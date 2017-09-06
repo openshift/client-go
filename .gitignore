@@ -18,3 +18,4 @@ origin.iml
 *.go~
 tags
 .envrc
+client-gen
