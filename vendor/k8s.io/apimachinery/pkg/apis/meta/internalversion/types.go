@@ -20,10 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime"
 )
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ListOptions is the query options to a standard REST list call, and has future support for
 // watch calls.
@@ -48,15 +45,4 @@ type ListOptions struct {
 	ResourceVersion string
 	// Timeout for the list/watch call.
 	TimeoutSeconds *int64
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// List holds a list of objects, which may not be known by the server.
-type List struct {
-	metav1.TypeMeta
-	// +optional
-	metav1.ListMeta
-
-	Items []runtime.Object
 }
