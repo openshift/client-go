@@ -1,0 +1,18 @@
+hash: 608421a1752bef7e434aaf7e72f17f7014f7f08fe710fe35747a0efd9bd8af2c
+updated: 2017-09-07T13:04:33.924362635-04:00
+imports:
+- name: github.com/openshift/origin
+  version: 1243b943f6eb0cb96a915f4f143771de58454981
+  subpackages:
+  - pkg/template/apis/template/v1
+- name: k8s.io/apimachinery
+  version: 8ab5f3d8a330c2e9baaf84e39042db8d49034ae2
+- name: k8s.io/client-go
+  version: 2a227f04f328fe506bd562f50b4d2a175fce80c5
+- name: k8s.io/code-generator
+  version: bf449d588b78132603c5e2dba7286e7d335abedc
+- name: k8s.io/kubernetes
+  version: f20e19779c9ef97c930ec1be080c78c1b33345f7
+  subpackages:
+  - pkg/api
+testImports: []
