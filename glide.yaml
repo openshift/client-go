@@ -1,0 +1,15 @@
+package: github.com/openshift/client-go
+import:
+- package: k8s.io/gengo
+- package: k8s.io/code-generator
+- package: k8s.io/client-go
+  version: release-4.0
+- package: k8s.io/apimachinery
+  version: release-1.7
+- package: k8s.io/kubernetes
+  version: release-1.7
+  subpackages:
+  - pkg/api
+- package: github.com/openshift/origin
+  subpackages:
+  - pkg/template/apis/template/v1
