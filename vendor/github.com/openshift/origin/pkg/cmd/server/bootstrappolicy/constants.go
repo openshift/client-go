@@ -49,6 +49,7 @@ const (
 const (
 	ClusterAdminRoleName       = "cluster-admin"
 	SudoerRoleName             = "sudoer"
+	ScopeImpersonationRoleName = "system:scope-impersonation"
 	ClusterReaderRoleName      = "cluster-reader"
 	StorageAdminRoleName       = "storage-admin"
 	ClusterDebuggerRoleName    = "cluster-debugger"
@@ -96,6 +97,8 @@ const (
 	NodeReaderRoleName = "system:node-reader"
 
 	OpenshiftSharedResourceViewRoleName = "shared-resource-viewer"
+
+	NodeBootstrapRoleName = "system:node-bootstrapper"
 )
 
 // RoleBindings

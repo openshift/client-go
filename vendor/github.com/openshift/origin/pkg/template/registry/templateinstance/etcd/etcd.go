@@ -8,7 +8,7 @@ import (
 	"k8s.io/apiserver/pkg/registry/generic/registry"
 	"k8s.io/apiserver/pkg/registry/rest"
 	kapi "k8s.io/kubernetes/pkg/api"
-	kclientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
+	authorizationinternalversion "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset/typed/authorization/internalversion"
 
 	templateapi "github.com/openshift/origin/pkg/template/apis/template"
 	"github.com/openshift/origin/pkg/template/registry/templateinstance"
@@ -23,22 +23,21 @@ type REST struct {
 var _ rest.StandardStorage = &REST{}
 
 // NewREST returns a RESTStorage object that will work against templateinstances.
-func NewREST(optsGetter restoptions.Getter, kc kclientset.Interface) (*REST, *StatusREST, error) {
-	strategy := templateinstance.NewStrategy(kc)
+func NewREST(optsGetter restoptions.Getter, authorizationClient authorizationinternalversion.AuthorizationInterface) (*REST, *StatusREST, error) {
+	strategy := templateinstance.NewStrategy(authorizationClient)
 
 	store := &registry.Store{
-		Copier:            kapi.Scheme,
-		NewFunc:           func() runtime.Object { return &templateapi.TemplateInstance{} },
-		NewListFunc:       func() runtime.Object { return &templateapi.TemplateInstanceList{} },
-		PredicateFunc:     templateinstance.Matcher,
-		QualifiedResource: templateapi.Resource("templateinstances"),
+		Copier:                   kapi.Scheme,
+		NewFunc:                  func() runtime.Object { return &templateapi.TemplateInstance{} },
+		NewListFunc:              func() runtime.Object { return &templateapi.TemplateInstanceList{} },
+		DefaultQualifiedResource: templateapi.Resource("templateinstances"),
 
 		CreateStrategy: strategy,
 		UpdateStrategy: strategy,
 		DeleteStrategy: strategy,
 	}
 
-	options := &generic.StoreOptions{RESTOptions: optsGetter, AttrFunc: templateinstance.GetAttrs}
+	options := &generic.StoreOptions{RESTOptions: optsGetter}
 	if err := store.CompleteWithOptions(options); err != nil {
 		return nil, nil, err
 	}

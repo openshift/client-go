@@ -137,6 +137,9 @@ type Config struct {
 	// RequestContextMapper maps requests to contexts. Exported so downstream consumers can provider their own mappers
 	// TODO confirm that anyone downstream actually uses this and doesn't just need an accessor
 	RequestContextMapper apirequest.RequestContextMapper
+	// RequestInfoResolver is used to assign attributes (used by admission and authorization) based on a request URL.
+	// Use-cases that are like kubelets may need to customize this.
+	RequestInfoResolver apirequest.RequestInfoResolver
 	// Serializer is required and provides the interface for serializing and converting objects to and from the wire
 	// The default (api.Codecs) usually works fine.
 	Serializer runtime.NegotiatedSerializer
@@ -360,6 +363,10 @@ func (c *Config) Complete() completedConfig {
 		c.Authorizer = authorizerunion.New(tokenAuthorizer, c.Authorizer)
 	}
 
+	if c.RequestInfoResolver == nil {
+		c.RequestInfoResolver = NewRequestInfoResolver(c)
+	}
+
 	return completedConfig{c}
 }
 
@@ -403,8 +410,9 @@ func (c completedConfig) New(name string, delegationTarget DelegationTarget) (*G
 
 		listedPathProvider: apiServerHandler,
 
-		swaggerConfig: c.SwaggerConfig,
-		openAPIConfig: c.OpenAPIConfig,
+		swaggerConfig:           c.SwaggerConfig,
+		openAPIConfig:           c.OpenAPIConfig,
+		openAPIDelegationTarget: delegationTarget,
 
 		postStartHooks:         map[string]postStartHookEntry{},
 		disabledPostStartHooks: c.DisabledPostStartHooks,
@@ -461,6 +469,7 @@ func (c completedConfig) New(name string, delegationTarget DelegationTarget) (*G
 
 func DefaultBuildHandlerChain(apiHandler http.Handler, c *Config) http.Handler {
 	handler := genericapifilters.WithAuthorization(apiHandler, c.RequestContextMapper, c.Authorizer)
+	handler = genericfilters.WithMaxInFlightLimit(handler, c.MaxRequestsInFlight, c.MaxMutatingRequestsInFlight, c.RequestContextMapper, c.LongRunningFunc)
 	handler = genericapifilters.WithImpersonation(handler, c.RequestContextMapper, c.Authorizer)
 	if utilfeature.DefaultFeatureGate.Enabled(features.AdvancedAuditing) {
 		handler = genericapifilters.WithAudit(handler, c.RequestContextMapper, c.AuditBackend, c.AuditPolicyChecker, c.LongRunningFunc)
@@ -471,8 +480,7 @@ func DefaultBuildHandlerChain(apiHandler http.Handler, c *Config) http.Handler {
 	handler = genericfilters.WithCORS(handler, c.CorsAllowedOriginList, nil, nil, nil, "true")
 	handler = genericfilters.WithPanicRecovery(handler)
 	handler = genericfilters.WithTimeoutForNonLongRunningRequests(handler, c.RequestContextMapper, c.LongRunningFunc)
-	handler = genericfilters.WithMaxInFlightLimit(handler, c.MaxRequestsInFlight, c.MaxMutatingRequestsInFlight, c.RequestContextMapper, c.LongRunningFunc)
-	handler = genericapifilters.WithRequestInfo(handler, NewRequestInfoResolver(c), c.RequestContextMapper)
+	handler = genericapifilters.WithRequestInfo(handler, c.RequestInfoResolver, c.RequestContextMapper)
 	handler = apirequest.WithRequestContext(handler, c.RequestContextMapper)
 	return handler
 }
@@ -497,8 +505,9 @@ func installAPI(s *GenericAPIServer, c *Config) {
 			routes.DefaultMetrics{}.Install(s.Handler.NonGoRestfulMux)
 		}
 	}
-	routes.Version{Version: c.Version}.Install(s.Handler.GoRestfulContainer)
-
+	if c.Version != nil {
+		routes.Version{Version: c.Version}.Install(s.Handler.NonGoRestfulMux)
+	}
 	if c.EnableDiscovery {
 		s.Handler.GoRestfulContainer.Add(s.DiscoveryGroupManager.WebService())
 	}

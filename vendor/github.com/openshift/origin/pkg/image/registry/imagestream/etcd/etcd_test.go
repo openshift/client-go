@@ -9,11 +9,10 @@ import (
 	apirequest "k8s.io/apiserver/pkg/endpoints/request"
 	etcdtesting "k8s.io/apiserver/pkg/storage/etcd/testing"
 	kapihelper "k8s.io/kubernetes/pkg/api/helper"
+	authorizationapi "k8s.io/kubernetes/pkg/apis/authorization"
 	"k8s.io/kubernetes/pkg/registry/registrytest"
 
 	"github.com/openshift/origin/pkg/api/latest"
-	authorizationapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
-	"github.com/openshift/origin/pkg/authorization/registry/subjectaccessreview"
 	"github.com/openshift/origin/pkg/image/admission/testutil"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 	"github.com/openshift/origin/pkg/util/restoptions"
@@ -27,8 +26,8 @@ const (
 )
 
 var (
-	testDefaultRegistry = imageapi.DefaultRegistryFunc(func() (string, bool) { return "test", true })
-	noDefaultRegistry   = imageapi.DefaultRegistryFunc(func() (string, bool) { return "", false })
+	testDefaultRegistry = func() (string, bool) { return "test", true }
+	noDefaultRegistry   = func() (string, bool) { return "", false }
 )
 
 type fakeSubjectAccessReviewRegistry struct {
@@ -38,17 +37,20 @@ type fakeSubjectAccessReviewRegistry struct {
 	requestNamespace string
 }
 
-var _ subjectaccessreview.Registry = &fakeSubjectAccessReviewRegistry{}
-
-func (f *fakeSubjectAccessReviewRegistry) CreateSubjectAccessReview(ctx apirequest.Context, subjectAccessReview *authorizationapi.SubjectAccessReview) (*authorizationapi.SubjectAccessReviewResponse, error) {
+func (f *fakeSubjectAccessReviewRegistry) Create(subjectAccessReview *authorizationapi.SubjectAccessReview) (*authorizationapi.SubjectAccessReview, error) {
 	f.request = subjectAccessReview
-	f.requestNamespace = apirequest.NamespaceValue(ctx)
-	return &authorizationapi.SubjectAccessReviewResponse{Allowed: f.allow}, f.err
+	f.requestNamespace = subjectAccessReview.Spec.ResourceAttributes.Namespace
+	return &authorizationapi.SubjectAccessReview{
+		Status: authorizationapi.SubjectAccessReviewStatus{
+			Allowed: f.allow,
+		},
+	}, f.err
 }
 
 func newStorage(t *testing.T) (*REST, *StatusREST, *InternalREST, *etcdtesting.EtcdTestServer) {
 	etcdStorage, server := registrytest.NewEtcdStorage(t, latest.Version.Group)
-	imageStorage, statusStorage, internalStorage, err := NewREST(restoptions.NewSimpleGetter(etcdStorage), noDefaultRegistry, &fakeSubjectAccessReviewRegistry{}, &testutil.FakeImageStreamLimitVerifier{})
+	registry := imageapi.DefaultRegistryHostnameRetriever(noDefaultRegistry, "", "")
+	imageStorage, statusStorage, internalStorage, err := NewREST(restoptions.NewSimpleGetter(etcdStorage), registry, &fakeSubjectAccessReviewRegistry{}, &testutil.FakeImageStreamLimitVerifier{})
 	if err != nil {
 		t.Fatal(err)
 	}

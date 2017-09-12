@@ -21,10 +21,10 @@ import (
 	"sort"
 	"strings"
 
-	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
 	"k8s.io/gengo/generator"
 	"k8s.io/gengo/namer"
 	"k8s.io/gengo/types"
+	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
 )
 
 // genericGenerator generates the generic informer.
@@ -49,7 +49,8 @@ func (g *genericGenerator) Filter(c *generator.Context, t *types.Type) bool {
 
 func (g *genericGenerator) Namers(c *generator.Context) namer.NameSystems {
 	pluralExceptions := map[string]string{
-		"Endpoints": "Endpoints",
+		"Endpoints":                  "Endpoints",
+		"SecurityContextConstraints": "SecurityContextConstraints",
 	}
 	return namer.NameSystems{
 		"raw":                namer.NewRawNamer(g.outputPackage, g.imports),

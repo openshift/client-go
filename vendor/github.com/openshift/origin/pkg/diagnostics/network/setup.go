@@ -17,8 +17,9 @@ import (
 
 	"github.com/openshift/origin/pkg/diagnostics/networkpod/util"
 	diagutil "github.com/openshift/origin/pkg/diagnostics/util"
+	"github.com/openshift/origin/pkg/network"
+	networkapi "github.com/openshift/origin/pkg/network/apis/network"
 	"github.com/openshift/origin/pkg/oc/cli/config"
-	sdnapi "github.com/openshift/origin/pkg/sdn/apis/network"
 )
 
 func (d *NetworkDiagnostic) TestSetup() error {
@@ -26,7 +27,7 @@ func (d *NetworkDiagnostic) TestSetup() error {
 	d.nsName2 = names.SimpleNameGenerator.GenerateName(fmt.Sprintf("%s-", util.NetworkDiagNamespacePrefix))
 
 	nsList := []string{d.nsName1, d.nsName2}
-	if sdnapi.IsOpenShiftMultitenantNetworkPlugin(d.pluginName) {
+	if network.IsOpenShiftMultitenantNetworkPlugin(d.pluginName) {
 		d.globalnsName1 = names.SimpleNameGenerator.GenerateName(fmt.Sprintf("%s-", util.NetworkDiagGlobalNamespacePrefix))
 		nsList = append(nsList, d.globalnsName1)
 		d.globalnsName2 = names.SimpleNameGenerator.GenerateName(fmt.Sprintf("%s-", util.NetworkDiagGlobalNamespacePrefix))
@@ -193,7 +194,7 @@ func (d *NetworkDiagnostic) makeNamespaceGlobal(nsName string) error {
 		Duration: 500 * time.Millisecond,
 		Factor:   1.1,
 	}
-	var netns *sdnapi.NetNamespace
+	var netns *networkapi.NetNamespace
 	err := wait.ExponentialBackoff(backoff, func() (bool, error) {
 		var err error
 		netns, err = d.OSClient.NetNamespaces().Get(nsName, metav1.GetOptions{})
@@ -209,7 +210,7 @@ func (d *NetworkDiagnostic) makeNamespaceGlobal(nsName string) error {
 		return err
 	}
 
-	sdnapi.SetChangePodNetworkAnnotation(netns, sdnapi.GlobalPodNetwork, "")
+	network.SetChangePodNetworkAnnotation(netns, network.GlobalPodNetwork, "")
 
 	if _, err = d.OSClient.NetNamespaces().Update(netns); err != nil {
 		return err
@@ -221,7 +222,7 @@ func (d *NetworkDiagnostic) makeNamespaceGlobal(nsName string) error {
 			return false, err
 		}
 
-		if _, _, err = sdnapi.GetChangePodNetworkAnnotation(updatedNetNs); err == sdnapi.ErrorPodNetworkAnnotationNotFound {
+		if _, _, err = network.GetChangePodNetworkAnnotation(updatedNetNs); err == network.ErrorPodNetworkAnnotationNotFound {
 			return true, nil
 		}
 		// Pod network change not applied yet

@@ -27,10 +27,10 @@ import (
 	"k8s.io/kubernetes/pkg/kubectl/resource"
 	"k8s.io/kubernetes/pkg/printers"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deployutil "github.com/openshift/origin/pkg/apps/util"
 	buildapi "github.com/openshift/origin/pkg/build/apis/build"
 	"github.com/openshift/origin/pkg/cmd/util"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deployutil "github.com/openshift/origin/pkg/deploy/util"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 )
 
@@ -327,17 +327,6 @@ func (f *Factory) PodForResource(resource string, timeout time.Duration) (string
 			return "", err
 		}
 		return pod.Name, nil
-	case extensions.Resource("jobs"):
-		kc, err := f.ClientSet()
-		if err != nil {
-			return "", err
-		}
-		// TODO/REBASE kc.Extensions() doesn't exist any more. Is this ok?
-		job, err := kc.Batch().Jobs(namespace).Get(name, metav1.GetOptions{})
-		if err != nil {
-			return "", err
-		}
-		return podNameForJob(job, kc, timeout, sortBy)
 	case batch.Resource("jobs"):
 		kc, err := f.ClientSet()
 		if err != nil {

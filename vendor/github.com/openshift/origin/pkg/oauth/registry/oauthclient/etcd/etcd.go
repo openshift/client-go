@@ -22,18 +22,17 @@ var _ rest.StandardStorage = &REST{}
 // NewREST returns a RESTStorage object that will work against oauth clients
 func NewREST(optsGetter restoptions.Getter) (*REST, error) {
 	store := &registry.Store{
-		Copier:            kapi.Scheme,
-		NewFunc:           func() runtime.Object { return &oauthapi.OAuthClient{} },
-		NewListFunc:       func() runtime.Object { return &oauthapi.OAuthClientList{} },
-		PredicateFunc:     oauthclient.Matcher,
-		QualifiedResource: oauthapi.Resource("oauthclients"),
+		Copier:                   kapi.Scheme,
+		NewFunc:                  func() runtime.Object { return &oauthapi.OAuthClient{} },
+		NewListFunc:              func() runtime.Object { return &oauthapi.OAuthClientList{} },
+		DefaultQualifiedResource: oauthapi.Resource("oauthclients"),
 
 		CreateStrategy: oauthclient.Strategy,
 		UpdateStrategy: oauthclient.Strategy,
 		DeleteStrategy: oauthclient.Strategy,
 	}
 
-	options := &generic.StoreOptions{RESTOptions: optsGetter, AttrFunc: oauthclient.GetAttrs}
+	options := &generic.StoreOptions{RESTOptions: optsGetter}
 	if err := store.CompleteWithOptions(options); err != nil {
 		return nil, err
 	}

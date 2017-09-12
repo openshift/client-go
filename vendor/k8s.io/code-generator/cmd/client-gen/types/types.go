@@ -58,10 +58,9 @@ type GroupVersionPackage struct {
 	Version Version
 	// If a user calls a group client without specifying the version (e.g.,
 	// c.Core(), instead of c.CoreV1()), the default version will be returned.
-	IsDefaultVersion      bool
-	GroupVersion          string
-	LowerCaseGroupVersion string
-	PackageName           string
+	IsDefaultVersion bool
+	GroupVersion     string
+	PackageName      string
 }
 
 type GroupInstallPackage struct {

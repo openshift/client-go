@@ -22,18 +22,17 @@ var _ rest.StandardStorage = &REST{}
 // NewREST returns a RESTStorage object that will work against brokertemplateinstances.
 func NewREST(optsGetter restoptions.Getter) (*REST, error) {
 	store := &registry.Store{
-		Copier:            kapi.Scheme,
-		NewFunc:           func() runtime.Object { return &templateapi.BrokerTemplateInstance{} },
-		NewListFunc:       func() runtime.Object { return &templateapi.BrokerTemplateInstanceList{} },
-		PredicateFunc:     brokertemplateinstance.Matcher,
-		QualifiedResource: templateapi.Resource("brokertemplateinstances"),
+		Copier:                   kapi.Scheme,
+		NewFunc:                  func() runtime.Object { return &templateapi.BrokerTemplateInstance{} },
+		NewListFunc:              func() runtime.Object { return &templateapi.BrokerTemplateInstanceList{} },
+		DefaultQualifiedResource: templateapi.Resource("brokertemplateinstances"),
 
 		CreateStrategy: brokertemplateinstance.Strategy,
 		UpdateStrategy: brokertemplateinstance.Strategy,
 		DeleteStrategy: brokertemplateinstance.Strategy,
 	}
 
-	options := &generic.StoreOptions{RESTOptions: optsGetter, AttrFunc: brokertemplateinstance.GetAttrs}
+	options := &generic.StoreOptions{RESTOptions: optsGetter}
 	if err := store.CompleteWithOptions(options); err != nil {
 		return nil, err
 	}

@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/diff"
 	knet "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/sets"
 	kapi "k8s.io/kubernetes/pkg/api"
@@ -88,6 +89,7 @@ var expectedIndex = []string{
 	"/healthz",
 	"/healthz/autoregister-completion",
 	"/healthz/ping",
+	"/healthz/poststarthook/admission.openshift.io-RefreshRESTMapper",
 	"/healthz/poststarthook/apiservice-registration-controller",
 	"/healthz/poststarthook/apiservice-status-available-controller",
 	"/healthz/poststarthook/authorization.openshift.io-bootstrapclusterroles",
@@ -98,6 +100,7 @@ var expectedIndex = []string{
 	// "/healthz/poststarthook/extensions/third-party-resources",  // Do not enable this controller, we do not support it
 	"/healthz/poststarthook/generic-apiserver-start-informers",
 	"/healthz/poststarthook/kube-apiserver-autoregistration",
+	"/healthz/poststarthook/oauth.openshift.io-EnsureBootstrapOAuthClients",
 	"/healthz/poststarthook/project.openshift.io-projectauthorizationcache",
 	"/healthz/poststarthook/project.openshift.io-projectcache",
 	"/healthz/poststarthook/quota.openshift.io-clusterquotamapping",
@@ -162,7 +165,7 @@ func TestRootRedirect(t *testing.T) {
 			break
 		}
 
-		t.Fatalf("Unexpected index: \ngot=%v,\n\n expected=%v", got, expectedIndex)
+		t.Fatalf("Unexpected index: \ngot=%v,\n\n expected=%v,\n\ndiff=%v", got.Paths, expectedIndex, diff.ObjectDiff(expectedIndex, got.Paths))
 	}
 
 	req, err = http.NewRequest("GET", masterConfig.AssetConfig.MasterPublicURL, nil)

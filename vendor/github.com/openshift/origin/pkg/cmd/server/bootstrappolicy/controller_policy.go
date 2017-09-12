@@ -48,6 +48,8 @@ const (
 	// This is a special constant which maps to the service account name used by the underlying
 	// Kubernetes code, so that we can build out the extra policy required to scale OpenShift resources.
 	InfraHorizontalPodAutoscalerControllerServiceAccountName = "horizontal-pod-autoscaler"
+
+	InfraNodeBootstrapServiceAccountName = "node-bootstrapper"
 )
 
 var (
@@ -75,11 +77,6 @@ func addControllerRoleToSA(saNamespace, saName string, role rbac.ClusterRole) {
 		}
 	}
 
-	if role.Annotations == nil {
-		role.Annotations = map[string]string{}
-	}
-	role.Annotations[roleSystemOnly] = roleIsSystemOnly
-
 	controllerRoles = append(controllerRoles, role)
 
 	controllerRoleBindings = append(controllerRoleBindings,
@@ -96,6 +93,7 @@ func init() {
 		ObjectMeta: metav1.ObjectMeta{Name: saRolePrefix + InfraBuildControllerServiceAccountName},
 		Rules: []rbac.PolicyRule{
 			rbac.NewRule("get", "list", "watch", "patch", "update", "delete").Groups(buildGroup, legacyBuildGroup).Resources("builds").RuleOrDie(),
+			rbac.NewRule("update").Groups(buildGroup, legacyBuildGroup).Resources("builds/finalizers").RuleOrDie(),
 			rbac.NewRule("get").Groups(buildGroup, legacyBuildGroup).Resources("buildconfigs").RuleOrDie(),
 			rbac.NewRule("create").Groups(buildGroup, legacyBuildGroup).Resources("builds/optimizeddocker", "builds/docker", "builds/source", "builds/custom", "builds/jenkinspipeline").RuleOrDie(),
 			rbac.NewRule("get", "list").Groups(imageGroup, legacyImageGroup).Resources("imagestreams").RuleOrDie(),
@@ -139,7 +137,8 @@ func init() {
 		Rules: []rbac.PolicyRule{
 			rbac.NewRule("create", "get", "list", "watch", "update", "patch", "delete").Groups(kapiGroup).Resources("replicationcontrollers").RuleOrDie(),
 			rbac.NewRule("update").Groups(deployGroup, legacyDeployGroup).Resources("deploymentconfigs/status").RuleOrDie(),
-			rbac.NewRule("get", "list", "watch", "delete").Groups(deployGroup, legacyDeployGroup).Resources("deploymentconfigs").RuleOrDie(),
+			rbac.NewRule("update").Groups(deployGroup, legacyDeployGroup).Resources("deploymentconfigs/finalizers").RuleOrDie(),
+			rbac.NewRule("get", "list", "watch").Groups(deployGroup, legacyDeployGroup).Resources("deploymentconfigs").RuleOrDie(),
 			eventsRule(),
 		},
 	})

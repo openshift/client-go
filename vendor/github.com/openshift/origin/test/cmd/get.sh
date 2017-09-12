@@ -29,5 +29,13 @@ os::cmd::expect_success_and_not_text 'oc get svc/testsvc1 svc/testsvc2' "svc/tes
 os::cmd::expect_success_and_text 'oc get svc/testsvc1 is/testimg1' "svc/testsvc1"
 # specific resources should not have their kind prefixed
 os::cmd::expect_success_and_text 'oc get svc' "testsvc1"
-echo "oc get all: ok"
+# test --show-labels displays labels for users
+os::cmd::expect_success 'oc create user test-user-1'
+os::cmd::expect_success 'oc label user/test-user-1 customlabel=true'
+os::cmd::expect_success_and_text 'oc get users test-user-1 --show-labels' "customlabel=true"
+os::cmd::expect_success_and_not_text 'oc get users test-user-1' "customlabel=true"
+# test structured and unstructured resources print generically without panic
+os::cmd::expect_success_and_text 'oc get projectrequests -o yaml' 'status: Success'
+os::cmd::expect_success_and_text 'oc get projectrequests,svc,pod -o yaml' 'kind: List'
+echo "oc get: ok"
 os::test::junit::declare_suite_end

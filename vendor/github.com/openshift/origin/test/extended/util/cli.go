@@ -26,6 +26,7 @@ import (
 
 	_ "github.com/openshift/origin/pkg/api/install"
 	"github.com/openshift/origin/pkg/client"
+	oclientset "github.com/openshift/origin/pkg/client/clientset/clientset"
 	configapi "github.com/openshift/origin/pkg/cmd/server/api"
 	"github.com/openshift/origin/pkg/oc/cli/config"
 	projectapi "github.com/openshift/origin/pkg/project/apis/project"
@@ -190,6 +191,22 @@ func (c *CLI) Client() *client.Client {
 		FatalErr(err)
 	}
 	return osClient
+}
+
+// Clientset provides the new OpenShift clientset for the current user. If the user is not
+// set, then it provides client for the cluster admin user
+func (c *CLI) Clientset() *oclientset.Clientset {
+	_, clientConfig, err := configapi.GetInternalKubeClient(c.configPath, nil)
+	if err != nil {
+		FatalErr(err)
+	}
+
+	cs, err := oclientset.NewForConfig(clientConfig)
+	if err != nil {
+		FatalErr(err)
+	}
+
+	return cs
 }
 
 // AdminClient provides an OpenShift client for the cluster admin user.
@@ -391,9 +408,9 @@ func (c *CLI) Outputs() (string, string, error) {
 }
 
 // Background executes the command in the background and returns the Cmd object
-// returns the Cmd which should be killed later via cmd.Process.Kill(), as well
-// as the stdout and stderr byte buffers assigned to the cmd.Stdout and cmd.Stderr
-// writers.
+// which may be killed later via cmd.Process.Kill().  It also returns buffers
+// holding the stdout & stderr of the command, which may be read from only after
+// calling cmd.Wait().
 func (c *CLI) Background() (*exec.Cmd, *bytes.Buffer, *bytes.Buffer, error) {
 	if c.verbose {
 		fmt.Printf("DEBUG: oc %s\n", c.printCmd())
@@ -408,6 +425,27 @@ func (c *CLI) Background() (*exec.Cmd, *bytes.Buffer, *bytes.Buffer, error) {
 
 	err := cmd.Start()
 	return cmd, &stdout, &stderr, err
+}
+
+// BackgroundRC executes the command in the background and returns the Cmd
+// object which may be killed later via cmd.Process.Kill().  It returns a
+// ReadCloser for stdout.  If in doubt, use Background().  Consult the os/exec
+// documentation.
+func (c *CLI) BackgroundRC() (*exec.Cmd, io.ReadCloser, error) {
+	if c.verbose {
+		fmt.Printf("DEBUG: oc %s\n", c.printCmd())
+	}
+	cmd := exec.Command(c.execPath, c.finalArgs...)
+	cmd.Stdin = c.stdin
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	e2e.Logf("Running '%s %s'", c.execPath, strings.Join(c.finalArgs, " "))
+
+	err = cmd.Start()
+	return cmd, stdout, err
 }
 
 // Stdout returns the current stdout writer

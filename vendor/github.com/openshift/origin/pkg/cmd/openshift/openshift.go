@@ -70,6 +70,12 @@ func CommandFor(basename string) *cobra.Command {
 		cmd = builder.NewCommandS2IBuilder(basename)
 	case "openshift-docker-build":
 		cmd = builder.NewCommandDockerBuilder(basename)
+	case "openshift-git-clone":
+		cmd = builder.NewCommandGitClone(basename)
+	case "openshift-manage-dockerfile":
+		cmd = builder.NewCommandManageDockerfile(basename)
+	case "openshift-extract-image-content":
+		cmd = builder.NewCommandExtractImageContent(basename)
 	case "oc", "osc":
 		cmd = cli.NewCommandCLI(basename, basename, in, out, errout)
 	case "oadm", "osadm":
@@ -172,11 +178,11 @@ func newExperimentalCommand(name, fullName string) *cobra.Command {
 	experimental.AddCommand(buildchain.NewCmdBuildChain(name, fullName+" "+buildchain.BuildChainRecommendedCommandName, f, out))
 	experimental.AddCommand(configcmd.NewCmdConfig(configcmd.ConfigRecommendedName, fullName+" "+configcmd.ConfigRecommendedName, f, out, errout))
 	deprecatedDiag := diagnostics.NewCmdDiagnostics(diagnostics.DiagnosticsRecommendedName, fullName+" "+diagnostics.DiagnosticsRecommendedName, out)
-	deprecatedDiag.Deprecated = fmt.Sprintf(`use "oadm %[1]s" to run diagnostics instead.`, diagnostics.DiagnosticsRecommendedName)
+	deprecatedDiag.Deprecated = fmt.Sprintf(`use "oc adm %[1]s" to run diagnostics instead.`, diagnostics.DiagnosticsRecommendedName)
 	experimental.AddCommand(deprecatedDiag)
 	experimental.AddCommand(cmd.NewCmdOptions(out))
 
-	// these groups also live under `oadm groups {sync,prune}` and are here only for backwards compatibility
+	// these groups also live under `oc adm groups {sync,prune}` and are here only for backwards compatibility
 	experimental.AddCommand(sync.NewCmdSync("sync-groups", fullName+" "+"sync-groups", f, out))
 	experimental.AddCommand(sync.NewCmdPrune("prune-groups", fullName+" "+"prune-groups", f, out))
 	return experimental

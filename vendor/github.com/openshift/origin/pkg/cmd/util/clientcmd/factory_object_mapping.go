@@ -28,14 +28,15 @@ import (
 	kprinters "k8s.io/kubernetes/pkg/printers"
 
 	"github.com/openshift/origin/pkg/api/latest"
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deploycmd "github.com/openshift/origin/pkg/apps/cmd"
+	appsclient "github.com/openshift/origin/pkg/apps/generated/internalclientset"
 	authorizationapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
 	authorizationreaper "github.com/openshift/origin/pkg/authorization/reaper"
 	buildapi "github.com/openshift/origin/pkg/build/apis/build"
 	buildcmd "github.com/openshift/origin/pkg/build/cmd"
 	buildutil "github.com/openshift/origin/pkg/build/util"
 	"github.com/openshift/origin/pkg/client"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deploycmd "github.com/openshift/origin/pkg/deploy/cmd"
 	"github.com/openshift/origin/pkg/oc/cli/describe"
 	"github.com/openshift/origin/pkg/security/legacyclient"
 	userapi "github.com/openshift/origin/pkg/user/apis/user"
@@ -145,6 +146,10 @@ func (f *ring1Factory) Describer(mapping *meta.RESTMapping) (kprinters.Describer
 		if err != nil {
 			return nil, fmt.Errorf("unable to create client %s: %v", mapping.GroupVersionKind.Kind, err)
 		}
+		clientConfig, err := f.clientAccessFactory.ClientConfig()
+		if err != nil {
+			return nil, fmt.Errorf("unable to create client config %s: %v", mapping.GroupVersionKind.Kind, err)
+		}
 
 		mappingVersion := mapping.GroupVersionKind.GroupVersion()
 		cfg, err := f.clientAccessFactory.ClientConfigForVersion(&mappingVersion)
@@ -152,7 +157,7 @@ func (f *ring1Factory) Describer(mapping *meta.RESTMapping) (kprinters.Describer
 			return nil, fmt.Errorf("unable to load a client %s: %v", mapping.GroupVersionKind.Kind, err)
 		}
 
-		describer, ok := describe.DescriberFor(mapping.GroupVersionKind.GroupKind(), oClient, kClient, cfg.Host)
+		describer, ok := describe.DescriberFor(mapping.GroupVersionKind.GroupKind(), clientConfig, oClient, kClient, cfg.Host)
 		if !ok {
 			return nil, fmt.Errorf("no description has been implemented for %q", mapping.GroupVersionKind.Kind)
 		}
@@ -217,11 +222,15 @@ func (f *ring1Factory) LogsForObject(object, options runtime.Object, timeout tim
 
 func (f *ring1Factory) Scaler(mapping *meta.RESTMapping) (kubectl.Scaler, error) {
 	if deployapi.IsKindOrLegacy("DeploymentConfig", mapping.GroupVersionKind.GroupKind()) {
-		oc, kc, err := f.clientAccessFactory.Clients()
+		_, kc, err := f.clientAccessFactory.Clients()
 		if err != nil {
 			return nil, err
 		}
-		return deploycmd.NewDeploymentConfigScaler(oc, kc), nil
+		config, err := f.clientAccessFactory.OpenShiftClientConfig().ClientConfig()
+		if err != nil {
+			return nil, err
+		}
+		return deploycmd.NewDeploymentConfigScaler(appsclient.NewForConfigOrDie(config), kc), nil
 	}
 	return f.kubeObjectMappingFactory.Scaler(mapping)
 }
@@ -230,11 +239,15 @@ func (f *ring1Factory) Reaper(mapping *meta.RESTMapping) (kubectl.Reaper, error)
 	gk := mapping.GroupVersionKind.GroupKind()
 	switch {
 	case deployapi.IsKindOrLegacy("DeploymentConfig", gk):
-		oc, kc, err := f.clientAccessFactory.Clients()
+		_, kc, err := f.clientAccessFactory.Clients()
 		if err != nil {
 			return nil, err
 		}
-		return deploycmd.NewDeploymentConfigReaper(oc, kc), nil
+		config, err := f.clientAccessFactory.OpenShiftClientConfig().ClientConfig()
+		if err != nil {
+			return nil, err
+		}
+		return deploycmd.NewDeploymentConfigReaper(appsclient.NewForConfigOrDie(config), kc), nil
 	case authorizationapi.IsKindOrLegacy("Role", gk):
 		oc, _, err := f.clientAccessFactory.Clients()
 		if err != nil {
@@ -283,34 +296,33 @@ func (f *ring1Factory) Reaper(mapping *meta.RESTMapping) (kubectl.Reaper, error)
 
 func (f *ring1Factory) HistoryViewer(mapping *meta.RESTMapping) (kubectl.HistoryViewer, error) {
 	if deployapi.IsKindOrLegacy("DeploymentConfig", mapping.GroupVersionKind.GroupKind()) {
-		oc, kc, err := f.clientAccessFactory.Clients()
+		_, kc, err := f.clientAccessFactory.Clients()
 		if err != nil {
 			return nil, err
 		}
-		return deploycmd.NewDeploymentConfigHistoryViewer(oc, kc), nil
+		return deploycmd.NewDeploymentConfigHistoryViewer(kc), nil
 	}
 	return f.kubeObjectMappingFactory.HistoryViewer(mapping)
 }
 
 func (f *ring1Factory) Rollbacker(mapping *meta.RESTMapping) (kubectl.Rollbacker, error) {
 	if deployapi.IsKindOrLegacy("DeploymentConfig", mapping.GroupVersionKind.GroupKind()) {
-		oc, _, err := f.clientAccessFactory.Clients()
+		config, err := f.clientAccessFactory.OpenShiftClientConfig().ClientConfig()
 		if err != nil {
 			return nil, err
 		}
-		return deploycmd.NewDeploymentConfigRollbacker(oc), nil
+		return deploycmd.NewDeploymentConfigRollbacker(appsclient.NewForConfigOrDie(config)), nil
 	}
 	return f.kubeObjectMappingFactory.Rollbacker(mapping)
 }
 
 func (f *ring1Factory) StatusViewer(mapping *meta.RESTMapping) (kubectl.StatusViewer, error) {
-	oc, _, err := f.clientAccessFactory.Clients()
+	config, err := f.clientAccessFactory.OpenShiftClientConfig().ClientConfig()
 	if err != nil {
 		return nil, err
 	}
-
 	if deployapi.IsKindOrLegacy("DeploymentConfig", mapping.GroupVersionKind.GroupKind()) {
-		return deploycmd.NewDeploymentConfigStatusViewer(oc), nil
+		return deploycmd.NewDeploymentConfigStatusViewer(appsclient.NewForConfigOrDie(config)), nil
 	}
 	return f.kubeObjectMappingFactory.StatusViewer(mapping)
 }

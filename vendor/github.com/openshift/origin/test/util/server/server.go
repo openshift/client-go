@@ -51,9 +51,9 @@ var (
 	// startLock protects access to the start vars
 	startLock sync.Mutex
 	// startedMaster is true if the master has already been started in process
-	startedMaster = false
+	startedMaster bool
 	// startedNode is true if the node has already been started in process
-	startedNode = false
+	startedNode bool
 )
 
 // guardMaster prevents multiple master processes from being started at once
@@ -131,6 +131,9 @@ func setupStartOptions(startEtcd, useDefaultPort bool) (*start.MasterArgs, *star
 	nodeArgs.ConfigDir.Default(path.Join(basedir, "openshift.local.config", nodeArgs.NodeName))
 	nodeArgs.MasterCertDir = masterArgs.ConfigDir.Value()
 
+	// give the nodeArgs a separate listen argument
+	nodeArgs.ListenArg = start.NewDefaultListenArg()
+
 	if !useDefaultPort {
 		// don't wait for nodes to come up
 		masterAddr := os.Getenv("OS_MASTER_ADDR")
@@ -141,9 +144,14 @@ func setupStartOptions(startEtcd, useDefaultPort bool) (*start.MasterArgs, *star
 				masterAddr = addr
 			}
 		}
-		fmt.Printf("masterAddr: %#v\n", masterAddr)
 		masterArgs.MasterAddr.Set(masterAddr)
 		listenArg.ListenAddr.Set(masterAddr)
+
+		nodeAddr, err := FindAvailableBindAddress(10000, 29999)
+		if err != nil {
+			glog.Fatalf("couldn't find free port for node: %v", err)
+		}
+		nodeArgs.ListenArg.ListenAddr.Set(nodeAddr)
 	}
 
 	if !startEtcd {
@@ -178,13 +186,26 @@ func DefaultMasterOptionsWithTweaks(startEtcd, useDefaultPort bool) (*configapi.
 	if err := CreateMasterCerts(startOptions.MasterArgs); err != nil {
 		return nil, err
 	}
-	if err := CreateBootstrapPolicy(startOptions.MasterArgs); err != nil {
-		return nil, err
-	}
 
 	masterConfig, err := startOptions.MasterArgs.BuildSerializeableMasterConfig()
 	if err != nil {
 		return nil, err
+	}
+
+	if masterConfig.EtcdConfig != nil {
+		addr, err := FindAvailableBindAddress(10000, 29999)
+		if err != nil {
+			return nil, fmt.Errorf("can't setup etcd address: %v", err)
+		}
+		peerAddr, err := FindAvailableBindAddress(10000, 29999)
+		if err != nil {
+			return nil, fmt.Errorf("can't setup etcd address: %v", err)
+		}
+		masterConfig.EtcdConfig.Address = addr
+		masterConfig.EtcdConfig.ServingInfo.BindAddress = masterConfig.EtcdConfig.Address
+		masterConfig.EtcdConfig.PeerAddress = peerAddr
+		masterConfig.EtcdConfig.PeerServingInfo.BindAddress = masterConfig.EtcdConfig.PeerAddress
+		masterConfig.EtcdClientInfo.URLs = []string{"https://" + masterConfig.EtcdConfig.Address}
 	}
 
 	masterConfig.DisableOpenAPI = true
@@ -201,22 +222,6 @@ func DefaultMasterOptionsWithTweaks(startEtcd, useDefaultPort bool) (*configapi.
 	glog.Infof("Starting integration server from master %s", startOptions.MasterArgs.ConfigDir.Value())
 
 	return masterConfig, nil
-}
-
-func CreateBootstrapPolicy(masterArgs *start.MasterArgs) error {
-	createBootstrapPolicy := &admin.CreateBootstrapPolicyFileOptions{
-		File: path.Join(masterArgs.ConfigDir.Value(), "policy.json"),
-		OpenShiftSharedResourcesNamespace: "openshift",
-	}
-
-	if err := createBootstrapPolicy.Validate(nil); err != nil {
-		return err
-	}
-	if err := createBootstrapPolicy.CreateBootstrapPolicyFile(); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func CreateMasterCerts(masterArgs *start.MasterArgs) error {
@@ -301,10 +306,6 @@ func DefaultAllInOneOptions() (*configapi.MasterConfig, *configapi.NodeConfig, *
 	if err := CreateMasterCerts(startOptions.MasterOptions.MasterArgs); err != nil {
 		return nil, nil, nil, err
 	}
-	if err := CreateBootstrapPolicy(startOptions.MasterOptions.MasterArgs); err != nil {
-		return nil, nil, nil, err
-	}
-
 	if err := CreateNodeCerts(startOptions.NodeArgs, startOptions.MasterOptions.MasterArgs.MasterAddr.String()); err != nil {
 		return nil, nil, nil, err
 	}
@@ -316,6 +317,22 @@ func DefaultAllInOneOptions() (*configapi.MasterConfig, *configapi.NodeConfig, *
 
 	masterConfig.DisableOpenAPI = true
 
+	if masterConfig.EtcdConfig != nil {
+		addr, err := FindAvailableBindAddress(10000, 29999)
+		if err != nil {
+			return nil, nil, nil, fmt.Errorf("can't setup etcd address: %v", err)
+		}
+		peerAddr, err := FindAvailableBindAddress(10000, 29999)
+		if err != nil {
+			return nil, nil, nil, fmt.Errorf("can't setup etcd address: %v", err)
+		}
+		masterConfig.EtcdConfig.Address = addr
+		masterConfig.EtcdConfig.ServingInfo.BindAddress = masterConfig.EtcdConfig.Address
+		masterConfig.EtcdConfig.PeerAddress = peerAddr
+		masterConfig.EtcdConfig.PeerServingInfo.BindAddress = masterConfig.EtcdConfig.PeerAddress
+		masterConfig.EtcdClientInfo.URLs = []string{"https://" + masterConfig.EtcdConfig.Address}
+	}
+
 	if fn := startOptions.MasterOptions.MasterArgs.OverrideConfig; fn != nil {
 		if err := fn(masterConfig); err != nil {
 			return nil, nil, nil, err
@@ -326,6 +343,7 @@ func DefaultAllInOneOptions() (*configapi.MasterConfig, *configapi.NodeConfig, *
 	if err != nil {
 		return nil, nil, nil, err
 	}
+
 	nodeConfig.DockerConfig.DockerShimSocket = path.Join(util.GetBaseDir(), "dockershim.sock")
 	nodeConfig.DockerConfig.DockershimRootDirectory = path.Join(util.GetBaseDir(), "dockershim")
 
@@ -399,14 +417,13 @@ func StartConfiguredNode(nodeConfig *configapi.NodeConfig, components *utilflags
 	if err != nil {
 		return err
 	}
-	nodeTLS := configapi.UseTLS(nodeConfig.ServingInfo)
 
 	if err := start.StartNode(*nodeConfig, components); err != nil {
 		return err
 	}
 
 	// wait for the server to come up for 30 seconds (average time on desktop is 2 seconds, but Jenkins timed out at 10 seconds)
-	if err := cmdutil.WaitForSuccessfulDial(nodeTLS, "tcp", net.JoinHostPort(nodeConfig.NodeName, nodePort), 100*time.Millisecond, 1*time.Second, 30); err != nil {
+	if err := cmdutil.WaitForSuccessfulDial(true, "tcp", net.JoinHostPort(nodeConfig.NodeName, nodePort), 100*time.Millisecond, 1*time.Second, 30); err != nil {
 		return err
 	}
 
@@ -447,9 +464,9 @@ func StartConfiguredMasterWithOptions(masterConfig *configapi.MasterConfig, test
 	}
 
 	var healthzResponse string
-	err = wait.Poll(100*time.Millisecond, 10*time.Second, func() (bool, error) {
+	err = wait.Poll(time.Second, time.Minute, func() (bool, error) {
 		var healthy bool
-		healthy, healthzResponse, err = IsServerHealthy(*masterURL)
+		healthy, healthzResponse, err = IsServerHealthy(*masterURL, masterConfig.OAuthConfig != nil)
 		if err != nil {
 			return false, err
 		}
@@ -465,14 +482,24 @@ func StartConfiguredMasterWithOptions(masterConfig *configapi.MasterConfig, test
 	return adminKubeConfigFile, nil
 }
 
-func IsServerHealthy(url url.URL) (bool, string, error) {
+func IsServerHealthy(url url.URL, checkOAuth bool) (bool, string, error) {
+	healthy, healthzResponse, err := isServerPathHealthy(url, "/healthz", http.StatusOK)
+	if err != nil || !healthy || !checkOAuth {
+		return healthy, healthzResponse, err
+	}
+	// As a special case, check this endpoint as well since the OAuth server is not part of the /healthz check
+	// Whenever the OAuth server gets split out, it would have its own /healthz and post start hooks to handle this
+	return isServerPathHealthy(url, "/oauth/token/request", http.StatusFound)
+}
+
+func isServerPathHealthy(url url.URL, path string, code int) (bool, string, error) {
 	transport := knet.SetTransportDefaults(&http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
 	})
 
-	url.Path = "/healthz"
+	url.Path = path
 	req, err := http.NewRequest("GET", url.String(), nil)
 	req.Header.Set("Accept", "text/html")
 	resp, err := transport.RoundTrip(req)
@@ -482,7 +509,7 @@ func IsServerHealthy(url url.URL) (bool, string, error) {
 	defer resp.Body.Close()
 	content, _ := ioutil.ReadAll(resp.Body)
 
-	return resp.StatusCode == http.StatusOK, string(content), nil
+	return resp.StatusCode == code, string(content), nil
 }
 
 // StartTestMaster starts up a test master and returns back the startOptions so you can get clients and certs

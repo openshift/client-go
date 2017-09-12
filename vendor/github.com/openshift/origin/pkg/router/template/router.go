@@ -5,13 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
-	"regexp"
-	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -32,9 +29,7 @@ const (
 	ProtocolHTTP  = "http"
 	ProtocolHTTPS = "https"
 	ProtocolTLS   = "tls"
-)
 
-const (
 	routeFile       = "routes.json"
 	certDir         = "certs"
 	caCertDir       = "cacerts"
@@ -42,6 +37,11 @@ const (
 
 	caCertPostfix   = "_ca"
 	destCertPostfix = "_pod"
+
+	// '-' is not used because namespace can contain dashes
+	// '_' is not used as this could be part of the name in the future
+	// '/' is not safe to use in names of router config files
+	routeKeySeparator = ":"
 )
 
 // templateRouter is a backend-agnostic router implementation
@@ -225,124 +225,6 @@ func newTemplateRouter(cfg templateRouterCfg) (*templateRouter, error) {
 	// committed without delay.
 	router.commitAndReload()
 	return router, nil
-}
-
-func isInteger(s string) bool {
-	_, err := strconv.Atoi(s)
-	return (err == nil)
-}
-
-func matchValues(s string, allowedValues ...string) bool {
-	for _, value := range allowedValues {
-		if value == s {
-			return true
-		}
-	}
-	return false
-}
-
-func matchPattern(pattern, s string) bool {
-	glog.V(5).Infof("matchPattern called with %s and %s", pattern, s)
-	status, err := regexp.MatchString(`\A(?:`+pattern+`)\z`, s)
-	if err == nil {
-		glog.V(5).Infof("matchPattern returning status: %v", status)
-		return status
-	}
-	glog.Errorf("Error with regex pattern in call to matchPattern: %v", err)
-	return false
-}
-
-// genSubdomainWildcardRegexp is now legacy and around for backward
-// compatibility and allows old templates to continue running.
-// Generate a regular expression to match wildcard hosts (and paths if any)
-// for a [sub]domain.
-func genSubdomainWildcardRegexp(hostname, path string, exactPath bool) string {
-	subdomain := routeapi.GetDomainForHost(hostname)
-	if len(subdomain) == 0 {
-		glog.Warningf("Generating subdomain wildcard regexp - invalid host name %s", hostname)
-		return fmt.Sprintf("%s%s", hostname, path)
-	}
-
-	expr := regexp.QuoteMeta(fmt.Sprintf(".%s%s", subdomain, path))
-	if exactPath {
-		return fmt.Sprintf(`^[^\.]*%s$`, expr)
-	}
-
-	return fmt.Sprintf(`^[^\.]*%s(|/.*)$`, expr)
-}
-
-// Generate a regular expression to match route hosts (and paths if any).
-func generateRouteRegexp(hostname, path string, wildcard bool) string {
-	hostRE := regexp.QuoteMeta(hostname)
-	if wildcard {
-		subdomain := routeapi.GetDomainForHost(hostname)
-		if len(subdomain) == 0 {
-			glog.Warningf("Generating subdomain wildcard regexp - invalid host name %s", hostname)
-		} else {
-			subdomainRE := regexp.QuoteMeta(fmt.Sprintf(".%s", subdomain))
-			hostRE = fmt.Sprintf(`[^\.]*%s`, subdomainRE)
-		}
-	}
-
-	portRE := "(:[0-9]+)?"
-
-	// build the correct subpath regex, depending on whether path ends with a segment separator
-	var pathRE, subpathRE string
-	switch {
-	case strings.TrimRight(path, "/") == "":
-		// Special-case paths consisting solely of "/" to match a root request to "" as well
-		pathRE = ""
-		subpathRE = "(/.*)?"
-	case strings.HasSuffix(path, "/"):
-		pathRE = regexp.QuoteMeta(path)
-		subpathRE = "(.*)?"
-	default:
-		pathRE = regexp.QuoteMeta(path)
-		subpathRE = "(/.*)?"
-	}
-
-	return "^" + hostRE + portRE + pathRE + subpathRE + "$"
-}
-
-// Generates the host name to use for serving/certificate matching.
-// If wildcard is set, a wildcard host name (*.<subdomain>) is generated.
-func genCertificateHostName(hostname string, wildcard bool) string {
-	if wildcard {
-		if idx := strings.IndexRune(hostname, '.'); idx > 0 {
-			return fmt.Sprintf("*.%s", hostname[idx+1:])
-		}
-	}
-
-	return hostname
-}
-
-// Returns the list of endpoints for the given route's service
-// action argument further processes the list e.g. shuffle
-// The default action is in-order traversal of internal data structure that stores
-//   the endpoints (does not change the return order if the data structure did not mutate)
-func processEndpointsForAlias(alias ServiceAliasConfig, svc ServiceUnit, action string) []Endpoint {
-	endpoints := endpointsForAlias(alias, svc)
-	if strings.ToLower(action) == "shuffle" {
-		for i := len(endpoints) - 1; i >= 0; i-- {
-			rIndex := rand.Intn(i + 1)
-			endpoints[i], endpoints[rIndex] = endpoints[rIndex], endpoints[i]
-		}
-	}
-	return endpoints
-}
-
-func endpointsForAlias(alias ServiceAliasConfig, svc ServiceUnit) []Endpoint {
-	if len(alias.PreferPort) == 0 {
-		return svc.EndpointTable
-	}
-	endpoints := make([]Endpoint, 0, len(svc.EndpointTable))
-	for i := range svc.EndpointTable {
-		endpoint := svc.EndpointTable[i]
-		if endpoint.PortName == alias.PreferPort || endpoint.Port == alias.PreferPort {
-			endpoints = append(endpoints, endpoint)
-		}
-	}
-	return endpoints
 }
 
 func (r *templateRouter) EnableRateLimiter(interval int, handlerFunc ratelimiter.HandlerFunc) {
@@ -572,7 +454,7 @@ func (r *templateRouter) FilterNamespaces(namespaces sets.String) {
 	for k := range r.serviceUnits {
 		// TODO: the id of a service unit should be defined inside this class, not passed in from the outside
 		//   remove the leak of the abstraction when we refactor this code
-		ns := strings.SplitN(k, "/", 2)[0]
+		ns, _ := getPartsFromEndpointsKey(k)
 		if namespaces.Has(ns) {
 			continue
 		}
@@ -581,7 +463,7 @@ func (r *templateRouter) FilterNamespaces(namespaces sets.String) {
 	}
 
 	for k := range r.state {
-		ns := strings.SplitN(k, "_", 2)[0]
+		ns, _ := getPartsFromRouteKey(k)
 		if namespaces.Has(ns) {
 			continue
 		}
@@ -601,10 +483,10 @@ func (r *templateRouter) CreateServiceUnit(id string) {
 // CreateServiceUnit creates a new service named with the given id - internal
 // lockless form, caller needs to ensure lock acquisition [and release].
 func (r *templateRouter) createServiceUnitInternal(id string) {
-	parts := strings.SplitN(id, "/", 2)
+	namespace, name := getPartsFromEndpointsKey(id)
 	service := ServiceUnit{
 		Name:          id,
-		Hostname:      fmt.Sprintf("%s.%s.svc", parts[1], parts[0]),
+		Hostname:      fmt.Sprintf("%s.%s.svc", name, namespace),
 		EndpointTable: []Endpoint{},
 	}
 
@@ -665,26 +547,28 @@ func (r *templateRouter) DeleteEndpoints(id string) {
 	r.stateChanged = true
 }
 
-// routeKey generates route key in form of Namespace_Name.  This is NOT the normal key structure of ns/name because
-// it is not safe to use / in names of router config files.  This allows templates to use this key without having
-// to create (or provide) a separate method
-func (r *templateRouter) routeKey(route *routeapi.Route) string {
-	name := controller.GetSafeRouteName(route.Name)
+// routeKey generates route key. This allows templates to use this key without having to create a separate method
+func routeKey(route *routeapi.Route) string {
+	return routeKeyFromParts(route.Namespace, controller.GetSafeRouteName(route.Name))
+}
 
-	// Namespace can contain dashes, so ${namespace}-${name} is not
-	// unique, use an underscore instead - ${namespace}_${name} akin
-	// to the way domain keys/service records use it ala
-	// _$service.$proto.$name.
-	// Note here that underscore (_) is not a valid DNS character and
-	// is just used for the key name and not for the record/route name.
-	// This also helps the use case for the key used as a router config
-	// file name.
-	return fmt.Sprintf("%s:%s", route.Namespace, name)
+func routeKeyFromParts(namespace, name string) string {
+	return fmt.Sprintf("%s%s%s", namespace, routeKeySeparator, name)
+}
+
+func getPartsFromRouteKey(key string) (string, string) {
+	tokens := strings.SplitN(key, routeKeySeparator, 2)
+	if len(tokens) != 2 {
+		glog.Errorf("Expected separator %q not found in route key %q", routeKeySeparator, key)
+	}
+	namespace := tokens[0]
+	name := tokens[1]
+	return namespace, name
 }
 
 // createServiceAliasConfig creates a ServiceAliasConfig from a route and the router state.
 // The router state is not modified in the process, so referenced ServiceUnits may not exist.
-func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKey string) *ServiceAliasConfig {
+func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, backendKey string) *ServiceAliasConfig {
 	wantsWildcardSupport := (route.Spec.WildcardPolicy == routeapi.WildcardPolicySubdomain)
 
 	// The router config trumps what the route asks for/wants.
@@ -714,7 +598,7 @@ func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKe
 		config.PreferPort = route.Spec.Port.TargetPort.String()
 	}
 
-	key := fmt.Sprintf("%s %s", config.TLSTermination, routeKey)
+	key := fmt.Sprintf("%s %s", config.TLSTermination, backendKey)
 	config.RoutingKeyName = fmt.Sprintf("%x", md5.Sum([]byte(key)))
 
 	tls := route.Spec.TLS
@@ -733,7 +617,7 @@ func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKe
 			if len(tls.Certificate) > 0 {
 				certKey := generateCertKey(&config)
 				cert := Certificate{
-					ID:         routeKey,
+					ID:         backendKey,
 					Contents:   tls.Certificate,
 					PrivateKey: tls.Key,
 				}
@@ -744,7 +628,7 @@ func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKe
 			if len(tls.CACertificate) > 0 {
 				caCertKey := generateCACertKey(&config)
 				caCert := Certificate{
-					ID:       routeKey,
+					ID:       backendKey,
 					Contents: tls.CACertificate,
 				}
 
@@ -754,7 +638,7 @@ func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKe
 			if len(tls.DestinationCACertificate) > 0 {
 				destCertKey := generateDestCertKey(&config)
 				destCert := Certificate{
-					ID:       routeKey,
+					ID:       backendKey,
 					Contents: tls.DestinationCACertificate,
 				}
 
@@ -769,7 +653,7 @@ func (r *templateRouter) createServiceAliasConfig(route *routeapi.Route, routeKe
 // AddRoute adds the given route to the router state if the route
 // hasn't been seen before or has changed since it was last seen.
 func (r *templateRouter) AddRoute(route *routeapi.Route) {
-	backendKey := r.routeKey(route)
+	backendKey := routeKey(route)
 
 	newConfig := r.createServiceAliasConfig(route, backendKey)
 
@@ -820,14 +704,14 @@ func (r *templateRouter) RemoveRoute(route *routeapi.Route) {
 // removeRouteInternal removes the given route - internal
 // lockless form, caller needs to ensure lock acquisition [and release].
 func (r *templateRouter) removeRouteInternal(route *routeapi.Route) {
-	routeKey := r.routeKey(route)
-	serviceAliasConfig, ok := r.state[routeKey]
+	backendKey := routeKey(route)
+	serviceAliasConfig, ok := r.state[backendKey]
 	if !ok {
 		return
 	}
 
 	r.cleanUpServiceAliasConfig(&serviceAliasConfig)
-	delete(r.state, routeKey)
+	delete(r.state, backendKey)
 	r.stateChanged = true
 }
 
@@ -946,7 +830,7 @@ func (r *templateRouter) shouldWriteCerts(cfg *ServiceAliasConfig) bool {
 func (r *templateRouter) HasRoute(route *routeapi.Route) bool {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	key := r.routeKey(route)
+	key := routeKey(route)
 	_, ok := r.state[key]
 	return ok
 }
@@ -997,7 +881,7 @@ type endpointsCounter func(key string) int32
 // The above assumes roundRobin scheduling.
 func getServiceUnits(counter endpointsCounter, route *routeapi.Route) map[string]int32 {
 	serviceUnits := make(map[string]int32)
-	key := fmt.Sprintf("%s/%s", route.Namespace, route.Spec.To.Name)
+	key := endpointsKeyFromParts(route.Namespace, route.Spec.To.Name)
 
 	// find the maximum weight
 	var maxWeight int32 = 1

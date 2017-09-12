@@ -35,11 +35,11 @@ import (
 	"k8s.io/kubernetes/pkg/quota"
 	"k8s.io/kubernetes/test/e2e/framework"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deployutil "github.com/openshift/origin/pkg/apps/util"
 	authapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
 	buildapi "github.com/openshift/origin/pkg/build/apis/build"
 	"github.com/openshift/origin/pkg/client"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deployutil "github.com/openshift/origin/pkg/deploy/util"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 	"github.com/openshift/origin/pkg/util/namer"
 	"github.com/openshift/origin/test/extended/testdata"
@@ -1148,6 +1148,8 @@ func FixturePath(elem ...string) string {
 	case len(elem) == 0:
 		panic("must specify path")
 	case len(elem) > 3 && elem[0] == ".." && elem[1] == ".." && elem[2] == "examples":
+		elem = elem[2:]
+	case len(elem) > 3 && elem[0] == ".." && elem[1] == ".." && elem[2] == "install":
 		elem = elem[2:]
 	case len(elem) > 3 && elem[0] == ".." && elem[1] == "integration":
 		elem = append([]string{"test"}, elem[1:]...)

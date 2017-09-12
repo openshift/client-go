@@ -15,9 +15,9 @@ import (
 	kapi "k8s.io/kubernetes/pkg/api"
 	kclientset "k8s.io/kubernetes/pkg/client/clientset_generated/internalclientset"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
 	authorizationapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
 	osclient "github.com/openshift/origin/pkg/client"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
 	"github.com/openshift/origin/pkg/diagnostics/types"
 )
 
@@ -47,7 +47,7 @@ A router is not strictly required; however it is needed for accessing
 pods from external networks and its absence likely indicates an incomplete
 installation of the cluster.
 
-Use the 'oadm router' command to create a router.
+Use the 'oc adm router' command to create a router.
 `
 	clGetRtFailed = `
 Client error while retrieving "%s" DC. Client retrieved records

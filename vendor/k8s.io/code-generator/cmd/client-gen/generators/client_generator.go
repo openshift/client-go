@@ -22,16 +22,16 @@ import (
 	"path/filepath"
 	"strings"
 
+	"k8s.io/gengo/args"
+	"k8s.io/gengo/generator"
+	"k8s.io/gengo/namer"
+	"k8s.io/gengo/types"
 	clientgenargs "k8s.io/code-generator/cmd/client-gen/args"
 	"k8s.io/code-generator/cmd/client-gen/generators/fake"
 	"k8s.io/code-generator/cmd/client-gen/generators/scheme"
 	"k8s.io/code-generator/cmd/client-gen/generators/util"
 	"k8s.io/code-generator/cmd/client-gen/path"
 	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
-	"k8s.io/gengo/args"
-	"k8s.io/gengo/generator"
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/types"
 
 	"github.com/golang/glog"
 )
@@ -39,16 +39,26 @@ import (
 // NameSystems returns the name system used by the generators in this package.
 func NameSystems() namer.NameSystems {
 	pluralExceptions := map[string]string{
-		"Endpoints": "Endpoints",
+		"Endpoints":                  "Endpoints",
+		"SecurityContextConstraints": "SecurityContextConstraints",
 	}
 	lowercaseNamer := namer.NewAllLowercasePluralNamer(pluralExceptions)
 
 	publicNamer := &ExceptionNamer{
 		Exceptions: map[string]string{
-		// these exceptions are used to deconflict the generated code
-		// you can put your fully qualified package like
-		// to generate a name that doesn't conflict with your group.
-		// "k8s.io/apis/events/v1alpha1.Event": "EventResource"
+			// these exceptions are used to deconflict the generated code
+			"github.com/openshift/origin/pkg/build/apis/build/v1.Build":          "BuildResource",
+			"github.com/openshift/origin/pkg/build/apis/build.Build":             "BuildResource",
+			"github.com/openshift/origin/pkg/image/apis/image/v1.Image":          "ImageResource",
+			"github.com/openshift/origin/pkg/image/apis/image.Image":             "ImageResource",
+			"github.com/openshift/origin/pkg/project/apis/project/v1.Project":    "ProjectResource",
+			"github.com/openshift/origin/pkg/project/apis/project.Project":       "ProjectResource",
+			"github.com/openshift/origin/pkg/route/apis/route/v1.Route":          "RouteResource",
+			"github.com/openshift/origin/pkg/route/apis/route.Route":             "RouteResource",
+			"github.com/openshift/origin/pkg/template/apis/template/v1.Template": "TemplateResource",
+			"github.com/openshift/origin/pkg/template/apis/template.Template":    "TemplateResource",
+			"github.com/openshift/origin/pkg/user/apis/user/v1.User":             "UserResource",
+			"github.com/openshift/origin/pkg/user/apis/user.User":                "UserResource",
 		},
 		KeyFunc: func(t *types.Type) string {
 			return t.Name.Package + "." + t.Name.Name
@@ -57,10 +67,19 @@ func NameSystems() namer.NameSystems {
 	}
 	privateNamer := &ExceptionNamer{
 		Exceptions: map[string]string{
-		// these exceptions are used to deconflict the generated code
-		// you can put your fully qualified package like
-		// to generate a name that doesn't conflict with your group.
-		// "k8s.io/apis/events/v1alpha1.Event": "eventResource"
+			// these exceptions are used to deconflict the generated code
+			"github.com/openshift/origin/pkg/build/apis/build/v1.Build":          "buildResource",
+			"github.com/openshift/origin/pkg/build/apis/build.Build":             "buildResource",
+			"github.com/openshift/origin/pkg/image/apis/image/v1.Image":          "imageResource",
+			"github.com/openshift/origin/pkg/image/apis/image.Image":             "imageResource",
+			"github.com/openshift/origin/pkg/project/apis/project/v1.Project":    "projectResource",
+			"github.com/openshift/origin/pkg/project/apis/project.Project":       "projectResource",
+			"github.com/openshift/origin/pkg/route/apis/route/v1.Route":          "routeResource",
+			"github.com/openshift/origin/pkg/route/apis/route.Route":             "routeResource",
+			"github.com/openshift/origin/pkg/template/apis/template/v1.Template": "templateResource",
+			"github.com/openshift/origin/pkg/template/apis/template.Template":    "templateResource",
+			"github.com/openshift/origin/pkg/user/apis/user/v1.User":             "userResource",
+			"github.com/openshift/origin/pkg/user/apis/user.User":                "userResource",
 		},
 		KeyFunc: func(t *types.Type) string {
 			return t.Name.Package + "." + t.Name.Name
@@ -80,8 +99,6 @@ func NameSystems() namer.NameSystems {
 	}
 }
 
-// ExceptionNamer allows you specify exceptional cases with exact names.  This allows you to have control
-// for handling various conflicts, like group and resource names for instance.
 type ExceptionNamer struct {
 	Exceptions map[string]string
 	KeyFunc    func(*types.Type) string
@@ -89,12 +106,12 @@ type ExceptionNamer struct {
 	Delegate namer.Namer
 }
 
-// Name provides the requested name for a type.
 func (n *ExceptionNamer) Name(t *types.Type) string {
 	key := n.KeyFunc(t)
 	if exception, ok := n.Exceptions[key]; ok {
 		return exception
 	}
+
 	return n.Delegate.Name(t)
 }
 
@@ -342,7 +359,7 @@ func Packages(context *generator.Context, arguments *args.GeneratorArgs) generat
 				}
 			} else {
 				// User has not specified any override for this group version.
-				// filter out types which dont have genclient.
+				// filter out types which dont have genclient=true.
 				if tags := util.MustParseClientGenTags(t.SecondClosestCommentLines); !tags.GenerateClient {
 					continue
 				}

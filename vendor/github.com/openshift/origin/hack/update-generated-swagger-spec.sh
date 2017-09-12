@@ -49,7 +49,7 @@ generated_file="${SWAGGER_SPEC_OUT_DIR}/openshift-openapi-spec.json"
 oc get --raw "/swagger.json" --config="${MASTER_CONFIG_DIR}/admin.kubeconfig" > "${generated_file}"
 
 os::util::sed 's|https://127.0.0.1:38443|https://127.0.0.1:8443|g' "${generated_file}"
-os::util::sed -E 's|"version": "[^\"]+"|"version": "latest"|g' "${generated_file}"
+os::util::sed -E '0,/"version":/ s|"version": "[^\"]+"|"version": "latest"|g' "${generated_file}"
 os::util::sed '$a\' "${generated_file}" # add eof newline if it is missing
 
 # Copy all protobuf generated specs into the api/protobuf-spec directory
@@ -70,3 +70,5 @@ for proto_file in $( find "${OS_ROOT}/pkg" "${OS_ROOT}/vendor/k8s.io/kubernetes/
 
     cp "${proto_file}" "${proto_spec_out_dir}/${openapi_file}"
 done
+
+go run tools/genapidocs/genapidocs.go "${OS_ROOT}/${SWAGGER_SPEC_REL_DIR}/api/docs"

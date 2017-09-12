@@ -22,9 +22,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apiserver/pkg/authentication/user"
 	apirequest "k8s.io/apiserver/pkg/endpoints/request"
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
-	"k8s.io/apiserver/pkg/server/httplog"
 
 	"github.com/golang/glog"
 )
@@ -89,11 +89,23 @@ func WithMaxInFlightLimit(
 		if c == nil {
 			handler.ServeHTTP(w, r)
 		} else {
+
 			select {
 			case c <- true:
 				defer func() { <-c }()
 				handler.ServeHTTP(w, r)
+
 			default:
+				// at this point we're about to return a 429, BUT not all actors should be rate limited.  A system:master is so powerful
+				// that he should always get an answer.  It's a super-admin or a loopback connection.
+				if currUser, ok := apirequest.UserFrom(ctx); ok {
+					for _, group := range currUser.GetGroups() {
+						if group == user.SystemPrivilegedGroup {
+							handler.ServeHTTP(w, r)
+							return
+						}
+					}
+				}
 				tooManyRequests(r, w)
 			}
 		}
@@ -101,10 +113,6 @@ func WithMaxInFlightLimit(
 }
 
 func tooManyRequests(req *http.Request, w http.ResponseWriter) {
-	// "Too Many Requests" response is returned before logger is setup for the request.
-	// So we need to explicitly log it here.
-	defer httplog.NewLogged(req, &w).Log()
-
 	// Return a 429 status indicating "Too Many Requests"
 	w.Header().Set("Retry-After", retryAfter)
 	http.Error(w, "Too many requests, please try again later.", errors.StatusTooManyRequests)

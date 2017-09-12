@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -14,9 +15,9 @@ import (
 	"github.com/openshift/origin/pkg/authorization/authorizer/scope"
 	configapi "github.com/openshift/origin/pkg/cmd/server/api"
 	"github.com/openshift/origin/pkg/cmd/server/bootstrappolicy"
-	"github.com/openshift/origin/pkg/cmd/server/origin"
 	"github.com/openshift/origin/pkg/cmd/util/clientcmd"
 	oauthapi "github.com/openshift/origin/pkg/oauth/apis/oauth"
+	oauthapiserver "github.com/openshift/origin/pkg/oauth/apiserver"
 	"github.com/openshift/origin/pkg/oc/admin/policy"
 	testutil "github.com/openshift/origin/test/util"
 	testserver "github.com/openshift/origin/test/util/server"
@@ -52,6 +53,15 @@ func TestNodeAuth(t *testing.T) {
 
 	// Client configs for lesser users
 	masterKubeletClientConfig := configapi.GetKubeletClientConfig(*masterConfig)
+	_, nodePort, err := net.SplitHostPort(nodeConfig.ServingInfo.BindAddress)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	nodePortInt, err := strconv.ParseInt(nodePort, 0, 0)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	masterKubeletClientConfig.Port = uint(nodePortInt)
 
 	anonymousConfig := clientcmd.AnonymousClientConfig(adminConfig)
 
@@ -80,7 +90,7 @@ func TestNodeAuth(t *testing.T) {
 	}
 	whoamiOnlyBobToken := &oauthapi.OAuthAccessToken{
 		ObjectMeta: metav1.ObjectMeta{Name: "whoami-token-plus-some-padding-here-to-make-the-limit"},
-		ClientName: origin.OpenShiftCLIClientID,
+		ClientName: oauthapiserver.OpenShiftCLIClientID,
 		ExpiresIn:  200,
 		Scopes:     []string{scope.UserInfo},
 		UserName:   bobUser.Name,
@@ -110,20 +120,10 @@ func TestNodeAuth(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	_, nodePort, err := net.SplitHostPort(nodeConfig.ServingInfo.BindAddress)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	nodePortInt, err := strconv.ParseInt(nodePort, 0, 0)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	nodeTLS := configapi.UseTLS(nodeConfig.ServingInfo)
-
 	kubeletClientConfig := func(config *restclient.Config) *kubeletclient.KubeletClientConfig {
 		return &kubeletclient.KubeletClientConfig{
 			Port:            uint(nodePortInt),
-			EnableHttps:     nodeTLS,
+			EnableHttps:     true,
 			TLSClientConfig: config.TLSClientConfig,
 			BearerToken:     config.BearerToken,
 		}
@@ -239,7 +239,7 @@ func TestNodeAuth(t *testing.T) {
 		}
 
 		for _, r := range requests {
-			req, err := http.NewRequest(r.Method, "https://"+nodeConfig.NodeName+":10250"+r.Path, nil)
+			req, err := http.NewRequest(r.Method, fmt.Sprintf("https://%s:%d", nodeConfig.NodeName, nodePortInt)+r.Path, nil)
 			if err != nil {
 				t.Errorf("%s: %s: unexpected error: %v", k, r.Path, err)
 				continue

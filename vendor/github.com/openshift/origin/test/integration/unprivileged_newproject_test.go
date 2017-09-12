@@ -20,14 +20,16 @@ import (
 
 	// make sure all generated clients compile
 	// these are only here because it's the spot I chose to use a generated clientset for a test
+	_ "github.com/openshift/origin/pkg/apps/generated/clientset"
+	_ "github.com/openshift/origin/pkg/apps/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/authorization/generated/clientset"
 	_ "github.com/openshift/origin/pkg/authorization/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/build/generated/clientset"
 	_ "github.com/openshift/origin/pkg/build/generated/internalclientset"
-	_ "github.com/openshift/origin/pkg/deploy/generated/clientset"
-	_ "github.com/openshift/origin/pkg/deploy/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/image/generated/clientset"
 	_ "github.com/openshift/origin/pkg/image/generated/internalclientset"
+	_ "github.com/openshift/origin/pkg/network/generated/clientset"
+	_ "github.com/openshift/origin/pkg/network/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/oauth/generated/clientset"
 	_ "github.com/openshift/origin/pkg/oauth/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/project/generated/clientset"
@@ -36,8 +38,6 @@ import (
 	_ "github.com/openshift/origin/pkg/quota/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/route/generated/clientset"
 	_ "github.com/openshift/origin/pkg/route/generated/internalclientset"
-	_ "github.com/openshift/origin/pkg/sdn/generated/clientset"
-	_ "github.com/openshift/origin/pkg/sdn/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/template/generated/clientset"
 	_ "github.com/openshift/origin/pkg/template/generated/internalclientset"
 	_ "github.com/openshift/origin/pkg/user/generated/clientset"

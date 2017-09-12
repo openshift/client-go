@@ -94,6 +94,10 @@ const (
 	ImageSignatureTypeAtomicImageV1 string = "AtomicImageV1"
 )
 
+// +genclient
+// +genclient:onlyVerbs=create,delete
+// +genclient:nonNamespaced
+
 // ImageSignature holds a signature of an image. It allows to verify image identity and possibly other claims
 // as long as the signature is trusted. Based on this information it is possible to restrict runnable images
 // to those matching cluster-wide policy.
@@ -193,6 +197,7 @@ type ImageStreamList struct {
 }
 
 // +genclient
+// +genclient:method=Secrets,verb=list,subresource=secrets,result=k8s.io/kubernetes/pkg/api.Secret
 
 // ImageStream stores a mapping of tags to images, metadata overrides that are applied
 // when images are tagged in a stream, and an optional reference to a Docker image
@@ -212,6 +217,8 @@ type ImageStreamSpec struct {
 	// lookupPolicy controls how other resources reference images within this namespace.
 	LookupPolicy ImageLookupPolicy
 	// Optional, if specified this stream is backed by a Docker repository on this server
+	// Deprecated: This field is deprecated as of v3.7 and will be removed in a future release.
+	// Specify the source for the tags to be imported in each tag via the spec.tags.from reference instead.
 	DockerImageRepository string
 	// Tags map arbitrary string values to specific image locators
 	Tags map[string]TagReference
@@ -251,7 +258,7 @@ type TagReference struct {
 	Generation *int64
 	// ImportPolicy is information that controls how images may be imported by the server.
 	ImportPolicy TagImportPolicy
-	// ReferencePolicy defines how other components should consume the image
+	// ReferencePolicy defines how other components should consume the image.
 	ReferencePolicy TagReferencePolicy
 }
 
@@ -351,6 +358,9 @@ type TagEventCondition struct {
 	Generation int64
 }
 
+// +genclient
+// +genclient:onlyVerbs=create
+
 // ImageStreamMapping represents a mapping from a single tag to a Docker image as
 // well as the reference to the Docker image repository the image came from.
 type ImageStreamMapping struct {
@@ -366,6 +376,9 @@ type ImageStreamMapping struct {
 	// A string value this image can be located with inside the repository.
 	Tag string
 }
+
+// +genclient
+// +genclient:onlyVerbs=get,create,update,delete
 
 // ImageStreamTag has a .Name in the format <stream name>:<tag>.
 type ImageStreamTag struct {
@@ -401,6 +414,9 @@ type ImageStreamTagList struct {
 	Items []ImageStreamTag
 }
 
+// +genclient
+// +genclient:onlyVerbs=get
+
 // ImageStreamImage represents an Image that is retrieved by image name from an ImageStream.
 type ImageStreamImage struct {
 	metav1.TypeMeta
@@ -418,6 +434,9 @@ type DockerImageReference struct {
 	Tag       string
 	ID        string
 }
+
+// +genclient
+// +genclient:onlyVerbs=create
 
 // ImageStreamImport allows a caller to request information about a set of images for possible
 // import into an image stream, or actually tag the images into the image stream.

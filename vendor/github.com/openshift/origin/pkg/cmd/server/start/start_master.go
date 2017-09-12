@@ -27,13 +27,18 @@ import (
 	clientgoclientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	aggregatorinstall "k8s.io/kube-aggregator/pkg/apis/apiregistration/install"
+	kubecontroller "k8s.io/kubernetes/cmd/kube-controller-manager/app"
 	kapi "k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/capabilities"
 	kinformers "k8s.io/kubernetes/pkg/client/informers/informers_generated/externalversions"
 	"k8s.io/kubernetes/pkg/kubectl/cmd/templates"
 	kcmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
 	kubelettypes "k8s.io/kubernetes/pkg/kubelet/types"
+	"k8s.io/kubernetes/pkg/master"
+	"k8s.io/kubernetes/pkg/volume"
+	kutilerrors "k8s.io/kubernetes/staging/src/k8s.io/apimachinery/pkg/util/errors"
 
+	assetapiserver "github.com/openshift/origin/pkg/assets/apiserver"
 	"github.com/openshift/origin/pkg/cmd/server/admin"
 	configapi "github.com/openshift/origin/pkg/cmd/server/api"
 	configapilatest "github.com/openshift/origin/pkg/cmd/server/api/latest"
@@ -81,9 +86,7 @@ var masterLong = templates.LongDesc(`
 	address that will be visible inside running Docker containers. This is not always successful,
 	so if you have problems tell the master what public address it should use via --master=<ip>.
 
-	You may also pass --etcd=<address> to connect to an external etcd server.
-
-	You may also pass --kubeconfig=<path> to connect to an external Kubernetes cluster.`)
+	You may also pass --etcd=<address> to connect to an external etcd server.`)
 
 // NewCommandStartMaster provides a CLI handler for 'start master' command
 func NewCommandStartMaster(basename string, out, errout io.Writer) (*cobra.Command, *MasterOptions) {
@@ -227,9 +230,6 @@ func (o MasterOptions) RunMaster() error {
 		if err := o.CreateCerts(); err != nil {
 			return err
 		}
-		if err := o.CreateBootstrapPolicy(); err != nil {
-			return err
-		}
 	}
 
 	var masterConfig *configapi.MasterConfig
@@ -312,15 +312,6 @@ func (o MasterOptions) RunMaster() error {
 	return m.Start()
 }
 
-func (o MasterOptions) CreateBootstrapPolicy() error {
-	writeBootstrapPolicy := admin.CreateBootstrapPolicyFileOptions{
-		File: o.MasterArgs.GetPolicyFile(),
-		OpenShiftSharedResourcesNamespace: bootstrappolicy.DefaultOpenShiftSharedResourcesNamespace,
-	}
-
-	return writeBootstrapPolicy.CreateBootstrapPolicyFile()
-}
-
 func (o MasterOptions) CreateCerts() error {
 	masterAddr, err := o.MasterArgs.GetMasterAddress()
 	if err != nil {
@@ -355,18 +346,6 @@ func (o MasterOptions) CreateCerts() error {
 	}
 
 	return nil
-}
-
-func BuildKubernetesMasterConfig(openshiftConfig *origin.MasterConfig) (*kubernetes.MasterConfig, error) {
-	return kubernetes.BuildKubernetesMasterConfig(
-		openshiftConfig.Options,
-		openshiftConfig.RequestContextMapper,
-		openshiftConfig.KubeClientsetExternal(),
-		openshiftConfig.KubeClientsetInternal(),
-		openshiftConfig.KubeAdmissionControl,
-		openshiftConfig.Authenticator,
-		openshiftConfig.Authorizer,
-	)
 }
 
 // Master encapsulates starting the components of the master
@@ -428,11 +407,13 @@ func (m *Master) Start() error {
 			return err
 		}
 
-		// you can't double run healthz, so only do this next bit if we aren't starting the API
+		imageTemplate := variable.NewDefaultImageTemplate()
+		imageTemplate.Format = m.config.ImageConfig.Format
+		imageTemplate.Latest = m.config.ImageConfig.Latest
+		volume.NewPersistentVolumeRecyclerPodTemplate = newPersistentVolumeRecyclerPodTemplate(imageTemplate.ExpandOrDie("recycler"))
+
 		if !m.api {
-			imageTemplate := variable.NewDefaultImageTemplate()
-			imageTemplate.Format = m.config.ImageConfig.Format
-			imageTemplate.Latest = m.config.ImageConfig.Latest
+			// you can't double run healthz, so only do this next bit if we aren't starting the API
 
 			glog.Infof("Starting controllers on %s (%s)", m.config.ServingInfo.BindAddress, version.Get().String())
 			if len(m.config.DisabledFeatures) > 0 {
@@ -494,12 +475,15 @@ func (m *Master) Start() error {
 		go func() {
 			controllerPlug.WaitForStart()
 
+			// continuously run the scheduler while we have the primary lease
+			go runEmbeddedScheduler(m.config.MasterClients.OpenShiftLoopbackKubeConfig, m.config.KubernetesMasterConfig.SchedulerConfigFile, m.config.KubernetesMasterConfig.SchedulerArguments)
+
 			controllerContext, err := getControllerContext(*m.config, kubeControllerManagerConfig, cloudProvider, informers, utilwait.NeverStop)
 			if err != nil {
 				glog.Fatal(err)
 			}
 
-			if err := startControllers(*m.config, allocationController, informers, controllerContext); err != nil {
+			if err := startControllers(*m.config, allocationController, controllerContext); err != nil {
 				glog.Fatal(err)
 			}
 
@@ -528,20 +512,29 @@ func (m *Master) Start() error {
 			return err
 		}
 
-		kubeMasterConfig, err := BuildKubernetesMasterConfig(openshiftConfig)
+		kubeAPIServerConfig, err := kubernetes.BuildKubernetesMasterConfig(
+			openshiftConfig.Options,
+			openshiftConfig.RequestContextMapper,
+			openshiftConfig.KubeAdmissionControl,
+			openshiftConfig.Authenticator,
+			openshiftConfig.Authorizer,
+		)
 		if err != nil {
 			return err
 		}
-		kubeMasterConfig.Master.GenericConfig.SharedInformerFactory = informers.GetClientGoKubeInformers()
+		kubeAPIServerConfig.GenericConfig.SharedInformerFactory = informers.GetClientGoKubeInformers()
 
 		glog.Infof("Starting master on %s (%s)", m.config.ServingInfo.BindAddress, version.Get().String())
 		glog.Infof("Public master address is %s", m.config.MasterPublicURL)
 		if len(m.config.DisabledFeatures) > 0 {
 			glog.V(4).Infof("Disabled features: %s", strings.Join(m.config.DisabledFeatures, ", "))
 		}
-		glog.Infof("Using images from %q", openshiftConfig.ImageFor("<component>"))
+		imageTemplate := variable.NewDefaultImageTemplate()
+		imageTemplate.Format = m.config.ImageConfig.Format
+		imageTemplate.Latest = m.config.ImageConfig.Latest
+		glog.Infof("Using images from %q", imageTemplate.ExpandOrDie("<component>"))
 
-		if err := StartAPI(openshiftConfig, kubeMasterConfig, informers, controllerPlug); err != nil {
+		if err := StartAPI(openshiftConfig, kubeAPIServerConfig, informers, controllerPlug); err != nil {
 			return err
 		}
 	}
@@ -553,32 +546,19 @@ func (m *Master) Start() error {
 // API and core controllers, the Origin API, the group, policy, project, and authorization caches,
 // etcd, the asset server (for the UI), the OAuth server endpoints, and the DNS server.
 // TODO: allow to be more granularly targeted
-func StartAPI(oc *origin.MasterConfig, kc *kubernetes.MasterConfig, informers *informers, controllerPlug plug.Plug) error {
+func StartAPI(oc *origin.MasterConfig, kubeAPIServerConfig *master.Config, informers *informers, controllerPlug plug.Plug) error {
 	// start etcd
 	if oc.Options.EtcdConfig != nil {
 		etcdserver.RunEtcd(oc.Options.EtcdConfig)
 	}
 
 	// verify we can connect to etcd with the provided config
-	if len(kc.Options.APIServerArguments) > 0 && len(kc.Options.APIServerArguments["storage-backend"]) > 0 && kc.Options.APIServerArguments["storage-backend"][0] == "etcd3" {
-		etcdClient, err := etcd.MakeEtcdClientV3(oc.Options.EtcdClientInfo)
-		if err != nil {
-			return err
-		}
-		if err := etcd.TestEtcdClientV3(etcdClient); err != nil {
-			return err
-		}
-	} else {
-		etcdClient, err := etcd.MakeEtcdClient(oc.Options.EtcdClientInfo)
-		if err != nil {
-			return err
-		}
-		if err := etcd.TestEtcdClient(etcdClient); err != nil {
-			return err
-		}
+	// TODO remove when this becomes a health check in 3.8
+	if err := testEtcdConnectivity(oc.Options.EtcdClientInfo); err != nil {
+		return err
 	}
 
-	if err := oc.Run(kc.Master, controllerPlug, utilwait.NeverStop); err != nil {
+	if err := oc.Run(kubeAPIServerConfig, controllerPlug, utilwait.NeverStop); err != nil {
 		return err
 	}
 
@@ -600,9 +580,31 @@ func StartAPI(oc *origin.MasterConfig, kc *kubernetes.MasterConfig, informers *i
 		if err != nil {
 			return err
 		}
-		if err := origin.RunAssetServer(assetServer, utilwait.NeverStop); err != nil {
+		if err := assetapiserver.RunAssetServer(assetServer, utilwait.NeverStop); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func testEtcdConnectivity(etcdClientInfo configapi.EtcdConnectionInfo) error {
+	// first try etcd2
+	etcdClient2, etcd2Err := etcd.MakeEtcdClient(etcdClientInfo)
+	if etcd2Err == nil {
+		etcd2Err = etcd.TestEtcdClient(etcdClient2)
+		if etcd2Err == nil {
+			return nil
+		}
+	}
+
+	// try etcd3 otherwise
+	etcdClient3, etcd3Err := etcd.MakeEtcdClientV3(etcdClientInfo)
+	if etcd3Err != nil {
+		return kutilerrors.NewAggregate([]error{etcd2Err, etcd3Err})
+	}
+	if etcd3Err := etcd.TestEtcdClientV3(etcdClient3); etcd3Err != nil {
+		return kutilerrors.NewAggregate([]error{etcd2Err, etcd3Err})
 	}
 
 	return nil
@@ -651,12 +653,8 @@ func (i genericInformers) ForResource(resource schema.GroupVersionResource) (kin
 
 // startControllers launches the controllers
 // allocation controller is passed in because it wants direct etcd access.  Naughty.
-func startControllers(options configapi.MasterConfig, allocationController origin.SecurityAllocationController, informers *informers, controllerContext origincontrollers.ControllerContext) error {
-	openshiftControllerConfig, err := origin.BuildOpenshiftControllerConfig(options, informers)
-	if err != nil {
-		return err
-	}
-	kubeControllerConfig, err := origin.BuildKubeControllerConfig(options)
+func startControllers(options configapi.MasterConfig, allocationController origin.SecurityAllocationController, controllerContext origincontrollers.ControllerContext) error {
+	openshiftControllerConfig, err := origincontrollers.BuildOpenshiftControllerConfig(options)
 	if err != nil {
 		return err
 	}
@@ -704,10 +702,8 @@ func startControllers(options configapi.MasterConfig, allocationController origi
 
 	allocationController.RunSecurityAllocationController()
 
-	kubernetesControllerInitializers, err := kubeControllerConfig.GetControllerInitializers()
-	if err != nil {
-		return err
-	}
+	// set the upstream default until it is configurable
+	kubernetesControllerInitializers := kubecontroller.NewControllerInitializers()
 	openshiftControllerInitializers, err := openshiftControllerConfig.GetControllerInitializers()
 	if err != nil {
 		return err
@@ -758,6 +754,8 @@ func getExcludedControllers(options configapi.MasterConfig) sets.String {
 		"ttl",
 		"bootstrapsigner",
 		"tokencleaner",
+		// remove the HPA controller until it is generic
+		"horizontalpodautoscaling",
 	)
 	if !configapi.IsBuildEnabled(&options) {
 		excludedControllers.Insert("openshift.io/build")
