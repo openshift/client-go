@@ -17,12 +17,15 @@ type Interface interface {
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	template *templateinternalversion.TemplateClient
+	*templateinternalversion.TemplateClient
 }
 
 // Template retrieves the TemplateClient
 func (c *Clientset) Template() templateinternalversion.TemplateInterface {
-	return c.template
+	if c == nil {
+		return nil
+	}
+	return c.TemplateClient
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -41,7 +44,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	}
 	var cs Clientset
 	var err error
-	cs.template, err = templateinternalversion.NewForConfig(&configShallowCopy)
+	cs.TemplateClient, err = templateinternalversion.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +61,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	var cs Clientset
-	cs.template = templateinternalversion.NewForConfigOrDie(c)
+	cs.TemplateClient = templateinternalversion.NewForConfigOrDie(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClientForConfigOrDie(c)
 	return &cs
@@ -67,7 +70,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.template = templateinternalversion.New(c)
+	cs.TemplateClient = templateinternalversion.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

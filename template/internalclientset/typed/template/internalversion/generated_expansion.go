@@ -2,6 +2,6 @@ package internalversion
 
 type BrokerTemplateInstanceExpansion interface{}
 
-type TemplateExpansion interface{}
+type TemplateResourceExpansion interface{}
 
 type TemplateInstanceExpansion interface{}
