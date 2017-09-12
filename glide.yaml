@@ -1,15 +1,35 @@
 package: github.com/openshift/client-go
 import:
 - package: k8s.io/gengo
+  version: master
 - package: k8s.io/code-generator
+  repo: https://github.com/openshift/kubernetes-code-generator
+  version: master
 - package: k8s.io/client-go
-  version: release-4.0
+  repo: https://github.com/openshift/kubernetes-client-go
+  version: master
 - package: k8s.io/apimachinery
-  version: release-1.7
+  repo: https://github.com/openshift/kubernetes-apimachinery
+  version: master
+- package: k8s.io/apiserver
+  repo: https://github.com/openshift/kubernetes-apiserver
+  version: master
 - package: k8s.io/kubernetes
   version: release-1.7
   subpackages:
   - pkg/api
 - package: github.com/openshift/origin
+  version: master
   subpackages:
+  - pkg/apps/apis/apps/v1
+  - pkg/authorization/apis/authorization/v1
+  - pkg/build/apis/build/v1
+  - pkg/image/apis/image/v1
+  - pkg/network/apis/network/v1
+  - pkg/oauth/apis/oauth/v1
+  - pkg/project/apis/project/v1
+  - pkg/quota/apis/quota/v1
+  - pkg/route/apis/route/v1
+  - pkg/security/apis/security/v1
   - pkg/template/apis/template/v1
+  - pkg/user/apis/user/v1
