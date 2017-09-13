@@ -20,5 +20,6 @@ generate:
 .PHONY: generate
 
 update-deps:
-	hack/glide-update.sh
+	hack/update-deps.sh
+	hack/prune-deps.sh
 .PHONY: generate
