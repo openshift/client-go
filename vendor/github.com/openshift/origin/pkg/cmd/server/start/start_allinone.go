@@ -21,13 +21,14 @@ import (
 	"k8s.io/apiserver/pkg/util/flag"
 	"k8s.io/kubernetes/pkg/kubectl/cmd/templates"
 	kcmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	"k8s.io/kubernetes/pkg/master/ports"
 
 	"github.com/openshift/origin/pkg/cmd/server/admin"
 	configapi "github.com/openshift/origin/pkg/cmd/server/api"
 	"github.com/openshift/origin/pkg/cmd/server/crypto"
 	"github.com/openshift/origin/pkg/cmd/server/start/kubernetes"
 	cmdutil "github.com/openshift/origin/pkg/cmd/util"
-	tsbcmd "github.com/openshift/origin/pkg/openservicebroker/cmd/server"
+	tsbcmd "github.com/openshift/origin/pkg/templateservicebroker/cmd/server"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
@@ -62,9 +63,7 @@ var allInOneLong = templates.LongDesc(`
 	address that will be visible inside running Docker containers. This is not always successful,
 	so if you have problems tell OpenShift what public address it will be via --master=<ip>.
 
-	You may also pass --etcd=<address> to connect to an external etcd server.
-
-	You may also pass --kubeconfig=<path> to connect to an external Kubernetes cluster.`)
+	You may also pass --etcd=<address> to connect to an external etcd server.`)
 
 // NewCommandStartAllInOne provides a CLI handler for 'start' command
 func NewCommandStartAllInOne(basename string, out, errout io.Writer) (*cobra.Command, *AllInOneOptions) {
@@ -241,6 +240,14 @@ func (o *AllInOneOptions) Complete() error {
 	o.NodeArgs.DefaultKubernetesURL = masterAddr
 	o.NodeArgs.NodeName = strings.ToLower(o.NodeArgs.NodeName)
 	o.NodeArgs.MasterCertDir = o.MasterOptions.MasterArgs.ConfigDir.Value()
+
+	// if the node listen argument inherits the master listen argument, specialize it now to its own value so
+	// that the kubelet can have a customizable port
+	if o.NodeArgs.ListenArg == o.MasterOptions.MasterArgs.ListenArg {
+		o.NodeArgs.ListenArg = NewDefaultListenArg()
+		o.NodeArgs.ListenArg.ListenAddr.Set(fmt.Sprintf("%s:%d", o.MasterOptions.MasterArgs.ListenArg.ListenAddr.Host, ports.KubeletPort))
+		o.NodeArgs.ListenArg.ListenAddr.Default()
+	}
 
 	// For backward compatibility of DNS queries to the master service IP, enabling node DNS
 	// continues to start the master DNS, but the container DNS server will be the node's.

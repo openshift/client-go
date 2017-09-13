@@ -284,11 +284,6 @@ type MasterConfig struct {
 	// AuditConfig holds information related to auditing capabilities.
 	AuditConfig AuditConfig `json:"auditConfig"`
 
-	// TemplateServiceBrokerConfig holds information related to the template
-	// service broker.  The broker is enabled if TemplateServiceBrokerConfig is
-	// non-nil.
-	TemplateServiceBrokerConfig *TemplateServiceBrokerConfig `json:"templateServiceBrokerConfig"`
-
 	// DisableOpenAPI avoids starting the openapi endpoint because it is very expensive.
 	// This option will be removed at a later time.  It is never serialized.
 	DisableOpenAPI bool `json:"-"`
@@ -377,6 +372,16 @@ type ImagePolicyConfig struct {
 	// this policy - typically only administrators or system integrations will have those
 	// permissions.
 	AllowedRegistriesForImport *AllowedRegistries `json:"allowedRegistriesForImport,omitempty"`
+	// InternalRegistryHostname sets the hostname for the default internal image
+	// registry. The value must be in "hostname[:port]" format.
+	// For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY
+	// environment variable but this setting overrides the environment variable.
+	InternalRegistryHostname string `json:"internalRegistryHostname,omitempty"`
+	// ExternalRegistryHostname sets the hostname for the default external image
+	// registry. The external hostname should be set only when the image registry
+	// is exposed externally. The value is used in 'publicDockerImageRepository'
+	// field in ImageStreams. The value must be in "hostname[:port]" format.
+	ExternalRegistryHostname string `json:"externalRegistryHostname,omitempty"`
 }
 
 // AllowedRegistries represents a list of registries allowed for the image import.
@@ -1404,12 +1409,4 @@ type DefaultAdmissionConfig struct {
 
 	// Disable turns off an admission plugin that is enabled by default.
 	Disable bool `json:"disable"`
-}
-
-// TemplateServiceBrokerConfig holds information related to the template
-// service broker
-type TemplateServiceBrokerConfig struct {
-	// TemplateNamespaces indicates the namespace(s) in which the template service
-	// broker looks for templates to serve to the catalog.
-	TemplateNamespaces []string `json:"templateNamespaces"`
 }

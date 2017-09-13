@@ -11,10 +11,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/diff"
 	"k8s.io/kubernetes/pkg/api"
+	"k8s.io/kubernetes/pkg/apis/rbac"
+	"k8s.io/kubernetes/pkg/apis/rbac/v1beta1"
+	rulevalidation "k8s.io/kubernetes/pkg/registry/rbac/validation"
 
 	"github.com/openshift/origin/pkg/api/v1"
-	authorizationapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
-	"github.com/openshift/origin/pkg/authorization/rulevalidation"
 	"github.com/openshift/origin/pkg/cmd/server/bootstrappolicy"
 
 	// install all APIs
@@ -64,11 +65,11 @@ func testObjects(t *testing.T, list *api.List, fixtureFilename string) {
 		t.Fatal(err)
 	}
 
-	if err := runtime.EncodeList(api.Codecs.LegacyCodec(v1.SchemeGroupVersion), list.Items); err != nil {
+	if err := runtime.EncodeList(api.Codecs.LegacyCodec(v1beta1.SchemeGroupVersion, v1.SchemeGroupVersion), list.Items); err != nil {
 		t.Fatal(err)
 	}
 
-	jsonData, err := runtime.Encode(api.Codecs.LegacyCodec(v1.SchemeGroupVersion), list)
+	jsonData, err := runtime.Encode(api.Codecs.LegacyCodec(v1beta1.SchemeGroupVersion, v1.SchemeGroupVersion), list)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,17 +98,17 @@ func testObjects(t *testing.T, list *api.List, fixtureFilename string) {
 // Some roles should always cover others
 func TestCovers(t *testing.T) {
 	allRoles := bootstrappolicy.GetBootstrapClusterRoles()
-	var admin *authorizationapi.ClusterRole
-	var editor *authorizationapi.ClusterRole
-	var viewer *authorizationapi.ClusterRole
-	var registryAdmin *authorizationapi.ClusterRole
-	var registryEditor *authorizationapi.ClusterRole
-	var registryViewer *authorizationapi.ClusterRole
-	var systemMaster *authorizationapi.ClusterRole
-	var systemDiscovery *authorizationapi.ClusterRole
-	var clusterAdmin *authorizationapi.ClusterRole
-	var storageAdmin *authorizationapi.ClusterRole
-	var imageBuilder *authorizationapi.ClusterRole
+	var admin *rbac.ClusterRole
+	var editor *rbac.ClusterRole
+	var viewer *rbac.ClusterRole
+	var registryAdmin *rbac.ClusterRole
+	var registryEditor *rbac.ClusterRole
+	var registryViewer *rbac.ClusterRole
+	var systemMaster *rbac.ClusterRole
+	var systemDiscovery *rbac.ClusterRole
+	var clusterAdmin *rbac.ClusterRole
+	var storageAdmin *rbac.ClusterRole
+	var imageBuilder *rbac.ClusterRole
 
 	for i := range allRoles {
 		role := allRoles[i]

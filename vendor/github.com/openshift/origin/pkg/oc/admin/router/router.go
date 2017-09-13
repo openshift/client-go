@@ -30,9 +30,9 @@ import (
 	cmdutil "github.com/openshift/origin/pkg/cmd/util"
 	"github.com/openshift/origin/pkg/cmd/util/clientcmd"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
 	"github.com/openshift/origin/pkg/cmd/util/variable"
 	configcmd "github.com/openshift/origin/pkg/config/cmd"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
 	"github.com/openshift/origin/pkg/generate/app"
 	"github.com/openshift/origin/pkg/security/legacyclient"
 	oscc "github.com/openshift/origin/pkg/security/securitycontextconstraints"
@@ -362,7 +362,7 @@ func generateSecretsConfig(cfg *RouterConfig, namespace string, defaultCert []by
 	}
 
 	if len(defaultCert) > 0 {
-		// When the user sets the default cert from the "oadm router --default-cert ..."
+		// When the user sets the default cert from the "oc adm router --default-cert ..."
 		// command we end up here. In this case the default cert must be in pem format.
 		// The secret has a crt and key. The crt contains the supplied default cert (pem)
 		// and the key is extracted from the default cert but its ultimately not used.
@@ -622,9 +622,6 @@ func RunCmdRouter(f *clientcmd.Factory, cmd *cobra.Command, out, errout io.Write
 
 	// create new router
 	secretEnv := app.Environment{}
-	if len(cfg.ServiceAccount) == 0 {
-		return fmt.Errorf("router could not be created; you must specify a service account with --service-account")
-	}
 
 	defaultCert, err := fileutil.LoadData(cfg.DefaultCertificate)
 	if err != nil {
@@ -831,7 +828,7 @@ func RunCmdRouter(f *clientcmd.Factory, cmd *cobra.Command, out, errout io.Write
 	}
 
 	levelPrefixFilter := func(e error) string {
-		// ignore SA/RB errors if we were creating the service account
+		// Avoid failing when service accounts or role bindings already exist.
 		if ignoreError(e, cfg.ServiceAccount, generateRoleBindingName(cfg.Name)) {
 			return "warning"
 		}
@@ -849,8 +846,8 @@ func RunCmdRouter(f *clientcmd.Factory, cmd *cobra.Command, out, errout io.Write
 }
 
 // ignoreError will return true if the error is an already exists status error and
-// 1. it is for a cluster role binding named roleBindingName
-// 2. it is for a serivce account name saName
+// 1. it is for a cluster role binding named roleBindingName, or
+// 2. it is for a service account name saName
 func ignoreError(e error, saName string, roleBindingName string) bool {
 	if !errors.IsAlreadyExists(e) {
 		return false
@@ -864,7 +861,8 @@ func ignoreError(e error, saName string, roleBindingName string) bool {
 		return false
 	}
 	return (details.Kind == "serviceaccounts" && details.Name == saName) ||
-		(details.Kind == "clusterrolebinding" && details.Name == roleBindingName)
+		(details.Kind == "clusterrolebinding" /*pre-3.7*/ && details.Name == roleBindingName) ||
+		(details.Kind == "clusterrolebindings" /*3.7+*/ && details.Name == roleBindingName)
 }
 
 // generateRoleBindingName generates a name for the rolebinding object if it is
@@ -913,11 +911,11 @@ func validateServiceAccount(client kclientset.Interface, ns string, serviceAccou
 	}
 
 	if hostNetwork {
-		errMsg := "service account %q is not allowed to access the host network on nodes, grant access with oadm policy add-scc-to-user %s -z %s"
+		errMsg := "service account %q is not allowed to access the host network on nodes, grant access with oc adm policy add-scc-to-user %s -z %s"
 		return fmt.Errorf(errMsg, serviceAccount, bootstrappolicy.SecurityContextConstraintsHostNetwork, serviceAccount)
 	}
 	if hostPorts {
-		errMsg := "service account %q is not allowed to access host ports on nodes, grant access with oadm policy add-scc-to-user %s -z %s"
+		errMsg := "service account %q is not allowed to access host ports on nodes, grant access with oc adm policy add-scc-to-user %s -z %s"
 		return fmt.Errorf(errMsg, serviceAccount, bootstrappolicy.SecurityContextConstraintsHostNetwork, serviceAccount)
 	}
 	return nil

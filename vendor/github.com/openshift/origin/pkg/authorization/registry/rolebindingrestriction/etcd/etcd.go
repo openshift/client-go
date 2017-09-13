@@ -21,18 +21,17 @@ var _ rest.StandardStorage = &REST{}
 // NewREST returns a RESTStorage object that will work against nodes.
 func NewREST(optsGetter restoptions.Getter) (*REST, error) {
 	store := &registry.Store{
-		Copier:            kapi.Scheme,
-		NewFunc:           func() runtime.Object { return &authorizationapi.RoleBindingRestriction{} },
-		NewListFunc:       func() runtime.Object { return &authorizationapi.RoleBindingRestrictionList{} },
-		QualifiedResource: authorizationapi.Resource("rolebindingrestrictions"),
-		PredicateFunc:     rolebindingrestriction.Matcher,
+		Copier:                   kapi.Scheme,
+		NewFunc:                  func() runtime.Object { return &authorizationapi.RoleBindingRestriction{} },
+		NewListFunc:              func() runtime.Object { return &authorizationapi.RoleBindingRestrictionList{} },
+		DefaultQualifiedResource: authorizationapi.Resource("rolebindingrestrictions"),
 
 		CreateStrategy: rolebindingrestriction.Strategy,
 		UpdateStrategy: rolebindingrestriction.Strategy,
 		DeleteStrategy: rolebindingrestriction.Strategy,
 	}
 
-	options := &generic.StoreOptions{RESTOptions: optsGetter, AttrFunc: rolebindingrestriction.GetAttrs}
+	options := &generic.StoreOptions{RESTOptions: optsGetter}
 	if err := store.CompleteWithOptions(options); err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ func (c *FakeTemplateV1) BrokerTemplateInstances() v1.BrokerTemplateInstanceInte
 	return &FakeBrokerTemplateInstances{c}
 }
 
-func (c *FakeTemplateV1) Templates(namespace string) v1.TemplateInterface {
+func (c *FakeTemplateV1) Templates(namespace string) v1.TemplateResourceInterface {
 	return &FakeTemplates{c, namespace}
 }
 

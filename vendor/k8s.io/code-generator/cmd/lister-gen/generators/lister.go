@@ -36,7 +36,8 @@ import (
 // NameSystems returns the name system used by the generators in this package.
 func NameSystems() namer.NameSystems {
 	pluralExceptions := map[string]string{
-		"Endpoints": "Endpoints",
+		"Endpoints":                  "Endpoints",
+		"SecurityContextConstraints": "SecurityContextConstraints",
 	}
 	return namer.NameSystems{
 		"public":             namer.NewPublicNamer(0),
@@ -172,7 +173,7 @@ func Packages(context *generator.Context, arguments *args.GeneratorArgs) generat
 func objectMetaForPackage(p *types.Package) (*types.Type, bool, error) {
 	generatingForPackage := false
 	for _, t := range p.Types {
-		// filter out types which dont have genclient.
+		// filter out types which dont have genclient=true.
 		if !util.MustParseClientGenTags(t.SecondClosestCommentLines).GenerateClient {
 			continue
 		}

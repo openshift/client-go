@@ -21,10 +21,9 @@ import (
 	etcdtesting "k8s.io/apiserver/pkg/storage/etcd/testing"
 	kapi "k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/api/v1"
+	authorizationapi "k8s.io/kubernetes/pkg/apis/authorization"
 	"k8s.io/kubernetes/pkg/registry/registrytest"
 
-	authorizationapi "github.com/openshift/origin/pkg/authorization/apis/authorization"
-	"github.com/openshift/origin/pkg/authorization/registry/subjectaccessreview"
 	"github.com/openshift/origin/pkg/image/admission/testutil"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 	"github.com/openshift/origin/pkg/image/registry/image"
@@ -38,14 +37,12 @@ import (
 
 const testDefaultRegistryURL = "defaultregistry:5000"
 
-var testDefaultRegistry = imageapi.DefaultRegistryFunc(func() (string, bool) { return testDefaultRegistryURL, true })
+var testDefaultRegistry = func() (string, bool) { return testDefaultRegistryURL, true }
 
 type fakeSubjectAccessReviewRegistry struct {
 }
 
-var _ subjectaccessreview.Registry = &fakeSubjectAccessReviewRegistry{}
-
-func (f *fakeSubjectAccessReviewRegistry) CreateSubjectAccessReview(ctx apirequest.Context, subjectAccessReview *authorizationapi.SubjectAccessReview) (*authorizationapi.SubjectAccessReviewResponse, error) {
+func (f *fakeSubjectAccessReviewRegistry) Create(subjectAccessReview *authorizationapi.SubjectAccessReview) (*authorizationapi.SubjectAccessReview, error) {
 	return nil, nil
 }
 
@@ -57,7 +54,8 @@ func setup(t *testing.T) (etcd.KV, *etcdtesting.EtcdTestServer, *REST) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	imageStreamStorage, imageStreamStatus, internalStorage, err := imagestreametcd.NewREST(restoptions.NewSimpleGetter(etcdStorage), testDefaultRegistry, &fakeSubjectAccessReviewRegistry{}, &testutil.FakeImageStreamLimitVerifier{})
+	registry := imageapi.DefaultRegistryHostnameRetriever(testDefaultRegistry, "", "")
+	imageStreamStorage, imageStreamStatus, internalStorage, err := imagestreametcd.NewREST(restoptions.NewSimpleGetter(etcdStorage), registry, &fakeSubjectAccessReviewRegistry{}, &testutil.FakeImageStreamLimitVerifier{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +63,7 @@ func setup(t *testing.T) (etcd.KV, *etcdtesting.EtcdTestServer, *REST) {
 	imageRegistry := image.NewRegistry(imageStorage)
 	imageStreamRegistry := imagestream.NewRegistry(imageStreamStorage, imageStreamStatus, internalStorage)
 
-	storage := NewREST(imageRegistry, imageStreamRegistry, testDefaultRegistry)
+	storage := NewREST(imageRegistry, imageStreamRegistry, registry)
 
 	return etcdClient, server, storage
 }
@@ -588,8 +586,9 @@ func TestTrackingTags(t *testing.T) {
 // TestCreateRetryUnrecoverable ensures that an attempt to create a mapping
 // using failing registry update calls will return an error.
 func TestCreateRetryUnrecoverable(t *testing.T) {
+	registry := imageapi.DefaultRegistryHostnameRetriever(nil, "", testDefaultRegistryURL)
 	rest := &REST{
-		strategy: NewStrategy(testDefaultRegistry),
+		strategy: NewStrategy(registry),
 		imageRegistry: &fakeImageRegistry{
 			createImage: func(ctx apirequest.Context, image *imageapi.Image) error {
 				return nil
@@ -621,9 +620,10 @@ func TestCreateRetryUnrecoverable(t *testing.T) {
 // that result in resource conflicts that do NOT include tag diffs causes the
 // create to be retried successfully.
 func TestCreateRetryConflictNoTagDiff(t *testing.T) {
+	registry := imageapi.DefaultRegistryHostnameRetriever(nil, "", testDefaultRegistryURL)
 	firstUpdate := true
 	rest := &REST{
-		strategy: NewStrategy(testDefaultRegistry),
+		strategy: NewStrategy(registry),
 		imageRegistry: &fakeImageRegistry{
 			createImage: func(ctx apirequest.Context, image *imageapi.Image) error {
 				return nil
@@ -666,7 +666,7 @@ func TestCreateRetryConflictTagDiff(t *testing.T) {
 	firstGet := true
 	firstUpdate := true
 	rest := &REST{
-		strategy: NewStrategy(testDefaultRegistry),
+		strategy: NewStrategy(imageapi.DefaultRegistryHostnameRetriever(nil, "", testDefaultRegistryURL)),
 		imageRegistry: &fakeImageRegistry{
 			createImage: func(ctx apirequest.Context, image *imageapi.Image) error {
 				return nil

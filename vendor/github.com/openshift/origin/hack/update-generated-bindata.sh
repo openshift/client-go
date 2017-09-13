@@ -32,8 +32,8 @@ pushd "${OS_ROOT}" > /dev/null
     examples/heapster/... \
     examples/prometheus/... \
     examples/service-catalog/... \
-    pkg/image/admission/imagepolicy/api/v1/... \
-    test/testdata/templateservicebroker/...
+    install/... \
+    pkg/image/admission/imagepolicy/api/v1/...
 
 "$(os::util::find::gopath_binary go-bindata)" \
     -nocompress \
@@ -49,14 +49,17 @@ pushd "${OS_ROOT}" > /dev/null
     examples/db-templates \
     examples/image-streams \
     examples/sample-app \
+    examples/quickstarts/... \
     examples/prometheus/... \
     examples/hello-openshift \
-    examples/jenkins/...
+    examples/jenkins/... \
+    examples/quickstarts/cakephp-mysql.json \
+    install/...
 
 popd > /dev/null
 
 # If you hit this, please reduce other tests instead of importing more
-if [[ "$( cat "${OUTPUT_PARENT}/test/extended/testdata/bindata.go" | wc -c )" -gt 740000 ]]; then
+if [[ "$( cat "${OUTPUT_PARENT}/test/extended/testdata/bindata.go" | wc -c )" -gt 1500000 ]]; then
     echo "error: extended bindata is $( cat "${OUTPUT_PARENT}/test/extended/testdata/bindata.go" | wc -c ) bytes, reduce the size of the import" 1>&2
     exit 1
 fi

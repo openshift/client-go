@@ -33,9 +33,9 @@ import (
 	"k8s.io/kubernetes/pkg/kubectl/resource"
 	kprinters "k8s.io/kubernetes/pkg/printers"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deploycmd "github.com/openshift/origin/pkg/apps/cmd"
 	"github.com/openshift/origin/pkg/client"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deploycmd "github.com/openshift/origin/pkg/deploy/cmd"
 	imageutil "github.com/openshift/origin/pkg/image/util"
 	"github.com/openshift/origin/pkg/oc/cli/config"
 	"github.com/openshift/origin/pkg/oc/cli/describe"
@@ -298,7 +298,7 @@ func (o *imageResolutionOptions) Bind(f *pflag.FlagSet) {
 	if o.Bound() {
 		return
 	}
-	f.StringVarP(&o.Source, "source", "", "istag", "The image source type; valid types are 'imagestreamtag', 'istag', 'imagestreamimage', 'isimage', and 'docker'")
+	f.StringVarP(&o.Source, "source", "", "docker", "The image source type; valid types are 'imagestreamtag', 'istag', 'imagestreamimage', 'isimage', and 'docker'")
 	o.bound = true
 }
 

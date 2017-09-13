@@ -53,5 +53,6 @@ go_library(
         "//vendor/k8s.io/client-go/pkg/api/v1:go_default_library",
         "//vendor/k8s.io/client-go/pkg/api/v1/ref:go_default_library",
         "//vendor/k8s.io/client-go/rest:go_default_library",
+        "//vendor/k8s.io/client-go/util/flowcontrol:go_default_library",
     ],
 )

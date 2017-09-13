@@ -22,10 +22,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
 	"k8s.io/gengo/generator"
 	"k8s.io/gengo/namer"
 	"k8s.io/gengo/types"
+	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
 )
 
 // genClientset generates a package for a clientset.
@@ -70,6 +70,7 @@ func (g *genClientset) GenerateType(c *generator.Context, t *types.Type, w io.Wr
 	sw := generator.NewSnippetWriter(w, c, "$", "$")
 
 	allGroups := clientgentypes.ToGroupVersionPackages(g.groups)
+
 	m := map[string]interface{}{
 		"allGroups":                            allGroups,
 		"Config":                               c.Universe.Type(types.Name{Package: "k8s.io/client-go/rest", Name: "Config"}),
@@ -115,7 +116,7 @@ var clientsetTemplate = `
 // version included in a Clientset.
 type Clientset struct {
 	*$.DiscoveryClient|raw$
-    $range .allGroups$$.LowerCaseGroupVersion$ *$.PackageName$.$.GroupVersion$Client
+    $range .allGroups$*$.PackageName$.$.GroupVersion$Client
     $end$
 }
 `
@@ -123,7 +124,10 @@ type Clientset struct {
 var clientsetInterfaceImplTemplate = `
 // $.GroupVersion$ retrieves the $.GroupVersion$Client
 func (c *Clientset) $.GroupVersion$() $.PackageName$.$.GroupVersion$Interface {
-	return c.$.LowerCaseGroupVersion$
+	if c == nil {
+		return nil
+	}
+	return c.$.GroupVersion$Client
 }
 `
 
@@ -131,7 +135,10 @@ var clientsetInterfaceDefaultVersionImpl = `
 // Deprecated: $.Group$ retrieves the default version of $.Group$Client.
 // Please explicitly pick a version.
 func (c *Clientset) $.Group$() $.PackageName$.$.GroupVersion$Interface {
-	return c.$.LowerCaseGroupVersion$
+	if c == nil {
+		return nil
+	}
+	return c.$.GroupVersion$Client
 }
 `
 
@@ -154,7 +161,7 @@ func NewForConfig(c *$.Config|raw$) (*Clientset, error) {
 	}
 	var cs Clientset
 	var err error
-$range .allGroups$    cs.$.LowerCaseGroupVersion$, err =$.PackageName$.NewForConfig(&configShallowCopy)
+$range .allGroups$    cs.$.GroupVersion$Client, err =$.PackageName$.NewForConfig(&configShallowCopy)
 	if err!=nil {
 		return nil, err
 	}
@@ -173,7 +180,7 @@ var newClientsetForConfigOrDieTemplate = `
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *$.Config|raw$) *Clientset {
 	var cs Clientset
-$range .allGroups$    cs.$.LowerCaseGroupVersion$ =$.PackageName$.NewForConfigOrDie(c)
+$range .allGroups$    cs.$.GroupVersion$Client =$.PackageName$.NewForConfigOrDie(c)
 $end$
 	cs.DiscoveryClient = $.NewDiscoveryClientForConfigOrDie|raw$(c)
 	return &cs
@@ -184,7 +191,7 @@ var newClientsetForRESTClientTemplate = `
 // New creates a new Clientset for the given RESTClient.
 func New(c $.RESTClientInterface|raw$) *Clientset {
 	var cs Clientset
-$range .allGroups$    cs.$.LowerCaseGroupVersion$ =$.PackageName$.New(c)
+$range .allGroups$    cs.$.GroupVersion$Client =$.PackageName$.New(c)
 $end$
 	cs.DiscoveryClient = $.NewDiscoveryClient|raw$(c)
 	return &cs

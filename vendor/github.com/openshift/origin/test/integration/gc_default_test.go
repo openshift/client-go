@@ -74,7 +74,7 @@ func TestGCDefaults(t *testing.T) {
 	// the buildconfig or the orphaning step won't find anything to orphan, then the delete will complete, the configmap
 	// creation will be observed, there will be no parent, and the configmap will be deleted.
 	// There is no API to determine if the configmap was observed.
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	// this looks weird, but we want no new dependencies on the old client
 	if err := newBuildClient.Build().RESTClient().Delete().AbsPath("/oapi/v1/namespaces/" + ns + "/buildconfigs/" + buildConfig.Name).Do().Error(); err != nil {
@@ -83,7 +83,7 @@ func TestGCDefaults(t *testing.T) {
 
 	// the /oapi endpoints should orphan by default
 	// wait for a bit and make sure that the build is still there
-	time.Sleep(2 * time.Second)
+	time.Sleep(6 * time.Second)
 	childConfigMap, err = kubeClient.Core().ConfigMaps(ns).Get(childConfigMap.Name, metav1.GetOptions{})
 	if err != nil {
 		t.Error(err)

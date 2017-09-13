@@ -105,6 +105,11 @@ func (l *lifecycle) Admit(a admission.Attributes) error {
 		return nil
 	}
 
+	// always allow deletion of other resources
+	if a.GetOperation() == admission.Delete {
+		return nil
+	}
+
 	// always allow access review checks.  Returning status about the namespace would be leaking information
 	if isAccessReview(a) {
 		return nil
@@ -217,7 +222,13 @@ func (l *lifecycle) Validate() error {
 // accessReviewResources are resources which give a view into permissions in a namespace.  Users must be allowed to create these
 // resources because returning "not found" errors allows someone to search for the "people I'm going to fire in 2017" namespace.
 var accessReviewResources = map[schema.GroupResource]bool{
-	{Group: "authorization.k8s.io", Resource: "localsubjectaccessreviews"}: true,
+	{Group: "authorization.k8s.io", Resource: "localsubjectaccessreviews"}:  true,
+	schema.GroupResource{Group: "", Resource: "subjectaccessreviews"}:       true,
+	schema.GroupResource{Group: "", Resource: "localsubjectaccessreviews"}:  true,
+	schema.GroupResource{Group: "", Resource: "resourceaccessreviews"}:      true,
+	schema.GroupResource{Group: "", Resource: "localresourceaccessreviews"}: true,
+	schema.GroupResource{Group: "", Resource: "selfsubjectrulesreviews"}:    true,
+	schema.GroupResource{Group: "", Resource: "subjectrulesreviews"}:        true,
 }
 
 func isAccessReview(a admission.Attributes) bool {

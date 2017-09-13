@@ -24,11 +24,11 @@ import (
 	"k8s.io/kubernetes/pkg/registry/core/secret"
 	"k8s.io/kubernetes/pkg/registry/core/serviceaccount"
 
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deployrest "github.com/openshift/origin/pkg/apps/registry/deployconfig"
 	buildapi "github.com/openshift/origin/pkg/build/apis/build"
 	buildrest "github.com/openshift/origin/pkg/build/registry/build"
 	buildconfigrest "github.com/openshift/origin/pkg/build/registry/buildconfig"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deployrest "github.com/openshift/origin/pkg/deploy/registry/deployconfig"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 	routeapi "github.com/openshift/origin/pkg/route/apis/route"
 	osautil "github.com/openshift/origin/pkg/serviceaccounts/util"
@@ -146,7 +146,7 @@ func (e *DefaultExporter) Export(obj runtime.Object, exact bool) error {
 		t.Secrets = newMountableSecrets
 
 	case *deployapi.DeploymentConfig:
-		return deployrest.Strategy.Export(ctx, obj, exact)
+		return deployrest.CommonStrategy.Export(ctx, obj, exact)
 
 	case *buildapi.BuildConfig:
 		// Use the legacy strategy to avoid setting prune defaults if

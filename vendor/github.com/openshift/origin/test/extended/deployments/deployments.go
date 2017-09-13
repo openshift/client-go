@@ -1,7 +1,7 @@
 package deployments
 
 import (
-	//"errors"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -19,9 +19,8 @@ import (
 	kcontroller "k8s.io/kubernetes/pkg/controller"
 	e2e "k8s.io/kubernetes/test/e2e/framework"
 
-	"github.com/openshift/origin/pkg/client"
-	deployapi "github.com/openshift/origin/pkg/deploy/apis/apps"
-	deployutil "github.com/openshift/origin/pkg/deploy/util"
+	deployapi "github.com/openshift/origin/pkg/apps/apis/apps"
+	deployutil "github.com/openshift/origin/pkg/apps/util"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
 	exutil "github.com/openshift/origin/test/extended/util"
 )
@@ -80,10 +79,10 @@ var _ = g.Describe("deploymentconfigs", func() {
 					e2e.Logf("%02d: cancelling deployment", i)
 					if out, err := oc.Run("rollout").Args("cancel", "dc/deployment-simple").Output(); err != nil {
 						// TODO: we should fix this
-						if !strings.Contains(out, "the object has been modified") {
+						if !strings.Contains(out, "the object has been modified") && !strings.Contains(out, "there have been no replication controllers") {
 							o.Expect(err).NotTo(o.HaveOccurred())
 						}
-						e2e.Logf("rollout cancel deployment failed due to conflict: %v", err)
+						e2e.Logf("rollout cancel deployment failed due to known safe error: %v", err)
 					}
 
 				case n < 0.0:
@@ -533,7 +532,7 @@ var _ = g.Describe("deploymentconfigs", func() {
 			o.Expect(err).NotTo(o.HaveOccurred())
 
 			g.By("updating the deployment config in order to trigger a new rollout")
-			_, err = client.UpdateConfigWithRetries(oc.Client(), oc.Namespace(), name, func(update *deployapi.DeploymentConfig) {
+			_, err = updateConfigWithRetries(oc.Client(), oc.Namespace(), name, func(update *deployapi.DeploymentConfig) {
 				one := int64(1)
 				update.Spec.Template.Spec.TerminationGracePeriodSeconds = &one
 			})
@@ -704,7 +703,7 @@ var _ = g.Describe("deploymentconfigs", func() {
 				o.Expect(fmt.Errorf("expected no deployment, found %#v", rcs[0])).NotTo(o.HaveOccurred())
 			}
 
-			_, err = client.UpdateConfigWithRetries(oc.Client(), oc.Namespace(), name, func(dc *deployapi.DeploymentConfig) {
+			_, err = updateConfigWithRetries(oc.Client(), oc.Namespace(), name, func(dc *deployapi.DeploymentConfig) {
 				// TODO: oc rollout pause should patch instead of making a full update
 				dc.Spec.Paused = false
 			})
@@ -907,6 +906,8 @@ var _ = g.Describe("deploymentconfigs", func() {
 			// FIXME: remove when tests are migrated to the new client
 			// (the old one incorrectly translates nil into an empty array)
 			dc.Spec.Triggers = append(dc.Spec.Triggers, deployapi.DeploymentTriggerPolicy{Type: deployapi.DeploymentTriggerOnConfigChange})
+			// This is the last place we can safely say that the time was taken before replicas became ready
+			startTime := time.Now()
 			dc, err = oc.Client().DeploymentConfigs(namespace).Create(dc)
 			o.Expect(err).NotTo(o.HaveOccurred())
 
@@ -926,7 +927,9 @@ var _ = g.Describe("deploymentconfigs", func() {
 					return rc.Status.ReadyReplicas == dc.Spec.Replicas, nil
 				})
 			o.Expect(err).NotTo(o.HaveOccurred())
-			o.Expect(rc1.Status.AvailableReplicas).To(o.BeZero())
+			o.Expect(rc1.Status.AvailableReplicas).To(o.BeNumerically("<", rc1.Status.ReadyReplicas))
+			// We need to log here to have a timestamp to compare with master logs if something goes wrong
+			e2e.Logf("All replicas are ready.")
 
 			g.By("verifying that the deployment is still running")
 			if deployutil.IsTerminatedDeployment(rc1) {
@@ -935,37 +938,32 @@ var _ = g.Describe("deploymentconfigs", func() {
 
 			g.By("waiting for the deployment to finish")
 			rc1, err = waitForRCModification(oc, namespace, rc1.Name,
-				deploymentChangeTimeout+time.Duration(dc.Spec.MinReadySeconds)*time.Second,
+				deploymentRunTimeout+time.Duration(dc.Spec.MinReadySeconds)*time.Second,
 				rc1.GetResourceVersion(), func(rc *kapiv1.ReplicationController) (bool, error) {
 					if rc.Status.AvailableReplicas == dc.Spec.Replicas {
 						return true, nil
 					}
 
-					// FIXME: There is a race between deployer pod updating phase and RC updating AvailableReplicas
-					// FIXME: Enable this when we switch pod acceptors to use RC AvailableReplicas with MinReadySecondsSet
-					//if deployutil.DeploymentStatusFor(rc) == deployapi.DeploymentStatusComplete {
-					//	e2e.Logf("Failed RC: %#v", rc)
-					//	return false, errors.New("deployment shouldn't be completed before ReadyReplicas become AvailableReplicas")
-					//}
+					if deployutil.DeploymentStatusFor(rc) == deployapi.DeploymentStatusComplete {
+						e2e.Logf("Failed RC: %#v", rc)
+						return false, errors.New("deployment shouldn't be completed before ReadyReplicas become AvailableReplicas")
+					}
 					return false, nil
 				})
+			// We need to log here to have a timestamp to compare with master logs if something goes wrong
+			e2e.Logf("Finished waiting for deployment.")
 			o.Expect(err).NotTo(o.HaveOccurred())
+			o.Expect(time.Since(startTime)).To(o.BeNumerically(">=", time.Duration(dc.Spec.MinReadySeconds)*time.Second),
+				"Deployment shall not finish before MinReadySeconds elapse.")
 			o.Expect(rc1.Status.AvailableReplicas).To(o.Equal(dc.Spec.Replicas))
-			// FIXME: There is a race between deployer pod updating phase and RC updating AvailableReplicas
-			// FIXME: Enable this when we switch pod acceptors to use RC AvailableReplicas with MinReadySecondsSet
-			//// Deployment status can't be updated yet but should be right after
-			//o.Expect(deployutil.DeploymentStatusFor(rc1)).To(o.Equal(deployapi.DeploymentStatusRunning))
+			// Deployment status can't be updated yet but should be right after
+			o.Expect(deployutil.DeploymentStatusFor(rc1)).To(o.Equal(deployapi.DeploymentStatusRunning))
 			// It should finish right after
-			// FIXME: remove this condition when the above is fixed
-			if deployutil.DeploymentStatusFor(rc1) != deployapi.DeploymentStatusComplete {
-				// FIXME: remove this assertion when the above is fixed
-				o.Expect(deployutil.DeploymentStatusFor(rc1)).To(o.Equal(deployapi.DeploymentStatusRunning))
-				rc1, err = waitForRCModification(oc, namespace, rc1.Name, deploymentChangeTimeout,
-					rc1.GetResourceVersion(), func(rc *kapiv1.ReplicationController) (bool, error) {
-						return deployutil.DeploymentStatusFor(rc) == deployapi.DeploymentStatusComplete, nil
-					})
-				o.Expect(err).NotTo(o.HaveOccurred())
-			}
+			rc1, err = waitForRCModification(oc, namespace, rc1.Name, deploymentChangeTimeout,
+				rc1.GetResourceVersion(), func(rc *kapiv1.ReplicationController) (bool, error) {
+					return deployutil.DeploymentStatusFor(rc) == deployapi.DeploymentStatusComplete, nil
+				})
+			o.Expect(err).NotTo(o.HaveOccurred())
 
 			// We might check that minReadySecond passed between pods becoming ready
 			// and available but I don't think there is a way to get a timestamp from events
@@ -1091,11 +1089,7 @@ var _ = g.Describe("deploymentconfigs", func() {
 			})
 
 			g.By("deleting owned RCs when deleted", func() {
-				// FIXME: Add delete option when we have new client available.
-				// This is working fine now because of finalizers on RCs but when GC gets fixed
-				// and we remove them this will probably break and will require setting deleteOptions
-				// to achieve cascade delete
-				err = oc.Client().DeploymentConfigs(namespace).Delete(dcName)
+				err = oc.Clientset().AppsV1().DeploymentConfigs(namespace).Delete(dcName, &metav1.DeleteOptions{})
 				o.Expect(err).NotTo(o.HaveOccurred())
 
 				err = wait.PollImmediate(200*time.Millisecond, 5*time.Minute, func() (bool, error) {

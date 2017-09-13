@@ -21,7 +21,7 @@ func (c *TemplateClient) BrokerTemplateInstances() BrokerTemplateInstanceInterfa
 	return newBrokerTemplateInstances(c)
 }
 
-func (c *TemplateClient) Templates(namespace string) TemplateInterface {
+func (c *TemplateClient) Templates(namespace string) TemplateResourceInterface {
 	return newTemplates(c, namespace)
 }
 

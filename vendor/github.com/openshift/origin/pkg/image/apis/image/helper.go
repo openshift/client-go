@@ -41,17 +41,57 @@ const (
 	ImportRegistryNotAllowed = "registry is not allowed for import"
 )
 
-// DefaultRegistry returns the default Docker registry (host or host:port), or false if it is not available.
-type DefaultRegistry interface {
-	DefaultRegistry() (string, bool)
+var errNoRegistryURLPathAllowed = fmt.Errorf("no path after <host>[:<port>] is allowed")
+var errNoRegistryURLQueryAllowed = fmt.Errorf("no query arguments are allowed after <host>[:<port>]")
+var errRegistryURLHostEmpty = fmt.Errorf("no host name specified")
+
+// RegistryHostnameRetriever represents an interface for retrieving the hostname
+// of internal and external registry.
+type RegistryHostnameRetriever interface {
+	InternalRegistryHostname() (string, bool)
+	ExternalRegistryHostname() (string, bool)
 }
 
-// DefaultRegistryFunc implements DefaultRegistry for a simple function.
-type DefaultRegistryFunc func() (string, bool)
+// DefaultRegistryHostnameRetriever is a default implementation of
+// RegistryHostnameRetriever.
+// The first argument is a function that lazy-loads the value of
+// OPENSHIFT_DEFAULT_REGISTRY environment variable which should be deprecated in
+// future.
+func DefaultRegistryHostnameRetriever(deprecatedDefaultRegistryEnvFn func() (string, bool), external, internal string) RegistryHostnameRetriever {
+	return &defaultRegistryHostnameRetriever{
+		deprecatedDefaultFn: deprecatedDefaultRegistryEnvFn,
+		externalHostname:    external,
+		internalHostname:    internal,
+	}
+}
 
-// DefaultRegistry implements the DefaultRegistry interface for a function.
-func (fn DefaultRegistryFunc) DefaultRegistry() (string, bool) {
-	return fn()
+type defaultRegistryHostnameRetriever struct {
+	// deprecatedDefaultFn points to a function that will lazy-load the value of
+	// OPENSHIFT_DEFAULT_REGISTRY.
+	deprecatedDefaultFn func() (string, bool)
+	internalHostname    string
+	externalHostname    string
+}
+
+// InternalRegistryHostnameFn returns a function that can be used to lazy-load
+// the internal Docker Registry hostname. If the master configuration properly
+// InternalRegistryHostname is set, it will prefer that over the lazy-loaded
+// environment variable 'OPENSHIFT_DEFAULT_REGISTRY'.
+func (r *defaultRegistryHostnameRetriever) InternalRegistryHostname() (string, bool) {
+	if len(r.internalHostname) > 0 {
+		return r.internalHostname, true
+	}
+	if r.deprecatedDefaultFn != nil {
+		return r.deprecatedDefaultFn()
+	}
+	return "", false
+}
+
+// ExternalRegistryHostnameFn returns a function that can be used to retrieve an
+// external/public hostname of Docker Registry. External location can be
+// configured in master config using 'ExternalRegistryHostname' property.
+func (r *defaultRegistryHostnameRetriever) ExternalRegistryHostname() (string, bool) {
+	return r.externalHostname, len(r.externalHostname) > 0
 }
 
 // ParseImageStreamImageName splits a string into its name component and ID component, and returns an error
@@ -576,7 +616,7 @@ func LatestImageTagEvent(stream *ImageStream, imageID string) (string, *TagEvent
 			continue
 		}
 		for i, event := range events.Items {
-			if digestOrImageMatch(event.Image, imageID) &&
+			if DigestOrImageMatch(event.Image, imageID) &&
 				(latestTagEvent == nil || latestTagEvent != nil && event.Created.After(latestTagEvent.Created.Time)) {
 				latestTagEvent = &events.Items[i]
 				latestTag = tag
@@ -874,7 +914,8 @@ func UpdateTrackingTags(stream *ImageStream, updatedTag string, updatedImage Tag
 	return updated
 }
 
-func digestOrImageMatch(image, imageID string) bool {
+// DigestOrImageMatch matches the digest in the image name.
+func DigestOrImageMatch(image, imageID string) bool {
 	if d, err := digest.ParseDigest(image); err == nil {
 		return strings.HasPrefix(d.Hex(), imageID) || strings.HasPrefix(image, imageID)
 	}
@@ -889,7 +930,7 @@ func ResolveImageID(stream *ImageStream, imageID string) (*TagEvent, error) {
 	for _, history := range stream.Status.Tags {
 		for i := range history.Items {
 			tagging := &history.Items[i]
-			if digestOrImageMatch(tagging.Image, imageID) {
+			if DigestOrImageMatch(tagging.Image, imageID) {
 				event = tagging
 				set.Insert(tagging.Image)
 			}
@@ -1160,4 +1201,42 @@ func (tagref TagReference) HasAnnotationTag(searchTag string) bool {
 		}
 	}
 	return false
+}
+
+// ValidateRegistryURL returns error if the given input is not a valid registry URL. The url may be prefixed
+// with http:// or https:// schema. It may not contain any path or query after the host:[port].
+func ValidateRegistryURL(registryURL string) error {
+	var (
+		u     *url.URL
+		err   error
+		parts = strings.SplitN(registryURL, "://", 2)
+	)
+
+	switch len(parts) {
+	case 2:
+		u, err = url.Parse(registryURL)
+		if err != nil {
+			return err
+		}
+		switch u.Scheme {
+		case "http", "https":
+		default:
+			return fmt.Errorf("unsupported scheme: %s", u.Scheme)
+		}
+	case 1:
+		u, err = url.Parse("https://" + registryURL)
+		if err != nil {
+			return err
+		}
+	}
+	if len(u.Path) > 0 && u.Path != "/" {
+		return errNoRegistryURLPathAllowed
+	}
+	if len(u.RawQuery) > 0 {
+		return errNoRegistryURLQueryAllowed
+	}
+	if len(u.Host) == 0 {
+		return errRegistryURLHostEmpty
+	}
+	return nil
 }

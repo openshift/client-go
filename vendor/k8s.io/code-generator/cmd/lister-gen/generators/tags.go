@@ -27,7 +27,7 @@ import (
 func extractBoolTagOrDie(key string, lines []string) bool {
 	val, err := types.ExtractSingleBoolCommentTag("+", key, false, lines)
 	if err != nil {
-		glog.Fatal(err)
+		glog.Fatalf(err.Error())
 	}
 	return val
 }

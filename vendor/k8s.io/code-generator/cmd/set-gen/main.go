@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// set-gen is an example usage of gengo.
+// set-gen is an example usage of go2idl.
 //
 // Structs in the input directories with the below line in their comments will
 // have sets generated for them.
