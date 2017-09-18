@@ -4,8 +4,7 @@ import (
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	oapi "github.com/openshift/origin/pkg/api"
-	"github.com/openshift/origin/pkg/api/legacy"
+	"github.com/openshift/origin/pkg/api/apihelpers"
 	newer "github.com/openshift/origin/pkg/build/apis/build"
 	buildutil "github.com/openshift/origin/pkg/build/util"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
@@ -175,24 +174,45 @@ func addConversionFuncs(scheme *runtime.Scheme) error {
 		return err
 	}
 
-	if err := scheme.AddFieldLabelConversionFunc(SchemeGroupVersion.String(), "Build",
-		oapi.GetFieldLabelConversionFunc(newer.BuildToSelectableFields(&newer.Build{}), nil),
-	); err != nil {
-		return err
-	}
-
 	return nil
 }
 
-func addLegacyFieldLabelConversions(scheme *runtime.Scheme) error {
-	if err := scheme.AddFieldLabelConversionFunc("v1", "Build",
-		oapi.GetFieldLabelConversionFunc(newer.BuildToSelectableFields(&newer.Build{}), map[string]string{"name": "metadata.name"}),
-	); err != nil {
+func addLegacyFieldSelectorKeyConversions(scheme *runtime.Scheme) error {
+	if err := scheme.AddFieldLabelConversionFunc(LegacySchemeGroupVersion.String(), "Build", legacyBuildFieldSelectorKeyConversionFunc); err != nil {
 		return err
 	}
-
-	if err := scheme.AddFieldLabelConversionFunc("v1", "BuildConfig", legacy.LegacyMetaV1FieldSelectorConversionWithName); err != nil {
+	if err := scheme.AddFieldLabelConversionFunc(LegacySchemeGroupVersion.String(), "BuildConfig", apihelpers.LegacyMetaV1FieldSelectorConversionWithName); err != nil {
 		return err
 	}
 	return nil
+}
+
+func addFieldSelectorKeyConversions(scheme *runtime.Scheme) error {
+	if err := scheme.AddFieldLabelConversionFunc(SchemeGroupVersion.String(), "Build", buildFieldSelectorKeyConversionFunc); err != nil {
+		return err
+	}
+	return nil
+}
+
+// because field selectors can vary in support by version they are exposed under, we have one function for each
+// groupVersion we're registering for
+
+func legacyBuildFieldSelectorKeyConversionFunc(label, value string) (internalLabel, internalValue string, err error) {
+	switch label {
+	case "status",
+		"podName":
+		return label, value, nil
+	default:
+		return apihelpers.LegacyMetaV1FieldSelectorConversionWithName(label, value)
+	}
+}
+
+func buildFieldSelectorKeyConversionFunc(label, value string) (internalLabel, internalValue string, err error) {
+	switch label {
+	case "status",
+		"podName":
+		return label, value, nil
+	default:
+		return runtime.DefaultMetaV1FieldSelectorConversion(label, value)
+	}
 }

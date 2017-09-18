@@ -38,6 +38,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	unversionedvalidation "k8s.io/apimachinery/pkg/apis/meta/v1/validation"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/util/diff"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -399,12 +400,9 @@ func validateVolumeSource(source *api.VolumeSource, fldPath *field.Path) field.E
 	if source.EmptyDir != nil {
 		numVolumes++
 		if !utilfeature.DefaultFeatureGate.Enabled(features.LocalStorageCapacityIsolation) {
-			if source.EmptyDir.SizeLimit != nil && source.EmptyDir.SizeLimit.Cmp(resource.Quantity{}) != 0 {
+			unsetSizeLimit := resource.Quantity{}
+			if unsetSizeLimit.Cmp(source.EmptyDir.SizeLimit) != 0 {
 				allErrs = append(allErrs, field.Forbidden(fldPath.Child("emptyDir").Child("sizeLimit"), "SizeLimit field disabled by feature-gate for EmptyDir volumes"))
-			}
-		} else {
-			if source.EmptyDir.SizeLimit != nil && source.EmptyDir.SizeLimit.Cmp(resource.Quantity{}) < 0 {
-				allErrs = append(allErrs, field.Forbidden(fldPath.Child("emptyDir").Child("sizeLimit"), "SizeLimit field must be a valid resource quantity"))
 			}
 		}
 	}
@@ -2732,8 +2730,10 @@ func ValidatePodUpdate(newPod, oldPod *api.Pod) field.ErrorList {
 	allErrs = append(allErrs, validateOnlyAddedTolerations(newPod.Spec.Tolerations, oldPod.Spec.Tolerations, specPath.Child("tolerations"))...)
 
 	if !apiequality.Semantic.DeepEqual(mungedPod.Spec, oldPod.Spec) {
+		// This diff isn't perfect, but it's a helluva lot better an "I'm not going to tell you what the difference is".
 		//TODO: Pinpoint the specific field that causes the invalid error after we have strategic merge diff
-		allErrs = append(allErrs, field.Forbidden(specPath, "pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)"))
+		specDiff := diff.ObjectDiff(mungedPod.Spec, oldPod.Spec)
+		allErrs = append(allErrs, field.Forbidden(specPath, fmt.Sprintf("pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)\n%v", specDiff)))
 	}
 
 	return allErrs
@@ -3356,16 +3356,6 @@ func ValidateNodeUpdate(node, oldNode *api.Node) field.ErrorList {
 			allErrs = append(allErrs, field.Forbidden(field.NewPath("spec", "podCIDR"), "node updates may not change podCIDR except from \"\" to valid"))
 		}
 	}
-
-	// Allow controller manager updating provider ID when not set
-	if len(oldNode.Spec.ProviderID) == 0 {
-		oldNode.Spec.ProviderID = node.Spec.ProviderID
-	} else {
-		if oldNode.Spec.ProviderID != node.Spec.ProviderID {
-			allErrs = append(allErrs, field.Forbidden(field.NewPath("spec", "providerID"), "node updates may not change providerID except from \"\" to valid"))
-		}
-	}
-
 	// TODO: move reset function to its own location
 	// Ignore metadata changes now that they have been tested
 	oldNode.ObjectMeta = node.ObjectMeta
