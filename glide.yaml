@@ -5,19 +5,23 @@ import:
 - package: k8s.io/code-generator
   repo: https://github.com/openshift/kubernetes-code-generator
   version: master
+  vcs: git
 - package: k8s.io/client-go
   repo: https://github.com/openshift/kubernetes-client-go
-  version: master
+  version: release-1.7.0
+  vcs: git
 - package: k8s.io/apimachinery
   repo: https://github.com/openshift/kubernetes-apimachinery
-  version: master
+  version: release-1.7.0
+  vcs: git
 - package: k8s.io/apiserver
   repo: https://github.com/openshift/kubernetes-apiserver
-  version: master
+  version: release-1.7.0
+  vcs: git
 - package: k8s.io/kubernetes
-  version: release-1.7
-  subpackages:
-  - pkg/api
+  repo: https://github.com/openshift/kubernetes
+  version: release-1.7.0
+  vcs: git
 - package: github.com/openshift/origin
   version: master
   subpackages:
