@@ -1,4 +1,4 @@
-all: generate build
+all: build
 .PHONY: all
 
 build:
@@ -13,6 +13,7 @@ build:
 	go build github.com/openshift/client-go/route/...
 	go build github.com/openshift/client-go/security/...
 	go build github.com/openshift/client-go/template/...
+	go build github.com/openshift/client-go/user/...
 .PHONY: build
 
 generate:
