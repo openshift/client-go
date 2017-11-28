@@ -1,5 +1,5 @@
 hash: 6664d0842f51586725f7f19018bf1526d835424bebab08add87cee1f415bca3b
-updated: 2017-10-27T13:47:15.503583739-04:00
+updated: 2017-11-28T08:35:21.017947315-05:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -65,7 +65,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/openshift/api
-  version: 3713da6d7874dfa37eca30edfa40b09c83e690f9
+  version: f71a82298f77273bfbf4ccfb08e4649bf1a94dc7
   subpackages:
   - apps/v1
   - authorization/v1
@@ -75,6 +75,7 @@ imports:
   - image/v1
   - network/v1
   - oauth/v1
+  - pkg/serialization
   - project/v1
   - quota/v1
   - route/v1
@@ -117,7 +118,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/api
-  version: 6c6dac0277229b9e9578c5ca3f74a4345d35cdc2
+  version: 4df58c811fe2e65feb879227b2b245e4dc26e7ad
   subpackages:
   - admissionregistration/v1alpha1
   - apps/v1beta1
@@ -187,7 +188,7 @@ imports:
   - pkg/watch
   - third_party/forked/golang/reflect
 - name: k8s.io/client-go
-  version: 1fb83015bea362f028381bc0fcfb2a4e3eb7390b
+  version: 3c9596422809744570e7b344a5597b4ad8aaabfb
   subpackages:
   - discovery
   - discovery/fake
@@ -205,7 +206,7 @@ imports:
   - util/flowcontrol
   - util/integer
 - name: k8s.io/code-generator
-  version: 0c5165a97e055df28cca8bbcb8b7c8ae1019b3f1
+  version: 6db2ee6aa9ab51230d6e0d970b398274a88e81b0
 - name: k8s.io/gengo
   version: 9e661e9308f078838e266cca1c673922088c0ea4
 - name: k8s.io/kube-openapi
