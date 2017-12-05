@@ -1,5 +1,5 @@
 hash: 6664d0842f51586725f7f19018bf1526d835424bebab08add87cee1f415bca3b
-updated: 2017-11-29T13:36:21.393383907-05:00
+updated: 2017-12-05T17:04:57.312070239-06:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -65,7 +65,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/openshift/api
-  version: e27edf81a4d5e57dd23bf3488df4c8ffe7bcecbd
+  version: a6905405c788ff2e9431d98cbc4c23b2a8596451
   subpackages:
   - apps/v1
   - authorization/v1
