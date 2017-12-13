@@ -1,5 +1,5 @@
-hash: 6664d0842f51586725f7f19018bf1526d835424bebab08add87cee1f415bca3b
-updated: 2017-11-29T13:36:21.393383907-05:00
+hash: 6da94a04d17790083fe43232e1633957692729a49ee9d4a223dbc8225915b94c
+updated: 2017-12-14T08:25:12.575118101-05:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -9,8 +9,6 @@ imports:
   version: ff4f55a206334ef123e4f79bbf348980da81ca46
   subpackages:
   - log
-- name: github.com/emicklei/go-restful-swagger12
-  version: dcef7f55730566d41eae5db10e7d6981829720f6
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
 - name: github.com/go-openapi/jsonpointer
@@ -18,9 +16,9 @@ imports:
 - name: github.com/go-openapi/jsonreference
   version: 13c6e3589ad90f49bd3e3bbe2c2cb3d7a4142272
 - name: github.com/go-openapi/spec
-  version: 6aced65f8501fe1217321abf0749d354824ba2ff
+  version: 7abd5745472fff5eb3685386d5fb8bf38683154d
 - name: github.com/go-openapi/swag
-  version: 1d0bd113de87027671077d3c71eb3ac5d7dbba72
+  version: f3f9494671f93fcff853e3c6e9e948b3eb71e590
 - name: github.com/gogo/protobuf
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
   subpackages:
@@ -29,7 +27,7 @@ imports:
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/protobuf
-  version: 4bd1920723d7b7c925de087aa32e2187708897f7
+  version: 1643683e1b54a9e88ad26d98f81400c8c9d9f4f9
   subpackages:
   - proto
   - ptypes
@@ -59,13 +57,13 @@ imports:
 - name: github.com/juju/ratelimit
   version: 5b9ff866471762aa2ab2dced63c9fb6f53921342
 - name: github.com/mailru/easyjson
-  version: d5b7844b561a7bc640052f1b935f7b800330d7e0
+  version: 2f5df55504ebc322e4d52d34df6a1f5b503bf26d
   subpackages:
   - buffer
   - jlexer
   - jwriter
 - name: github.com/openshift/api
-  version: e27edf81a4d5e57dd23bf3488df4c8ffe7bcecbd
+  version: 3e1c0e8e3c5faae342fb57ed50556dbd3a57e5bf
   subpackages:
   - apps/v1
   - authorization/v1
@@ -118,9 +116,11 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/api
-  version: 4df58c811fe2e65feb879227b2b245e4dc26e7ad
+  version: af4bc157c3a209798fc897f6d4aaaaeb6c2e0d6a
   subpackages:
   - admissionregistration/v1alpha1
+  - admissionregistration/v1beta1
+  - apps/v1
   - apps/v1beta1
   - apps/v1beta2
   - authentication/v1
@@ -134,6 +134,7 @@ imports:
   - batch/v2alpha1
   - certificates/v1beta1
   - core/v1
+  - events/v1beta1
   - extensions/v1beta1
   - networking/v1
   - policy/v1beta1
@@ -143,11 +144,11 @@ imports:
   - scheduling/v1alpha1
   - settings/v1alpha1
   - storage/v1
+  - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: 019ae5ada31de202164b118aee88ee2d14075c31
+  version: 180eddb345a5be3a157cea1c624700ad5bd27b8f
   subpackages:
-  - pkg/api/equality
   - pkg/api/errors
   - pkg/api/meta
   - pkg/api/resource
@@ -157,7 +158,6 @@ imports:
   - pkg/apis/meta/v1alpha1
   - pkg/conversion
   - pkg/conversion/queryparams
-  - pkg/conversion/unstructured
   - pkg/fields
   - pkg/labels
   - pkg/runtime
@@ -188,7 +188,7 @@ imports:
   - pkg/watch
   - third_party/forked/golang/reflect
 - name: k8s.io/client-go
-  version: 3c9596422809744570e7b344a5597b4ad8aaabfb
+  version: 78700dec6369ba22221b72770783300f143df150
   subpackages:
   - discovery
   - discovery/fake
@@ -202,15 +202,19 @@ imports:
   - tools/metrics
   - tools/pager
   - transport
+  - util/buffer
   - util/cert
   - util/flowcontrol
   - util/integer
 - name: k8s.io/code-generator
-  version: 6db2ee6aa9ab51230d6e0d970b398274a88e81b0
+  version: 004ef858db39afcedf99c8cb82f6666865f9bea9
+  repo: git@github.com:openshift/kubernetes-code-generator
 - name: k8s.io/gengo
-  version: 9e661e9308f078838e266cca1c673922088c0ea4
+  version: c2e273a26d3fc59b60cf6de2fb80eace7402de6e
+  repo: git@github.com:openshift/kubernetes-gengo
 - name: k8s.io/kube-openapi
-  version: 868f2f29720b192240e18284659231b440f9cda5
+  version: 39a7bf85c140f972372c2a0d1ee40adbf0c8bfe1
   subpackages:
   - pkg/common
+  - pkg/util/proto
 testImports: []
