@@ -16,6 +16,10 @@ build:
 	go build github.com/openshift/client-go/user/...
 .PHONY: build
 
+verify:
+	hack/verify-codegen.sh
+.PHONY: verify
+
 generate:
 	hack/update-codegen.sh
 .PHONY: generate
