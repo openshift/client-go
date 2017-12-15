@@ -1,5 +1,5 @@
 hash: 6da94a04d17790083fe43232e1633957692729a49ee9d4a223dbc8225915b94c
-updated: 2017-12-14T08:25:12.575118101-05:00
+updated: 2017-12-15T12:18:26.934482511-05:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -25,7 +25,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
   version: 1643683e1b54a9e88ad26d98f81400c8c9d9f4f9
   subpackages:
@@ -63,7 +63,7 @@ imports:
   - jlexer
   - jwriter
 - name: github.com/openshift/api
-  version: 3e1c0e8e3c5faae342fb57ed50556dbd3a57e5bf
+  version: 3922a2604003bc9fba95f09e17581e9917270a65
   subpackages:
   - apps/v1
   - authorization/v1
@@ -207,7 +207,7 @@ imports:
   - util/flowcontrol
   - util/integer
 - name: k8s.io/code-generator
-  version: 004ef858db39afcedf99c8cb82f6666865f9bea9
+  version: 0ea404e72920cc2978c0bfcc05a37528e01e5bcf
   repo: git@github.com:openshift/kubernetes-code-generator
 - name: k8s.io/gengo
   version: c2e273a26d3fc59b60cf6de2fb80eace7402de6e
