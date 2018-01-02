@@ -26,4 +26,4 @@ generate:
 
 update-deps:
 	hack/update-deps.sh
-.PHONY: generate
+.PHONY: update-deps
