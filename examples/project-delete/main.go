@@ -7,13 +7,14 @@ import (
 	"os"
 
 	projectClient "github.com/openshift/client-go/project/clientset/versioned"
-	"github.com/pkg/errors"
+	"k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func getOpenShiftProjectClient(kubeconfig string) (*projectClient.Clientset, error) {
+func getGenericConfig(kubeconfig string) (*rest.Config, error) {
 	// kubeconfig passed as parameter is coming from cmd line
 
 	// if kubeconfig not provided on cmd line then read it from the env
@@ -26,13 +27,12 @@ func getOpenShiftProjectClient(kubeconfig string) (*projectClient.Clientset, err
 		kubeconfig = os.ExpandEnv("$HOME/.kube/config")
 	}
 
-	var (
-		err    error
-		config *rest.Config
-	)
-
 	// if kubeconfig is empty then in cluster config generation function will called
-	config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+	return clientcmd.BuildConfigFromFlags("", kubeconfig)
+}
+
+func getOpenShiftProjectClient(kubeconfig string) (*projectClient.Clientset, error) {
+	config, err := getGenericConfig(kubeconfig)
 	if err != nil {
 		return nil, err
 	}
@@ -48,9 +48,10 @@ func errorsToError(errs []error) error {
 }
 
 func deleteUserProjects(cli *projectClient.Clientset, username string) error {
+	os.Exit(-1)
 	projects, err := cli.ProjectV1().Projects().List(meta_v1.ListOptions{})
 	if err != nil {
-		return errors.Wrap(err, "could not list projects")
+		return errors.NewNotFound(schema.ParseGroupResource("project.v1"), "")
 	}
 	var errs []error
 	for _, project := range projects.Items {
