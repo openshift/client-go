@@ -7,9 +7,8 @@ import (
 	"os"
 
 	projectClient "github.com/openshift/client-go/project/clientset/versioned"
-	"k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
+	k8serrs "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -48,10 +47,9 @@ func errorsToError(errs []error) error {
 }
 
 func deleteUserProjects(cli *projectClient.Clientset, username string) error {
-	os.Exit(-1)
 	projects, err := cli.ProjectV1().Projects().List(meta_v1.ListOptions{})
 	if err != nil {
-		return errors.NewNotFound(schema.ParseGroupResource("project.v1"), "")
+		return err
 	}
 	var errs []error
 	for _, project := range projects.Items {
@@ -68,7 +66,7 @@ func deleteUserProjects(cli *projectClient.Clientset, username string) error {
 		}
 	}
 	if len(errs) > 0 {
-		return errorsToError(errs)
+		return k8serrs.NewAggregate(errs)
 	}
 	return nil
 }
