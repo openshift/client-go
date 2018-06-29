@@ -416,6 +416,10 @@ type BuildSource struct {
 	// secrets represents a list of secrets and their destinations that will
 	// be used only for the build.
 	Secrets []SecretBuildSource `json:"secrets,omitempty" protobuf:"bytes,8,rep,name=secrets"`
+
+	// configMaps represents a list of configMaps and their destinations that will
+	// be used for the build.
+	ConfigMaps []ConfigMapBuildSource `json:"configMaps,omitempty" protobuf:"bytes,9,rep,name=configMaps"`
 }
 
 // ImageSource is used to describe build source that will be extracted from an image or used during a
@@ -475,6 +479,24 @@ type SecretBuildSource struct {
 	// For the Source build strategy, these will be injected into a container
 	// where the assemble script runs. Later, when the script finishes, all files
 	// injected will be truncated to zero length.
+	// For the Docker build strategy, these will be copied into the build
+	// directory, where the Dockerfile is located, so users can ADD or COPY them
+	// during docker build.
+	DestinationDir string `json:"destinationDir,omitempty" protobuf:"bytes,2,opt,name=destinationDir"`
+}
+
+// ConfigMapBuildSource describes a configmap and its destination directory that will be
+// used only at the build time. The content of the configmap referenced here will
+// be copied into the destination directory instead of mounting.
+type ConfigMapBuildSource struct {
+	// configMap is a reference to an existing configmap that you want to use in your
+	// build.
+	ConfigMap corev1.LocalObjectReference `json:"configMap" protobuf:"bytes,1,opt,name=configMap"`
+
+	// destinationDir is the directory where the files from the configmap should be
+	// available for the build time.
+	// For the Source build strategy, these will be injected into a container
+	// where the assemble script runs.
 	// For the Docker build strategy, these will be copied into the build
 	// directory, where the Dockerfile is located, so users can ADD or COPY them
 	// during docker build.
@@ -946,6 +968,9 @@ type ImageChangeTrigger struct {
 	// will be used. Only one ImageChangeTrigger with an empty From reference is allowed in
 	// a build configuration.
 	From *corev1.ObjectReference `json:"from,omitempty" protobuf:"bytes,2,opt,name=from"`
+
+	// paused is true if this trigger is temporarily disabled. Optional.
+	Paused bool `json:"paused,omitempty" protobuf:"varint,3,opt,name=paused"`
 }
 
 // BuildTriggerPolicy describes a policy for a single trigger that results in a new Build.

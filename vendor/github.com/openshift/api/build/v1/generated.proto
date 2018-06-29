@@ -375,6 +375,10 @@ message BuildSource {
   // secrets represents a list of secrets and their destinations that will
   // be used only for the build.
   repeated SecretBuildSource secrets = 8;
+
+  // configMaps represents a list of configMaps and their destinations that will
+  // be used for the build.
+  repeated ConfigMapBuildSource configMaps = 9;
 }
 
 // BuildSpec has the information to represent a build and also additional
@@ -577,6 +581,24 @@ message CommonWebHookCause {
   optional string secret = 2;
 }
 
+// ConfigMapBuildSource describes a configmap and its destination directory that will be
+// used only at the build time. The content of the configmap referenced here will
+// be copied into the destination directory instead of mounting.
+message ConfigMapBuildSource {
+  // configMap is a reference to an existing configmap that you want to use in your
+  // build.
+  optional k8s.io.api.core.v1.LocalObjectReference configMap = 1;
+
+  // destinationDir is the directory where the files from the configmap should be
+  // available for the build time.
+  // For the Source build strategy, these will be injected into a container
+  // where the assemble script runs.
+  // For the Docker build strategy, these will be copied into the build
+  // directory, where the Dockerfile is located, so users can ADD or COPY them
+  // during docker build.
+  optional string destinationDir = 2;
+}
+
 // CustomBuildStrategy defines input parameters specific to Custom build.
 message CustomBuildStrategy {
   // from is reference to an DockerImage, ImageStreamTag, or ImageStreamImage from which
@@ -758,6 +780,9 @@ message ImageChangeTrigger {
   // will be used. Only one ImageChangeTrigger with an empty From reference is allowed in
   // a build configuration.
   optional k8s.io.api.core.v1.ObjectReference from = 2;
+
+  // paused is true if this trigger is temporarily disabled. Optional.
+  optional bool paused = 3;
 }
 
 // ImageLabel represents a label applied to the resulting image.
