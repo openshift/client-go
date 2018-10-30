@@ -12,6 +12,10 @@ type FakeConfigV1 struct {
 	*testing.Fake
 }
 
+func (c *FakeConfigV1) Builds() v1.BuildInterface {
+	return &FakeBuilds{c}
+}
+
 func (c *FakeConfigV1) Images() v1.ImageInterface {
 	return &FakeImages{c}
 }
