@@ -2,4 +2,6 @@
 
 package v1
 
+type BuildExpansion interface{}
+
 type ImageExpansion interface{}

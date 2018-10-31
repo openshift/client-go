@@ -8,6 +8,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Builds returns a BuildInformer.
+	Builds() BuildInformer
 	// Images returns a ImageInformer.
 	Images() ImageInformer
 }
@@ -21,6 +23,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// Builds returns a BuildInformer.
+func (v *version) Builds() BuildInformer {
+	return &buildInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Images returns a ImageInformer.
