@@ -61,12 +61,12 @@ func (v *version) Builds() BuildInformer {
 
 // ClusterOperators returns a ClusterOperatorInformer.
 func (v *version) ClusterOperators() ClusterOperatorInformer {
-	return &clusterOperatorInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &clusterOperatorInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ClusterVersions returns a ClusterVersionInformer.
 func (v *version) ClusterVersions() ClusterVersionInformer {
-	return &clusterVersionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &clusterVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Consoles returns a ConsoleInformer.
