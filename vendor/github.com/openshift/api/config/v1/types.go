@@ -5,12 +5,19 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-// ConfigMapReference references the location of a configmap.
+// ConfigMapReference references a configmap in the openshift-config namespace.
 type ConfigMapReference struct {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
+	Name string `json:"name"`
 	// Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.
 	Key string `json:"filename,omitempty"`
+}
+
+// LocalSecretReference references a secret within the local namespace
+type LocalSecretReference struct {
+	// Name of the secret in the local namespace
+	Name string `json:"name"`
+	// Key selects a specific key within the local secret. Must be a valid secret key.
+	Key string `json:"key,omitempty"`
 }
 
 // HTTPServingInfo holds configuration for serving HTTP
@@ -243,4 +250,34 @@ type ClientConnectionOverrides struct {
 	QPS float32 `json:"qps"`
 	// burst allows extra queries to accumulate when a client is exceeding its rate.
 	Burst int32 `json:"burst"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// GenericControllerConfig provides information to configure a controller
+type GenericControllerConfig struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// ServingInfo is the HTTP serving information for the controller's endpoints
+	ServingInfo HTTPServingInfo `json:"servingInfo,omitempty"`
+
+	// leaderElection provides information to elect a leader. Only override this if you have a specific need
+	LeaderElection LeaderElection `json:"leaderElection,omitempty"`
+
+	// authentication allows configuration of authentication for the endpoints
+	Authentication DelegatedAuthentication `json:"authentication,omitempty"`
+	// authorization allows configuration of authentication for the endpoints
+	Authorization DelegatedAuthorization `json:"authorization,omitempty"`
+}
+
+// DelegatedAuthentication allows authentication to be disabled.
+type DelegatedAuthentication struct {
+	// disabled indicates that authentication should be disabled.  By default it will use delegated authentication.
+	Disabled bool `json:"disabled,omitempty"`
+}
+
+// DelegatedAuthorization allows authorization to be disabled.
+type DelegatedAuthorization struct {
+	// disabled indicates that authorization should be disabled.  By default it will use delegated authorization.
+	Disabled bool `json:"disabled,omitempty"`
 }
