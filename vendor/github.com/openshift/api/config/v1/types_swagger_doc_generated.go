@@ -61,12 +61,30 @@ func (ClientConnectionOverrides) SwaggerDoc() map[string]string {
 }
 
 var map_ConfigMapReference = map[string]string{
-	"":         "ConfigMapReference references the location of a configmap.",
+	"":         "ConfigMapReference references a configmap in the openshift-config namespace.",
 	"filename": "Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.",
 }
 
 func (ConfigMapReference) SwaggerDoc() map[string]string {
 	return map_ConfigMapReference
+}
+
+var map_DelegatedAuthentication = map[string]string{
+	"":         "DelegatedAuthentication allows authentication to be disabled.",
+	"disabled": "disabled indicates that authentication should be disabled.  By default it will use delegated authentication.",
+}
+
+func (DelegatedAuthentication) SwaggerDoc() map[string]string {
+	return map_DelegatedAuthentication
+}
+
+var map_DelegatedAuthorization = map[string]string{
+	"":         "DelegatedAuthorization allows authorization to be disabled.",
+	"disabled": "disabled indicates that authorization should be disabled.  By default it will use delegated authorization.",
+}
+
+func (DelegatedAuthorization) SwaggerDoc() map[string]string {
+	return map_DelegatedAuthorization
 }
 
 var map_EtcdConnectionInfo = map[string]string{
@@ -97,6 +115,18 @@ var map_GenericAPIServerConfig = map[string]string{
 
 func (GenericAPIServerConfig) SwaggerDoc() map[string]string {
 	return map_GenericAPIServerConfig
+}
+
+var map_GenericControllerConfig = map[string]string{
+	"":               "GenericControllerConfig provides information to configure a controller",
+	"servingInfo":    "ServingInfo is the HTTP serving information for the controller's endpoints",
+	"leaderElection": "leaderElection provides information to elect a leader. Only override this if you have a specific need",
+	"authentication": "authentication allows configuration of authentication for the endpoints",
+	"authorization":  "authorization allows configuration of authentication for the endpoints",
+}
+
+func (GenericControllerConfig) SwaggerDoc() map[string]string {
+	return map_GenericControllerConfig
 }
 
 var map_HTTPServingInfo = map[string]string{
@@ -130,6 +160,16 @@ var map_LeaderElection = map[string]string{
 
 func (LeaderElection) SwaggerDoc() map[string]string {
 	return map_LeaderElection
+}
+
+var map_LocalSecretReference = map[string]string{
+	"":     "LocalSecretReference references a secret within the local namespace",
+	"name": "Name of the secret in the local namespace",
+	"key":  "Key selects a specific key within the local secret. Must be a valid secret key.",
+}
+
+func (LocalSecretReference) SwaggerDoc() map[string]string {
+	return map_LocalSecretReference
 }
 
 var map_NamedCertificate = map[string]string{
