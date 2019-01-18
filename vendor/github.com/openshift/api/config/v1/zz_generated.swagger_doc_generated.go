@@ -289,11 +289,12 @@ func (Build) SwaggerDoc() map[string]string {
 }
 
 var map_BuildDefaults = map[string]string{
-	"defaultProxy": "DefaultProxy contains the default proxy settings for all build operations, including image pull/push and source download.\n\nValues can be overrode by setting the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables in the build config's strategy.",
-	"gitProxy":     "GitProxy contains the proxy settings for git operations only. If set, this will override any Proxy settings for all git commands, such as git clone.\n\nValues that are not set here will be inherited from DefaultProxy.",
-	"env":          "Env is a set of default environment variables that will be applied to the build if the specified variables do not exist on the build",
-	"imageLabels":  "ImageLabels is a list of docker labels that are applied to the resulting image. User can override a default label by providing a label with the same name in their Build/BuildConfig.",
-	"resources":    "Resources defines resource requirements to execute the build.",
+	"defaultProxy":     "DefaultProxy contains the default proxy settings for all build operations, including image pull/push and source download.\n\nValues can be overrode by setting the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables in the build config's strategy.",
+	"gitProxy":         "GitProxy contains the proxy settings for git operations only. If set, this will override any Proxy settings for all git commands, such as git clone.\n\nValues that are not set here will be inherited from DefaultProxy.",
+	"env":              "Env is a set of default environment variables that will be applied to the build if the specified variables do not exist on the build",
+	"imageLabels":      "ImageLabels is a list of docker labels that are applied to the resulting image. User can override a default label by providing a label with the same name in their Build/BuildConfig.",
+	"resources":        "Resources defines resource requirements to execute the build.",
+	"registriesConfig": "RegistriesConfig controls the registries allowed for image pull and push.",
 }
 
 func (BuildDefaults) SwaggerDoc() map[string]string {
@@ -337,6 +338,17 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 	return map_ImageLabel
 }
 
+var map_RegistriesConfig = map[string]string{
+	"searchRegistries":   "SearchRegistries lists the registries to search for images if an image repository is not specified in an image pull spec.\n\nIf this is not set, builds will search Docker Hub (docker.io) when a repository is not specified. Setting this to an empty list will require all builds to fully qualify their image pull specs.",
+	"insecureRegistries": "InsecureRegistries are registries which do not have a valid SSL certificate or only support HTTP connections.",
+	"blockedRegistries":  "BlockedRegistries are blacklisted from image pull/push. All other registries are allowed.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+	"allowedRegistries":  "AllowedRegistries are whitelisted for image pull/push. All other registries are blocked.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+}
+
+func (RegistriesConfig) SwaggerDoc() map[string]string {
+	return map_RegistriesConfig
+}
+
 var map_ClusterOperator = map[string]string{
 	"":       "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.",
 	"spec":   "spec hold the intent of how this operator should behave.",
@@ -364,10 +376,11 @@ func (ClusterOperatorSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterOperatorStatus = map[string]string{
-	"":           "ClusterOperatorStatus provides information about the status of the operator.",
-	"conditions": "conditions describes the state of the operator's reconciliation functionality.",
-	"version":    "version indicates which version of the operator updated the current status object.",
-	"extension":  "extension contains any additional status information specific to the operator which owns this status object.",
+	"":               "ClusterOperatorStatus provides information about the status of the operator.",
+	"conditions":     "conditions describes the state of the operator's reconciliation functionality.",
+	"version":        "version indicates which version of the operator updated the current status object.",
+	"relatedObjects": "relatedObjects is a list of objects that are \"interesting\" or related to this operator.  Common uses are: 1. the detailed resource driving the operator 2. operator namespaces 3. operand namespaces",
+	"extension":      "extension contains any additional status information specific to the operator which owns this status object.",
 }
 
 func (ClusterOperatorStatus) SwaggerDoc() map[string]string {
@@ -385,6 +398,18 @@ var map_ClusterOperatorStatusCondition = map[string]string{
 
 func (ClusterOperatorStatusCondition) SwaggerDoc() map[string]string {
 	return map_ClusterOperatorStatusCondition
+}
+
+var map_ObjectReference = map[string]string{
+	"":          "ObjectReference contains enough information to let you inspect or modify the referred object.",
+	"group":     "group of the referent.",
+	"resource":  "resource of the referent.",
+	"namespace": "namespace of the referent.",
+	"name":      "name of the referent.",
+}
+
+func (ObjectReference) SwaggerDoc() map[string]string {
+	return map_ObjectReference
 }
 
 var map_ClusterVersion = map[string]string{
@@ -918,6 +943,25 @@ var map_ProjectList = map[string]string{
 
 func (ProjectList) SwaggerDoc() map[string]string {
 	return map_ProjectList
+}
+
+var map_ProjectSpec = map[string]string{
+	"": "ProjectSpec holds the project creation configuration.",
+	"projectRequestMessage":  "projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
+	"projectRequestTemplate": "projectRequestTemplate is the template to use for creating projects in response to projectrequest. This must point to a template in 'openshift-config' namespace. It is optional. If it is not specified, a default template is used.",
+}
+
+func (ProjectSpec) SwaggerDoc() map[string]string {
+	return map_ProjectSpec
+}
+
+var map_TemplateReference = map[string]string{
+	"":     "TemplateReference references a template in a specific namespace. The namespace must be specified at the point of use.",
+	"name": "name is the metadata.name of the referenced project request template",
+}
+
+func (TemplateReference) SwaggerDoc() map[string]string {
+	return map_TemplateReference
 }
 
 var map_Proxy = map[string]string{
