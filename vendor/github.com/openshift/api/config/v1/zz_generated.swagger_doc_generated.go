@@ -549,12 +549,28 @@ func (Console) SwaggerDoc() map[string]string {
 	return map_Console
 }
 
+var map_ConsoleAuthentication = map[string]string{
+	"logoutRedirect": "An optional, absolute URL to redirect web browsers to after logging out of the console. If not specified, it will redirect to the default login page. This is required when using an identity provider that supports single sign-on (SSO) such as: - OpenID (Keycloak, Azure) - RequestHeader (GSSAPI, SSPI, SAML) - OAuth (GitHub, GitLab, Google) Logging out of the console will destroy the user's token. The logoutRedirect provides the user the option to perform single logout (SLO) through the identity provider to destroy their single sign-on session.",
+}
+
+func (ConsoleAuthentication) SwaggerDoc() map[string]string {
+	return map_ConsoleAuthentication
+}
+
 var map_ConsoleList = map[string]string{
 	"metadata": "Standard object's metadata.",
 }
 
 func (ConsoleList) SwaggerDoc() map[string]string {
 	return map_ConsoleList
+}
+
+var map_ConsoleStatus = map[string]string{
+	"publicHostname": "The hostname for the console. This will match the host for the route that is created for the console.",
+}
+
+func (ConsoleStatus) SwaggerDoc() map[string]string {
+	return map_ConsoleStatus
 }
 
 var map_DNS = map[string]string{
@@ -644,6 +660,7 @@ func (Infrastructure) SwaggerDoc() map[string]string {
 }
 
 var map_InfrastructureList = map[string]string{
+	"":         "InfrastructureList is",
 	"metadata": "Standard object's metadata.",
 }
 
@@ -651,8 +668,17 @@ func (InfrastructureList) SwaggerDoc() map[string]string {
 	return map_InfrastructureList
 }
 
+var map_InfrastructureSpec = map[string]string{
+	"": "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
+}
+
+func (InfrastructureSpec) SwaggerDoc() map[string]string {
+	return map_InfrastructureSpec
+}
+
 var map_InfrastructureStatus = map[string]string{
-	"platform": "platform is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled.",
+	"":         "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
+	"platform": "platform is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
 }
 
 func (InfrastructureStatus) SwaggerDoc() map[string]string {
