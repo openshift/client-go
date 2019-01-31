@@ -8,6 +8,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Consoles returns a ConsoleInformer.
+	Consoles() ConsoleInformer
 	// KubeAPIServers returns a KubeAPIServerInformer.
 	KubeAPIServers() KubeAPIServerInformer
 	// KubeControllerManagers returns a KubeControllerManagerInformer.
@@ -27,6 +29,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// Consoles returns a ConsoleInformer.
+func (v *version) Consoles() ConsoleInformer {
+	return &consoleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KubeAPIServers returns a KubeAPIServerInformer.

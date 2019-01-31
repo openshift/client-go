@@ -12,6 +12,10 @@ type FakeOperatorV1 struct {
 	*testing.Fake
 }
 
+func (c *FakeOperatorV1) Consoles() v1.ConsoleInterface {
+	return &FakeConsoles{c}
+}
+
 func (c *FakeOperatorV1) KubeAPIServers() v1.KubeAPIServerInterface {
 	return &FakeKubeAPIServers{c}
 }
