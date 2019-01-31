@@ -2,6 +2,10 @@
 
 package v1
 
+// ConsoleListerExpansion allows custom methods to be added to
+// ConsoleLister.
+type ConsoleListerExpansion interface{}
+
 // KubeAPIServerListerExpansion allows custom methods to be added to
 // KubeAPIServerLister.
 type KubeAPIServerListerExpansion interface{}

@@ -2,6 +2,8 @@
 
 package v1
 
+type ConsoleExpansion interface{}
+
 type KubeAPIServerExpansion interface{}
 
 type KubeControllerManagerExpansion interface{}
