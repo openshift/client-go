@@ -39,6 +39,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=operator.openshift.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("consoles"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().Consoles().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("etcds"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().Etcds().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("kubeapiservers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().KubeAPIServers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("kubecontrollermanagers"):
