@@ -6,6 +6,10 @@ package v1
 // ConsoleLister.
 type ConsoleListerExpansion interface{}
 
+// EtcdListerExpansion allows custom methods to be added to
+// EtcdLister.
+type EtcdListerExpansion interface{}
+
 // KubeAPIServerListerExpansion allows custom methods to be added to
 // KubeAPIServerLister.
 type KubeAPIServerListerExpansion interface{}

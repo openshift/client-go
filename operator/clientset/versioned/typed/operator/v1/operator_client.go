@@ -12,6 +12,7 @@ import (
 type OperatorV1Interface interface {
 	RESTClient() rest.Interface
 	ConsolesGetter
+	EtcdsGetter
 	KubeAPIServersGetter
 	KubeControllerManagersGetter
 	OpenShiftAPIServersGetter
@@ -25,6 +26,10 @@ type OperatorV1Client struct {
 
 func (c *OperatorV1Client) Consoles() ConsoleInterface {
 	return newConsoles(c)
+}
+
+func (c *OperatorV1Client) Etcds() EtcdInterface {
+	return newEtcds(c)
 }
 
 func (c *OperatorV1Client) KubeAPIServers() KubeAPIServerInterface {

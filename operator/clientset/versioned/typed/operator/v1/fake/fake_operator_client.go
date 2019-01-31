@@ -16,6 +16,10 @@ func (c *FakeOperatorV1) Consoles() v1.ConsoleInterface {
 	return &FakeConsoles{c}
 }
 
+func (c *FakeOperatorV1) Etcds() v1.EtcdInterface {
+	return &FakeEtcds{c}
+}
+
 func (c *FakeOperatorV1) KubeAPIServers() v1.KubeAPIServerInterface {
 	return &FakeKubeAPIServers{c}
 }

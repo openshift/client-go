@@ -4,6 +4,8 @@ package v1
 
 type ConsoleExpansion interface{}
 
+type EtcdExpansion interface{}
+
 type KubeAPIServerExpansion interface{}
 
 type KubeControllerManagerExpansion interface{}
