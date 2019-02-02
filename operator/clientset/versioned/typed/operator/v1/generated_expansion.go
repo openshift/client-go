@@ -2,6 +2,8 @@
 
 package v1
 
+type AuthenticationExpansion interface{}
+
 type ConsoleExpansion interface{}
 
 type EtcdExpansion interface{}
