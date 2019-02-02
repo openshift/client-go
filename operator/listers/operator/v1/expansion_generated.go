@@ -2,6 +2,10 @@
 
 package v1
 
+// AuthenticationListerExpansion allows custom methods to be added to
+// AuthenticationLister.
+type AuthenticationListerExpansion interface{}
+
 // ConsoleListerExpansion allows custom methods to be added to
 // ConsoleLister.
 type ConsoleListerExpansion interface{}

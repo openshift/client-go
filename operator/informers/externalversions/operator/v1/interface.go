@@ -8,6 +8,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Authentications returns a AuthenticationInformer.
+	Authentications() AuthenticationInformer
 	// Consoles returns a ConsoleInformer.
 	Consoles() ConsoleInformer
 	// Etcds returns a EtcdInformer.
@@ -31,6 +33,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// Authentications returns a AuthenticationInformer.
+func (v *version) Authentications() AuthenticationInformer {
+	return &authenticationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Consoles returns a ConsoleInformer.
