@@ -42,10 +42,14 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&KubeAPIServerList{},
 		&KubeControllerManager{},
 		&KubeControllerManagerList{},
+		&KubeScheduler{},
+		&KubeSchedulerList{},
 		&OpenShiftAPIServer{},
 		&OpenShiftAPIServerList{},
 		&OpenShiftControllerManager{},
 		&OpenShiftControllerManagerList{},
+		&ServiceCA{},
+		&ServiceCAList{},
 	)
 
 	return nil
