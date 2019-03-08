@@ -24,6 +24,10 @@ func (c *FakeOperatorV1) Etcds() v1.EtcdInterface {
 	return &FakeEtcds{c}
 }
 
+func (c *FakeOperatorV1) IngressControllers(namespace string) v1.IngressControllerInterface {
+	return &FakeIngressControllers{c, namespace}
+}
+
 func (c *FakeOperatorV1) KubeAPIServers() v1.KubeAPIServerInterface {
 	return &FakeKubeAPIServers{c}
 }
