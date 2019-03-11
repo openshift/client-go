@@ -13,8 +13,10 @@ type Features struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// +required
 	Spec FeaturesSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
+	// +optional
 	Status FeaturesStatus `json:"status"`
 }
 
@@ -62,13 +64,26 @@ type FeatureEnabledDisabled struct {
 // example:
 //   if featureSet, ok := FeaturesSets["SomeNewFeature"]; ok { }
 //
+// If you put an item in either of these lists, put your area and name on it so we can find owners.
 var FeatureSets = map[FeatureSet]*FeatureEnabledDisabled{
 	Default: &FeatureEnabledDisabled{
-		Enabled:  []string{},
-		Disabled: []string{"PersistentLocalVolumes"},
+		Enabled: []string{
+			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
+			"RotateKubeletServerCertificate",    // sig-pod, sjenning
+		},
+		Disabled: []string{
+			"LocalStorageCapacityIsolation", // sig-pod, sjenning
+			"PersistentLocalVolumes",        // sig-storage, hekumar@redhat.com
+		},
 	},
 	TechPreviewNoUpgrade: &FeatureEnabledDisabled{
-		Enabled:  []string{},
-		Disabled: []string{},
+		Enabled: []string{
+			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
+			"RotateKubeletServerCertificate",    // sig-pod, sjenning
+		},
+		Disabled: []string{
+			"LocalStorageCapacityIsolation", // sig-pod, sjenning
+			"PersistentLocalVolumes",        // sig-storage, hekumar@redhat.com
+		},
 	},
 }

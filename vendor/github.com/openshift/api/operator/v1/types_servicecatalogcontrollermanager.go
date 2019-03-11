@@ -11,10 +11,12 @@ import (
 // ServiceCatalogControllerManager provides information to configure an operator to manage Service Catalog Controller Manager
 type ServiceCatalogControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
 
-	Spec   ServiceCatalogControllerManagerSpec   `json:"spec,omitempty"`
-	Status ServiceCatalogControllerManagerStatus `json:"status,omitempty"`
+	// +required
+	Spec ServiceCatalogControllerManagerSpec `json:"spec"`
+	// +optional
+	Status ServiceCatalogControllerManagerStatus `json:"status"`
 }
 
 type ServiceCatalogControllerManagerSpec struct {

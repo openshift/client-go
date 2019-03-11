@@ -14,6 +14,14 @@ type ConsoleListerExpansion interface{}
 // EtcdLister.
 type EtcdListerExpansion interface{}
 
+// IngressControllerListerExpansion allows custom methods to be added to
+// IngressControllerLister.
+type IngressControllerListerExpansion interface{}
+
+// IngressControllerNamespaceListerExpansion allows custom methods to be added to
+// IngressControllerNamespaceLister.
+type IngressControllerNamespaceListerExpansion interface{}
+
 // KubeAPIServerListerExpansion allows custom methods to be added to
 // KubeAPIServerLister.
 type KubeAPIServerListerExpansion interface{}
