@@ -44,6 +44,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&KubeControllerManagerList{},
 		&KubeScheduler{},
 		&KubeSchedulerList{},
+		&Network{},
+		&NetworkList{},
 		&OpenShiftAPIServer{},
 		&OpenShiftAPIServerList{},
 		&OpenShiftControllerManager{},
@@ -54,6 +56,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ServiceCatalogAPIServerList{},
 		&ServiceCatalogControllerManager{},
 		&ServiceCatalogControllerManagerList{},
+		&IngressController{},
+		&IngressControllerList{},
 	)
 
 	return nil
