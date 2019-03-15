@@ -1,5 +1,5 @@
-hash: ea083077c1e55ae19912a8f5cd98109e104de487364f11fca3c0c227ceffe6c6
-updated: 2019-03-08T09:37:23.531077218-05:00
+hash: 9dc19286d9a6d0fca73ace9a9b72e7c9bac325a99f4d25620a16a1eac933dce4
+updated: 2019-03-15T11:51:33.082661254-04:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -12,8 +12,6 @@ imports:
   subpackages:
   - proto
   - sortkeys
-- name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/protobuf
   version: b4deda0973fb4c70b50d226b1af49f3da59f5265
   subpackages:
@@ -49,7 +47,7 @@ imports:
 - name: github.com/modern-go/reflect2
   version: 94122c33edd36123c84d5368cfb2b69df93a0ec8
 - name: github.com/openshift/api
-  version: a086ececadbb428c3d0ef0d5a2de0c343008cac6
+  version: 9b5ff1e2ea32eed18adc85520d938700b4870cbc
   subpackages:
   - apps/v1
   - authorization/v1
@@ -239,11 +237,10 @@ imports:
   - util/integer
   - util/retry
 - name: k8s.io/code-generator
-  version: 1bdf8e8a8fde675de375d9d0a8fa77c4034be0a0
-  repo: https://github.com/openshift/kubernetes-code-generator.git
+  version: 2bf47b06188b89cc41d68422aa52509f2cbb4cc8
+  repo: git@github.com:openshift/kubernetes-code-generator
 - name: k8s.io/gengo
-  version: 01a732e01d00cb9a81bb0ca050d3e6d2b947927b
-  repo: https://github.com/openshift/kubernetes-gengo.git
+  version: 51747d6e00da1fc578d5a333a93bb2abcbce7a95
 - name: k8s.io/klog
   version: 8139d8cb77af419532b33dfa7dd09fbc5f1d344f
 - name: k8s.io/kube-openapi
