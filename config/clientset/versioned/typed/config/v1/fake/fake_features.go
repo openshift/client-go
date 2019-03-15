@@ -3,7 +3,7 @@
 package fake
 
 import (
-	config_v1 "github.com/openshift/api/config/v1"
+	configv1 "github.com/openshift/api/config/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -22,19 +22,19 @@ var featuresResource = schema.GroupVersionResource{Group: "config.openshift.io",
 var featuresKind = schema.GroupVersionKind{Group: "config.openshift.io", Version: "v1", Kind: "Features"}
 
 // Get takes name of the features, and returns the corresponding features object, and an error if there is any.
-func (c *FakeFeatures) Get(name string, options v1.GetOptions) (result *config_v1.Features, err error) {
+func (c *FakeFeatures) Get(name string, options v1.GetOptions) (result *configv1.Features, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(featuresResource, name), &config_v1.Features{})
+		Invokes(testing.NewRootGetAction(featuresResource, name), &configv1.Features{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*config_v1.Features), err
+	return obj.(*configv1.Features), err
 }
 
 // List takes label and field selectors, and returns the list of Features that match those selectors.
-func (c *FakeFeatures) List(opts v1.ListOptions) (result *config_v1.FeaturesList, err error) {
+func (c *FakeFeatures) List(opts v1.ListOptions) (result *configv1.FeaturesList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(featuresResource, featuresKind, opts), &config_v1.FeaturesList{})
+		Invokes(testing.NewRootListAction(featuresResource, featuresKind, opts), &configv1.FeaturesList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -43,8 +43,8 @@ func (c *FakeFeatures) List(opts v1.ListOptions) (result *config_v1.FeaturesList
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &config_v1.FeaturesList{ListMeta: obj.(*config_v1.FeaturesList).ListMeta}
-	for _, item := range obj.(*config_v1.FeaturesList).Items {
+	list := &configv1.FeaturesList{ListMeta: obj.(*configv1.FeaturesList).ListMeta}
+	for _, item := range obj.(*configv1.FeaturesList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -59,40 +59,40 @@ func (c *FakeFeatures) Watch(opts v1.ListOptions) (watch.Interface, error) {
 }
 
 // Create takes the representation of a features and creates it.  Returns the server's representation of the features, and an error, if there is any.
-func (c *FakeFeatures) Create(features *config_v1.Features) (result *config_v1.Features, err error) {
+func (c *FakeFeatures) Create(features *configv1.Features) (result *configv1.Features, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(featuresResource, features), &config_v1.Features{})
+		Invokes(testing.NewRootCreateAction(featuresResource, features), &configv1.Features{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*config_v1.Features), err
+	return obj.(*configv1.Features), err
 }
 
 // Update takes the representation of a features and updates it. Returns the server's representation of the features, and an error, if there is any.
-func (c *FakeFeatures) Update(features *config_v1.Features) (result *config_v1.Features, err error) {
+func (c *FakeFeatures) Update(features *configv1.Features) (result *configv1.Features, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(featuresResource, features), &config_v1.Features{})
+		Invokes(testing.NewRootUpdateAction(featuresResource, features), &configv1.Features{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*config_v1.Features), err
+	return obj.(*configv1.Features), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeFeatures) UpdateStatus(features *config_v1.Features) (*config_v1.Features, error) {
+func (c *FakeFeatures) UpdateStatus(features *configv1.Features) (*configv1.Features, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceAction(featuresResource, "status", features), &config_v1.Features{})
+		Invokes(testing.NewRootUpdateSubresourceAction(featuresResource, "status", features), &configv1.Features{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*config_v1.Features), err
+	return obj.(*configv1.Features), err
 }
 
 // Delete takes name of the features and deletes it. Returns an error if one occurs.
 func (c *FakeFeatures) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(featuresResource, name), &config_v1.Features{})
+		Invokes(testing.NewRootDeleteAction(featuresResource, name), &configv1.Features{})
 	return err
 }
 
@@ -100,16 +100,16 @@ func (c *FakeFeatures) Delete(name string, options *v1.DeleteOptions) error {
 func (c *FakeFeatures) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	action := testing.NewRootDeleteCollectionAction(featuresResource, listOptions)
 
-	_, err := c.Fake.Invokes(action, &config_v1.FeaturesList{})
+	_, err := c.Fake.Invokes(action, &configv1.FeaturesList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched features.
-func (c *FakeFeatures) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *config_v1.Features, err error) {
+func (c *FakeFeatures) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *configv1.Features, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(featuresResource, name, data, subresources...), &config_v1.Features{})
+		Invokes(testing.NewRootPatchSubresourceAction(featuresResource, name, pt, data, subresources...), &configv1.Features{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*config_v1.Features), err
+	return obj.(*configv1.Features), err
 }
