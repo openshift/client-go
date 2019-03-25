@@ -10,6 +10,10 @@ type AuthenticationListerExpansion interface{}
 // ConsoleLister.
 type ConsoleListerExpansion interface{}
 
+// DNSListerExpansion allows custom methods to be added to
+// DNSLister.
+type DNSListerExpansion interface{}
+
 // EtcdListerExpansion allows custom methods to be added to
 // EtcdLister.
 type EtcdListerExpansion interface{}
@@ -33,6 +37,10 @@ type KubeControllerManagerListerExpansion interface{}
 // KubeSchedulerListerExpansion allows custom methods to be added to
 // KubeSchedulerLister.
 type KubeSchedulerListerExpansion interface{}
+
+// NetworkListerExpansion allows custom methods to be added to
+// NetworkLister.
+type NetworkListerExpansion interface{}
 
 // OpenShiftAPIServerListerExpansion allows custom methods to be added to
 // OpenShiftAPIServerLister.

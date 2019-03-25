@@ -20,6 +20,10 @@ func (c *FakeOperatorV1) Consoles() v1.ConsoleInterface {
 	return &FakeConsoles{c}
 }
 
+func (c *FakeOperatorV1) DNSes() v1.DNSInterface {
+	return &FakeDNSes{c}
+}
+
 func (c *FakeOperatorV1) Etcds() v1.EtcdInterface {
 	return &FakeEtcds{c}
 }
@@ -38,6 +42,10 @@ func (c *FakeOperatorV1) KubeControllerManagers() v1.KubeControllerManagerInterf
 
 func (c *FakeOperatorV1) KubeSchedulers() v1.KubeSchedulerInterface {
 	return &FakeKubeSchedulers{c}
+}
+
+func (c *FakeOperatorV1) Networks() v1.NetworkInterface {
+	return &FakeNetworks{c}
 }
 
 func (c *FakeOperatorV1) OpenShiftAPIServers() v1.OpenShiftAPIServerInterface {
