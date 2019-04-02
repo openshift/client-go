@@ -464,7 +464,7 @@ func TestQueryToProto(t *testing.T) {
 		},
 		{
 			desc:  "standard query",
-			query: NewQuery("kind").Order("-I").Filter("I >", 17).Filter("U =", "Dave").Limit(7).Offset(42).BatchSize(5),
+			query: NewQuery("kind").Order("-I").Filter("I >", 17).Filter("U =", "Dave").Limit(7).Offset(42),
 			want: &pb.Query{
 				Kind: proto.String("kind"),
 				Filter: []*pb.Query_Filter{
@@ -497,7 +497,6 @@ func TestQueryToProto(t *testing.T) {
 				},
 				Limit:  proto.Int32(7),
 				Offset: proto.Int32(42),
-				Count:  proto.Int32(5),
 			},
 		},
 		{
@@ -525,14 +524,6 @@ func TestQueryToProto(t *testing.T) {
 			want: &pb.Query{
 				PropertyName:        []string{"A", "B"},
 				GroupByPropertyName: []string{"A", "B"},
-			},
-		},
-		{
-			desc:  "distinct on",
-			query: NewQuery("").Project("A", "B").DistinctOn("A"),
-			want: &pb.Query{
-				PropertyName:        []string{"A", "B"},
-				GroupByPropertyName: []string{"A"},
 			},
 		},
 		{
