@@ -5,8 +5,8 @@ package v1
 import (
 	"time"
 
-	v1 "github.com/openshift/api/config/v1"
-	scheme "github.com/openshift/client-go/config/clientset/versioned/scheme"
+	v1 "github.com/openshift/api/operator/v1"
+	scheme "github.com/openshift/client-go/operator/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -39,7 +39,7 @@ type dNSes struct {
 }
 
 // newDNSes returns a DNSes
-func newDNSes(c *ConfigV1Client) *dNSes {
+func newDNSes(c *OperatorV1Client) *dNSes {
 	return &dNSes{
 		client: c.RESTClient(),
 	}
