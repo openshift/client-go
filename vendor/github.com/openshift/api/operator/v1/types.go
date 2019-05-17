@@ -1,9 +1,8 @@
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // MyOperatorResource is an example operator configuration type
@@ -59,10 +58,6 @@ type OperatorSpec struct {
 	// +optional
 	OperatorLogLevel LogLevel `json:"operatorLogLevel"`
 
-	// operandSpecs provide customization for functional units within the component
-	// +optional
-	OperandSpecs []OperandSpec `json:"operandSpecs,omitempty"`
-
 	// unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override
 	// it will end up overlaying in the following order:
 	// 1. hardcoded defaults
@@ -95,38 +90,6 @@ var (
 	// prepare from serious performance issues and massive amounts of logs.  In kube, this is probably glog=8.
 	TraceAll LogLevel = "TraceAll"
 )
-
-// ResourcePatch is a way to represent the patch you would issue to `kubectl patch` in the API
-type ResourcePatch struct {
-	// type is the type of patch to apply: jsonmerge, strategicmerge
-	Type string `json:"type"`
-	// patch the patch itself
-	Patch string `json:"patch"`
-}
-
-// OperandSpec holds information for customization of a particular functional unit - logically maps to a workload
-type OperandSpec struct {
-	// name is the name of this unit.  The operator must be aware of it.
-	Name string `json:"name"`
-
-	// operandContainerSpecs are per-container options
-	// +optional
-	OperandContainerSpecs []OperandContainerSpec `json:"operandContainerSpecs,omitempty"`
-
-	// unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported
-	// workaround if anything needs to be modified on the workload that is not otherwise configurable.
-	// TODO Decide: alternatively, we could simply include a RawExtension which is used in place of the "normal" default manifest
-	// +optional
-	UnsupportedResourcePatches []ResourcePatch `json:"unsupportedResourcePatches,omitempty"`
-}
-
-type OperandContainerSpec struct {
-	// name is the name of the container to modify
-	Name string `json:"name"`
-
-	// resources are the requests and limits to place in the container.  Nil means to accept the defaults.
-	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
-}
 
 type OperatorStatus struct {
 	// observedGeneration is the last generation change you've dealt with
@@ -170,8 +133,8 @@ var (
 	OperatorStatusTypeAvailable = "Available"
 	// Progressing indicates that the operator is trying to transition the operand to a different state
 	OperatorStatusTypeProgressing = "Progressing"
-	// Failing indicates that the operator (not the operand) is unable to fulfill the user intent
-	OperatorStatusTypeFailing = "Failing"
+	// Degraded indicates that the operator (not the operand) is unable to fulfill the user intent
+	OperatorStatusTypeDegraded = "Degraded"
 	// PrereqsSatisfied indicates that the things this operator depends on are present and at levels compatible with the
 	// current and desired states.
 	OperatorStatusTypePrereqsSatisfied = "PrereqsSatisfied"
@@ -200,6 +163,11 @@ const (
 type StaticPodOperatorSpec struct {
 	OperatorSpec `json:",inline"`
 
+	// forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string.
+	// This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work
+	// this time instead of failing again on the same config.
+	ForceRedeploymentReason string `json:"forceRedeploymentReason"`
+
 	// failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
 	FailedRevisionLimit int32 `json:"failedRevisionLimit,omitempty"`
@@ -216,6 +184,10 @@ type StaticPodOperatorStatus struct {
 	// latestAvailableRevision is the deploymentID of the most recent deployment
 	// +optional
 	LatestAvailableRevision int32 `json:"latestAvailableRevision,omitEmpty"`
+
+	// latestAvailableRevisionReason describe the detailed reason for the most recent deployment
+	// +optional
+	LatestAvailableRevisionReason string `json:"latestAvailableRevisionReason,omitEmpty"`
 
 	// nodeStatuses track the deployment values and errors across individual nodes
 	// +optional
