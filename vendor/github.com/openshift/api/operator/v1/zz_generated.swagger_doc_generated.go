@@ -46,26 +46,6 @@ func (NodeStatus) SwaggerDoc() map[string]string {
 	return map_NodeStatus
 }
 
-var map_OperandContainerSpec = map[string]string{
-	"name":      "name is the name of the container to modify",
-	"resources": "resources are the requests and limits to place in the container.  Nil means to accept the defaults.",
-}
-
-func (OperandContainerSpec) SwaggerDoc() map[string]string {
-	return map_OperandContainerSpec
-}
-
-var map_OperandSpec = map[string]string{
-	"":                           "OperandSpec holds information for customization of a particular functional unit - logically maps to a workload",
-	"name":                       "name is the name of this unit.  The operator must be aware of it.",
-	"operandContainerSpecs":      "operandContainerSpecs are per-container options",
-	"unsupportedResourcePatches": "unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported workaround if anything needs to be modified on the workload that is not otherwise configurable.",
-}
-
-func (OperandSpec) SwaggerDoc() map[string]string {
-	return map_OperandSpec
-}
-
 var map_OperatorCondition = map[string]string{
 	"": "OperatorCondition is just the standard condition fields.",
 }
@@ -79,7 +59,6 @@ var map_OperatorSpec = map[string]string{
 	"managementState":            "managementState indicates whether and how the operator should manage the component",
 	"logLevel":                   "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.",
 	"operatorLogLevel":           "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.",
-	"operandSpecs":               "operandSpecs provide customization for functional units within the component",
 	"unsupportedConfigOverrides": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
 	"observedConfig":             "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
 }
@@ -100,20 +79,11 @@ func (OperatorStatus) SwaggerDoc() map[string]string {
 	return map_OperatorStatus
 }
 
-var map_ResourcePatch = map[string]string{
-	"":      "ResourcePatch is a way to represent the patch you would issue to `kubectl patch` in the API",
-	"type":  "type is the type of patch to apply: jsonmerge, strategicmerge",
-	"patch": "patch the patch itself",
-}
-
-func (ResourcePatch) SwaggerDoc() map[string]string {
-	return map_ResourcePatch
-}
-
 var map_StaticPodOperatorSpec = map[string]string{
-	"": "StaticPodOperatorSpec is spec for controllers that manage static pods.",
-	"failedRevisionLimit":    "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
-	"succeededRevisionLimit": "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"":                        "StaticPodOperatorSpec is spec for controllers that manage static pods.",
+	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
+	"failedRevisionLimit":     "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"succeededRevisionLimit":  "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
 }
 
 func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {
@@ -121,9 +91,10 @@ func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {
 }
 
 var map_StaticPodOperatorStatus = map[string]string{
-	"": "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
-	"latestAvailableRevision": "latestAvailableRevision is the deploymentID of the most recent deployment",
-	"nodeStatuses":            "nodeStatuses track the deployment values and errors across individual nodes",
+	"":                              "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
+	"latestAvailableRevision":       "latestAvailableRevision is the deploymentID of the most recent deployment",
+	"latestAvailableRevisionReason": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
+	"nodeStatuses":                  "nodeStatuses track the deployment values and errors across individual nodes",
 }
 
 func (StaticPodOperatorStatus) SwaggerDoc() map[string]string {
@@ -218,14 +189,6 @@ func (EtcdList) SwaggerDoc() map[string]string {
 	return map_EtcdList
 }
 
-var map_EtcdSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-apiserver by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (EtcdSpec) SwaggerDoc() map[string]string {
-	return map_EtcdSpec
-}
-
 var map_EndpointPublishingStrategy = map[string]string{
 	"":     "EndpointPublishingStrategy is a way to publish the endpoints of an IngressController, and represents the type and any additional configuration for a specific type.",
 	"type": "type is the publishing strategy to use. Valid values are:\n\n* LoadBalancerService\n\nPublishes the ingress controller using a Kubernetes LoadBalancer Service.\n\nIn this configuration, the ingress controller deployment uses container networking. A LoadBalancer Service is created to publish the deployment.\n\nSee: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer\n\nIf domain is set, a wildcard DNS record will be managed to point at the LoadBalancer Service's external name. DNS records are managed only in DNS zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nWildcard DNS management is currently supported only on the AWS platform.\n\n* HostNetwork\n\nPublishes the ingress controller on node ports where the ingress controller is deployed.\n\nIn this configuration, the ingress controller deployment uses host networking, bound to node ports 80 and 443. The user is responsible for configuring an external load balancer to publish the ingress controller via the node ports.\n\n* Private\n\nDoes not publish the ingress controller.\n\nIn this configuration, the ingress controller deployment uses container networking, and is not explicitly published. The user must manually publish the ingress controller.",
@@ -257,7 +220,7 @@ var map_IngressControllerSpec = map[string]string{
 	"":                           "IngressControllerSpec is the specification of the desired behavior of the IngressController.",
 	"domain":                     "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.",
 	"replicas":                   "replicas is the desired number of ingress controller replicas. If unset, defaults to 2.",
-	"endpointPublishingStrategy": "endpointPublishingStrategy is used to publish the ingress controller endpoints to other networks, enable load balancer integrations, etc.\n\nIf unset, the default is based on infrastructure.config.openshift.io/cluster .status.platform:\n\n  AWS:      LoadBalancerService\n  Libvirt:  HostNetwork\n\nAny other platform types (including None) default to HostNetwork.\n\nendpointPublishingStrategy cannot be updated.",
+	"endpointPublishingStrategy": "endpointPublishingStrategy is used to publish the ingress controller endpoints to other networks, enable load balancer integrations, etc.\n\nIf unset, the default is based on infrastructure.config.openshift.io/cluster .status.platform:\n\n  AWS:      LoadBalancerService\n  Azure:    LoadBalancerService\n  Libvirt:  HostNetwork\n\nAny other platform types (including None) default to HostNetwork.\n\nendpointPublishingStrategy cannot be updated.",
 	"defaultCertificate":         "defaultCertificate is a reference to a secret containing the default certificate served by the ingress controller. When Routes don't specify their own certificate, defaultCertificate is used.\n\nThe secret must contain the following keys and data:\n\n  tls.crt: certificate file contents\n  tls.key: key file contents\n\nIf unset, a wildcard certificate is automatically generated and used. The certificate is valid for the ingress controller domain (and subdomains) and the generated certificate's CA will be automatically integrated with the cluster's trust store.\n\nThe in-use certificate (whether generated or user-specified) will be automatically integrated with OpenShift's built-in OAuth server.",
 	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
@@ -309,14 +272,6 @@ func (KubeAPIServerList) SwaggerDoc() map[string]string {
 	return map_KubeAPIServerList
 }
 
-var map_KubeAPIServerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-apiserver by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeAPIServerSpec) SwaggerDoc() map[string]string {
-	return map_KubeAPIServerSpec
-}
-
 var map_KubeControllerManager = map[string]string{
 	"": "KubeControllerManager provides information to configure an operator to manage kube-controller-manager.",
 }
@@ -335,18 +290,11 @@ func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerList
 }
 
-var map_KubeControllerManagerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-controller-manager by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
-	return map_KubeControllerManagerSpec
-}
-
 var map_AdditionalNetworkDefinition = map[string]string{
 	"":             "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
 	"type":         "type is the type of network The only supported value is NetworkTypeRaw",
 	"name":         "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
+	"namespace":    "namespace is the namespace of the network. This will be populated in the resulting CRD If not given the network will be created in the default namespace.",
 	"rawCNIConfig": "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
 }
 
@@ -422,10 +370,10 @@ func (OVNKubernetesConfig) SwaggerDoc() map[string]string {
 }
 
 var map_OpenShiftSDNConfig = map[string]string{
-	"":          "OpenShiftSDNConfig configures the three openshift-sdn plugins",
-	"mode":      "mode is one of \"Multitenant\", \"Subnet\", or \"NetworkPolicy\"",
-	"vxlanPort": "vxlanPort is the port to use for all vxlan packets. The default is 4789.",
-	"mtu":       "mtu is the mtu to use for the tunnel interface. Defaults to 1450 if unset. This must be 50 bytes smaller than the machine's uplink.",
+	"":                       "OpenShiftSDNConfig configures the three openshift-sdn plugins",
+	"mode":                   "mode is one of \"Multitenant\", \"Subnet\", or \"NetworkPolicy\"",
+	"vxlanPort":              "vxlanPort is the port to use for all vxlan packets. The default is 4789.",
+	"mtu":                    "mtu is the mtu to use for the tunnel interface. Defaults to 1450 if unset. This must be 50 bytes smaller than the machine's uplink.",
 	"useExternalOpenvswitch": "useExternalOpenvswitch tells the operator not to install openvswitch, because it will be provided separately. If set, you must provide it yourself.",
 }
 
@@ -498,16 +446,10 @@ func (KubeSchedulerList) SwaggerDoc() map[string]string {
 	return map_KubeSchedulerList
 }
 
-var map_KubeSchedulerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-scheduler by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeSchedulerSpec) SwaggerDoc() map[string]string {
-	return map_KubeSchedulerSpec
-}
-
 var map_ServiceCA = map[string]string{
-	"": "ServiceCA provides information to configure an operator to manage the service cert controllers",
+	"":       "ServiceCA provides information to configure an operator to manage the service cert controllers",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
 }
 
 func (ServiceCA) SwaggerDoc() map[string]string {
