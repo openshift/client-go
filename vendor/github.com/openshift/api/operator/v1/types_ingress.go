@@ -125,13 +125,6 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
-
-	// securitySpec specifies settings for securing IngressController connections.
-	//
-	// If unset, the "Intermediate" security profile is used.
-	//
-	// +optional
-	SecuritySpec *SecuritySpec `json:"securitySpec,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -177,9 +170,42 @@ const (
 	PrivateStrategyType EndpointPublishingStrategyType = "Private"
 )
 
+// LoadBalancerScope is the scope at which a load balancer is exposed.
+type LoadBalancerScope string
+
+var (
+	// InternalLoadBalancer is a load balancer that is exposed only on the
+	// cluster's private network.
+	InternalLoadBalancer LoadBalancerScope = "Internal"
+
+	// ExternalLoadBalancer is a load balancer that is exposed on the
+	// cluster's public network (which is typically on the Internet).
+	ExternalLoadBalancer LoadBalancerScope = "External"
+)
+
+// LoadBalancerStrategy holds parameters for a load balancer.
+type LoadBalancerStrategy struct {
+	// scope indicates the scope at which the load balancer is exposed.
+	// Possible values are "External" and "Internal".  The default is
+	// "External".
+	// +optional
+	Scope LoadBalancerScope `json:"scope"`
+}
+
+// HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing
+// strategy.
+type HostNetworkStrategy struct {
+}
+
+// PrivateStrategy holds parameters for the Private endpoint publishing
+// strategy.
+type PrivateStrategy struct {
+}
+
 // EndpointPublishingStrategy is a way to publish the endpoints of an
 // IngressController, and represents the type and any additional configuration
 // for a specific type.
+// +union
 type EndpointPublishingStrategy struct {
 	// type is the publishing strategy to use. Valid values are:
 	//
@@ -216,7 +242,27 @@ type EndpointPublishingStrategy struct {
 	// In this configuration, the ingress controller deployment uses container
 	// networking, and is not explicitly published. The user must manually publish
 	// the ingress controller.
+	// +unionDiscriminator
+	// +optional
 	Type EndpointPublishingStrategyType `json:"type"`
+
+	// loadBalancer holds parameters for the load balancer. Present only if
+	// type is LoadBalancerService.
+	// +optional
+	// +nullable
+	LoadBalancer *LoadBalancerStrategy `json:"loadBalancer,omitempty"`
+
+	// hostNetwork holds parameters for the HostNetwork endpoint publishing
+	// strategy. Present only if type is HostNetwork.
+	// +optional
+	// +nullable
+	HostNetwork *HostNetworkStrategy `json:"hostNetwork,omitempty"`
+
+	// private holds parameters for the Private endpoint publishing
+	// strategy. Present only if type is Private.
+	// +optional
+	// +nullable
+	Private *PrivateStrategy `json:"private,omitempty"`
 }
 
 var (
@@ -236,138 +282,6 @@ var (
 	DNSReadyIngressConditionType = "DNSReady"
 )
 
-// SecuritySpec defines the settings for securing IngressController connections.
-type SecuritySpec struct {
-	// profile is one of "Old", "Intermediate", "Modern" or "Custom". "Old",
-	// "Intermediate" and "Modern" profiles map to security configurations from [1]:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations
-	//
-	// When a profile of type "Old", "Intermediate" or "Modern" is set, the CustomSettings
-	// field is forbidden.
-	//
-	// customSettings must be provided if, and only if, profile is "Custom".
-	//
-	// If unset, the "Intermediate" profile is used.
-	//
-	Profile SecurityProfileType `json:"profile"`
-	// customSettings defines the schema for settings of a "Custom" profile
-	// and is ignored unless a "Custom" profile is specified.
-	//
-	// +optional
-	CustomSettings *CustomProfileSettings `json:"customSettings,omitempty"`
-
-}
-
-// SecurityProfileType defines a security profile.
-type SecurityProfileType string
-
-const (
-	// SecurityProfileOldType is a security profile that maps to:
-	// https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility
-	SecurityProfileOldType SecurityProfileType = "Old"
-	// SecurityProfileIntermediateType is a security profile that maps to:
-	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	SecurityProfileIntermediateType SecurityProfileType = "Intermediate"
-	// SecurityProfileModernType is a security profile that maps to:
-	// https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
-	SecurityProfileModernType SecurityProfileType = "Modern"
-	// SecurityProfileCustomType is a security profile that allows for custom settings
-	// through type CustomProfileSettings.
-	SecurityProfileCustomType SecurityProfileType = "Custom"
-
-)
-
-// CustomProfileSettings defines the schema for a custom security profile.
-type CustomProfileSettings struct {
-	// ciphers is used to specify the cipher algorithms that are negotiated
-	// during the SSL/TLS handshake with an IngressController. Each cipher must
-	// be an explicit, colon-delimited list of ciphers.
-	//
-	// If unset, the "Intermediate" Ciphersuites [1] are used:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	//
-	// +optional
-	Ciphers *string `json:"ciphers,omitempty"`
-	// securityProtocol is used to specify one or more encryption protocols
-	// that are negotiated during the SSL/TLS handshake with the IngressController.
-	//
-	// If unset, the "Intermediate" Versions [1] are used:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	//
-	//
-	// +optional
-	SecurityProtocol *SecurityProtocol `json:"securityProtocol,omitempty"`
-	// dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating
-	// the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size
-	// will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary
-	// DH key for a 2048 bits RSA key), but will not exceed this maximum value. Only 1024 or 2048
-	// values are allowed.
-	//
-	// If unset, the "Intermediate" DH Parameter size [1] is used:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	//
-	// +optional
-	DHParamSize *DHParamSize `json:"dHParamSize,omitempty"`
-}
-
-// SecurityProtocol defines one or more security protocols used by
-// an IngressController to secure network connections.
-type SecurityProtocol struct {
-	// minimumVersion enforces use of SecurityProtocolVersion or newer on
-	// SSL connections instantiated from an IngressController. minimumVersion
-	// must be lower than maximumVersion.
-	//
-	// If unset and maximumVersion is set, minimumVersion will be set
-	// to maximumVersion. If minimumVersion and maximumVersion are unset,
-	// the minimum version in "Intermediate" Versions [1] is used:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	//
-	// +optional
-	MinimumVersion *SecurityProtocolVersion `json:"minimumVersion,omitempty"`
-	// maximumVersion enforces use of SecurityProtocolVersion or older on
-	// SSL connections instantiated from an IngressController. maximumVersion
-	// must be higher than minimumVersion.
-	//
-	// If unset and minimumVersion is set, maximumVersion will be set
-	// to minimumVersion. If minimumVersion and maximumVersion are unset,
-	// the maximum version in "Intermediate" Versions [1] is used:
-	//
-	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	//
-	// +optional
-	MaximumVersion *SecurityProtocolVersion `json:"maximumVersion,omitempty"`
-}
-
-// SecurityProtocolVersion is a way to specify an IngressController security protocol.
-type SecurityProtocolVersion string
-
-const (
-	// SecurityProtocolTLS10Version is v1.0 of the TLS security protocol.
-	SecurityProtocolTLS10Version SecurityProtocolVersion = "TLSv1.0"
-	// SecurityProtocolTLS11Version is v1.1 of the TLS security protocol.
-	SecurityProtocolTLS11Version SecurityProtocolVersion = "TLSv1.1"
-	// SecurityProtocolTLS12Version is v1.2 of the TLS security protocol.
-	SecurityProtocolTLS12Version SecurityProtocolVersion = "TLSv1.2"
-	// SecurityProtocolTLS13Version is v1.3 of the TLS security protocol.
-	SecurityProtocolTLS13Version SecurityProtocolVersion = "TLSv1.3"
-)
-
-// DHParamSize sets the maximum size of the Diffie-Hellman parameters used for generating
-// the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange.
-type DHParamSize string
-
-const (
-	// DHParamSize1024 is a Diffie-Hellman parameter of 1024 bits.
-	DHParamSize1024 DHParamSize = "1024"
-	// DHParamSize2048 is a Diffie-Hellman parameter of 2048 bits.
-	DHParamSize2048 DHParamSize = "2048"
-)
-
 // IngressControllerStatus defines the observed status of the IngressController.
 type IngressControllerStatus struct {
 	// availableReplicas is number of observed available replicas according to the
@@ -384,9 +298,6 @@ type IngressControllerStatus struct {
 
 	// endpointPublishingStrategy is the actual strategy in use.
 	EndpointPublishingStrategy *EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
-
-	// securityProfileType is the actual security profile in use.
-	SecurityProfile *SecurityProfileType `json:"securityProfile,omitempty"`
 
 	// conditions is a list of conditions and their status.
 	//
