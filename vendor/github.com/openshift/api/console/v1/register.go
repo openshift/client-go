@@ -1,16 +1,16 @@
-package v1alpha1
+package v1
 
 import (
-	configv1 "github.com/openshift/api/config/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 var (
-	GroupName     = "operator.openshift.io"
-	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
-	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, configv1.Install)
+	GroupName     = "console.openshift.io"
+	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
+	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, corev1.AddToScheme)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme
 
@@ -28,14 +28,13 @@ func Resource(resource string) schema.GroupResource {
 	return schema.GroupResource{Group: GroupName, Resource: resource}
 }
 
+// addKnownTypes adds types to API group
 func addKnownTypes(scheme *runtime.Scheme) error {
-	metav1.AddToGroupVersion(scheme, GroupVersion)
-
 	scheme.AddKnownTypes(GroupVersion,
-		&GenericOperatorConfig{},
-		&ImageContentSourcePolicy{},
-		&ImageContentSourcePolicyList{},
+		&ConsoleLink{},
+		&ConsoleCLIDownload{},
+		&ConsoleNotification{},
 	)
-
+	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil
 }
