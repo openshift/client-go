@@ -1147,9 +1147,9 @@ func (TokenConfig) SwaggerDoc() map[string]string {
 }
 
 var map_HubSource = map[string]string{
-	"":         "HubSource is used to specify the OperatorSource and its configuration",
-	"name":     "name is the name of one of the default OperatorSources",
-	"disabled": "disabled is used to disable a default OperatorSource on cluster",
+	"":         "HubSource is used to specify the hub source and its configuration",
+	"name":     "name is the name of one of the default hub sources",
+	"disabled": "disabled is used to disable a default hub source on cluster",
 }
 
 func (HubSource) SwaggerDoc() map[string]string {
@@ -1157,11 +1157,9 @@ func (HubSource) SwaggerDoc() map[string]string {
 }
 
 var map_HubSourceStatus = map[string]string{
-	"":              "HubSourceStatus is used to reflect the current state of applying the configuration to a default source",
-	"name":          "name is the name of one of the default OperatorSources",
-	"configuration": "configuration is the state of the default OperatorSources configuration",
-	"status":        "status indicates success or failure in applying the configuration",
-	"message":       "message provides more information regarding failures",
+	"":        "HubSourceStatus is used to reflect the current state of applying the configuration to a default source",
+	"status":  "status indicates success or failure in applying the configuration",
+	"message": "message provides more information regarding failures",
 }
 
 func (HubSourceStatus) SwaggerDoc() map[string]string {
@@ -1169,7 +1167,7 @@ func (HubSourceStatus) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHub = map[string]string{
-	"": "OperatorHub is the Schema for the operatorhubs API",
+	"": "OperatorHub is the Schema for the operatorhubs API. It can be used to change the state of the default hub sources for OperatorHub on the cluster from enabled to disabled and vice versa.",
 }
 
 func (OperatorHub) SwaggerDoc() map[string]string {
@@ -1185,8 +1183,9 @@ func (OperatorHubList) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHubSpec = map[string]string{
-	"":           "OperatorHubSpec defines the desired state of OperatorHub",
-	"hubSources": "hubSources is the list of default OperatorSources and their configuration",
+	"":                         "OperatorHubSpec defines the desired state of OperatorHub",
+	"disableAllDefaultSources": "disableAllDefaultSources allows you to disable all the default hub sources. If this is true, a specific entry in sources can be used to enable a default source. If this is false, a specific entry in sources can be used to disable or enable a default source.",
+	"sources":                  "sources is the list of default hub sources and their configuration. If the list is empty, it implies that the default hub sources are enabled on the cluster unless disableAllDefaultSources is true. If disableAllDefaultSources is true and sources is not empty, the configuration present in sources will take precedence. The list of default hub sources and their current state will always be reflected in the status block.",
 }
 
 func (OperatorHubSpec) SwaggerDoc() map[string]string {
@@ -1194,8 +1193,8 @@ func (OperatorHubSpec) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHubStatus = map[string]string{
-	"":                 "OperatorHubStatus defines the observed state of OperatorHub",
-	"hubSourcesStatus": "hubSourcesStatus encapsulates the result applying the configuration",
+	"":        "OperatorHubStatus defines the observed state of OperatorHub. The current state of the default hub sources will always be reflected here.",
+	"sources": "sources encapsulates the result of applying the configuration for each hub source",
 }
 
 func (OperatorHubStatus) SwaggerDoc() map[string]string {
@@ -1264,7 +1263,7 @@ var map_ProxySpec = map[string]string{
 	"httpsProxy":         "httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.",
 	"noProxy":            "noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used. Empty means unset and will not result in an env var.",
 	"readinessEndpoints": "readinessEndpoints is a list of endpoints used to verify readiness of the proxy.",
-	"trustedCA":          "trustedCA is a reference to a ConfigMap containing a CA certificate bundle used for client egress HTTPS connections. The certificate bundle must be from the CA that signed the proxy's certificate and be signed for everything. trustedCA should only be consumed by a proxy validator. The validator is responsible for reading ConfigMapNameReference, validating the certificate and copying \"ca-bundle.crt\" from data to a ConfigMap in the namespace of an operator configured for proxy. The namespace for this ConfigMap is \"openshift-config-managed\". Here is an example ConfigMap (in yaml):\n\napiVersion: v1 kind: ConfigMap metadata:\n name: proxy-ca\n namespace: openshift-config-managed\n data:\n   ca-bundle.crt: |",
+	"trustedCA":          "trustedCA is a reference to a ConfigMap containing a CA certificate bundle used for client egress HTTPS connections. The certificate bundle must be from the CA that signed the proxy's certificate and be signed for everything. The trustedCA field should only be consumed by a proxy validator. The validator is responsible for reading the certificate bundle from required key \"ca-bundle.crt\" and copying it to a ConfigMap named \"trusted-ca-bundle\" in the \"openshift-config-managed\" namespace. The namespace for the ConfigMap referenced by trustedCA is \"openshift-config\". Here is an example ConfigMap (in yaml):\n\napiVersion: v1 kind: ConfigMap metadata:\n name: user-ca-bundle\n namespace: openshift-config\n data:\n   ca-bundle.crt: |",
 }
 
 func (ProxySpec) SwaggerDoc() map[string]string {
@@ -1283,7 +1282,7 @@ func (ProxyStatus) SwaggerDoc() map[string]string {
 }
 
 var map_Scheduler = map[string]string{
-	"":         "Scheduler holds cluster-wide information about Scheduler.  The canonical name is `cluster`",
+	"":         "Scheduler holds cluster-wide config information to run the Kubernetes Scheduler and influence its placement decisions. The canonical name for this config is `cluster`.",
 	"metadata": "Standard object's metadata.",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
