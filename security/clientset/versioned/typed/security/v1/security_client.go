@@ -5,7 +5,6 @@ package v1
 import (
 	v1 "github.com/openshift/api/security/v1"
 	"github.com/openshift/client-go/security/clientset/versioned/scheme"
-	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -15,7 +14,7 @@ type SecurityV1Interface interface {
 	PodSecurityPolicySelfSubjectReviewsGetter
 	PodSecurityPolicySubjectReviewsGetter
 	RangeAllocationsGetter
-	SecurityContextConstraintsGetter
+	SecurityContextConstraintsesGetter
 }
 
 // SecurityV1Client is used to interact with features provided by the security.openshift.io group.
@@ -39,8 +38,8 @@ func (c *SecurityV1Client) RangeAllocations() RangeAllocationInterface {
 	return newRangeAllocations(c)
 }
 
-func (c *SecurityV1Client) SecurityContextConstraints() SecurityContextConstraintsInterface {
-	return newSecurityContextConstraints(c)
+func (c *SecurityV1Client) SecurityContextConstraintses() SecurityContextConstraintsInterface {
+	return newSecurityContextConstraintses(c)
 }
 
 // NewForConfig creates a new SecurityV1Client for the given config.
@@ -75,7 +74,7 @@ func setConfigDefaults(config *rest.Config) error {
 	gv := v1.SchemeGroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = serializer.DirectCodecFactory{CodecFactory: scheme.Codecs}
+	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()

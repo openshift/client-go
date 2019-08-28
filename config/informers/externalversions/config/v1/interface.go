@@ -20,8 +20,8 @@ type Interface interface {
 	ClusterVersions() ClusterVersionInformer
 	// Consoles returns a ConsoleInformer.
 	Consoles() ConsoleInformer
-	// DNSes returns a DNSInformer.
-	DNSes() DNSInformer
+	// DNSs returns a DNSInformer.
+	DNSs() DNSInformer
 	// FeatureGates returns a FeatureGateInformer.
 	FeatureGates() FeatureGateInformer
 	// Images returns a ImageInformer.
@@ -83,8 +83,8 @@ func (v *version) Consoles() ConsoleInformer {
 	return &consoleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// DNSes returns a DNSInformer.
-func (v *version) DNSes() DNSInformer {
+// DNSs returns a DNSInformer.
+func (v *version) DNSs() DNSInformer {
 	return &dNSInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 

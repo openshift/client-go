@@ -10,8 +10,8 @@ import (
 type Interface interface {
 	// RangeAllocations returns a RangeAllocationInformer.
 	RangeAllocations() RangeAllocationInformer
-	// SecurityContextConstraints returns a SecurityContextConstraintsInformer.
-	SecurityContextConstraints() SecurityContextConstraintsInformer
+	// SecurityContextConstraintses returns a SecurityContextConstraintsInformer.
+	SecurityContextConstraintses() SecurityContextConstraintsInformer
 }
 
 type version struct {
@@ -30,7 +30,7 @@ func (v *version) RangeAllocations() RangeAllocationInformer {
 	return &rangeAllocationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// SecurityContextConstraints returns a SecurityContextConstraintsInformer.
-func (v *version) SecurityContextConstraints() SecurityContextConstraintsInformer {
+// SecurityContextConstraintses returns a SecurityContextConstraintsInformer.
+func (v *version) SecurityContextConstraintses() SecurityContextConstraintsInformer {
 	return &securityContextConstraintsInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

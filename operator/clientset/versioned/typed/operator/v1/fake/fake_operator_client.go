@@ -20,8 +20,8 @@ func (c *FakeOperatorV1) Consoles() v1.ConsoleInterface {
 	return &FakeConsoles{c}
 }
 
-func (c *FakeOperatorV1) DNSes() v1.DNSInterface {
-	return &FakeDNSes{c}
+func (c *FakeOperatorV1) DNSs() v1.DNSInterface {
+	return &FakeDNSs{c}
 }
 
 func (c *FakeOperatorV1) Etcds() v1.EtcdInterface {

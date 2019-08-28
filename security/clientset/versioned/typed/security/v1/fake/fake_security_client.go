@@ -28,8 +28,8 @@ func (c *FakeSecurityV1) RangeAllocations() v1.RangeAllocationInterface {
 	return &FakeRangeAllocations{c}
 }
 
-func (c *FakeSecurityV1) SecurityContextConstraints() v1.SecurityContextConstraintsInterface {
-	return &FakeSecurityContextConstraints{c}
+func (c *FakeSecurityV1) SecurityContextConstraintses() v1.SecurityContextConstraintsInterface {
+	return &FakeSecurityContextConstraintses{c}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
