@@ -14,6 +14,7 @@ type ConsoleV1Interface interface {
 	ConsoleExternalLogLinksGetter
 	ConsoleLinksGetter
 	ConsoleNotificationsGetter
+	ConsoleYAMLSamplesGetter
 }
 
 // ConsoleV1Client is used to interact with features provided by the console.openshift.io group.
@@ -35,6 +36,10 @@ func (c *ConsoleV1Client) ConsoleLinks() ConsoleLinkInterface {
 
 func (c *ConsoleV1Client) ConsoleNotifications() ConsoleNotificationInterface {
 	return newConsoleNotifications(c)
+}
+
+func (c *ConsoleV1Client) ConsoleYAMLSamples() ConsoleYAMLSampleInterface {
+	return newConsoleYAMLSamples(c)
 }
 
 // NewForConfig creates a new ConsoleV1Client for the given config.

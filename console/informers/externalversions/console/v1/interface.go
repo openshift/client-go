@@ -16,6 +16,8 @@ type Interface interface {
 	ConsoleLinks() ConsoleLinkInformer
 	// ConsoleNotifications returns a ConsoleNotificationInformer.
 	ConsoleNotifications() ConsoleNotificationInformer
+	// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
+	ConsoleYAMLSamples() ConsoleYAMLSampleInformer
 }
 
 type version struct {
@@ -47,4 +49,9 @@ func (v *version) ConsoleLinks() ConsoleLinkInformer {
 // ConsoleNotifications returns a ConsoleNotificationInformer.
 func (v *version) ConsoleNotifications() ConsoleNotificationInformer {
 	return &consoleNotificationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
+func (v *version) ConsoleYAMLSamples() ConsoleYAMLSampleInformer {
+	return &consoleYAMLSampleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

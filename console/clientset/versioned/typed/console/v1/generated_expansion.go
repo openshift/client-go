@@ -9,3 +9,5 @@ type ConsoleExternalLogLinkExpansion interface{}
 type ConsoleLinkExpansion interface{}
 
 type ConsoleNotificationExpansion interface{}
+
+type ConsoleYAMLSampleExpansion interface{}

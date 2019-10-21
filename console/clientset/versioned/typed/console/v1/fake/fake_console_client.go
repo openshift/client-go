@@ -28,6 +28,10 @@ func (c *FakeConsoleV1) ConsoleNotifications() v1.ConsoleNotificationInterface {
 	return &FakeConsoleNotifications{c}
 }
 
+func (c *FakeConsoleV1) ConsoleYAMLSamples() v1.ConsoleYAMLSampleInterface {
+	return &FakeConsoleYAMLSamples{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeConsoleV1) RESTClient() rest.Interface {
