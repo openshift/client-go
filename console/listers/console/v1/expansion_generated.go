@@ -17,3 +17,7 @@ type ConsoleLinkListerExpansion interface{}
 // ConsoleNotificationListerExpansion allows custom methods to be added to
 // ConsoleNotificationLister.
 type ConsoleNotificationListerExpansion interface{}
+
+// ConsoleYAMLSampleListerExpansion allows custom methods to be added to
+// ConsoleYAMLSampleLister.
+type ConsoleYAMLSampleListerExpansion interface{}
