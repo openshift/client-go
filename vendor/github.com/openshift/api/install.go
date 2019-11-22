@@ -38,6 +38,7 @@ import (
 	"github.com/openshift/api/build"
 	"github.com/openshift/api/config"
 	"github.com/openshift/api/image"
+	"github.com/openshift/api/imageregistry"
 	"github.com/openshift/api/kubecontrolplane"
 	"github.com/openshift/api/network"
 	"github.com/openshift/api/oauth"
@@ -47,6 +48,7 @@ import (
 	"github.com/openshift/api/project"
 	"github.com/openshift/api/quota"
 	"github.com/openshift/api/route"
+	"github.com/openshift/api/samples"
 	"github.com/openshift/api/security"
 	"github.com/openshift/api/servicecertsigner"
 	"github.com/openshift/api/template"
@@ -63,6 +65,7 @@ var (
 		build.Install,
 		config.Install,
 		image.Install,
+		imageregistry.Install,
 		kubecontrolplane.Install,
 		network.Install,
 		oauth.Install,
@@ -72,6 +75,7 @@ var (
 		project.Install,
 		quota.Install,
 		route.Install,
+		samples.Install,
 		security.Install,
 		servicecertsigner.Install,
 		template.Install,
