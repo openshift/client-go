@@ -99,12 +99,11 @@ type FeatureGateEnabledDisabled struct {
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	Default: {
 		Enabled: []string{
-			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
-			"RotateKubeletServerCertificate",    // sig-pod, sjenning
-			"SupportPodPidsLimit",               // sig-pod, sjenning
-			"TLSSecurityProfile",                // sig-network, danehans
-			"NodeDisruptionExclusion",           // sig-scheduling, ccoleman
-			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
+			"RotateKubeletServerCertificate", // sig-pod, sjenning
+			"SupportPodPidsLimit",            // sig-pod, sjenning
+			"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
+			"ServiceNodeExclusion",           // sig-scheduling, ccoleman
+			"SCTPSupport",                    // sig-network, ccallend
 		},
 		Disabled: []string{
 			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
@@ -116,12 +115,10 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	},
 	TechPreviewNoUpgrade: {
 		Enabled: []string{
-			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
-			"RotateKubeletServerCertificate",    // sig-pod, sjenning
-			"SupportPodPidsLimit",               // sig-pod, sjenning
-			"TLSSecurityProfile",                // sig-network, danehans
-			"NodeDisruptionExclusion",           // sig-scheduling, ccoleman
-			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
+			"RotateKubeletServerCertificate", // sig-pod, sjenning
+			"SupportPodPidsLimit",            // sig-pod, sjenning
+			"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
+			"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 		},
 		Disabled: []string{
 			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
@@ -129,12 +126,11 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	},
 	LatencySensitive: {
 		Enabled: []string{
-			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
-			"RotateKubeletServerCertificate",    // sig-pod, sjenning
-			"SupportPodPidsLimit",               // sig-pod, sjenning
-			"TopologyManager",                   // sig-pod, sjenning
-			"NodeDisruptionExclusion",           // sig-scheduling, ccoleman
-			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
+			"RotateKubeletServerCertificate", // sig-pod, sjenning
+			"SupportPodPidsLimit",            // sig-pod, sjenning
+			"TopologyManager",                // sig-pod, sjenning
+			"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
+			"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 		},
 		Disabled: []string{
 			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
