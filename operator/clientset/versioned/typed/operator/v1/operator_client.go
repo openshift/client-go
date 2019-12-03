@@ -12,7 +12,7 @@ type OperatorV1Interface interface {
 	RESTClient() rest.Interface
 	AuthenticationsGetter
 	ConsolesGetter
-	DNSesGetter
+	DNSsGetter
 	EtcdsGetter
 	IngressControllersGetter
 	KubeAPIServersGetter
@@ -40,8 +40,8 @@ func (c *OperatorV1Client) Consoles() ConsoleInterface {
 	return newConsoles(c)
 }
 
-func (c *OperatorV1Client) DNSes() DNSInterface {
-	return newDNSes(c)
+func (c *OperatorV1Client) DNSs() DNSInterface {
+	return newDNSs(c)
 }
 
 func (c *OperatorV1Client) Etcds() EtcdInterface {

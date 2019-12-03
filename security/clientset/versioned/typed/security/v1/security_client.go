@@ -14,7 +14,7 @@ type SecurityV1Interface interface {
 	PodSecurityPolicySelfSubjectReviewsGetter
 	PodSecurityPolicySubjectReviewsGetter
 	RangeAllocationsGetter
-	SecurityContextConstraintsGetter
+	SecurityContextConstraintsesGetter
 }
 
 // SecurityV1Client is used to interact with features provided by the security.openshift.io group.
@@ -38,8 +38,8 @@ func (c *SecurityV1Client) RangeAllocations() RangeAllocationInterface {
 	return newRangeAllocations(c)
 }
 
-func (c *SecurityV1Client) SecurityContextConstraints() SecurityContextConstraintsInterface {
-	return newSecurityContextConstraints(c)
+func (c *SecurityV1Client) SecurityContextConstraintses() SecurityContextConstraintsInterface {
+	return newSecurityContextConstraintses(c)
 }
 
 // NewForConfig creates a new SecurityV1Client for the given config.
