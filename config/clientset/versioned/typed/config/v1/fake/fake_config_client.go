@@ -36,8 +36,8 @@ func (c *FakeConfigV1) Consoles() v1.ConsoleInterface {
 	return &FakeConsoles{c}
 }
 
-func (c *FakeConfigV1) DNSes() v1.DNSInterface {
-	return &FakeDNSes{c}
+func (c *FakeConfigV1) DNSs() v1.DNSInterface {
+	return &FakeDNSs{c}
 }
 
 func (c *FakeConfigV1) FeatureGates() v1.FeatureGateInterface {

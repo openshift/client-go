@@ -16,7 +16,7 @@ import (
 )
 
 // SecurityContextConstraintsInformer provides access to a shared informer and lister for
-// SecurityContextConstraints.
+// SecurityContextConstraintses.
 type SecurityContextConstraintsInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() v1.SecurityContextConstraintsLister
@@ -44,13 +44,13 @@ func NewFilteredSecurityContextConstraintsInformer(client versioned.Interface, r
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SecurityV1().SecurityContextConstraints().List(options)
+				return client.SecurityV1().SecurityContextConstraintses().List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SecurityV1().SecurityContextConstraints().Watch(options)
+				return client.SecurityV1().SecurityContextConstraintses().Watch(options)
 			},
 		},
 		&securityv1.SecurityContextConstraints{},

@@ -16,7 +16,7 @@ type ConfigV1Interface interface {
 	ClusterOperatorsGetter
 	ClusterVersionsGetter
 	ConsolesGetter
-	DNSesGetter
+	DNSsGetter
 	FeatureGatesGetter
 	ImagesGetter
 	InfrastructuresGetter
@@ -57,8 +57,8 @@ func (c *ConfigV1Client) Consoles() ConsoleInterface {
 	return newConsoles(c)
 }
 
-func (c *ConfigV1Client) DNSes() DNSInterface {
-	return newDNSes(c)
+func (c *ConfigV1Client) DNSs() DNSInterface {
+	return newDNSs(c)
 }
 
 func (c *ConfigV1Client) FeatureGates() FeatureGateInterface {
