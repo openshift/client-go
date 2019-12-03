@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+export GO111MODULE=on
 SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
 CODEGEN_PKG=$(dirname ${BASH_SOURCE})/code-generator
 
