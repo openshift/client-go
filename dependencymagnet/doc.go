@@ -5,5 +5,6 @@
 package dependencymagnet
 
 import (
-    _ "k8s.io/code-generator"
+	_ "github.com/spf13/pflag"
+	_ "k8s.io/code-generator"
 )
