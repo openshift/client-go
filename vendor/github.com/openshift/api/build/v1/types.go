@@ -23,6 +23,7 @@ type Build struct {
 	Spec BuildSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
 	// status is the current status of the build.
+	// +optional
 	Status BuildStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
@@ -83,6 +84,7 @@ type CommonSpec struct {
 	// If nil, it can be overridden by default build nodeselector values for the cluster.
 	// If set to an empty map or a map with any values, default build nodeselector values
 	// are ignored.
+	// +optional
 	NodeSelector OptionalNodeSelector `json:"nodeSelector" protobuf:"bytes,9,name=nodeSelector"`
 }
 
@@ -218,6 +220,11 @@ type BuildStatus struct {
 
 	// logSnippet is the last few lines of the build log.  This value is only set for builds that failed.
 	LogSnippet string `json:"logSnippet,omitempty" protobuf:"bytes,12,opt,name=logSnippet"`
+
+	// Conditions represents the latest available observations of a build's current state.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	Conditions []BuildCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,13,rep,name=conditions"`
 }
 
 // StageInfo contains details about a build stage.
@@ -330,6 +337,24 @@ const (
 	// BuildPhaseCancelled indicates that a running/pending build was stopped from executing.
 	BuildPhaseCancelled BuildPhase = "Cancelled"
 )
+
+type BuildConditionType string
+
+// BuildCondition describes the state of a build at a certain point.
+type BuildCondition struct {
+	// Type of build condition.
+	Type BuildConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=BuildConditionType"`
+	// Status of the condition, one of True, False, Unknown.
+	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/kubernetes/pkg/api/v1.ConditionStatus"`
+	// The last time this condition was updated.
+	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty" protobuf:"bytes,6,opt,name=lastUpdateTime"`
+	// The last time the condition transitioned from one status to another.
+	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty" protobuf:"bytes,3,opt,name=lastTransitionTime"`
+	// The reason for the condition's last transition.
+	Reason string `json:"reason,omitempty" protobuf:"bytes,4,opt,name=reason"`
+	// A human readable message indicating details about the transition.
+	Message string `json:"message,omitempty" protobuf:"bytes,5,opt,name=message"`
+}
 
 // StatusReason is a brief CamelCase string that describes a temporary or
 // permanent build error condition, meant for machine parsing and tidy display
@@ -880,6 +905,7 @@ type BuildConfig struct {
 	// to trigger them.
 	Spec BuildConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 	// status holds any relevant information about a build config
+	// +optional
 	Status BuildConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
 }
 

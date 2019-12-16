@@ -65,7 +65,29 @@ message Build {
   optional BuildSpec spec = 2;
 
   // status is the current status of the build.
+  // +optional
   optional BuildStatus status = 3;
+}
+
+// BuildCondition describes the state of a build at a certain point.
+message BuildCondition {
+  // Type of build condition.
+  optional string type = 1;
+
+  // Status of the condition, one of True, False, Unknown.
+  optional string status = 2;
+
+  // The last time this condition was updated.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 6;
+
+  // The last time the condition transitioned from one status to another.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3;
+
+  // The reason for the condition's last transition.
+  optional string reason = 4;
+
+  // A human readable message indicating details about the transition.
+  optional string message = 5;
 }
 
 // Build configurations define a build process for new container images. There are three types of builds possible - a container image build using a Dockerfile, a Source-to-Image build that uses a specially prepared base image that accepts source code that it can make runnable, and a custom build that can run // arbitrary container images as a base and accept the build parameters. Builds run on the cluster and on completion are pushed to the container image registry specified in the "output" section. A build can be triggered via a webhook, when the base image changes, or when a user manually requests a new build be // created.
@@ -79,6 +101,7 @@ message BuildConfig {
   optional BuildConfigSpec spec = 2;
 
   // status holds any relevant information about a build config
+  // +optional
   optional BuildConfigStatus status = 3;
 }
 
@@ -434,6 +457,11 @@ message BuildStatus {
 
   // logSnippet is the last few lines of the build log.  This value is only set for builds that failed.
   optional string logSnippet = 12;
+
+  // Conditions represents the latest available observations of a build's current state.
+  // +patchMergeKey=type
+  // +patchStrategy=merge
+  repeated BuildCondition conditions = 13;
 }
 
 // BuildStatusOutput contains the status of the built image.
@@ -561,6 +589,7 @@ message CommonSpec {
   // If nil, it can be overridden by default build nodeselector values for the cluster.
   // If set to an empty map or a map with any values, default build nodeselector values
   // are ignored.
+  // +optional
   optional OptionalNodeSelector nodeSelector = 9;
 }
 
