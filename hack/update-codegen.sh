@@ -15,6 +15,7 @@ for group in apps authorization build config console image imageregistry network
     github.com/openshift/api \
     "${group}:v1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
+    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     ${verify}
 done
 
@@ -24,6 +25,7 @@ for group in servicecertsigner; do
     github.com/openshift/api \
     "${group}:v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
+    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     ${verify}
 done
 
@@ -33,5 +35,6 @@ for group in operator; do
     github.com/openshift/api \
     "${group}:v1,v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
+    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     ${verify}
 done
