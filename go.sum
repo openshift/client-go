@@ -121,6 +121,8 @@ github.com/openshift/api v0.0.0-20191219160953-2f4dddbbf3e6 h1:SxAWPzmw6o8FZ9MMf
 github.com/openshift/api v0.0.0-20191219160953-2f4dddbbf3e6/go.mod h1:dv+J0b/HWai0QnMVb37/H0v36klkLBi2TNpPeWDxX10=
 github.com/openshift/api v0.0.0-20200106203948-7ab22a2c8316 h1:enQG2QUGwug4fR1yM6hL0Fjzx6Km/exZY6RbSPwMu3o=
 github.com/openshift/api v0.0.0-20200106203948-7ab22a2c8316/go.mod h1:dv+J0b/HWai0QnMVb37/H0v36klkLBi2TNpPeWDxX10=
+github.com/openshift/api v0.0.0-20200109154256-35a64c701b10 h1:jtnyccOrbyEf9+7G6jPbHRisru+uiKNUKh45n2xVQeQ=
+github.com/openshift/api v0.0.0-20200109154256-35a64c701b10/go.mod h1:dv+J0b/HWai0QnMVb37/H0v36klkLBi2TNpPeWDxX10=
 github.com/openshift/kubernetes-code-generator v0.0.0-20191216140939-db549faca3fe h1:cqLfxSnplkv+YgeMZxuWnQ2VVeg+XzI6z1T3DRawM40=
 github.com/openshift/kubernetes-code-generator v0.0.0-20191216140939-db549faca3fe/go.mod h1:DVmfPQgxQENqDIzVR2ddLXMH34qeszkKSdH/N+s+38s=
 github.com/peterbourgon/diskv v2.0.1+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=
