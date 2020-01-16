@@ -145,6 +145,15 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
+
+	// routeAdmission defines a policy for handling new route claims (for example,
+	// to allow or deny claims across namespaces).
+	//
+	// If empty, defaults will be applied. See specific routeAdmission fields
+	// for details about their defaults.
+	//
+	// +optional
+	RouteAdmission *RouteAdmissionPolicy `json:"routeAdmission,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -307,6 +316,35 @@ type EndpointPublishingStrategy struct {
 	// +optional
 	NodePort *NodePortStrategy `json:"nodePort,omitempty"`
 }
+
+// RouteAdmissionPolicy is an admission policy for allowing new route claims.
+type RouteAdmissionPolicy struct {
+	// namespaceOwnership describes how host name claims across namespaces should
+	// be handled.
+	//
+	// Value must be one of:
+	//
+	// - Strict: Do not allow routes in different namespaces to claim the same host.
+	//
+	// - InterNamespaceAllowed: Allow routes to claim different paths of the same
+	//   host name across namespaces.
+	//
+	// If empty, the default is Strict.
+	// +optional
+	NamespaceOwnership NamespaceOwnershipCheck `json:"namespaceOwnership,omitempty"`
+}
+
+// NamespaceOwnershipCheck is a route admission policy component that describes
+// how host name claims across namespaces should be handled.
+type NamespaceOwnershipCheck string
+
+const (
+	// InterNamespaceAllowedOwnershipCheck allows routes to claim different paths of the same host name across namespaces.
+	InterNamespaceAllowedOwnershipCheck NamespaceOwnershipCheck = "InterNamespaceAllowed"
+
+	// StrictNamespaceOwnershipCheck does not allow routes to claim the same host name across namespaces.
+	StrictNamespaceOwnershipCheck NamespaceOwnershipCheck = "Strict"
+)
 
 var (
 	// Available indicates the ingress controller deployment is available.
