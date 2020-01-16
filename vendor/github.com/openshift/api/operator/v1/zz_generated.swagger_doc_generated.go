@@ -117,6 +117,14 @@ func (AuthenticationList) SwaggerDoc() map[string]string {
 	return map_AuthenticationList
 }
 
+var map_AuthenticationStatus = map[string]string{
+	"managingOAuthAPIServer": "ManagingOAuthAPIServer indicates whether this operator is managing OAuth related APIs. Setting this field to true will cause OAS-O to step down. Note that this field will be removed in the future releases, once https://github.com/openshift/enhancements/blob/master/enhancements/authentication/separate-oauth-resources.md is fully implemented",
+}
+
+func (AuthenticationStatus) SwaggerDoc() map[string]string {
+	return map_AuthenticationStatus
+}
+
 var map_Console = map[string]string{
 	"": "Console provides a means to configure an operator to manage the console.",
 }
@@ -171,6 +179,40 @@ var map_StatuspageProvider = map[string]string{
 
 func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
+}
+
+var map_CSISnapshotController = map[string]string{
+	"":       "CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (CSISnapshotController) SwaggerDoc() map[string]string {
+	return map_CSISnapshotController
+}
+
+var map_CSISnapshotControllerList = map[string]string{
+	"": "CSISnapshotControllerList contains a list of CSISnapshotControllers.",
+}
+
+func (CSISnapshotControllerList) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerList
+}
+
+var map_CSISnapshotControllerSpec = map[string]string{
+	"": "CSISnapshotControllerSpec is the specification of the desired behavior of the CSISnapshotController operator.",
+}
+
+func (CSISnapshotControllerSpec) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerSpec
+}
+
+var map_CSISnapshotControllerStatus = map[string]string{
+	"": "CSISnapshotControllerStatus defines the observed status of the CSISnapshotController operator.",
+}
+
+func (CSISnapshotControllerStatus) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerStatus
 }
 
 var map_DNS = map[string]string{
@@ -297,6 +339,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
 	"tlsSecurityProfile":         "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the apiservers.config.openshift.io/cluster resource.\n\nNote that when using the Old, Intermediate, and Modern profile types, the effective profile configuration is subject to change between releases. For example, given a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress controller, resulting in a rollout.\n\nNote that the minimum TLS version for ingress controllers is 1.1, and the maximum TLS version is 1.2.  An implication of this restriction is that the Modern TLS profile type cannot be used because it requires TLS 1.3.",
+	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -351,6 +394,15 @@ var map_PrivateStrategy = map[string]string{
 
 func (PrivateStrategy) SwaggerDoc() map[string]string {
 	return map_PrivateStrategy
+}
+
+var map_RouteAdmissionPolicy = map[string]string{
+	"":                   "RouteAdmissionPolicy is an admission policy for allowing new route claims.",
+	"namespaceOwnership": "namespaceOwnership describes how host name claims across namespaces should be handled.\n\nValue must be one of:\n\n- Strict: Do not allow routes in different namespaces to claim the same host.\n\n- InterNamespaceAllowed: Allow routes to claim different paths of the same\n  host name across namespaces.\n\nIf empty, the default is Strict.",
+}
+
+func (RouteAdmissionPolicy) SwaggerDoc() map[string]string {
+	return map_RouteAdmissionPolicy
 }
 
 var map_KubeAPIServer = map[string]string{
