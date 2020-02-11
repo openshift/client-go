@@ -13,3 +13,5 @@ require (
 
 // needed for pluralization patches open upstream.  Remove in v0.18.0
 replace k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20191216140939-db549faca3fe
+
+replace github.com/openshift/api => github.com/sallyom/api v0.0.0-20200211212639-1512a513eeeb
