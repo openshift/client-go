@@ -14,6 +14,8 @@ type Interface interface {
 	Authentications() AuthenticationInformer
 	// Builds returns a BuildInformer.
 	Builds() BuildInformer
+	// ClusterCLIs returns a ClusterCLIInformer.
+	ClusterCLIs() ClusterCLIInformer
 	// ClusterOperators returns a ClusterOperatorInformer.
 	ClusterOperators() ClusterOperatorInformer
 	// ClusterVersions returns a ClusterVersionInformer.
@@ -66,6 +68,11 @@ func (v *version) Authentications() AuthenticationInformer {
 // Builds returns a BuildInformer.
 func (v *version) Builds() BuildInformer {
 	return &buildInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ClusterCLIs returns a ClusterCLIInformer.
+func (v *version) ClusterCLIs() ClusterCLIInformer {
+	return &clusterCLIInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ClusterOperators returns a ClusterOperatorInformer.

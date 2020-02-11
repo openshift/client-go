@@ -8,6 +8,8 @@ type AuthenticationExpansion interface{}
 
 type BuildExpansion interface{}
 
+type ClusterCLIExpansion interface{}
+
 type ClusterOperatorExpansion interface{}
 
 type ClusterVersionExpansion interface{}
