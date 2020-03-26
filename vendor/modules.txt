@@ -53,7 +53,7 @@ github.com/mailru/easyjson/jwriter
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/openshift/api v0.0.0-20200324160301-f91f52aea878
+# github.com/openshift/api v0.0.0-20200326152221-912866ddb162
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
@@ -121,7 +121,7 @@ google.golang.org/appengine/urlfetch
 gopkg.in/inf.v0
 # gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
-# k8s.io/api v0.18.0-beta.2
+# k8s.io/api v0.18.0
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1beta1
 k8s.io/api/apps/v1
@@ -162,7 +162,7 @@ k8s.io/api/settings/v1alpha1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apimachinery v0.18.0-beta.2
+# k8s.io/apimachinery v0.18.0
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/api/resource
@@ -205,7 +205,7 @@ k8s.io/apimachinery/pkg/version
 k8s.io/apimachinery/pkg/watch
 k8s.io/apimachinery/third_party/forked/golang/json
 k8s.io/apimachinery/third_party/forked/golang/reflect
-# k8s.io/client-go v0.18.0-beta.2
+# k8s.io/client-go v0.18.0
 k8s.io/client-go/discovery
 k8s.io/client-go/discovery/fake
 k8s.io/client-go/kubernetes/scheme
@@ -232,7 +232,7 @@ k8s.io/client-go/util/flowcontrol
 k8s.io/client-go/util/homedir
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/workqueue
-# k8s.io/code-generator v0.18.0-beta.2
+# k8s.io/code-generator v0.18.0
 k8s.io/code-generator
 k8s.io/code-generator/cmd/client-gen
 k8s.io/code-generator/cmd/client-gen/args
@@ -286,7 +286,7 @@ k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/util/sets
-# k8s.io/utils v0.0.0-20200229041039-0a110f9eb7ab
+# k8s.io/utils v0.0.0-20200324210504-a9aa75ae1b89
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
