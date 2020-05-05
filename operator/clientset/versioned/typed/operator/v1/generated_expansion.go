@@ -6,6 +6,8 @@ type AuthenticationExpansion interface{}
 
 type CSISnapshotControllerExpansion interface{}
 
+type ConfigExpansion interface{}
+
 type ConsoleExpansion interface{}
 
 type DNSExpansion interface{}

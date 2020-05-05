@@ -12,6 +12,8 @@ type Interface interface {
 	Authentications() AuthenticationInformer
 	// CSISnapshotControllers returns a CSISnapshotControllerInformer.
 	CSISnapshotControllers() CSISnapshotControllerInformer
+	// Configs returns a ConfigInformer.
+	Configs() ConfigInformer
 	// Consoles returns a ConsoleInformer.
 	Consoles() ConsoleInformer
 	// DNSes returns a DNSInformer.
@@ -61,6 +63,11 @@ func (v *version) Authentications() AuthenticationInformer {
 // CSISnapshotControllers returns a CSISnapshotControllerInformer.
 func (v *version) CSISnapshotControllers() CSISnapshotControllerInformer {
 	return &cSISnapshotControllerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Configs returns a ConfigInformer.
+func (v *version) Configs() ConfigInformer {
+	return &configInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Consoles returns a ConsoleInformer.

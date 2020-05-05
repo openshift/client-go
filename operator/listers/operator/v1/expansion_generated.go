@@ -10,6 +10,10 @@ type AuthenticationListerExpansion interface{}
 // CSISnapshotControllerLister.
 type CSISnapshotControllerListerExpansion interface{}
 
+// ConfigListerExpansion allows custom methods to be added to
+// ConfigLister.
+type ConfigListerExpansion interface{}
+
 // ConsoleListerExpansion allows custom methods to be added to
 // ConsoleLister.
 type ConsoleListerExpansion interface{}
