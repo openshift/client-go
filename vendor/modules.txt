@@ -53,7 +53,7 @@ github.com/mailru/easyjson/jwriter
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/openshift/api v0.0.0-20200521101457-60c476765272
+# github.com/openshift/api v0.0.0-20200521101457-60c476765272 => github.com/sanchezl/api v0.0.0-20200518144445-c4f5eb11d75b
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
@@ -67,6 +67,7 @@ github.com/openshift/api/network/v1
 github.com/openshift/api/oauth/v1
 github.com/openshift/api/operator/v1
 github.com/openshift/api/operator/v1alpha1
+github.com/openshift/api/operatorcontrolplane/v1alpha1
 github.com/openshift/api/pkg/serialization
 github.com/openshift/api/project/v1
 github.com/openshift/api/quota/v1
