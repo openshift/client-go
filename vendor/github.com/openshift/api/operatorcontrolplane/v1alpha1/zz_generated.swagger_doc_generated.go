@@ -50,7 +50,7 @@ var map_PodNetworkConnectivityCheckCondition = map[string]string{
 	"status":             "Status of the condition",
 	"reason":             "Reason for the condition's last status transition in a machine readable format.",
 	"message":            "Message indicating details about last transition in a human readable format.",
-	"lastTransitionTime": "Last time the condition transit from one status to another.",
+	"lastTransitionTime": "Last time the condition transitioned from one status to another.",
 }
 
 func (PodNetworkConnectivityCheckCondition) SwaggerDoc() map[string]string {

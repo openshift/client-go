@@ -43,7 +43,7 @@ spec:
               description: SourcePod names the pod from which the condition will be
                 checked
               type: string
-              pattern: '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*'
+              pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
             targetEndpoint:
               description: EndpointAddress to check. A TCP address of the form host:port.
                 Note that if host is a DNS name, then the check would fail if the
