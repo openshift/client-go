@@ -12,6 +12,7 @@ type OperatorV1Interface interface {
 	RESTClient() rest.Interface
 	AuthenticationsGetter
 	CSISnapshotControllersGetter
+	ConfigsGetter
 	ConsolesGetter
 	DNSesGetter
 	EtcdsGetter
@@ -39,6 +40,10 @@ func (c *OperatorV1Client) Authentications() AuthenticationInterface {
 
 func (c *OperatorV1Client) CSISnapshotControllers() CSISnapshotControllerInterface {
 	return newCSISnapshotControllers(c)
+}
+
+func (c *OperatorV1Client) Configs() ConfigInterface {
+	return newConfigs(c)
 }
 
 func (c *OperatorV1Client) Consoles() ConsoleInterface {
