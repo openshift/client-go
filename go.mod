@@ -10,3 +10,5 @@ require (
 	k8s.io/client-go v0.18.3
 	k8s.io/code-generator v0.18.3
 )
+
+replace github.com/openshift/api => github.com/deads2k/api 6eccdf1efede37ca485ecdd38f009dd389fd2c9e
