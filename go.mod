@@ -11,4 +11,4 @@ require (
 	k8s.io/code-generator v0.18.3
 )
 
-replace github.com/openshift/api => github.com/deads2k/api 6eccdf1efede37ca485ecdd38f009dd389fd2c9e
+replace github.com/openshift/api => github.com/deads2k/api v0.0.0-20200622152052-6eccdf1efede
