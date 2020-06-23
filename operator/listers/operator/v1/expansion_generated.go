@@ -73,3 +73,7 @@ type ServiceCatalogAPIServerListerExpansion interface{}
 // ServiceCatalogControllerManagerListerExpansion allows custom methods to be added to
 // ServiceCatalogControllerManagerLister.
 type ServiceCatalogControllerManagerListerExpansion interface{}
+
+// StorageListerExpansion allows custom methods to be added to
+// StorageLister.
+type StorageListerExpansion interface{}

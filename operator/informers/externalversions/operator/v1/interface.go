@@ -42,6 +42,8 @@ type Interface interface {
 	ServiceCatalogAPIServers() ServiceCatalogAPIServerInformer
 	// ServiceCatalogControllerManagers returns a ServiceCatalogControllerManagerInformer.
 	ServiceCatalogControllerManagers() ServiceCatalogControllerManagerInformer
+	// Storages returns a StorageInformer.
+	Storages() StorageInformer
 }
 
 type version struct {
@@ -138,4 +140,9 @@ func (v *version) ServiceCatalogAPIServers() ServiceCatalogAPIServerInformer {
 // ServiceCatalogControllerManagers returns a ServiceCatalogControllerManagerInformer.
 func (v *version) ServiceCatalogControllerManagers() ServiceCatalogControllerManagerInformer {
 	return &serviceCatalogControllerManagerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Storages returns a StorageInformer.
+func (v *version) Storages() StorageInformer {
+	return &storageInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

@@ -80,6 +80,10 @@ func (c *FakeOperatorV1) ServiceCatalogControllerManagers() v1.ServiceCatalogCon
 	return &FakeServiceCatalogControllerManagers{c}
 }
 
+func (c *FakeOperatorV1) Storages() v1.StorageInterface {
+	return &FakeStorages{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeOperatorV1) RESTClient() rest.Interface {
