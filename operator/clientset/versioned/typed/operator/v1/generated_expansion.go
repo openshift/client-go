@@ -35,3 +35,5 @@ type ServiceCAExpansion interface{}
 type ServiceCatalogAPIServerExpansion interface{}
 
 type ServiceCatalogControllerManagerExpansion interface{}
+
+type StorageExpansion interface{}
