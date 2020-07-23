@@ -42,6 +42,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().Authentications().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("csisnapshotcontrollers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().CSISnapshotControllers().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("clustercsidrivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().ClusterCSIDrivers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("configs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().Configs().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("consoles"):

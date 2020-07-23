@@ -10,10 +10,13 @@ import (
 )
 
 // StorageLister helps list Storages.
+// All objects returned here must be treated as read-only.
 type StorageLister interface {
 	// List lists all Storages in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.Storage, err error)
 	// Get retrieves the Storage from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.Storage, error)
 	StorageListerExpansion
 }
