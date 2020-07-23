@@ -20,6 +20,10 @@ func (c *FakeOperatorV1) CSISnapshotControllers() v1.CSISnapshotControllerInterf
 	return &FakeCSISnapshotControllers{c}
 }
 
+func (c *FakeOperatorV1) ClusterCSIDrivers() v1.ClusterCSIDriverInterface {
+	return &FakeClusterCSIDrivers{c}
+}
+
 func (c *FakeOperatorV1) Configs() v1.ConfigInterface {
 	return &FakeConfigs{c}
 }

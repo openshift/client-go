@@ -10,8 +10,10 @@ import (
 )
 
 // PodNetworkConnectivityCheckLister helps list PodNetworkConnectivityChecks.
+// All objects returned here must be treated as read-only.
 type PodNetworkConnectivityCheckLister interface {
 	// List lists all PodNetworkConnectivityChecks in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.PodNetworkConnectivityCheck, err error)
 	// PodNetworkConnectivityChecks returns an object that can list and get PodNetworkConnectivityChecks.
 	PodNetworkConnectivityChecks(namespace string) PodNetworkConnectivityCheckNamespaceLister
@@ -42,10 +44,13 @@ func (s *podNetworkConnectivityCheckLister) PodNetworkConnectivityChecks(namespa
 }
 
 // PodNetworkConnectivityCheckNamespaceLister helps list and get PodNetworkConnectivityChecks.
+// All objects returned here must be treated as read-only.
 type PodNetworkConnectivityCheckNamespaceLister interface {
 	// List lists all PodNetworkConnectivityChecks in the indexer for a given namespace.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.PodNetworkConnectivityCheck, err error)
 	// Get retrieves the PodNetworkConnectivityCheck from the indexer for a given namespace and name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.PodNetworkConnectivityCheck, error)
 	PodNetworkConnectivityCheckNamespaceListerExpansion
 }

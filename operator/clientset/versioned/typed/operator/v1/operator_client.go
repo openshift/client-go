@@ -12,6 +12,7 @@ type OperatorV1Interface interface {
 	RESTClient() rest.Interface
 	AuthenticationsGetter
 	CSISnapshotControllersGetter
+	ClusterCSIDriversGetter
 	ConfigsGetter
 	ConsolesGetter
 	DNSesGetter
@@ -41,6 +42,10 @@ func (c *OperatorV1Client) Authentications() AuthenticationInterface {
 
 func (c *OperatorV1Client) CSISnapshotControllers() CSISnapshotControllerInterface {
 	return newCSISnapshotControllers(c)
+}
+
+func (c *OperatorV1Client) ClusterCSIDrivers() ClusterCSIDriverInterface {
+	return newClusterCSIDrivers(c)
 }
 
 func (c *OperatorV1Client) Configs() ConfigInterface {

@@ -10,10 +10,13 @@ import (
 )
 
 // ConsoleExternalLogLinkLister helps list ConsoleExternalLogLinks.
+// All objects returned here must be treated as read-only.
 type ConsoleExternalLogLinkLister interface {
 	// List lists all ConsoleExternalLogLinks in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ConsoleExternalLogLink, err error)
 	// Get retrieves the ConsoleExternalLogLink from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ConsoleExternalLogLink, error)
 	ConsoleExternalLogLinkListerExpansion
 }

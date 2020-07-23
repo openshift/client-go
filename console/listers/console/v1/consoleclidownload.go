@@ -10,10 +10,13 @@ import (
 )
 
 // ConsoleCLIDownloadLister helps list ConsoleCLIDownloads.
+// All objects returned here must be treated as read-only.
 type ConsoleCLIDownloadLister interface {
 	// List lists all ConsoleCLIDownloads in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ConsoleCLIDownload, err error)
 	// Get retrieves the ConsoleCLIDownload from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ConsoleCLIDownload, error)
 	ConsoleCLIDownloadListerExpansion
 }

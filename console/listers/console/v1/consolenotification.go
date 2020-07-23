@@ -10,10 +10,13 @@ import (
 )
 
 // ConsoleNotificationLister helps list ConsoleNotifications.
+// All objects returned here must be treated as read-only.
 type ConsoleNotificationLister interface {
 	// List lists all ConsoleNotifications in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ConsoleNotification, err error)
 	// Get retrieves the ConsoleNotification from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ConsoleNotification, error)
 	ConsoleNotificationListerExpansion
 }

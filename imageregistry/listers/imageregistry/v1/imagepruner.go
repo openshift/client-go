@@ -10,10 +10,13 @@ import (
 )
 
 // ImagePrunerLister helps list ImagePruners.
+// All objects returned here must be treated as read-only.
 type ImagePrunerLister interface {
 	// List lists all ImagePruners in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ImagePruner, err error)
 	// Get retrieves the ImagePruner from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ImagePruner, error)
 	ImagePrunerListerExpansion
 }
