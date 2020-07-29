@@ -20,6 +20,10 @@ func (c *FakeOperatorV1) CSISnapshotControllers() v1.CSISnapshotControllerInterf
 	return &FakeCSISnapshotControllers{c}
 }
 
+func (c *FakeOperatorV1) CloudCredentials() v1.CloudCredentialInterface {
+	return &FakeCloudCredentials{c}
+}
+
 func (c *FakeOperatorV1) ClusterCSIDrivers() v1.ClusterCSIDriverInterface {
 	return &FakeClusterCSIDrivers{c}
 }

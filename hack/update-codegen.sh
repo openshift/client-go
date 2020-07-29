@@ -49,3 +49,13 @@ for group in operator; do
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     ${verify}
 done
+
+for group in helm; do
+  bash ${CODEGEN_PKG}/generate-groups.sh "client,lister,informer" \
+    github.com/openshift/client-go/${group} \
+    github.com/openshift/api \
+    "${group}:v1beta1" \
+    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
+    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    ${verify}
+done
