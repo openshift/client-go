@@ -293,7 +293,7 @@ func (APIServerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_Audit = map[string]string{
-	"profile": "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster\n\nWe provide the following profiles - Default - WriteRequestBodies - AllRequestBodies If unset, the 'Default' profile is used as the default.",
+	"profile": "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster.\n\nThe following profiles are provided: - Default: the existing default policy. - WriteRequestBodies: like 'Default', but logs request and response HTTP payloads for write requests (create, update, patch). - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response HTTP payloads for read requests (get, list).\n\nIf unset, the 'Default' profile is used as the default.",
 }
 
 func (Audit) SwaggerDoc() map[string]string {
@@ -970,7 +970,7 @@ func (IngressSpec) SwaggerDoc() map[string]string {
 var map_ClusterNetworkEntry = map[string]string{
 	"":           "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
 	"cidr":       "The complete block for pod IPs.",
-	"hostPrefix": "The size (prefix) of block to allocate to each node.",
+	"hostPrefix": "The size (prefix) of block to allocate to each node. If this field is not used by the plugin, it can be left unset.",
 }
 
 func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
