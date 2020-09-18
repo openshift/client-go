@@ -60,6 +60,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().KubeAPIServers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("kubecontrollermanagers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().KubeControllerManagers().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("kubedeschedulers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().KubeDeschedulers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("kubeschedulers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Operator().V1().KubeSchedulers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("kubestorageversionmigrators"):

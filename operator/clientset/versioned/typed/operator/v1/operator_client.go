@@ -21,6 +21,7 @@ type OperatorV1Interface interface {
 	IngressControllersGetter
 	KubeAPIServersGetter
 	KubeControllerManagersGetter
+	KubeDeschedulersGetter
 	KubeSchedulersGetter
 	KubeStorageVersionMigratorsGetter
 	NetworksGetter
@@ -79,6 +80,10 @@ func (c *OperatorV1Client) KubeAPIServers() KubeAPIServerInterface {
 
 func (c *OperatorV1Client) KubeControllerManagers() KubeControllerManagerInterface {
 	return newKubeControllerManagers(c)
+}
+
+func (c *OperatorV1Client) KubeDeschedulers() KubeDeschedulerInterface {
+	return newKubeDeschedulers(c)
 }
 
 func (c *OperatorV1Client) KubeSchedulers() KubeSchedulerInterface {

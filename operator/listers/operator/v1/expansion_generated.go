@@ -50,6 +50,10 @@ type KubeAPIServerListerExpansion interface{}
 // KubeControllerManagerLister.
 type KubeControllerManagerListerExpansion interface{}
 
+// KubeDeschedulerListerExpansion allows custom methods to be added to
+// KubeDeschedulerLister.
+type KubeDeschedulerListerExpansion interface{}
+
 // KubeSchedulerListerExpansion allows custom methods to be added to
 // KubeSchedulerLister.
 type KubeSchedulerListerExpansion interface{}

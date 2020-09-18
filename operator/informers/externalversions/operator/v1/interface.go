@@ -30,6 +30,8 @@ type Interface interface {
 	KubeAPIServers() KubeAPIServerInformer
 	// KubeControllerManagers returns a KubeControllerManagerInformer.
 	KubeControllerManagers() KubeControllerManagerInformer
+	// KubeDeschedulers returns a KubeDeschedulerInformer.
+	KubeDeschedulers() KubeDeschedulerInformer
 	// KubeSchedulers returns a KubeSchedulerInformer.
 	KubeSchedulers() KubeSchedulerInformer
 	// KubeStorageVersionMigrators returns a KubeStorageVersionMigratorInformer.
@@ -114,6 +116,11 @@ func (v *version) KubeAPIServers() KubeAPIServerInformer {
 // KubeControllerManagers returns a KubeControllerManagerInformer.
 func (v *version) KubeControllerManagers() KubeControllerManagerInformer {
 	return &kubeControllerManagerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// KubeDeschedulers returns a KubeDeschedulerInformer.
+func (v *version) KubeDeschedulers() KubeDeschedulerInformer {
+	return &kubeDeschedulerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KubeSchedulers returns a KubeSchedulerInformer.

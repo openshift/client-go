@@ -24,6 +24,8 @@ type KubeAPIServerExpansion interface{}
 
 type KubeControllerManagerExpansion interface{}
 
+type KubeDeschedulerExpansion interface{}
+
 type KubeSchedulerExpansion interface{}
 
 type KubeStorageVersionMigratorExpansion interface{}

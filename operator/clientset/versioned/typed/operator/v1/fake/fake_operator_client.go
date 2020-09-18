@@ -56,6 +56,10 @@ func (c *FakeOperatorV1) KubeControllerManagers() v1.KubeControllerManagerInterf
 	return &FakeKubeControllerManagers{c}
 }
 
+func (c *FakeOperatorV1) KubeDeschedulers() v1.KubeDeschedulerInterface {
+	return &FakeKubeDeschedulers{c}
+}
+
 func (c *FakeOperatorV1) KubeSchedulers() v1.KubeSchedulerInterface {
 	return &FakeKubeSchedulers{c}
 }
