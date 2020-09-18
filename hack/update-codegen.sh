@@ -18,7 +18,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-go install ./${CODEGEN_PKG}/cmd/{defaulter-gen,client-gen,lister-gen,informer-gen,deepcopy-gen}
+go install k8s.io/code-generator/cmd/{defaulter-gen,client-gen,lister-gen,informer-gen,deepcopy-gen}
 
 for group in apps authorization build config console image imageregistry network oauth project quota route samples security template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "client,lister,informer" \
