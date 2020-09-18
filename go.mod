@@ -12,3 +12,5 @@ require (
 	k8s.io/code-generator v0.19.0
 	k8s.io/klog/v2 v2.3.0 // indirect
 )
+
+replace github.com/openshift/api => github.com/damemi/api v0.0.0-20200918135733-891e920f0424
