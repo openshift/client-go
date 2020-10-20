@@ -24,17 +24,6 @@ type KubeDescheduler struct {
 // KubeDeschedulerSpec defines the desired state of KubeDescheduler
 type KubeDeschedulerSpec struct {
 	OperatorSpec `json:",inline"`
-
-	// Policy contains the name of an upstream Descheduler policy configmap in the openshift-kube-descheduler-operator project
-	Policy string
-	// DeschedulingIntervalSeconds is the number of seconds between descheduler runs
-	// +optional
-	DeschedulingIntervalSeconds *int32 `json:"deschedulingIntervalSeconds,omitempty"`
-	// Flags for descheduler.
-	// +optional
-	Flags []string `json:"flags,omitempty"`
-	// Image of the deschduler being managed. This includes the version of the operand(descheduler).
-	Image string `json:"image,omitempty"`
 }
 
 // KubeDeschedulerStatus defines the observed state of KubeDescheduler

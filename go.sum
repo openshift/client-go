@@ -36,8 +36,8 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/damemi/api v0.0.0-20200918135733-891e920f0424 h1:lZ3HkzZ0X58DMPB8vyAn7RIFDubBm94JgzFCtx3PF8E=
-github.com/damemi/api v0.0.0-20200918135733-891e920f0424/go.mod h1:M3xexPhgM8DISzzRpuFUy+jfPjQPIcs9yqEYj17mXV8=
+github.com/damemi/api v0.0.0-20201020135824-ae68d44f797c h1:8/wk0qFCfgUj+3qaJCvF2RHQy6QFeUv4vdIv7loEktY=
+github.com/damemi/api v0.0.0-20201020135824-ae68d44f797c/go.mod h1:Si/I9UGeRR3qzg01YWPmtlr0GeGk2fnuggXJRmjAZ6U=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

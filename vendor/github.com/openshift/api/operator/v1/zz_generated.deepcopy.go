@@ -1670,16 +1670,6 @@ func (in *KubeDeschedulerList) DeepCopyObject() runtime.Object {
 func (in *KubeDeschedulerSpec) DeepCopyInto(out *KubeDeschedulerSpec) {
 	*out = *in
 	in.OperatorSpec.DeepCopyInto(&out.OperatorSpec)
-	if in.DeschedulingIntervalSeconds != nil {
-		in, out := &in.DeschedulingIntervalSeconds, &out.DeschedulingIntervalSeconds
-		*out = new(int32)
-		**out = **in
-	}
-	if in.Flags != nil {
-		in, out := &in.Flags, &out.Flags
-		*out = make([]string, len(*in))
-		copy(*out, *in)
-	}
 	return
 }
 
