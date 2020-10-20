@@ -16,6 +16,8 @@ type ConsoleExpansion interface{}
 
 type DNSExpansion interface{}
 
+type DeschedulerExpansion interface{}
+
 type FeatureGateExpansion interface{}
 
 type ImageExpansion interface{}

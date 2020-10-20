@@ -30,6 +30,10 @@ type ConsoleListerExpansion interface{}
 // DNSLister.
 type DNSListerExpansion interface{}
 
+// DeschedulerListerExpansion allows custom methods to be added to
+// DeschedulerLister.
+type DeschedulerListerExpansion interface{}
+
 // FeatureGateListerExpansion allows custom methods to be added to
 // FeatureGateLister.
 type FeatureGateListerExpansion interface{}

@@ -22,6 +22,8 @@ type Interface interface {
 	Consoles() ConsoleInformer
 	// DNSes returns a DNSInformer.
 	DNSes() DNSInformer
+	// Deschedulers returns a DeschedulerInformer.
+	Deschedulers() DeschedulerInformer
 	// FeatureGates returns a FeatureGateInformer.
 	FeatureGates() FeatureGateInformer
 	// Images returns a ImageInformer.
@@ -88,6 +90,11 @@ func (v *version) Consoles() ConsoleInformer {
 // DNSes returns a DNSInformer.
 func (v *version) DNSes() DNSInformer {
 	return &dNSInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Deschedulers returns a DeschedulerInformer.
+func (v *version) Deschedulers() DeschedulerInformer {
+	return &deschedulerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // FeatureGates returns a FeatureGateInformer.
