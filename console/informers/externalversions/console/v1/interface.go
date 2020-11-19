@@ -16,6 +16,8 @@ type Interface interface {
 	ConsoleLinks() ConsoleLinkInformer
 	// ConsoleNotifications returns a ConsoleNotificationInformer.
 	ConsoleNotifications() ConsoleNotificationInformer
+	// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
+	ConsoleQuickStarts() ConsoleQuickStartInformer
 	// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
 	ConsoleYAMLSamples() ConsoleYAMLSampleInformer
 }
@@ -49,6 +51,11 @@ func (v *version) ConsoleLinks() ConsoleLinkInformer {
 // ConsoleNotifications returns a ConsoleNotificationInformer.
 func (v *version) ConsoleNotifications() ConsoleNotificationInformer {
 	return &consoleNotificationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
+func (v *version) ConsoleQuickStarts() ConsoleQuickStartInformer {
+	return &consoleQuickStartInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
