@@ -11,8 +11,27 @@ See [INSTALL.md](/INSTALL.md) for detailed installation instructions.
 
 ## Table of Contents
 
+- [Updating Dependencies and Code Generation](#updating-dependencies-and-code-generation)
 - [How to use it](#how-to-use-it)
+- [Compatibility](#compatibility)
 
+### Updating Dependencies and Code Generation
+
+To pull in updates from openshift/api, run the following:
+
+```
+$ go get github.com/openshift/api@<commit or branch>
+$ go mod tidy
+$ go mod vendor
+$ go mod verify
+```
+
+To update the code generation, run the following:
+Note: `GOFLAGS=-mod-vendor` needs to be set in the environment.
+
+```
+$ make generate
+```
 
 ### How to use it
 
