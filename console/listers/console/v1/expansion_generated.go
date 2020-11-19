@@ -18,6 +18,10 @@ type ConsoleLinkListerExpansion interface{}
 // ConsoleNotificationLister.
 type ConsoleNotificationListerExpansion interface{}
 
+// ConsoleQuickStartListerExpansion allows custom methods to be added to
+// ConsoleQuickStartLister.
+type ConsoleQuickStartListerExpansion interface{}
+
 // ConsoleYAMLSampleListerExpansion allows custom methods to be added to
 // ConsoleYAMLSampleLister.
 type ConsoleYAMLSampleListerExpansion interface{}

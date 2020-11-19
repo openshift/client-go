@@ -28,6 +28,10 @@ func (c *FakeConsoleV1) ConsoleNotifications() v1.ConsoleNotificationInterface {
 	return &FakeConsoleNotifications{c}
 }
 
+func (c *FakeConsoleV1) ConsoleQuickStarts() v1.ConsoleQuickStartInterface {
+	return &FakeConsoleQuickStarts{c}
+}
+
 func (c *FakeConsoleV1) ConsoleYAMLSamples() v1.ConsoleYAMLSampleInterface {
 	return &FakeConsoleYAMLSamples{c}
 }
