@@ -16,7 +16,3 @@ verify:
 generate:
 	hack/update-codegen.sh
 .PHONY: generate
-
-update-deps:
-	hack/update-deps.sh
-.PHONY: update-deps
