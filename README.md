@@ -27,7 +27,7 @@ $ go mod verify
 ```
 
 To update the code generation, run the following:
-Note: `GOFLAGS=-mod-vendor` needs to be set in the environment.
+Note: `GOFLAGS=-mod=vendor` needs to be set in the environment.
 
 ```
 $ make generate
