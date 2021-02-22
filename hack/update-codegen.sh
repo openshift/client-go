@@ -20,7 +20,7 @@ trap cleanup EXIT
 
 go install ./${CODEGEN_PKG}/cmd/{defaulter-gen,client-gen,lister-gen,informer-gen,deepcopy-gen}
 
-for group in apps authorization build config image imageregistry network oauth project quota route samples security securityinternal template user; do
+for group in apiserver apps authorization build config image imageregistry network oauth project quota route samples security securityinternal template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "client,lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
