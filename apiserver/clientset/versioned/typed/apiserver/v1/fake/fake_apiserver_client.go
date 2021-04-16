@@ -12,6 +12,10 @@ type FakeApiserverV1 struct {
 	*testing.Fake
 }
 
+func (c *FakeApiserverV1) APIRequestCounts() v1.APIRequestCountInterface {
+	return &FakeAPIRequestCounts{c}
+}
+
 func (c *FakeApiserverV1) DeprecatedAPIRequests() v1.DeprecatedAPIRequestInterface {
 	return &FakeDeprecatedAPIRequests{c}
 }
