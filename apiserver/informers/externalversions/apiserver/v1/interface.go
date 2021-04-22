@@ -10,8 +10,6 @@ import (
 type Interface interface {
 	// APIRequestCounts returns a APIRequestCountInformer.
 	APIRequestCounts() APIRequestCountInformer
-	// DeprecatedAPIRequests returns a DeprecatedAPIRequestInformer.
-	DeprecatedAPIRequests() DeprecatedAPIRequestInformer
 }
 
 type version struct {
@@ -28,9 +26,4 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // APIRequestCounts returns a APIRequestCountInformer.
 func (v *version) APIRequestCounts() APIRequestCountInformer {
 	return &aPIRequestCountInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
-
-// DeprecatedAPIRequests returns a DeprecatedAPIRequestInformer.
-func (v *version) DeprecatedAPIRequests() DeprecatedAPIRequestInformer {
-	return &deprecatedAPIRequestInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

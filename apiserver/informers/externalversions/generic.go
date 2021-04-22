@@ -39,8 +39,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=apiserver.openshift.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("apirequestcounts"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Apiserver().V1().APIRequestCounts().Informer()}, nil
-	case v1.SchemeGroupVersion.WithResource("deprecatedapirequests"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Apiserver().V1().DeprecatedAPIRequests().Informer()}, nil
 
 	}
 
