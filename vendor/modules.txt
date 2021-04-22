@@ -55,7 +55,7 @@ github.com/mailru/easyjson/jwriter
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/openshift/api v0.0.0-20210416115537-a60c0dc032fd
+# github.com/openshift/api v0.0.0-20210422150128-d8a48168c81c
 ## explicit
 github.com/openshift/api/apiserver/v1
 github.com/openshift/api/apps/v1
