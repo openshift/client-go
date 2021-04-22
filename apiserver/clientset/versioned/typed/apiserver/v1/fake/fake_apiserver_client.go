@@ -16,10 +16,6 @@ func (c *FakeApiserverV1) APIRequestCounts() v1.APIRequestCountInterface {
 	return &FakeAPIRequestCounts{c}
 }
 
-func (c *FakeApiserverV1) DeprecatedAPIRequests() v1.DeprecatedAPIRequestInterface {
-	return &FakeDeprecatedAPIRequests{c}
-}
-
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeApiserverV1) RESTClient() rest.Interface {
