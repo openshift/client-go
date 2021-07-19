@@ -58,7 +58,10 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 	return c.tracker
 }
 
-var _ clientset.Interface = &Clientset{}
+var (
+	_ clientset.Interface = &Clientset{}
+	_ testing.FakeClient  = &Clientset{}
+)
 
 // HelmV1beta1 retrieves the HelmV1beta1Client
 func (c *Clientset) HelmV1beta1() helmv1beta1.HelmV1beta1Interface {

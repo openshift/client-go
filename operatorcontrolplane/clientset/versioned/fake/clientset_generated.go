@@ -58,7 +58,10 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 	return c.tracker
 }
 
-var _ clientset.Interface = &Clientset{}
+var (
+	_ clientset.Interface = &Clientset{}
+	_ testing.FakeClient  = &Clientset{}
+)
 
 // ControlplaneV1alpha1 retrieves the ControlplaneV1alpha1Client
 func (c *Clientset) ControlplaneV1alpha1() controlplanev1alpha1.ControlplaneV1alpha1Interface {
