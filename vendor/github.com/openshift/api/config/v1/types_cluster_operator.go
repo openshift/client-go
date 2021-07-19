@@ -149,7 +149,10 @@ const (
 	// Progressing indicates that the operator is actively rolling out new code,
 	// propagating config changes, or otherwise moving from one steady state to
 	// another.  Operators should not report progressing when they are reconciling
-	// a previously known state.
+	// (without action) a previously known state.  If the observed cluster state
+	// has changed and the operator/operand is reacting to it (scaling up for instance),
+	// Progressing should become true since it is moving from one steady state to
+	// another.
 	OperatorProgressing ClusterStatusConditionType = "Progressing"
 
 	// Degraded indicates that the operator's current state does not match its
@@ -170,7 +173,7 @@ const (
 	// unexpected errors are handled as operators mature.
 	OperatorDegraded ClusterStatusConditionType = "Degraded"
 
-	// Upgradeable indicates whether the operator is in a state that is safe to upgrade. When status is `False`
+	// Upgradeable indicates whether the operator safe to upgrade based on the current cluster state. When status is `False`
 	// administrators should not upgrade their cluster and the message field should contain a human readable description
 	// of what the administrator should do to allow the operator to successfully update.  A missing condition, True,
 	// and Unknown are all treated by the CVO as allowing an upgrade.

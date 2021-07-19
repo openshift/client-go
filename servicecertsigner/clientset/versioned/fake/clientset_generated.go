@@ -58,7 +58,10 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 	return c.tracker
 }
 
-var _ clientset.Interface = &Clientset{}
+var (
+	_ clientset.Interface = &Clientset{}
+	_ testing.FakeClient  = &Clientset{}
+)
 
 // ServicecertsignerV1alpha1 retrieves the ServicecertsignerV1alpha1Client
 func (c *Clientset) ServicecertsignerV1alpha1() servicecertsignerv1alpha1.ServicecertsignerV1alpha1Interface {

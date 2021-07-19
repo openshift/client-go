@@ -5,8 +5,10 @@ go 1.16
 require (
 	github.com/openshift/api v0.0.0-20210521075222-e273a339932a
 	github.com/spf13/pflag v1.0.5
-	k8s.io/api v0.21.1
-	k8s.io/apimachinery v0.21.1
-	k8s.io/client-go v0.21.1
-	k8s.io/code-generator v0.21.1
+	k8s.io/api v0.22.0-beta.2
+	k8s.io/apimachinery v0.22.0-beta.2
+	k8s.io/client-go v0.22.0-beta.2
+	k8s.io/code-generator v0.22.0-beta.2
 )
+
+replace github.com/openshift/api => github.com/soltysh/api v0.0.0-20210719081803-9091ab00c164
