@@ -189,6 +189,8 @@ github.com/openshift/api v0.0.0-20211005161005-4ec2bbe5ed00 h1:P0Is1Xs2ytKOsi5/s
 github.com/openshift/api v0.0.0-20211005161005-4ec2bbe5ed00/go.mod h1:RsQCVJu4qhUawxxDP7pGlwU3IA4F01wYm3qKEu29Su8=
 github.com/openshift/api v0.0.0-20211007134530-4cb30f221b89 h1:8asXeSr4GmJbTmO/kd1PvMrNc+MDoTEAcefX5Jl7EiA=
 github.com/openshift/api v0.0.0-20211007134530-4cb30f221b89/go.mod h1:RsQCVJu4qhUawxxDP7pGlwU3IA4F01wYm3qKEu29Su8=
+github.com/openshift/api v0.0.0-20211014115235-b692084b7fff h1:e1E4faBIYScFJdLRJ1BwqVnLHDA19wmMt/6r81qlqLc=
+github.com/openshift/api v0.0.0-20211014115235-b692084b7fff/go.mod h1:RsQCVJu4qhUawxxDP7pGlwU3IA4F01wYm3qKEu29Su8=
 github.com/openshift/build-machinery-go v0.0.0-20210712174854-1bb7fd1518d3/go.mod h1:b1BuldmJlbA/xYtdZvKi+7j5YGB44qJUJDZ9zwiNCfE=
 github.com/peterbourgon/diskv v2.0.1+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
