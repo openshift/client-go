@@ -60,7 +60,7 @@ for group in operator; do
     ${verify}
 done
 
-for group in helm; do
+for group in helm machine; do
   bash ${CODEGEN_PKG}/generate-groups.sh "client,lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
