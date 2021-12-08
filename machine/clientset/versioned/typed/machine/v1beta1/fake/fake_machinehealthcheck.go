@@ -101,7 +101,7 @@ func (c *FakeMachineHealthChecks) UpdateStatus(ctx context.Context, machineHealt
 // Delete takes name of the machineHealthCheck and deletes it. Returns an error if one occurs.
 func (c *FakeMachineHealthChecks) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(machinehealthchecksResource, c.ns, name), &v1beta1.MachineHealthCheck{})
+		Invokes(testing.NewDeleteActionWithOptions(machinehealthchecksResource, c.ns, name, opts), &v1beta1.MachineHealthCheck{})
 
 	return err
 }

@@ -94,7 +94,7 @@ func (c *FakeHelmChartRepositories) UpdateStatus(ctx context.Context, helmChartR
 // Delete takes name of the helmChartRepository and deletes it. Returns an error if one occurs.
 func (c *FakeHelmChartRepositories) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(helmchartrepositoriesResource, name), &v1beta1.HelmChartRepository{})
+		Invokes(testing.NewRootDeleteActionWithOptions(helmchartrepositoriesResource, name, opts), &v1beta1.HelmChartRepository{})
 	return err
 }
 

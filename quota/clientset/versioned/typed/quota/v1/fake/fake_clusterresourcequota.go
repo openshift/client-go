@@ -94,7 +94,7 @@ func (c *FakeClusterResourceQuotas) UpdateStatus(ctx context.Context, clusterRes
 // Delete takes name of the clusterResourceQuota and deletes it. Returns an error if one occurs.
 func (c *FakeClusterResourceQuotas) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(clusterresourcequotasResource, name), &quotav1.ClusterResourceQuota{})
+		Invokes(testing.NewRootDeleteActionWithOptions(clusterresourcequotasResource, name, opts), &quotav1.ClusterResourceQuota{})
 	return err
 }
 

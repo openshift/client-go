@@ -83,7 +83,7 @@ func (c *FakeNetNamespaces) Update(ctx context.Context, netNamespace *networkv1.
 // Delete takes name of the netNamespace and deletes it. Returns an error if one occurs.
 func (c *FakeNetNamespaces) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(netnamespacesResource, name), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootDeleteActionWithOptions(netnamespacesResource, name, opts), &networkv1.NetNamespace{})
 	return err
 }
 

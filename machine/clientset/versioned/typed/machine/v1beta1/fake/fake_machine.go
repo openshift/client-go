@@ -101,7 +101,7 @@ func (c *FakeMachines) UpdateStatus(ctx context.Context, machine *v1beta1.Machin
 // Delete takes name of the machine and deletes it. Returns an error if one occurs.
 func (c *FakeMachines) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(machinesResource, c.ns, name), &v1beta1.Machine{})
+		Invokes(testing.NewDeleteActionWithOptions(machinesResource, c.ns, name, opts), &v1beta1.Machine{})
 
 	return err
 }

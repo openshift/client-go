@@ -94,7 +94,7 @@ func (c *FakeSharedConfigMaps) UpdateStatus(ctx context.Context, sharedConfigMap
 // Delete takes name of the sharedConfigMap and deletes it. Returns an error if one occurs.
 func (c *FakeSharedConfigMaps) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(sharedconfigmapsResource, name), &v1alpha1.SharedConfigMap{})
+		Invokes(testing.NewRootDeleteActionWithOptions(sharedconfigmapsResource, name, opts), &v1alpha1.SharedConfigMap{})
 	return err
 }
 
