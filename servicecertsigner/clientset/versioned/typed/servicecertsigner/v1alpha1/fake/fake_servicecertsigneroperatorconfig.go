@@ -94,7 +94,7 @@ func (c *FakeServiceCertSignerOperatorConfigs) UpdateStatus(ctx context.Context,
 // Delete takes name of the serviceCertSignerOperatorConfig and deletes it. Returns an error if one occurs.
 func (c *FakeServiceCertSignerOperatorConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(servicecertsigneroperatorconfigsResource, name), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootDeleteActionWithOptions(servicecertsigneroperatorconfigsResource, name, opts), &v1alpha1.ServiceCertSignerOperatorConfig{})
 	return err
 }
 

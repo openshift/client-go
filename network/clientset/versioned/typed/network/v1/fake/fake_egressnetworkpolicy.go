@@ -89,7 +89,7 @@ func (c *FakeEgressNetworkPolicies) Update(ctx context.Context, egressNetworkPol
 // Delete takes name of the egressNetworkPolicy and deletes it. Returns an error if one occurs.
 func (c *FakeEgressNetworkPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(egressnetworkpoliciesResource, c.ns, name), &networkv1.EgressNetworkPolicy{})
+		Invokes(testing.NewDeleteActionWithOptions(egressnetworkpoliciesResource, c.ns, name, opts), &networkv1.EgressNetworkPolicy{})
 
 	return err
 }

@@ -101,7 +101,7 @@ func (c *FakePodNetworkConnectivityChecks) UpdateStatus(ctx context.Context, pod
 // Delete takes name of the podNetworkConnectivityCheck and deletes it. Returns an error if one occurs.
 func (c *FakePodNetworkConnectivityChecks) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(podnetworkconnectivitychecksResource, c.ns, name), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewDeleteActionWithOptions(podnetworkconnectivitychecksResource, c.ns, name, opts), &v1alpha1.PodNetworkConnectivityCheck{})
 
 	return err
 }

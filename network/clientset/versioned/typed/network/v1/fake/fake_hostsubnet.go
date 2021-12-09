@@ -83,7 +83,7 @@ func (c *FakeHostSubnets) Update(ctx context.Context, hostSubnet *networkv1.Host
 // Delete takes name of the hostSubnet and deletes it. Returns an error if one occurs.
 func (c *FakeHostSubnets) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(hostsubnetsResource, name), &networkv1.HostSubnet{})
+		Invokes(testing.NewRootDeleteActionWithOptions(hostsubnetsResource, name, opts), &networkv1.HostSubnet{})
 	return err
 }
 
