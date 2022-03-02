@@ -64,6 +64,10 @@ func (c *FakeConfigV1) Networks() v1.NetworkInterface {
 	return &FakeNetworks{c}
 }
 
+func (c *FakeConfigV1) Nodes() v1.NodeInterface {
+	return &FakeNodes{c}
+}
+
 func (c *FakeConfigV1) OAuths() v1.OAuthInterface {
 	return &FakeOAuths{c}
 }

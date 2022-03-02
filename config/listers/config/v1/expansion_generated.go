@@ -54,6 +54,10 @@ type IngressListerExpansion interface{}
 // NetworkLister.
 type NetworkListerExpansion interface{}
 
+// NodeListerExpansion allows custom methods to be added to
+// NodeLister.
+type NodeListerExpansion interface{}
+
 // OAuthListerExpansion allows custom methods to be added to
 // OAuthLister.
 type OAuthListerExpansion interface{}

@@ -10,6 +10,8 @@ import (
 type Interface interface {
 	// HelmChartRepositories returns a HelmChartRepositoryInformer.
 	HelmChartRepositories() HelmChartRepositoryInformer
+	// ProjectHelmChartRepositories returns a ProjectHelmChartRepositoryInformer.
+	ProjectHelmChartRepositories() ProjectHelmChartRepositoryInformer
 }
 
 type version struct {
@@ -26,4 +28,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // HelmChartRepositories returns a HelmChartRepositoryInformer.
 func (v *version) HelmChartRepositories() HelmChartRepositoryInformer {
 	return &helmChartRepositoryInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ProjectHelmChartRepositories returns a ProjectHelmChartRepositoryInformer.
+func (v *version) ProjectHelmChartRepositories() ProjectHelmChartRepositoryInformer {
+	return &projectHelmChartRepositoryInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

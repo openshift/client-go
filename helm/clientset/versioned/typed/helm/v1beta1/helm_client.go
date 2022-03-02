@@ -13,6 +13,7 @@ import (
 type HelmV1beta1Interface interface {
 	RESTClient() rest.Interface
 	HelmChartRepositoriesGetter
+	ProjectHelmChartRepositoriesGetter
 }
 
 // HelmV1beta1Client is used to interact with features provided by the helm.openshift.io group.
@@ -22,6 +23,10 @@ type HelmV1beta1Client struct {
 
 func (c *HelmV1beta1Client) HelmChartRepositories() HelmChartRepositoryInterface {
 	return newHelmChartRepositories(c)
+}
+
+func (c *HelmV1beta1Client) ProjectHelmChartRepositories(namespace string) ProjectHelmChartRepositoryInterface {
+	return newProjectHelmChartRepositories(c, namespace)
 }
 
 // NewForConfig creates a new HelmV1beta1Client for the given config.

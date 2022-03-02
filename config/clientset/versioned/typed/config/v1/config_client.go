@@ -25,6 +25,7 @@ type ConfigV1Interface interface {
 	InfrastructuresGetter
 	IngressesGetter
 	NetworksGetter
+	NodesGetter
 	OAuthsGetter
 	OperatorHubsGetter
 	ProjectsGetter
@@ -87,6 +88,10 @@ func (c *ConfigV1Client) Ingresses() IngressInterface {
 
 func (c *ConfigV1Client) Networks() NetworkInterface {
 	return newNetworks(c)
+}
+
+func (c *ConfigV1Client) Nodes() NodeInterface {
+	return newNodes(c)
 }
 
 func (c *ConfigV1Client) OAuths() OAuthInterface {

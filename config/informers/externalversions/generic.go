@@ -63,6 +63,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1().Ingresses().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("networks"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1().Networks().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("nodes"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1().Nodes().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("oauths"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1().OAuths().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("operatorhubs"):
