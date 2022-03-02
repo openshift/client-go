@@ -3,3 +3,5 @@
 package v1beta1
 
 type HelmChartRepositoryExpansion interface{}
+
+type ProjectHelmChartRepositoryExpansion interface{}

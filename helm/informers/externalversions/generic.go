@@ -39,6 +39,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=helm.openshift.io, Version=v1beta1
 	case v1beta1.SchemeGroupVersion.WithResource("helmchartrepositories"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Helm().V1beta1().HelmChartRepositories().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("projecthelmchartrepositories"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Helm().V1beta1().ProjectHelmChartRepositories().Informer()}, nil
 
 	}
 

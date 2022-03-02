@@ -16,6 +16,10 @@ func (c *FakeHelmV1beta1) HelmChartRepositories() v1beta1.HelmChartRepositoryInt
 	return &FakeHelmChartRepositories{c}
 }
 
+func (c *FakeHelmV1beta1) ProjectHelmChartRepositories(namespace string) v1beta1.ProjectHelmChartRepositoryInterface {
+	return &FakeProjectHelmChartRepositories{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeHelmV1beta1) RESTClient() rest.Interface {
