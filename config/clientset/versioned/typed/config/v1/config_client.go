@@ -22,6 +22,8 @@ type ConfigV1Interface interface {
 	FeatureGatesGetter
 	ImagesGetter
 	ImageContentPoliciesGetter
+	ImageDigestMirrorSetsGetter
+	ImageTagMirrorSetsGetter
 	InfrastructuresGetter
 	IngressesGetter
 	NetworksGetter
@@ -76,6 +78,14 @@ func (c *ConfigV1Client) Images() ImageInterface {
 
 func (c *ConfigV1Client) ImageContentPolicies() ImageContentPolicyInterface {
 	return newImageContentPolicies(c)
+}
+
+func (c *ConfigV1Client) ImageDigestMirrorSets() ImageDigestMirrorSetInterface {
+	return newImageDigestMirrorSets(c)
+}
+
+func (c *ConfigV1Client) ImageTagMirrorSets() ImageTagMirrorSetInterface {
+	return newImageTagMirrorSets(c)
 }
 
 func (c *ConfigV1Client) Infrastructures() InfrastructureInterface {

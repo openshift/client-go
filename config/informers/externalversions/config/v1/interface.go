@@ -28,6 +28,10 @@ type Interface interface {
 	Images() ImageInformer
 	// ImageContentPolicies returns a ImageContentPolicyInformer.
 	ImageContentPolicies() ImageContentPolicyInformer
+	// ImageDigestMirrorSets returns a ImageDigestMirrorSetInformer.
+	ImageDigestMirrorSets() ImageDigestMirrorSetInformer
+	// ImageTagMirrorSets returns a ImageTagMirrorSetInformer.
+	ImageTagMirrorSets() ImageTagMirrorSetInformer
 	// Infrastructures returns a InfrastructureInformer.
 	Infrastructures() InfrastructureInformer
 	// Ingresses returns a IngressInformer.
@@ -107,6 +111,16 @@ func (v *version) Images() ImageInformer {
 // ImageContentPolicies returns a ImageContentPolicyInformer.
 func (v *version) ImageContentPolicies() ImageContentPolicyInformer {
 	return &imageContentPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ImageDigestMirrorSets returns a ImageDigestMirrorSetInformer.
+func (v *version) ImageDigestMirrorSets() ImageDigestMirrorSetInformer {
+	return &imageDigestMirrorSetInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ImageTagMirrorSets returns a ImageTagMirrorSetInformer.
+func (v *version) ImageTagMirrorSets() ImageTagMirrorSetInformer {
+	return &imageTagMirrorSetInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Infrastructures returns a InfrastructureInformer.
