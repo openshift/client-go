@@ -52,6 +52,14 @@ func (c *FakeConfigV1) ImageContentPolicies() v1.ImageContentPolicyInterface {
 	return &FakeImageContentPolicies{c}
 }
 
+func (c *FakeConfigV1) ImageDigestMirrorSets() v1.ImageDigestMirrorSetInterface {
+	return &FakeImageDigestMirrorSets{c}
+}
+
+func (c *FakeConfigV1) ImageTagMirrorSets() v1.ImageTagMirrorSetInterface {
+	return &FakeImageTagMirrorSets{c}
+}
+
 func (c *FakeConfigV1) Infrastructures() v1.InfrastructureInterface {
 	return &FakeInfrastructures{c}
 }
