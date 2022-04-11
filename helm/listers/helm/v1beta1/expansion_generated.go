@@ -5,3 +5,11 @@ package v1beta1
 // HelmChartRepositoryListerExpansion allows custom methods to be added to
 // HelmChartRepositoryLister.
 type HelmChartRepositoryListerExpansion interface{}
+
+// ProjectHelmChartRepositoryListerExpansion allows custom methods to be added to
+// ProjectHelmChartRepositoryLister.
+type ProjectHelmChartRepositoryListerExpansion interface{}
+
+// ProjectHelmChartRepositoryNamespaceListerExpansion allows custom methods to be added to
+// ProjectHelmChartRepositoryNamespaceLister.
+type ProjectHelmChartRepositoryNamespaceListerExpansion interface{}
