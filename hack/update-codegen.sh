@@ -60,7 +60,7 @@ for group in helm; do
     ${verify}
 done
 
-for group in servicecertsigner operatorcontrolplane sharedresource; do
+for group in servicecertsigner operatorcontrolplane sharedresource monitoring; do
   bash ${CODEGEN_PKG}/generate-groups.sh "client,lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
