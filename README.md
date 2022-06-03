@@ -33,6 +33,12 @@ Note: `GOFLAGS=-mod=vendor` needs to be set in the environment.
 $ make generate
 ```
 
+**NOTE:** When adding entirely new package make sure to force import it
+before invoking `go get...`, `go mod tidy` and `go mod vendor`. This will
+ensure that this new package will be properly picked up in the vendor tree.
+Only then `make generate` will be able to correctly create the necessary
+clients.
+
 ### How to use it
 
 See [examples](/examples).
