@@ -73,6 +73,7 @@ github.com/openshift/api/image/v1
 github.com/openshift/api/imageregistry/v1
 github.com/openshift/api/machine/v1
 github.com/openshift/api/machine/v1beta1
+github.com/openshift/api/monitoring/v1alpha1
 github.com/openshift/api/network/v1
 github.com/openshift/api/oauth/v1
 github.com/openshift/api/operator/v1
