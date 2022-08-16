@@ -13,6 +13,9 @@ verify:
 	hack/verify-codegen.sh
 .PHONY: verify
 
+update: generate
+.PHONY: update
+
 generate:
 	hack/update-codegen.sh
 .PHONY: generate
