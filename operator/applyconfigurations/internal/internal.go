@@ -1069,6 +1069,18 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: sFlow
       type:
         namedType: com.github.openshift.api.operator.v1.SFlowConfig
+- name: com.github.openshift.api.operator.v1.FeaturesMigration
+  map:
+    fields:
+    - name: egressFirewall
+      type:
+        scalar: boolean
+    - name: egressIP
+      type:
+        scalar: boolean
+    - name: multicast
+      type:
+        scalar: boolean
 - name: com.github.openshift.api.operator.v1.ForwardPlugin
   map:
     fields:
@@ -2020,6 +2032,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.NetworkMigration
   map:
     fields:
+    - name: features
+      type:
+        namedType: com.github.openshift.api.operator.v1.FeaturesMigration
     - name: mtu
       type:
         namedType: com.github.openshift.api.operator.v1.MTUMigration
@@ -3054,9 +3069,6 @@ var schemaYAML = typed.YAMLObject(`types:
         map:
           elementType:
             scalar: string
-    - name: clusterName
-      type:
-        scalar: string
     - name: creationTimestamp
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time

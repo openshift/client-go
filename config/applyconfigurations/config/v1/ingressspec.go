@@ -9,6 +9,7 @@ type IngressSpecApplyConfiguration struct {
 	AppsDomain           *string                                `json:"appsDomain,omitempty"`
 	ComponentRoutes      []ComponentRouteSpecApplyConfiguration `json:"componentRoutes,omitempty"`
 	RequiredHSTSPolicies []RequiredHSTSPolicyApplyConfiguration `json:"requiredHSTSPolicies,omitempty"`
+	LoadBalancer         *LoadBalancerApplyConfiguration        `json:"loadbalancer,omitempty"`
 }
 
 // IngressSpecApplyConfiguration constructs an declarative configuration of the IngressSpec type for use with
@@ -56,5 +57,13 @@ func (b *IngressSpecApplyConfiguration) WithRequiredHSTSPolicies(values ...*Requ
 		}
 		b.RequiredHSTSPolicies = append(b.RequiredHSTSPolicies, *values[i])
 	}
+	return b
+}
+
+// WithLoadBalancer sets the LoadBalancer field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the LoadBalancer field is set to the value of the last call.
+func (b *IngressSpecApplyConfiguration) WithLoadBalancer(value *LoadBalancerApplyConfiguration) *IngressSpecApplyConfiguration {
+	b.LoadBalancer = value
 	return b
 }
