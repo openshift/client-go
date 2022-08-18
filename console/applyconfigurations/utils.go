@@ -35,6 +35,22 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &consolev1.ConsoleNotificationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleNotificationSpec"):
 		return &consolev1.ConsoleNotificationSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePlugin"):
+		return &consolev1.ConsolePluginApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginBackend"):
+		return &consolev1.ConsolePluginBackendApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginI18n"):
+		return &consolev1.ConsolePluginI18nApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginProxy"):
+		return &consolev1.ConsolePluginProxyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginProxyEndpoint"):
+		return &consolev1.ConsolePluginProxyEndpointApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginProxyServiceConfig"):
+		return &consolev1.ConsolePluginProxyServiceConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginService"):
+		return &consolev1.ConsolePluginServiceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginSpec"):
+		return &consolev1.ConsolePluginSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleQuickStart"):
 		return &consolev1.ConsoleQuickStartApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleQuickStartSpec"):

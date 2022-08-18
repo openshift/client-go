@@ -183,6 +183,132 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.console.v1.ConsolePlugin
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginSpec
+      default: {}
+- name: com.github.openshift.api.console.v1.ConsolePluginBackend
+  map:
+    fields:
+    - name: service
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginService
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: service
+        discriminatorValue: Service
+- name: com.github.openshift.api.console.v1.ConsolePluginI18n
+  map:
+    fields:
+    - name: loadType
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.console.v1.ConsolePluginProxy
+  map:
+    fields:
+    - name: alias
+      type:
+        scalar: string
+      default: ""
+    - name: authorization
+      type:
+        scalar: string
+    - name: caCertificate
+      type:
+        scalar: string
+    - name: endpoint
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginProxyEndpoint
+      default: {}
+- name: com.github.openshift.api.console.v1.ConsolePluginProxyEndpoint
+  map:
+    fields:
+    - name: service
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginProxyServiceConfig
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: service
+        discriminatorValue: Service
+- name: com.github.openshift.api.console.v1.ConsolePluginProxyServiceConfig
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+      default: ""
+    - name: port
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.openshift.api.console.v1.ConsolePluginService
+  map:
+    fields:
+    - name: basePath
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+      default: ""
+    - name: port
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.openshift.api.console.v1.ConsolePluginSpec
+  map:
+    fields:
+    - name: backend
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginBackend
+      default: {}
+    - name: displayName
+      type:
+        scalar: string
+      default: ""
+    - name: i18n
+      type:
+        namedType: com.github.openshift.api.console.v1.ConsolePluginI18n
+      default: {}
+    - name: proxy
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.console.v1.ConsolePluginProxy
+          elementRelationship: atomic
 - name: com.github.openshift.api.console.v1.ConsoleQuickStart
   map:
     fields:
