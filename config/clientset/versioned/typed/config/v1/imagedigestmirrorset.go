@@ -24,6 +24,7 @@ type ImageDigestMirrorSetsGetter interface {
 type ImageDigestMirrorSetInterface interface {
 	Create(ctx context.Context, imageDigestMirrorSet *v1.ImageDigestMirrorSet, opts metav1.CreateOptions) (*v1.ImageDigestMirrorSet, error)
 	Update(ctx context.Context, imageDigestMirrorSet *v1.ImageDigestMirrorSet, opts metav1.UpdateOptions) (*v1.ImageDigestMirrorSet, error)
+	UpdateStatus(ctx context.Context, imageDigestMirrorSet *v1.ImageDigestMirrorSet, opts metav1.UpdateOptions) (*v1.ImageDigestMirrorSet, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.ImageDigestMirrorSet, error)
@@ -105,6 +106,21 @@ func (c *imageDigestMirrorSets) Update(ctx context.Context, imageDigestMirrorSet
 	err = c.client.Put().
 		Resource("imagedigestmirrorsets").
 		Name(imageDigestMirrorSet.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(imageDigestMirrorSet).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *imageDigestMirrorSets) UpdateStatus(ctx context.Context, imageDigestMirrorSet *v1.ImageDigestMirrorSet, opts metav1.UpdateOptions) (result *v1.ImageDigestMirrorSet, err error) {
+	result = &v1.ImageDigestMirrorSet{}
+	err = c.client.Put().
+		Resource("imagedigestmirrorsets").
+		Name(imageDigestMirrorSet.Name).
+		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(imageDigestMirrorSet).
 		Do(ctx).
