@@ -80,6 +80,17 @@ func (c *FakeImageTagMirrorSets) Update(ctx context.Context, imageTagMirrorSet *
 	return obj.(*configv1.ImageTagMirrorSet), err
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeImageTagMirrorSets) UpdateStatus(ctx context.Context, imageTagMirrorSet *configv1.ImageTagMirrorSet, opts v1.UpdateOptions) (*configv1.ImageTagMirrorSet, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootUpdateSubresourceAction(imagetagmirrorsetsResource, "status", imageTagMirrorSet), &configv1.ImageTagMirrorSet{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*configv1.ImageTagMirrorSet), err
+}
+
 // Delete takes name of the imageTagMirrorSet and deletes it. Returns an error if one occurs.
 func (c *FakeImageTagMirrorSets) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

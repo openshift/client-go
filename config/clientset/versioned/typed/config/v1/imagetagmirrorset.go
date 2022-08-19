@@ -24,6 +24,7 @@ type ImageTagMirrorSetsGetter interface {
 type ImageTagMirrorSetInterface interface {
 	Create(ctx context.Context, imageTagMirrorSet *v1.ImageTagMirrorSet, opts metav1.CreateOptions) (*v1.ImageTagMirrorSet, error)
 	Update(ctx context.Context, imageTagMirrorSet *v1.ImageTagMirrorSet, opts metav1.UpdateOptions) (*v1.ImageTagMirrorSet, error)
+	UpdateStatus(ctx context.Context, imageTagMirrorSet *v1.ImageTagMirrorSet, opts metav1.UpdateOptions) (*v1.ImageTagMirrorSet, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.ImageTagMirrorSet, error)
@@ -105,6 +106,21 @@ func (c *imageTagMirrorSets) Update(ctx context.Context, imageTagMirrorSet *v1.I
 	err = c.client.Put().
 		Resource("imagetagmirrorsets").
 		Name(imageTagMirrorSet.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(imageTagMirrorSet).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *imageTagMirrorSets) UpdateStatus(ctx context.Context, imageTagMirrorSet *v1.ImageTagMirrorSet, opts metav1.UpdateOptions) (result *v1.ImageTagMirrorSet, err error) {
+	result = &v1.ImageTagMirrorSet{}
+	err = c.client.Put().
+		Resource("imagetagmirrorsets").
+		Name(imageTagMirrorSet.Name).
+		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(imageTagMirrorSet).
 		Do(ctx).
