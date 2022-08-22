@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	networkv1 "github.com/openshift/api/network/v1"
+	applyconfigurationsnetworkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -106,6 +109,28 @@ func (c *FakeEgressNetworkPolicies) DeleteCollection(ctx context.Context, opts v
 func (c *FakeEgressNetworkPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *networkv1.EgressNetworkPolicy, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(egressnetworkpoliciesResource, c.ns, name, pt, data, subresources...), &networkv1.EgressNetworkPolicy{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*networkv1.EgressNetworkPolicy), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied egressNetworkPolicy.
+func (c *FakeEgressNetworkPolicies) Apply(ctx context.Context, egressNetworkPolicy *applyconfigurationsnetworkv1.EgressNetworkPolicyApplyConfiguration, opts v1.ApplyOptions) (result *networkv1.EgressNetworkPolicy, err error) {
+	if egressNetworkPolicy == nil {
+		return nil, fmt.Errorf("egressNetworkPolicy provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(egressNetworkPolicy)
+	if err != nil {
+		return nil, err
+	}
+	name := egressNetworkPolicy.Name
+	if name == nil {
+		return nil, fmt.Errorf("egressNetworkPolicy.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(egressnetworkpoliciesResource, c.ns, *name, types.ApplyPatchType, data), &networkv1.EgressNetworkPolicy{})
 
 	if obj == nil {
 		return nil, err

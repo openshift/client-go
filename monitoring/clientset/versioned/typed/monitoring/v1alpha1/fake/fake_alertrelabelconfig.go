@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/monitoring/v1alpha1"
+	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -118,6 +121,51 @@ func (c *FakeAlertRelabelConfigs) DeleteCollection(ctx context.Context, opts v1.
 func (c *FakeAlertRelabelConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.AlertRelabelConfig, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, name, pt, data, subresources...), &v1alpha1.AlertRelabelConfig{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.AlertRelabelConfig), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied alertRelabelConfig.
+func (c *FakeAlertRelabelConfigs) Apply(ctx context.Context, alertRelabelConfig *monitoringv1alpha1.AlertRelabelConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.AlertRelabelConfig, err error) {
+	if alertRelabelConfig == nil {
+		return nil, fmt.Errorf("alertRelabelConfig provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(alertRelabelConfig)
+	if err != nil {
+		return nil, err
+	}
+	name := alertRelabelConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("alertRelabelConfig.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.AlertRelabelConfig{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.AlertRelabelConfig), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeAlertRelabelConfigs) ApplyStatus(ctx context.Context, alertRelabelConfig *monitoringv1alpha1.AlertRelabelConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.AlertRelabelConfig, err error) {
+	if alertRelabelConfig == nil {
+		return nil, fmt.Errorf("alertRelabelConfig provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(alertRelabelConfig)
+	if err != nil {
+		return nil, err
+	}
+	name := alertRelabelConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("alertRelabelConfig.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err

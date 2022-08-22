@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	machinev1 "github.com/openshift/api/machine/v1"
+	applyconfigurationsmachinev1 "github.com/openshift/client-go/machine/applyconfigurations/machine/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -118,6 +121,51 @@ func (c *FakeControlPlaneMachineSets) DeleteCollection(ctx context.Context, opts
 func (c *FakeControlPlaneMachineSets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *machinev1.ControlPlaneMachineSet, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(controlplanemachinesetsResource, c.ns, name, pt, data, subresources...), &machinev1.ControlPlaneMachineSet{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*machinev1.ControlPlaneMachineSet), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied controlPlaneMachineSet.
+func (c *FakeControlPlaneMachineSets) Apply(ctx context.Context, controlPlaneMachineSet *applyconfigurationsmachinev1.ControlPlaneMachineSetApplyConfiguration, opts v1.ApplyOptions) (result *machinev1.ControlPlaneMachineSet, err error) {
+	if controlPlaneMachineSet == nil {
+		return nil, fmt.Errorf("controlPlaneMachineSet provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(controlPlaneMachineSet)
+	if err != nil {
+		return nil, err
+	}
+	name := controlPlaneMachineSet.Name
+	if name == nil {
+		return nil, fmt.Errorf("controlPlaneMachineSet.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(controlplanemachinesetsResource, c.ns, *name, types.ApplyPatchType, data), &machinev1.ControlPlaneMachineSet{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*machinev1.ControlPlaneMachineSet), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeControlPlaneMachineSets) ApplyStatus(ctx context.Context, controlPlaneMachineSet *applyconfigurationsmachinev1.ControlPlaneMachineSetApplyConfiguration, opts v1.ApplyOptions) (result *machinev1.ControlPlaneMachineSet, err error) {
+	if controlPlaneMachineSet == nil {
+		return nil, fmt.Errorf("controlPlaneMachineSet provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(controlPlaneMachineSet)
+	if err != nil {
+		return nil, err
+	}
+	name := controlPlaneMachineSet.Name
+	if name == nil {
+		return nil, fmt.Errorf("controlPlaneMachineSet.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(controlplanemachinesetsResource, c.ns, *name, types.ApplyPatchType, data, "status"), &machinev1.ControlPlaneMachineSet{})
 
 	if obj == nil {
 		return nil, err

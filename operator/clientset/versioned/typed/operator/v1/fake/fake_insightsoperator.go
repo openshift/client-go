@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	operatorv1 "github.com/openshift/api/operator/v1"
+	applyconfigurationsoperatorv1 "github.com/openshift/client-go/operator/applyconfigurations/operator/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeInsightsOperators) DeleteCollection(ctx context.Context, opts v1.De
 func (c *FakeInsightsOperators) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *operatorv1.InsightsOperator, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(insightsoperatorsResource, name, pt, data, subresources...), &operatorv1.InsightsOperator{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*operatorv1.InsightsOperator), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied insightsOperator.
+func (c *FakeInsightsOperators) Apply(ctx context.Context, insightsOperator *applyconfigurationsoperatorv1.InsightsOperatorApplyConfiguration, opts v1.ApplyOptions) (result *operatorv1.InsightsOperator, err error) {
+	if insightsOperator == nil {
+		return nil, fmt.Errorf("insightsOperator provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(insightsOperator)
+	if err != nil {
+		return nil, err
+	}
+	name := insightsOperator.Name
+	if name == nil {
+		return nil, fmt.Errorf("insightsOperator.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(insightsoperatorsResource, *name, types.ApplyPatchType, data), &operatorv1.InsightsOperator{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*operatorv1.InsightsOperator), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeInsightsOperators) ApplyStatus(ctx context.Context, insightsOperator *applyconfigurationsoperatorv1.InsightsOperatorApplyConfiguration, opts v1.ApplyOptions) (result *operatorv1.InsightsOperator, err error) {
+	if insightsOperator == nil {
+		return nil, fmt.Errorf("insightsOperator provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(insightsOperator)
+	if err != nil {
+		return nil, err
+	}
+	name := insightsOperator.Name
+	if name == nil {
+		return nil, fmt.Errorf("insightsOperator.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(insightsoperatorsResource, *name, types.ApplyPatchType, data, "status"), &operatorv1.InsightsOperator{})
 	if obj == nil {
 		return nil, err
 	}

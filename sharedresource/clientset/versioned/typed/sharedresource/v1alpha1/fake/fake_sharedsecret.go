@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
+	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeSharedSecrets) DeleteCollection(ctx context.Context, opts v1.Delete
 func (c *FakeSharedSecrets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedSecret, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(sharedsecretsResource, name, pt, data, subresources...), &v1alpha1.SharedSecret{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.SharedSecret), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied sharedSecret.
+func (c *FakeSharedSecrets) Apply(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error) {
+	if sharedSecret == nil {
+		return nil, fmt.Errorf("sharedSecret provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(sharedSecret)
+	if err != nil {
+		return nil, err
+	}
+	name := sharedSecret.Name
+	if name == nil {
+		return nil, fmt.Errorf("sharedSecret.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(sharedsecretsResource, *name, types.ApplyPatchType, data), &v1alpha1.SharedSecret{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.SharedSecret), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeSharedSecrets) ApplyStatus(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error) {
+	if sharedSecret == nil {
+		return nil, fmt.Errorf("sharedSecret provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(sharedSecret)
+	if err != nil {
+		return nil, err
+	}
+	name := sharedSecret.Name
+	if name == nil {
+		return nil, fmt.Errorf("sharedSecret.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(sharedsecretsResource, *name, types.ApplyPatchType, data, "status"), &v1alpha1.SharedSecret{})
 	if obj == nil {
 		return nil, err
 	}

@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	quotav1 "github.com/openshift/api/quota/v1"
+	applyconfigurationsquotav1 "github.com/openshift/client-go/quota/applyconfigurations/quota/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeClusterResourceQuotas) DeleteCollection(ctx context.Context, opts v
 func (c *FakeClusterResourceQuotas) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *quotav1.ClusterResourceQuota, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(clusterresourcequotasResource, name, pt, data, subresources...), &quotav1.ClusterResourceQuota{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*quotav1.ClusterResourceQuota), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied clusterResourceQuota.
+func (c *FakeClusterResourceQuotas) Apply(ctx context.Context, clusterResourceQuota *applyconfigurationsquotav1.ClusterResourceQuotaApplyConfiguration, opts v1.ApplyOptions) (result *quotav1.ClusterResourceQuota, err error) {
+	if clusterResourceQuota == nil {
+		return nil, fmt.Errorf("clusterResourceQuota provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(clusterResourceQuota)
+	if err != nil {
+		return nil, err
+	}
+	name := clusterResourceQuota.Name
+	if name == nil {
+		return nil, fmt.Errorf("clusterResourceQuota.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(clusterresourcequotasResource, *name, types.ApplyPatchType, data), &quotav1.ClusterResourceQuota{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*quotav1.ClusterResourceQuota), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeClusterResourceQuotas) ApplyStatus(ctx context.Context, clusterResourceQuota *applyconfigurationsquotav1.ClusterResourceQuotaApplyConfiguration, opts v1.ApplyOptions) (result *quotav1.ClusterResourceQuota, err error) {
+	if clusterResourceQuota == nil {
+		return nil, fmt.Errorf("clusterResourceQuota provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(clusterResourceQuota)
+	if err != nil {
+		return nil, err
+	}
+	name := clusterResourceQuota.Name
+	if name == nil {
+		return nil, fmt.Errorf("clusterResourceQuota.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(clusterresourcequotasResource, *name, types.ApplyPatchType, data, "status"), &quotav1.ClusterResourceQuota{})
 	if obj == nil {
 		return nil, err
 	}

@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	networkv1 "github.com/openshift/api/network/v1"
+	applyconfigurationsnetworkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -99,6 +102,27 @@ func (c *FakeHostSubnets) DeleteCollection(ctx context.Context, opts v1.DeleteOp
 func (c *FakeHostSubnets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *networkv1.HostSubnet, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(hostsubnetsResource, name, pt, data, subresources...), &networkv1.HostSubnet{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*networkv1.HostSubnet), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied hostSubnet.
+func (c *FakeHostSubnets) Apply(ctx context.Context, hostSubnet *applyconfigurationsnetworkv1.HostSubnetApplyConfiguration, opts v1.ApplyOptions) (result *networkv1.HostSubnet, err error) {
+	if hostSubnet == nil {
+		return nil, fmt.Errorf("hostSubnet provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(hostSubnet)
+	if err != nil {
+		return nil, err
+	}
+	name := hostSubnet.Name
+	if name == nil {
+		return nil, fmt.Errorf("hostSubnet.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(hostsubnetsResource, *name, types.ApplyPatchType, data), &networkv1.HostSubnet{})
 	if obj == nil {
 		return nil, err
 	}

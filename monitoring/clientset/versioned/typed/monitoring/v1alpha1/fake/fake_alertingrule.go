@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/monitoring/v1alpha1"
+	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -118,6 +121,51 @@ func (c *FakeAlertingRules) DeleteCollection(ctx context.Context, opts v1.Delete
 func (c *FakeAlertingRules) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.AlertingRule, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(alertingrulesResource, c.ns, name, pt, data, subresources...), &v1alpha1.AlertingRule{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.AlertingRule), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied alertingRule.
+func (c *FakeAlertingRules) Apply(ctx context.Context, alertingRule *monitoringv1alpha1.AlertingRuleApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.AlertingRule, err error) {
+	if alertingRule == nil {
+		return nil, fmt.Errorf("alertingRule provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(alertingRule)
+	if err != nil {
+		return nil, err
+	}
+	name := alertingRule.Name
+	if name == nil {
+		return nil, fmt.Errorf("alertingRule.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(alertingrulesResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.AlertingRule{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.AlertingRule), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeAlertingRules) ApplyStatus(ctx context.Context, alertingRule *monitoringv1alpha1.AlertingRuleApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.AlertingRule, err error) {
+	if alertingRule == nil {
+		return nil, fmt.Errorf("alertingRule provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(alertingRule)
+	if err != nil {
+		return nil, err
+	}
+	name := alertingRule.Name
+	if name == nil {
+		return nil, fmt.Errorf("alertingRule.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(alertingrulesResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.AlertingRule{})
 
 	if obj == nil {
 		return nil, err

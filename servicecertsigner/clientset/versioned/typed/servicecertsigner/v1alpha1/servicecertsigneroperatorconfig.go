@@ -4,9 +4,12 @@ package v1alpha1
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 	"time"
 
 	v1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
+	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
 	scheme "github.com/openshift/client-go/servicecertsigner/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -31,6 +34,8 @@ type ServiceCertSignerOperatorConfigInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.ServiceCertSignerOperatorConfigList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
+	Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
+	ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
 	ServiceCertSignerOperatorConfigExpansion
 }
 
@@ -161,6 +166,60 @@ func (c *serviceCertSignerOperatorConfigs) Patch(ctx context.Context, name strin
 		Name(name).
 		SubResource(subresources...).
 		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(data).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied serviceCertSignerOperatorConfig.
+func (c *serviceCertSignerOperatorConfigs) Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	if serviceCertSignerOperatorConfig == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
+	}
+	patchOpts := opts.ToPatchOptions()
+	data, err := json.Marshal(serviceCertSignerOperatorConfig)
+	if err != nil {
+		return nil, err
+	}
+	name := serviceCertSignerOperatorConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
+	}
+	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
+	err = c.client.Patch(types.ApplyPatchType).
+		Resource("servicecertsigneroperatorconfigs").
+		Name(*name).
+		VersionedParams(&patchOpts, scheme.ParameterCodec).
+		Body(data).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *serviceCertSignerOperatorConfigs) ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	if serviceCertSignerOperatorConfig == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
+	}
+	patchOpts := opts.ToPatchOptions()
+	data, err := json.Marshal(serviceCertSignerOperatorConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	name := serviceCertSignerOperatorConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
+	}
+
+	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
+	err = c.client.Patch(types.ApplyPatchType).
+		Resource("servicecertsigneroperatorconfigs").
+		Name(*name).
+		SubResource("status").
+		VersionedParams(&patchOpts, scheme.ParameterCodec).
 		Body(data).
 		Do(ctx).
 		Into(result)

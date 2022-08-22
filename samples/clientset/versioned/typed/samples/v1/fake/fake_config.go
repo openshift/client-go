@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	samplesv1 "github.com/openshift/api/samples/v1"
+	applyconfigurationssamplesv1 "github.com/openshift/client-go/samples/applyconfigurations/samples/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOption
 func (c *FakeConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *samplesv1.Config, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(configsResource, name, pt, data, subresources...), &samplesv1.Config{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*samplesv1.Config), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied config.
+func (c *FakeConfigs) Apply(ctx context.Context, config *applyconfigurationssamplesv1.ConfigApplyConfiguration, opts v1.ApplyOptions) (result *samplesv1.Config, err error) {
+	if config == nil {
+		return nil, fmt.Errorf("config provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(config)
+	if err != nil {
+		return nil, err
+	}
+	name := config.Name
+	if name == nil {
+		return nil, fmt.Errorf("config.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(configsResource, *name, types.ApplyPatchType, data), &samplesv1.Config{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*samplesv1.Config), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeConfigs) ApplyStatus(ctx context.Context, config *applyconfigurationssamplesv1.ConfigApplyConfiguration, opts v1.ApplyOptions) (result *samplesv1.Config, err error) {
+	if config == nil {
+		return nil, fmt.Errorf("config provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(config)
+	if err != nil {
+		return nil, err
+	}
+	name := config.Name
+	if name == nil {
+		return nil, fmt.Errorf("config.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(configsResource, *name, types.ApplyPatchType, data, "status"), &samplesv1.Config{})
 	if obj == nil {
 		return nil, err
 	}
