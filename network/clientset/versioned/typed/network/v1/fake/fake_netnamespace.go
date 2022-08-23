@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	networkv1 "github.com/openshift/api/network/v1"
+	applyconfigurationsnetworkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -99,6 +102,27 @@ func (c *FakeNetNamespaces) DeleteCollection(ctx context.Context, opts v1.Delete
 func (c *FakeNetNamespaces) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *networkv1.NetNamespace, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, name, pt, data, subresources...), &networkv1.NetNamespace{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*networkv1.NetNamespace), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied netNamespace.
+func (c *FakeNetNamespaces) Apply(ctx context.Context, netNamespace *applyconfigurationsnetworkv1.NetNamespaceApplyConfiguration, opts v1.ApplyOptions) (result *networkv1.NetNamespace, err error) {
+	if netNamespace == nil {
+		return nil, fmt.Errorf("netNamespace provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(netNamespace)
+	if err != nil {
+		return nil, err
+	}
+	name := netNamespace.Name
+	if name == nil {
+		return nil, fmt.Errorf("netNamespace.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, *name, types.ApplyPatchType, data), &networkv1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}

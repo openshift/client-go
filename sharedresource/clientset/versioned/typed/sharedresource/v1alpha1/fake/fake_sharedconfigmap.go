@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
+	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeSharedConfigMaps) DeleteCollection(ctx context.Context, opts v1.Del
 func (c *FakeSharedConfigMaps) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedConfigMap, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(sharedconfigmapsResource, name, pt, data, subresources...), &v1alpha1.SharedConfigMap{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.SharedConfigMap), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied sharedConfigMap.
+func (c *FakeSharedConfigMaps) Apply(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error) {
+	if sharedConfigMap == nil {
+		return nil, fmt.Errorf("sharedConfigMap provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(sharedConfigMap)
+	if err != nil {
+		return nil, err
+	}
+	name := sharedConfigMap.Name
+	if name == nil {
+		return nil, fmt.Errorf("sharedConfigMap.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(sharedconfigmapsResource, *name, types.ApplyPatchType, data), &v1alpha1.SharedConfigMap{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.SharedConfigMap), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeSharedConfigMaps) ApplyStatus(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error) {
+	if sharedConfigMap == nil {
+		return nil, fmt.Errorf("sharedConfigMap provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(sharedConfigMap)
+	if err != nil {
+		return nil, err
+	}
+	name := sharedConfigMap.Name
+	if name == nil {
+		return nil, fmt.Errorf("sharedConfigMap.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(sharedconfigmapsResource, *name, types.ApplyPatchType, data, "status"), &v1alpha1.SharedConfigMap{})
 	if obj == nil {
 		return nil, err
 	}

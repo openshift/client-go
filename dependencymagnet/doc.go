@@ -6,5 +6,7 @@ package dependencymagnet
 
 import (
 	_ "github.com/spf13/pflag"
+	_ "github.com/openshift/api/openapi"
 	_ "k8s.io/code-generator"
+	_ "k8s.io/code-generator/cmd/applyconfiguration-gen"
 )

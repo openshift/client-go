@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
+	operatorcontrolplanev1alpha1 "github.com/openshift/client-go/operatorcontrolplane/applyconfigurations/operatorcontrolplane/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -118,6 +121,51 @@ func (c *FakePodNetworkConnectivityChecks) DeleteCollection(ctx context.Context,
 func (c *FakePodNetworkConnectivityChecks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, name, pt, data, subresources...), &v1alpha1.PodNetworkConnectivityCheck{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied podNetworkConnectivityCheck.
+func (c *FakePodNetworkConnectivityChecks) Apply(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	if podNetworkConnectivityCheck == nil {
+		return nil, fmt.Errorf("podNetworkConnectivityCheck provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(podNetworkConnectivityCheck)
+	if err != nil {
+		return nil, err
+	}
+	name := podNetworkConnectivityCheck.Name
+	if name == nil {
+		return nil, fmt.Errorf("podNetworkConnectivityCheck.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.PodNetworkConnectivityCheck{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakePodNetworkConnectivityChecks) ApplyStatus(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	if podNetworkConnectivityCheck == nil {
+		return nil, fmt.Errorf("podNetworkConnectivityCheck provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(podNetworkConnectivityCheck)
+	if err != nil {
+		return nil, err
+	}
+	name := podNetworkConnectivityCheck.Name
+	if name == nil {
+		return nil, fmt.Errorf("podNetworkConnectivityCheck.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.PodNetworkConnectivityCheck{})
 
 	if obj == nil {
 		return nil, err

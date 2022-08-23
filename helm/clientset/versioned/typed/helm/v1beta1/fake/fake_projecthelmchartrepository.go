@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1beta1 "github.com/openshift/api/helm/v1beta1"
+	helmv1beta1 "github.com/openshift/client-go/helm/applyconfigurations/helm/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -118,6 +121,51 @@ func (c *FakeProjectHelmChartRepositories) DeleteCollection(ctx context.Context,
 func (c *FakeProjectHelmChartRepositories) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.ProjectHelmChartRepository, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(projecthelmchartrepositoriesResource, c.ns, name, pt, data, subresources...), &v1beta1.ProjectHelmChartRepository{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1beta1.ProjectHelmChartRepository), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied projectHelmChartRepository.
+func (c *FakeProjectHelmChartRepositories) Apply(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.ProjectHelmChartRepository, err error) {
+	if projectHelmChartRepository == nil {
+		return nil, fmt.Errorf("projectHelmChartRepository provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(projectHelmChartRepository)
+	if err != nil {
+		return nil, err
+	}
+	name := projectHelmChartRepository.Name
+	if name == nil {
+		return nil, fmt.Errorf("projectHelmChartRepository.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(projecthelmchartrepositoriesResource, c.ns, *name, types.ApplyPatchType, data), &v1beta1.ProjectHelmChartRepository{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1beta1.ProjectHelmChartRepository), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeProjectHelmChartRepositories) ApplyStatus(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.ProjectHelmChartRepository, err error) {
+	if projectHelmChartRepository == nil {
+		return nil, fmt.Errorf("projectHelmChartRepository provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(projectHelmChartRepository)
+	if err != nil {
+		return nil, err
+	}
+	name := projectHelmChartRepository.Name
+	if name == nil {
+		return nil, fmt.Errorf("projectHelmChartRepository.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(projecthelmchartrepositoriesResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1beta1.ProjectHelmChartRepository{})
 
 	if obj == nil {
 		return nil, err

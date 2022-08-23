@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	v1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
+	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeServiceCertSignerOperatorConfigs) DeleteCollection(ctx context.Cont
 func (c *FakeServiceCertSignerOperatorConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, name, pt, data, subresources...), &v1alpha1.ServiceCertSignerOperatorConfig{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied serviceCertSignerOperatorConfig.
+func (c *FakeServiceCertSignerOperatorConfigs) Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	if serviceCertSignerOperatorConfig == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(serviceCertSignerOperatorConfig)
+	if err != nil {
+		return nil, err
+	}
+	name := serviceCertSignerOperatorConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data), &v1alpha1.ServiceCertSignerOperatorConfig{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeServiceCertSignerOperatorConfigs) ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	if serviceCertSignerOperatorConfig == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(serviceCertSignerOperatorConfig)
+	if err != nil {
+		return nil, err
+	}
+	name := serviceCertSignerOperatorConfig.Name
+	if name == nil {
+		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, "status"), &v1alpha1.ServiceCertSignerOperatorConfig{})
 	if obj == nil {
 		return nil, err
 	}

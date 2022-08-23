@@ -4,8 +4,11 @@ package fake
 
 import (
 	"context"
+	json "encoding/json"
+	"fmt"
 
 	imageregistryv1 "github.com/openshift/api/imageregistry/v1"
+	applyconfigurationsimageregistryv1 "github.com/openshift/client-go/imageregistry/applyconfigurations/imageregistry/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -110,6 +113,49 @@ func (c *FakeImagePruners) DeleteCollection(ctx context.Context, opts v1.DeleteO
 func (c *FakeImagePruners) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *imageregistryv1.ImagePruner, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(imageprunersResource, name, pt, data, subresources...), &imageregistryv1.ImagePruner{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*imageregistryv1.ImagePruner), err
+}
+
+// Apply takes the given apply declarative configuration, applies it and returns the applied imagePruner.
+func (c *FakeImagePruners) Apply(ctx context.Context, imagePruner *applyconfigurationsimageregistryv1.ImagePrunerApplyConfiguration, opts v1.ApplyOptions) (result *imageregistryv1.ImagePruner, err error) {
+	if imagePruner == nil {
+		return nil, fmt.Errorf("imagePruner provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(imagePruner)
+	if err != nil {
+		return nil, err
+	}
+	name := imagePruner.Name
+	if name == nil {
+		return nil, fmt.Errorf("imagePruner.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(imageprunersResource, *name, types.ApplyPatchType, data), &imageregistryv1.ImagePruner{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*imageregistryv1.ImagePruner), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakeImagePruners) ApplyStatus(ctx context.Context, imagePruner *applyconfigurationsimageregistryv1.ImagePrunerApplyConfiguration, opts v1.ApplyOptions) (result *imageregistryv1.ImagePruner, err error) {
+	if imagePruner == nil {
+		return nil, fmt.Errorf("imagePruner provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(imagePruner)
+	if err != nil {
+		return nil, err
+	}
+	name := imagePruner.Name
+	if name == nil {
+		return nil, fmt.Errorf("imagePruner.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(imageprunersResource, *name, types.ApplyPatchType, data, "status"), &imageregistryv1.ImagePruner{})
 	if obj == nil {
 		return nil, err
 	}
