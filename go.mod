@@ -13,4 +13,7 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3
 )
 
-replace k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
+replace (
+	k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
+	k8s.io/kube-openapi => github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3
+)
