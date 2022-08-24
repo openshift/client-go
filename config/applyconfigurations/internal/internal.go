@@ -112,6 +112,14 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
+- name: com.github.openshift.api.config.v1.AWSIngressSpec
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
 - name: com.github.openshift.api.config.v1.AWSPlatformSpec
   map:
     fields:
@@ -1511,6 +1519,21 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.IngressStatus
       default: {}
+- name: com.github.openshift.api.config.v1.IngressPlatformSpec
+  map:
+    fields:
+    - name: aws
+      type:
+        namedType: com.github.openshift.api.config.v1.AWSIngressSpec
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: aws
+        discriminatorValue: AWS
 - name: com.github.openshift.api.config.v1.IngressSpec
   map:
     fields:
@@ -1527,6 +1550,10 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: loadbalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.LoadBalancer
+      default: {}
     - name: requiredHSTSPolicies
       type:
         list:
@@ -1656,6 +1683,13 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.config.v1.LoadBalancer
+  map:
+    fields:
+    - name: platform
+      type:
+        namedType: com.github.openshift.api.config.v1.IngressPlatformSpec
+      default: {}
 - name: com.github.openshift.api.config.v1.MTUMigration
   map:
     fields:
