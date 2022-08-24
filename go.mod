@@ -14,3 +14,6 @@ require (
 )
 
 replace k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
+replace github.com/openshift/api => github.com/deads2k/api eb2ebe1adab1420eb81365d38d9e90128d497a31
+replace k8s.io/kube-openapi => github.com/deads2k/kube-openapi e54777fe3dde37a37760421328e4c40034eb535c
+
