@@ -56,7 +56,7 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 github.com/munnerz/goautoneg
-# github.com/openshift/api v0.0.0-20220823132416-944d64f14f39
+# github.com/openshift/api v0.0.0-20220823132416-944d64f14f39 => github.com/deads2k/api v0.0.0-20220824122603-eb2ebe1adab1
 ## explicit
 github.com/openshift/api/apiserver/v1
 github.com/openshift/api/apps/v1
@@ -369,7 +369,7 @@ k8s.io/klog/v2/internal/clock
 k8s.io/klog/v2/internal/dbg
 k8s.io/klog/v2/internal/serialize
 k8s.io/klog/v2/internal/severity
-# k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1
+# k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 => github.com/deads2k/kube-openapi v0.0.0-20220824152811-e54777fe3dde
 k8s.io/kube-openapi/cmd/openapi-gen/args
 k8s.io/kube-openapi/pkg/builder3/util
 k8s.io/kube-openapi/pkg/common
@@ -405,3 +405,5 @@ sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
 # k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
+# github.com/openshift/api => github.com/deads2k/api v0.0.0-20220824122603-eb2ebe1adab1
+# k8s.io/kube-openapi => github.com/deads2k/kube-openapi v0.0.0-20220824152811-e54777fe3dde

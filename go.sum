@@ -69,6 +69,10 @@ github.com/dave/rebecca v0.9.1/go.mod h1:N6XYdMD/OKw3lkF3ywh8Z6wPGuwNFDNtWYEMFWE
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/deads2k/api v0.0.0-20220824122603-eb2ebe1adab1 h1:7lFSlsBa0HNqhLTefkSCxdfTuC6pSY4OGNcZHeypqHA=
+github.com/deads2k/api v0.0.0-20220824122603-eb2ebe1adab1/go.mod h1:6lal7JeRpbdE/h4S12xH1ZRKMmrcyNQHnSKJ3akGXNc=
+github.com/deads2k/kube-openapi v0.0.0-20220824152811-e54777fe3dde h1:Kc+9zS3Sl3vJNxF2i09lxwsjw2wiXHppV2EJu8T0faI=
+github.com/deads2k/kube-openapi v0.0.0-20220824152811-e54777fe3dde/go.mod h1:C/N6wCaBHeBHkHUesQOQy2/MZqGgMAFPqGsGQLdbZBU=
 github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815/go.mod h1:WwZ+bS3ebgob9U8Nd0kOddGdZWjyMGR8Wziv+TBNwSE=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=
 github.com/emicklei/go-restful v0.0.0-20170410110728-ff4f55a20633/go.mod h1:otzb+WCGbkyDHkqmQmT5YD2WR4BBwUdeQoFo8l/7tVs=
