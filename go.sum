@@ -248,6 +248,8 @@ github.com/openshift/api v0.0.0-20220822155657-561a81ffb263/go.mod h1:6lal7JeRpb
 github.com/openshift/api v0.0.0-20220823132416-944d64f14f39 h1:8h13ffdui84zhovbdAu6fZdUASeZy9myQ5QC12zFkUE=
 github.com/openshift/api v0.0.0-20220823132416-944d64f14f39/go.mod h1:6lal7JeRpbdE/h4S12xH1ZRKMmrcyNQHnSKJ3akGXNc=
 github.com/openshift/build-machinery-go v0.0.0-20211213093930-7e33a7eb4ce3/go.mod h1:b1BuldmJlbA/xYtdZvKi+7j5YGB44qJUJDZ9zwiNCfE=
+github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3 h1:cWYtcARgUTv/EHAYXCVeyloiYmP8CgEOSkSBMuCXFBY=
+github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3/go.mod h1:C/N6wCaBHeBHkHUesQOQy2/MZqGgMAFPqGsGQLdbZBU=
 github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e h1:zZezZZezYr/mOhrNr4K269XwrDVicAZ2BWBp0Jp89Pc=
 github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e/go.mod h1:B6jZgI3DvDFAualltPitbYMQ74NjaCFxum3YeKZZ+3w=
 github.com/peterbourgon/diskv v2.0.1+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=

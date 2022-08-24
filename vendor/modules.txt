@@ -369,7 +369,7 @@ k8s.io/klog/v2/internal/clock
 k8s.io/klog/v2/internal/dbg
 k8s.io/klog/v2/internal/serialize
 k8s.io/klog/v2/internal/severity
-# k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1
+# k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 => github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3
 k8s.io/kube-openapi/cmd/openapi-gen/args
 k8s.io/kube-openapi/pkg/builder3/util
 k8s.io/kube-openapi/pkg/common
@@ -405,3 +405,4 @@ sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
 # k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
+# k8s.io/kube-openapi => github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3
