@@ -4099,6 +4099,22 @@
     "com.github.openshift.api.config.v1.APIServerStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1.AWSIngressSpec": {
+      "description": "AWSIngressSpec holds the desired state of the Ingress for Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type allows user to set a load balancer type. When this field is set the default ingresscontroller will get created using the specified LBType. If this field is not set then the default ingress controller of LBType Classic will be created. Valid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.AWSPlatformSpec": {
       "description": "AWSPlatformSpec holds the desired state of the Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object",
@@ -5262,7 +5278,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "consumingUsers": {
           "description": "consumingUsers is a slice of ServiceAccounts that need to have read permission on the servingCertKeyPairSecret secret.",
@@ -7006,6 +7026,32 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.IngressPlatformSpec": {
+      "description": "IngressPlatformSpec holds the desired state of Ingress specific to the underlying infrastructure provider of the current cluster. Since these are used at spec-level for the underlying cluster, it is supposed that only one of the spec structs is set.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "aws": {
+          "description": "aws contains settings specific to the Amazon Web Services infrastructure provider.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSIngressSpec"
+        },
+        "type": {
+          "description": "type is the underlying infrastructure provider for the cluster. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "aws": "AWS"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.IngressSpec": {
       "type": "object",
       "required": [
@@ -7022,12 +7068,22 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentRouteSpec"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "domain": {
           "description": "domain is used to generate a default host name for a route when the route's host name is empty. The generated host name will follow this pattern: \"<route-name>.<route-namespace>.<domain>\".\n\nIt is also used as the default wildcard domain suffix for ingress. The default ingresscontroller domain will follow this pattern: \"*.<domain>\".\n\nOnce set, changing domain is not currently supported.",
           "type": "string",
           "default": ""
+        },
+        "loadbalancer": {
+          "description": "loadBalancer contains the load balancer details in general which are not only specific to the underlying infrastructure provider of the current cluster and are required for Ingress Controller to work on OpenShift.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.LoadBalancer"
         },
         "requiredHSTSPolicies": {
           "description": "requiredHSTSPolicies specifies HSTS policies that are required to be set on newly created  or updated routes matching the domainPattern/s and namespaceSelector/s that are specified in the policy. Each requiredHSTSPolicy must have at least a domainPattern and a maxAge to validate a route HSTS Policy route annotation, and affect route admission.\n\nA candidate route is checked for HSTS Policies if it has the HSTS Policy route annotation: \"haproxy.router.openshift.io/hsts_header\" E.g. haproxy.router.openshift.io/hsts_header: max-age=31536000;preload;includeSubDomains\n\n- For each candidate route, if it matches a requiredHSTSPolicy domainPattern and optional namespaceSelector, then the maxAge, preloadPolicy, and includeSubdomainsPolicy must be valid to be admitted.  Otherwise, the route is rejected. - The first match, by domainPattern and optional namespaceSelector, in the ordering of the RequiredHSTSPolicies determines the route's admission status. - If the candidate route doesn't match any requiredHSTSPolicy domainPattern and optional namespaceSelector, then it may use any HSTS Policy annotation.\n\nThe HSTS policy configuration may be changed after routes have already been created. An update to a previously admitted route may then fail if the updated route does not conform to the updated HSTS policy configuration. However, changing the HSTS policy configuration will not cause a route that is already admitted to stop working.\n\nNote that if there are no RequiredHSTSPolicies, any HSTS Policy annotation on the route is valid.",
@@ -7048,7 +7104,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentRouteStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "defaultPlacement": {
           "description": "defaultPlacement is set at installation time to control which nodes will host the ingress router pods by default. The options are control-plane nodes or worker nodes.\n\nThis field works by dictating how the Cluster Ingress Operator will consider unset replicas and nodePlacement fields in IngressController resources when creating the corresponding Deployments.\n\nSee the documentation for the IngressController replicas and nodePlacement fields for more information.\n\nWhen omitted, the default value is Workers",
@@ -7250,6 +7311,16 @@
           "description": "retryPeriod is the duration the clients should wait between attempting acquisition and renewal of a leadership. This is only applicable if leader election is enabled.",
           "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.LoadBalancer": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "description": "platform holds configuration specific to the underlying infrastructure provider for the ingress load balancers. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.IngressPlatformSpec"
         }
       }
     },
@@ -15798,9 +15869,9 @@
       },
       "x-kubernetes-unions": [
         {
+          "discriminator": "type",
           "fields-to-discriminateBy": {
             "name": "Name",
-            "type": "Type",
             "uuid": "UUID"
           }
         }
@@ -16038,6 +16109,601 @@
           "description": "Value is the value or data of the key pair",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.AddressPair": {
+      "type": "object",
+      "properties": {
+        "ipAddress": {
+          "type": "string"
+        },
+        "macAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.Filter": {
+      "type": "object",
+      "properties": {
+        "adminStateUp": {
+          "description": "Deprecated: adminStateUp is silently ignored. It has no replacement.",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "description filters networks by description.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Deprecated: use NetworkParam.uuid instead. Ignored if NetworkParam.uuid is set.",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Deprecated: limit is silently ignored. It has no replacement.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "marker": {
+          "description": "Deprecated: marker is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name filters networks by name.",
+          "type": "string"
+        },
+        "notTags": {
+          "description": "notTags filters by networks which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "notTagsAny": {
+          "description": "notTagsAny filters by networks which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "projectId filters networks by project ID.",
+          "type": "string"
+        },
+        "shared": {
+          "description": "Deprecated: shared is silently ignored. It has no replacement.",
+          "type": "boolean"
+        },
+        "sortDir": {
+          "description": "Deprecated: sortDir is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "sortKey": {
+          "description": "Deprecated: sortKey is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Deprecated: status is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "tags filters by networks containing all specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tagsAny": {
+          "description": "tagsAny filters by networks containing any specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tenantId": {
+          "description": "tenantId filters networks by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.FixedIPs": {
+      "type": "object",
+      "required": [
+        "subnetID"
+      ],
+      "properties": {
+        "ipAddress": {
+          "description": "ipAddress is a specific IP address to use in the given subnet. Port creation will fail if the address is not available. If not specified, an available IP from the given subnet will be selected automatically.",
+          "type": "string"
+        },
+        "subnetID": {
+          "description": "subnetID specifies the ID of the subnet where the fixed IP will be allocated.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.NetworkParam": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "description": "Filters for optional network query",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.Filter"
+        },
+        "fixedIp": {
+          "description": "A fixed IPv4 address for the NIC.",
+          "type": "string"
+        },
+        "noAllowedAddressPairs": {
+          "description": "NoAllowedAddressPairs disables creation of allowed address pairs for the network ports",
+          "type": "boolean"
+        },
+        "portSecurity": {
+          "description": "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+          "type": "boolean"
+        },
+        "portTags": {
+          "description": "PortTags allows users to specify a list of tags to add to ports created in a given network",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "profile": {
+          "description": "A dictionary that enables the application running on the specified host to pass and receive virtual network interface (VIF) port-specific information to the plug-in.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "subnets": {
+          "description": "Subnet within a network to use",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.SubnetParam"
+          }
+        },
+        "uuid": {
+          "description": "The UUID of the network. Required if you omit the port attribute.",
+          "type": "string"
+        },
+        "vnicType": {
+          "description": "The virtual network interface card (vNIC) type that is bound to the neutron port.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.OpenstackProviderSpec": {
+      "description": "OpenstackProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an OpenStack Instance. It is used by the Openstack machine actuator to create a single machine instance. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "cloudsSecret",
+        "cloudName",
+        "flavor",
+        "image"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "availabilityZone": {
+          "description": "The availability zone from which to launch the server.",
+          "type": "string"
+        },
+        "cloudName": {
+          "description": "The name of the cloud to use from the clouds secret",
+          "type": "string",
+          "default": ""
+        },
+        "cloudsSecret": {
+          "description": "The name of the secret containing the openstack credentials",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretReference"
+        },
+        "configDrive": {
+          "description": "Config Drive support",
+          "type": "boolean"
+        },
+        "flavor": {
+          "description": "The flavor reference for the flavor for your server instance.",
+          "type": "string",
+          "default": ""
+        },
+        "floatingIP": {
+          "description": "floatingIP specifies a floating IP to be associated with the machine. Note that it is not safe to use this parameter in a MachineSet, as only one Machine may be assigned the same floating IP.\n\nDeprecated: floatingIP will be removed in a future release as it cannot be implemented correctly.",
+          "type": "string"
+        },
+        "image": {
+          "description": "The name of the image to use for your server instance. If the RootVolume is specified, this will be ignored and use rootVolume directly.",
+          "type": "string",
+          "default": ""
+        },
+        "keyName": {
+          "description": "The ssh key to inject in the instance",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "networks": {
+          "description": "A networks object. Required parameter when there are multiple networks defined for the tenant. When you do not specify the networks parameter, the server attaches to the only network created for the current tenant.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.NetworkParam"
+          }
+        },
+        "ports": {
+          "description": "Create and assign additional ports to instances",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.PortOpts"
+          }
+        },
+        "primarySubnet": {
+          "description": "The subnet that a set of machines will get ingress/egress traffic from",
+          "type": "string"
+        },
+        "rootVolume": {
+          "description": "The volume metadata to boot from",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.RootVolume"
+        },
+        "securityGroups": {
+          "description": "The names of the security groups to assign to the instance",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.SecurityGroupParam"
+          }
+        },
+        "serverGroupID": {
+          "description": "The server group to assign the machine to.",
+          "type": "string"
+        },
+        "serverGroupName": {
+          "description": "The server group to assign the machine to. A server group with that name will be created if it does not exist. If both ServerGroupID and ServerGroupName are non-empty, they must refer to the same OpenStack resource.",
+          "type": "string"
+        },
+        "serverMetadata": {
+          "description": "Metadata mapping. Allows you to create a map of key value pairs to add to the server instance.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "sshUserName": {
+          "description": "The machine ssh username",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Machine tags Requires Nova api 2.52 minimum!",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "trunk": {
+          "description": "Whether the server instance is created on a trunk port or not.",
+          "type": "boolean"
+        },
+        "userDataSecret": {
+          "description": "The name of the secret containing the user data (startup script in most cases)",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretReference"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.PortOpts": {
+      "type": "object",
+      "required": [
+        "networkID"
+      ],
+      "properties": {
+        "adminStateUp": {
+          "description": "adminStateUp sets the administrative state of the created port to up (true), or down (false).",
+          "type": "boolean"
+        },
+        "allowedAddressPairs": {
+          "description": "allowedAddressPairs specifies a set of allowed address pairs to add to the port.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.AddressPair"
+          }
+        },
+        "description": {
+          "description": "description specifies the description of the created port.",
+          "type": "string"
+        },
+        "fixedIPs": {
+          "description": "fixedIPs specifies a set of fixed IPs to assign to the port. They must all be valid for the port's network.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.FixedIPs"
+          }
+        },
+        "hostID": {
+          "description": "The ID of the host where the port is allocated. Do not use this field: it cannot be used correctly. Deprecated: hostID is silently ignored. It will be removed with no replacement.",
+          "type": "string"
+        },
+        "macAddress": {
+          "description": "macAddress specifies the MAC address of the created port.",
+          "type": "string"
+        },
+        "nameSuffix": {
+          "description": "If nameSuffix is specified the created port will be named <machine name>-<nameSuffix>. If not specified the port will be named <machine-name>-<index of this port>.",
+          "type": "string"
+        },
+        "networkID": {
+          "description": "networkID is the ID of the network the port will be created in. It is required.",
+          "type": "string",
+          "default": ""
+        },
+        "portSecurity": {
+          "description": "enable or disable security on a given port incompatible with securityGroups and allowedAddressPairs",
+          "type": "boolean"
+        },
+        "profile": {
+          "description": "A dictionary that enables the application running on the specified host to pass and receive virtual network interface (VIF) port-specific information to the plug-in.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "projectID": {
+          "description": "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended.",
+          "type": "string"
+        },
+        "securityGroups": {
+          "description": "securityGroups specifies a set of security group UUIDs to use instead of the machine's default security groups. The default security groups will be used if this is left empty or not specified.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tags": {
+          "description": "tags species a set of tags to add to the port.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tenantID": {
+          "description": "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: use projectID instead. It will be ignored if projectID is set.",
+          "type": "string"
+        },
+        "trunk": {
+          "description": "Enables and disables trunk at port level. If not provided, openStackMachine.Spec.Trunk is inherited.",
+          "type": "boolean"
+        },
+        "vnicType": {
+          "description": "The virtual network interface card (vNIC) type that is bound to the neutron port.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.RootVolume": {
+      "type": "object",
+      "properties": {
+        "availabilityZone": {
+          "description": "availabilityZone specifies the Cinder availability where the root volume will be created.",
+          "type": "string"
+        },
+        "deviceType": {
+          "description": "Deprecated: deviceType will be silently ignored. There is no replacement.",
+          "type": "string"
+        },
+        "diskSize": {
+          "description": "diskSize specifies the size, in GB, of the created root volume.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sourceType": {
+          "description": "Deprecated: sourceType will be silently ignored. There is no replacement.",
+          "type": "string"
+        },
+        "sourceUUID": {
+          "description": "sourceUUID specifies the UUID of a glance image used to populate the root volume. Deprecated: set image in the platform spec instead. This will be ignored if image is set in the platform spec.",
+          "type": "string"
+        },
+        "volumeType": {
+          "description": "volumeType specifies a volume type to use when creating the root volume. If not specified the default volume type will be used.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.SecurityGroupFilter": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "description filters security groups by description.",
+          "type": "string"
+        },
+        "id": {
+          "description": "id specifies the ID of a security group to use. If set, id will not be validated before use. An invalid id will result in failure to create a server with an appropriate error message.",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Deprecated: limit is silently ignored. It has no replacement.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "marker": {
+          "description": "Deprecated: marker is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name filters security groups by name.",
+          "type": "string"
+        },
+        "notTags": {
+          "description": "notTags filters by security groups which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "notTagsAny": {
+          "description": "notTagsAny filters by security groups which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "projectId filters security groups by project ID.",
+          "type": "string"
+        },
+        "sortDir": {
+          "description": "Deprecated: sortDir is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "sortKey": {
+          "description": "Deprecated: sortKey is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "tags filters by security groups containing all specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tagsAny": {
+          "description": "tagsAny filters by security groups containing any specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tenantId": {
+          "description": "tenantId filters security groups by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.SecurityGroupParam": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "description": "Filters used to query security groups in openstack",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.SecurityGroupFilter"
+        },
+        "name": {
+          "description": "Security Group name",
+          "type": "string"
+        },
+        "uuid": {
+          "description": "Security Group UUID",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.SubnetFilter": {
+      "type": "object",
+      "properties": {
+        "cidr": {
+          "description": "cidr filters subnets by CIDR.",
+          "type": "string"
+        },
+        "description": {
+          "description": "description filters subnets by description.",
+          "type": "string"
+        },
+        "enableDhcp": {
+          "description": "Deprecated: enableDhcp is silently ignored. It has no replacement.",
+          "type": "boolean"
+        },
+        "gateway_ip": {
+          "description": "gateway_ip filters subnets by gateway IP.",
+          "type": "string"
+        },
+        "id": {
+          "description": "id is the uuid of a specific subnet to use. If specified, id will not be validated. Instead server creation will fail with an appropriate error.",
+          "type": "string"
+        },
+        "ipVersion": {
+          "description": "ipVersion filters subnets by IP version.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ipv6AddressMode": {
+          "description": "ipv6AddressMode filters subnets by IPv6 address mode.",
+          "type": "string"
+        },
+        "ipv6RaMode": {
+          "description": "ipv6RaMode filters subnets by IPv6 router adversiement mode.",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Deprecated: limit is silently ignored. It has no replacement.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "marker": {
+          "description": "Deprecated: marker is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name filters subnets by name.",
+          "type": "string"
+        },
+        "networkId": {
+          "description": "Deprecated: networkId is silently ignored. Set uuid on the containing network definition instead.",
+          "type": "string"
+        },
+        "notTags": {
+          "description": "notTags filters by subnets which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "notTagsAny": {
+          "description": "notTagsAny filters by subnets which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "projectId filters subnets by project ID.",
+          "type": "string"
+        },
+        "sortDir": {
+          "description": "Deprecated: sortDir is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "sortKey": {
+          "description": "Deprecated: sortKey is silently ignored. It has no replacement.",
+          "type": "string"
+        },
+        "subnetpoolId": {
+          "description": "subnetpoolId filters subnets by subnet pool ID.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "tags filters by subnets containing all specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tagsAny": {
+          "description": "tagsAny filters by subnets containing any specified tags. Multiple tags are comma separated.",
+          "type": "string"
+        },
+        "tenantId": {
+          "description": "tenantId filters subnets by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.SubnetParam": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "description": "Filters for optional network query",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.SubnetFilter"
+        },
+        "portSecurity": {
+          "description": "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+          "type": "boolean"
+        },
+        "portTags": {
+          "description": "PortTags are tags that are added to ports created on this subnet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "uuid": {
+          "description": "The UUID of the network. Required if you omit the port attribute.",
+          "type": "string"
         }
       }
     },
@@ -20670,7 +21336,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.Config": {
-      "description": "Config provides information to configure the config operator. It handles installation, migration or synchronization of cloud based cluster configurations like AWS or Azure.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "Config specifies the behavior of the config operator which is responsible for creating the initial configuration of other components on the cluster.  The operator also handles installation, migration or synchronization of cloud configurations for AWS and Azure cloud based clusters\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "metadata",
@@ -21567,6 +22233,23 @@
         "sFlow": {
           "description": "sFlow defines the SFlow configuration.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.SFlowConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.FeaturesMigration": {
+      "type": "object",
+      "properties": {
+        "egressFirewall": {
+          "description": "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+          "type": "boolean"
+        },
+        "egressIP": {
+          "description": "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+          "type": "boolean"
+        },
+        "multicast": {
+          "description": "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+          "type": "boolean"
         }
       }
     },
@@ -23095,7 +23778,7 @@
       ],
       "properties": {
         "dnsManagementPolicy": {
-          "description": "dnsManagementPolicy indicates if the lifecyle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
+          "description": "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
           "type": "string",
           "default": ""
         },
@@ -23346,6 +24029,10 @@
       "description": "NetworkMigration represents the cluster network configuration.",
       "type": "object",
       "properties": {
+        "features": {
+          "description": "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.FeaturesMigration"
+        },
         "mtu": {
           "description": "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.MTUMigration"
@@ -26786,6 +27473,130 @@
         }
       }
     },
+    "com.github.openshift.api.platform.v1alpha1.ActiveBundleDeployment": {
+      "description": "ActiveBundleDeployment references a BundleDeployment resource.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced BundleDeployment object.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.platform.v1alpha1.Package": {
+      "description": "Package contains fields to configure which OLM package this PlatformOperator will install",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name contains the desired OLM-based Operator package name that is defined in an existing CatalogSource resource in the cluster.\n\nThis configured package will be managed with the cluster's lifecycle. In the current implementation, it will be retrieving this name from a list of supported operators out of the catalogs included with OpenShift.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.platform.v1alpha1.PlatformOperator": {
+      "description": "PlatformOperator is the Schema for the PlatformOperators API.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperatorSpec"
+        },
+        "status": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperatorStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorList": {
+      "description": "PlatformOperatorList contains a list of PlatformOperators\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperator"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorSpec": {
+      "description": "PlatformOperatorSpec defines the desired state of PlatformOperator.",
+      "type": "object",
+      "required": [
+        "package"
+      ],
+      "properties": {
+        "package": {
+          "description": "package contains the desired package and its configuration for this PlatformOperator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.Package"
+        }
+      }
+    },
+    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorStatus": {
+      "description": "PlatformOperatorStatus defines the observed state of PlatformOperator",
+      "type": "object",
+      "properties": {
+        "activeBundleDeployment": {
+          "description": "activeBundleDeployment is the reference to the BundleDeployment resource that's being managed by this PO resource. If this field is not populated in the status then it means the PlatformOperator has either not been installed yet or is failing to install.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.ActiveBundleDeployment"
+        },
+        "conditions": {
+          "description": "conditions represent the latest available observations of a platform operator's current state.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
     "com.github.openshift.api.project.v1.Project": {
       "description": "Projects are the unit of isolation and collaboration in OpenShift. A project has one or more members, a quota on the resources that the project may consume, and the security controls on the resources in the project. Within a project, members may have different roles - project administrators can set membership, editors can create and manage the resources, and viewers can see but not access running containers. In a normal cluster project administrators are not able to alter their quotas - that is restricted to cluster administrators.\n\nListing or watching projects will return only projects the user has the reader role on.\n\nAn OpenShift project is an alternative representation of a Kubernetes namespace. Projects are exposed as editable to end users while namespaces are not. Direct creation of a project is typically restricted to administrators, while end users should use the requestproject resource.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -27331,7 +28142,7 @@
       }
     },
     "com.github.openshift.api.route.v1.RouterShard": {
-      "description": "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding\n\n\tsupport is added.",
+      "description": "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding support is added.",
       "type": "object",
       "required": [
         "shardName",
@@ -29763,7 +30574,7 @@
       ],
       "properties": {
         "controllerExpandSecretRef": {
-          "description": "controllerExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerExpandVolume call. This is an alpha field and requires enabling ExpandCSIVolumes feature gate. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.",
+          "description": "controllerExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI ControllerExpandVolume call. This is an beta field and requires enabling ExpandCSIVolumes feature gate. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretReference"
         },
         "controllerPublishSecretRef": {
@@ -29778,6 +30589,10 @@
         "fsType": {
           "description": "fsType to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\".",
           "type": "string"
+        },
+        "nodeExpandSecretRef": {
+          "description": "nodeExpandSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodeExpandVolume call. This is an alpha field and requires enabling CSINodeExpandSecret feature gate. This field is optional, may be omitted if no secret is required. If the secret object contains more than one secret, all secrets are passed.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretReference"
         },
         "nodePublishSecretRef": {
           "description": "nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and may be empty if no secret is required. If the secret object contains more than one secret, all secrets are passed.",
@@ -30343,7 +31158,7 @@
           "default": ""
         },
         "ports": {
-          "description": "List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default \"0.0.0.0\" address inside a container will be accessible from the network. Cannot be updated.",
+          "description": "List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default \"0.0.0.0\" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated.",
           "type": "array",
           "items": {
             "default": {},
@@ -30429,7 +31244,7 @@
       "type": "object",
       "properties": {
         "names": {
-          "description": "Names by which this image is known. e.g. [\"k8s.gcr.io/hyperkube:v1.0.7\", \"dockerhub.io/google_containers/hyperkube:v1.0.7\"]",
+          "description": "Names by which this image is known. e.g. [\"kubernetes.example/hyperkube:v1.0.7\", \"cloud-vendor.registry.example/cloud-vendor/hyperkube:v1.0.7\"]",
           "type": "array",
           "items": {
             "type": "string",
@@ -30773,7 +31588,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "io.k8s.api.core.v1.EndpointSubset": {
-      "description": "EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:\n  {\n    Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n    Ports:     [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n  }\nThe resulting set of endpoints can be viewed as:\n    a: [ 10.10.1.1:8675, 10.10.2.2:8675 ],\n    b: [ 10.10.1.1:309, 10.10.2.2:309 ]",
+      "description": "EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:\n\n\t{\n\t  Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t  Ports:     [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t}\n\nThe resulting set of endpoints can be viewed as:\n\n\ta: [ 10.10.1.1:8675, 10.10.2.2:8675 ],\n\tb: [ 10.10.1.1:309, 10.10.2.2:309 ]",
       "type": "object",
       "properties": {
         "addresses": {
@@ -30803,7 +31618,7 @@
       }
     },
     "io.k8s.api.core.v1.Endpoints": {
-      "description": "Endpoints is a collection of endpoints that implement the actual service. Example:\n  Name: \"mysvc\",\n  Subsets: [\n    {\n      Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n      Ports: [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n    },\n    {\n      Addresses: [{\"ip\": \"10.10.3.3\"}],\n      Ports: [{\"name\": \"a\", \"port\": 93}, {\"name\": \"b\", \"port\": 76}]\n    },\n ]",
+      "description": "Endpoints is a collection of endpoints that implement the actual service. Example:\n\n\t Name: \"mysvc\",\n\t Subsets: [\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t   },\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.3.3\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 93}, {\"name\": \"b\", \"port\": 76}]\n\t   },\n\t]",
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -30922,7 +31737,7 @@
       }
     },
     "io.k8s.api.core.v1.EphemeralContainer": {
-      "description": "An EphemeralContainer is a temporary container that you may add to an existing Pod for user-initiated activities such as debugging. Ephemeral containers have no resource or scheduling guarantees, and they will not be restarted when they exit or when a Pod is removed or restarted. The kubelet may evict a Pod if an ephemeral container causes the Pod to exceed its resource allocation.\n\nTo add an ephemeral container, use the ephemeralcontainers subresource of an existing Pod. Ephemeral containers may not be removed or restarted.\n\nThis is a beta feature available on clusters that haven't disabled the EphemeralContainers feature gate.",
+      "description": "An EphemeralContainer is a temporary container that you may add to an existing Pod for user-initiated activities such as debugging. Ephemeral containers have no resource or scheduling guarantees, and they will not be restarted when they exit or when a Pod is removed or restarted. The kubelet may evict a Pod if an ephemeral container causes the Pod to exceed its resource allocation.\n\nTo add an ephemeral container, use the ephemeralcontainers subresource of an existing Pod. Ephemeral containers may not be removed or restarted.",
       "type": "object",
       "required": [
         "name"
@@ -33247,6 +34062,7 @@
         },
         "claimRef": {
           "description": "claimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim. Expected to be non-nil when bound. claim.VolumeName is the authoritative bind between PV and PVC. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding",
+          "x-kubernetes-map-type": "granular",
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
         },
         "csi": {
@@ -33655,7 +34471,7 @@
       }
     },
     "io.k8s.api.core.v1.PodIP": {
-      "description": "IP address information for entries in the (plural) PodIPs field. Each entry includes:\n   IP: An IP address allocated to the pod. Routable at least within the cluster.",
+      "description": "IP address information for entries in the (plural) PodIPs field. Each entry includes:\n\n\tIP: An IP address allocated to the pod. Routable at least within the cluster.",
       "type": "object",
       "properties": {
         "ip": {
@@ -33933,7 +34749,7 @@
           "type": "boolean"
         },
         "ephemeralContainers": {
-          "description": "List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing pod to perform user-initiated actions such as debugging. This list cannot be specified when creating a pod, and it cannot be modified by updating the pod spec. In order to add an ephemeral container to an existing pod, use the pod's ephemeralcontainers subresource. This field is beta-level and available on clusters that haven't disabled the EphemeralContainers feature gate.",
+          "description": "List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing pod to perform user-initiated actions such as debugging. This list cannot be specified when creating a pod, and it cannot be modified by updating the pod spec. In order to add an ephemeral container to an existing pod, use the pod's ephemeralcontainers subresource.",
           "type": "array",
           "items": {
             "default": {},
@@ -33962,6 +34778,10 @@
         },
         "hostPID": {
           "description": "Use the host's pid namespace. Optional: Default to false.",
+          "type": "boolean"
+        },
+        "hostUsers": {
+          "description": "Use the host's user namespace. Optional: Default to true. If set to true or not present, the pod will be run in the host user namespace, useful for when the pod needs a feature only available to the host user namespace, such as loading a kernel module with CAP_SYS_MODULE. When set to false, a new userns is created for the pod. Setting false is useful for mitigating container breakout vulnerabilities even allowing users to run their containers as root without actually having root privileges on the host. This field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.",
           "type": "boolean"
         },
         "hostname": {
@@ -34002,7 +34822,7 @@
           "x-kubernetes-map-type": "atomic"
         },
         "os": {
-          "description": "Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set.\n\nIf the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions\n\nIf the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup This is a beta field and requires the IdentifyPodOS feature",
+          "description": "Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set.\n\nIf the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions\n\nIf the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.hostUsers - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup",
           "$ref": "#/definitions/io.k8s.api.core.v1.PodOS"
         },
         "overhead": {
@@ -34138,7 +34958,7 @@
           }
         },
         "ephemeralContainerStatuses": {
-          "description": "Status for any ephemeral containers that have run in this pod. This field is beta-level and available on clusters that haven't disabled the EphemeralContainers feature gate.",
+          "description": "Status for any ephemeral containers that have run in this pod.",
           "type": "array",
           "items": {
             "default": {},
@@ -35686,7 +36506,7 @@
           "type": "string"
         },
         "externalTrafficPolicy": {
-          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.\n\nPossible enum values:\n - `\"Cluster\"` specifies node-global (legacy) behavior.\n - `\"Local\"` specifies node-local endpoints behavior.",
+          "description": "externalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's \"externally-facing\" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to \"Local\", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, \"Cluster\", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get \"Cluster\" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.\n\nPossible enum values:\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
           "type": "string",
           "enum": [
             "Cluster",
@@ -35694,12 +36514,12 @@
           ]
         },
         "healthCheckNodePort": {
-          "description": "healthCheckNodePort specifies the healthcheck nodePort for the service. This only applies when type is set to LoadBalancer and externalTrafficPolicy is set to Local. If a value is specified, is in-range, and is not in use, it will be used.  If not specified, a value will be automatically allocated.  External systems (e.g. load-balancers) can use this port to determine if a given node holds endpoints for this service or not.  If this field is specified when creating a Service which does not need it, creation will fail. This field will be wiped when updating a Service to no longer need it (e.g. changing type).",
+          "description": "healthCheckNodePort specifies the healthcheck nodePort for the service. This only applies when type is set to LoadBalancer and externalTrafficPolicy is set to Local. If a value is specified, is in-range, and is not in use, it will be used.  If not specified, a value will be automatically allocated.  External systems (e.g. load-balancers) can use this port to determine if a given node holds endpoints for this service or not.  If this field is specified when creating a Service which does not need it, creation will fail. This field will be wiped when updating a Service to no longer need it (e.g. changing type). This field cannot be updated once set.",
           "type": "integer",
           "format": "int32"
         },
         "internalTrafficPolicy": {
-          "description": "InternalTrafficPolicy specifies if the cluster internal traffic should be routed to all endpoints or node-local endpoints only. \"Cluster\" routes internal traffic to a Service to all endpoints. \"Local\" routes traffic to node-local endpoints only, traffic is dropped if no node-local endpoints are ready. The default value is \"Cluster\".",
+          "description": "InternalTrafficPolicy describes how nodes distribute service traffic they receive on the ClusterIP. If set to \"Local\", the proxy will assume that pods only want to talk to endpoints of the service on the same node as the pod, dropping the traffic if there are no local endpoints. The default value, \"Cluster\", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features).",
           "type": "string"
         },
         "ipFamilies": {
@@ -36028,6 +36848,15 @@
           "description": "LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
+        "matchLabelKeys": {
+          "description": "MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "maxSkew": {
           "description": "MaxSkew describes the degree to which pods may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference between the number of matching pods in the target topology and the global minimum. The global minimum is the minimum number of matching pods in an eligible domain or zero if the number of eligible domains is less than MinDomains. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 2/2/1: In this case, the global minimum is 1. | zone1 | zone2 | zone3 | |  P P  |  P P  |   P   | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 2/2/2; scheduling it onto zone1(zone2) would make the ActualSkew(3-1) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. When `whenUnsatisfiable=ScheduleAnyway`, it is used to give higher precedence to topologies that satisfy it. It's a required field. Default value is 1 and 0 is not allowed.",
           "type": "integer",
@@ -36035,12 +36864,20 @@
           "default": 0
         },
         "minDomains": {
-          "description": "MinDomains indicates a minimum number of eligible domains. When the number of eligible domains with matching topology keys is less than minDomains, Pod Topology Spread treats \"global minimum\" as 0, and then the calculation of Skew is performed. And when the number of eligible domains with matching topology keys equals or greater than minDomains, this value has no effect on scheduling. As a result, when the number of eligible domains is less than minDomains, scheduler won't schedule more than maxSkew Pods to those domains. If value is nil, the constraint behaves as if MinDomains is equal to 1. Valid values are integers greater than 0. When value is not nil, WhenUnsatisfiable must be DoNotSchedule.\n\nFor example, in a 3-zone cluster, MaxSkew is set to 2, MinDomains is set to 5 and pods with the same labelSelector spread as 2/2/2: | zone1 | zone2 | zone3 | |  P P  |  P P  |  P P  | The number of domains is less than 5(MinDomains), so \"global minimum\" is treated as 0. In this situation, new pod with the same labelSelector cannot be scheduled, because computed skew will be 3(3 - 0) if new Pod is scheduled to any of the three zones, it will violate MaxSkew.\n\nThis is an alpha field and requires enabling MinDomainsInPodTopologySpread feature gate.",
+          "description": "MinDomains indicates a minimum number of eligible domains. When the number of eligible domains with matching topology keys is less than minDomains, Pod Topology Spread treats \"global minimum\" as 0, and then the calculation of Skew is performed. And when the number of eligible domains with matching topology keys equals or greater than minDomains, this value has no effect on scheduling. As a result, when the number of eligible domains is less than minDomains, scheduler won't schedule more than maxSkew Pods to those domains. If value is nil, the constraint behaves as if MinDomains is equal to 1. Valid values are integers greater than 0. When value is not nil, WhenUnsatisfiable must be DoNotSchedule.\n\nFor example, in a 3-zone cluster, MaxSkew is set to 2, MinDomains is set to 5 and pods with the same labelSelector spread as 2/2/2: | zone1 | zone2 | zone3 | |  P P  |  P P  |  P P  | The number of domains is less than 5(MinDomains), so \"global minimum\" is treated as 0. In this situation, new pod with the same labelSelector cannot be scheduled, because computed skew will be 3(3 - 0) if new Pod is scheduled to any of the three zones, it will violate MaxSkew.\n\nThis is a beta field and requires the MinDomainsInPodTopologySpread feature gate to be enabled (enabled by default).",
           "type": "integer",
           "format": "int32"
         },
+        "nodeAffinityPolicy": {
+          "description": "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.\n\nIf this value is nil, the behavior is equivalent to the Honor policy. This is a alpha-level feature enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.",
+          "type": "string"
+        },
+        "nodeTaintsPolicy": {
+          "description": "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included.\n\nIf this value is nil, the behavior is equivalent to the Ignore policy. This is a alpha-level feature enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.",
+          "type": "string"
+        },
         "topologyKey": {
-          "description": "TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a \"bucket\", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes match the node selector. e.g. If TopologyKey is \"kubernetes.io/hostname\", each Node is a domain of that topology. And, if TopologyKey is \"topology.kubernetes.io/zone\", each zone is a domain of that topology. It's a required field.",
+          "description": "TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a \"bucket\", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is \"kubernetes.io/hostname\", each Node is a domain of that topology. And, if TopologyKey is \"topology.kubernetes.io/zone\", each zone is a domain of that topology. It's a required field.",
           "type": "string",
           "default": ""
         },
@@ -36637,7 +37474,7 @@
       ],
       "properties": {
         "apiGroups": {
-          "description": "APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed.",
+          "description": "APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. \"\" represents the core API group and \"*\" represents all API groups.",
           "type": "array",
           "items": {
             "type": "string",
@@ -36857,7 +37694,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "io.k8s.apimachinery.pkg.api.resource.Quantity": {
-      "description": "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.\n\nThe serialization format is:\n\n<quantity>        ::= <signedNumber><suffix>\n  (Note that <suffix> may be empty, from the \"\" case in <decimalSI>.)\n<digit>           ::= 0 | 1 | ... | 9 <digits>          ::= <digit> | <digit><digits> <number>          ::= <digits> | <digits>.<digits> | <digits>. | .<digits> <sign>            ::= \"+\" | \"-\" <signedNumber>    ::= <number> | <sign><number> <suffix>          ::= <binarySI> | <decimalExponent> | <decimalSI> <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei\n  (International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n<decimalSI>       ::= m | \"\" | k | M | G | T | P | E\n  (Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n<decimalExponent> ::= \"e\" <signedNumber> | \"E\" <signedNumber>\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n  a. No precision is lost\n  b. No fractional digits will be emitted\n  c. The exponent (or suffix) is as large as possible.\nThe sign will be omitted unless the number is negative.\n\nExamples:\n  1.5 will be serialized as \"1500m\"\n  1.5Gi will be serialized as \"1536Mi\"\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
+      "description": "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.\n\nThe serialization format is:\n\n``` <quantity>        ::= <signedNumber><suffix>\n\n\t(Note that <suffix> may be empty, from the \"\" case in <decimalSI>.)\n\n<digit>           ::= 0 | 1 | ... | 9 <digits>          ::= <digit> | <digit><digits> <number>          ::= <digits> | <digits>.<digits> | <digits>. | .<digits> <sign>            ::= \"+\" | \"-\" <signedNumber>    ::= <number> | <sign><number> <suffix>          ::= <binarySI> | <decimalExponent> | <decimalSI> <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei\n\n\t(International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n\n<decimalSI>       ::= m | \"\" | k | M | G | T | P | E\n\n\t(Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n\n<decimalExponent> ::= \"e\" <signedNumber> | \"E\" <signedNumber> ```\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n\n- No precision is lost - No fractional digits will be emitted - The exponent (or suffix) is as large as possible.\n\nThe sign will be omitted unless the number is negative.\n\nExamples:\n\n- 1.5 will be serialized as \"1500m\" - 1.5Gi will be serialized as \"1536Mi\"\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
       "type": "string"
     },
     "io.k8s.apimachinery.pkg.api.resource.int64Amount": {
@@ -37604,10 +38441,6 @@
             "default": ""
           }
         },
-        "clusterName": {
-          "description": "Deprecated: ClusterName is a legacy field that was always cleared by the system and never used; it will be removed completely in 1.25.\n\nThe name in the go struct is changed to help clients detect accidental use.",
-          "type": "string"
-        },
         "creationTimestamp": {
           "description": "CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.\n\nPopulated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
@@ -38204,11 +39037,11 @@
       }
     },
     "io.k8s.apimachinery.pkg.runtime.RawExtension": {
-      "description": "RawExtension is used to hold extensions in external versions.\n\nTo use this, make a field which has RawExtension as its type in your external, versioned struct, and Object in your internal struct. You also need to register your various plugin types.\n\n// Internal package: type MyAPIObject struct {\n\truntime.TypeMeta `json:\",inline\"`\n\tMyPlugin runtime.Object `json:\"myPlugin\"`\n} type PluginA struct {\n\tAOption string `json:\"aOption\"`\n}\n\n// External package: type MyAPIObject struct {\n\truntime.TypeMeta `json:\",inline\"`\n\tMyPlugin runtime.RawExtension `json:\"myPlugin\"`\n} type PluginA struct {\n\tAOption string `json:\"aOption\"`\n}\n\n// On the wire, the JSON will look something like this: {\n\t\"kind\":\"MyAPIObject\",\n\t\"apiVersion\":\"v1\",\n\t\"myPlugin\": {\n\t\t\"kind\":\"PluginA\",\n\t\t\"aOption\":\"foo\",\n\t},\n}\n\nSo what happens? Decode first uses json or yaml to unmarshal the serialized data into your external MyAPIObject. That causes the raw JSON to be stored, but not unpacked. The next step is to copy (using pkg/conversion) into the internal struct. The runtime package's DefaultScheme has conversion functions installed which will unpack the JSON stored in RawExtension, turning it into the correct object type, and storing it in the Object. (TODO: In the case where the object is of an unknown type, a runtime.Unknown object will be created and stored.)",
+      "description": "RawExtension is used to hold extensions in external versions.\n\nTo use this, make a field which has RawExtension as its type in your external, versioned struct, and Object in your internal struct. You also need to register your various plugin types.\n\n// Internal package:\n\n\ttype MyAPIObject struct {\n\t\truntime.TypeMeta `json:\",inline\"`\n\t\tMyPlugin runtime.Object `json:\"myPlugin\"`\n\t}\n\n\ttype PluginA struct {\n\t\tAOption string `json:\"aOption\"`\n\t}\n\n// External package:\n\n\ttype MyAPIObject struct {\n\t\truntime.TypeMeta `json:\",inline\"`\n\t\tMyPlugin runtime.RawExtension `json:\"myPlugin\"`\n\t}\n\n\ttype PluginA struct {\n\t\tAOption string `json:\"aOption\"`\n\t}\n\n// On the wire, the JSON will look something like this:\n\n\t{\n\t\t\"kind\":\"MyAPIObject\",\n\t\t\"apiVersion\":\"v1\",\n\t\t\"myPlugin\": {\n\t\t\t\"kind\":\"PluginA\",\n\t\t\t\"aOption\":\"foo\",\n\t\t},\n\t}\n\nSo what happens? Decode first uses json or yaml to unmarshal the serialized data into your external MyAPIObject. That causes the raw JSON to be stored, but not unpacked. The next step is to copy (using pkg/conversion) into the internal struct. The runtime package's DefaultScheme has conversion functions installed which will unpack the JSON stored in RawExtension, turning it into the correct object type, and storing it in the Object. (TODO: In the case where the object is of an unknown type, a runtime.Unknown object will be created and stored.)",
       "type": "object"
     },
     "io.k8s.apimachinery.pkg.runtime.TypeMeta": {
-      "description": "TypeMeta is shared by all top level objects. The proper way to use it is to inline it in your type, like this: type MyAwesomeAPIObject struct {\n     runtime.TypeMeta    `json:\",inline\"`\n     ... // other fields\n} func (obj *MyAwesomeAPIObject) SetGroupVersionKind(gvk *metav1.GroupVersionKind) { metav1.UpdateTypeMeta(obj,gvk) }; GroupVersionKind() *GroupVersionKind\n\nTypeMeta is provided here for convenience. You may use it directly from this package or define your own with the same fields.",
+      "description": "TypeMeta is shared by all top level objects. The proper way to use it is to inline it in your type, like this:\n\n\ttype MyAwesomeAPIObject struct {\n\t     runtime.TypeMeta    `json:\",inline\"`\n\t     ... // other fields\n\t}\n\nfunc (obj *MyAwesomeAPIObject) SetGroupVersionKind(gvk *metav1.GroupVersionKind) { metav1.UpdateTypeMeta(obj,gvk) }; GroupVersionKind() *GroupVersionKind\n\nTypeMeta is provided here for convenience. You may use it directly from this package or define your own with the same fields.",
       "type": "object",
       "properties": {
         "apiVersion": {

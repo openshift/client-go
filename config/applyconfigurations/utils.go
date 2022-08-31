@@ -37,6 +37,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.AuthenticationSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AuthenticationStatus"):
 		return &configv1.AuthenticationStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSIngressSpec"):
+		return &configv1.AWSIngressSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSPlatformSpec"):
 		return &configv1.AWSPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSPlatformStatus"):
@@ -177,6 +179,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.InfrastructureStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Ingress"):
 		return &configv1.IngressApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IngressPlatformSpec"):
+		return &configv1.IngressPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressSpec"):
 		return &configv1.IngressSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressStatus"):
@@ -189,6 +193,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.LDAPAttributeMappingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LDAPIdentityProvider"):
 		return &configv1.LDAPIdentityProviderApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("LoadBalancer"):
+		return &configv1.LoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MaxAgePolicy"):
 		return &configv1.MaxAgePolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MTUMigration"):

@@ -105,6 +105,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.EtcdStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ExportNetworkFlows"):
 		return &operatorv1.ExportNetworkFlowsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("FeaturesMigration"):
+		return &operatorv1.FeaturesMigrationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ForwardPlugin"):
 		return &operatorv1.ForwardPluginApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GatewayConfig"):
