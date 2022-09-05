@@ -23,7 +23,7 @@ cakephp-ex-1   Source    Git@e04b8cc   Complete   37 minutes ago   1m39s
 Compile this example on your workstation:
 
 ```sh
-$ go build -o examples/build/app ./examples/build/
+$ make examples
 ```
 
 Now, run this application on your workstation with your local kubeconfig file:
