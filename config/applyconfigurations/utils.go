@@ -4,7 +4,9 @@ package applyconfigurations
 
 import (
 	v1 "github.com/openshift/api/config/v1"
+	v1alpha1 "github.com/openshift/api/config/v1alpha1"
 	configv1 "github.com/openshift/client-go/config/applyconfigurations/config/v1"
+	configv1alpha1 "github.com/openshift/client-go/config/applyconfigurations/config/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -303,6 +305,14 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.VSpherePlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("WebhookTokenAuthenticator"):
 		return &configv1.WebhookTokenAuthenticatorApplyConfiguration{}
+
+		// Group=config.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
+		return &configv1alpha1.GatherConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGather"):
+		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
+		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
 
 	}
 	return nil
