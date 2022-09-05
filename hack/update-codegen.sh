@@ -56,7 +56,7 @@ function generateApplyConfiguration(){
       "$@"
 }
 
-for group in apiserver apps authorization build cloudnetwork config image imageregistry network oauth project quota route samples security securityinternal template user; do
+for group in apiserver apps authorization build cloudnetwork image imageregistry network oauth project quota route samples security securityinternal template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
@@ -106,7 +106,7 @@ for group in machine; do
     ${verify}
 done
 
-for group in console operator; do
+for group in console operator config; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
