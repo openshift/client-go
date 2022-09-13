@@ -10292,6 +10292,188 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.StableConfigType": {
+      "description": "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the StableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigTypeSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the StableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigTypeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeList": {
+      "description": "StableConfigTypeList contains a list of StableConfigTypes.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigType"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeSpec": {
+      "description": "StableConfigTypeSpec is the desired state",
+      "type": "object",
+      "properties": {
+        "coolNewField": {
+          "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
+          "type": "string",
+          "default": ""
+        },
+        "stableField": {
+          "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeStatus": {
+      "description": "StableConfigTypeStatus defines the observed status of the StableConfigType.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigType": {
+      "description": "NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the NotStableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigTypeSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the NotStableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigTypeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeList": {
+      "description": "NotStableConfigTypeList contains a list of NotStableConfigTypes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigType"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeSpec": {
+      "description": "NotStableConfigTypeSpec is the desired state",
+      "type": "object",
+      "required": [
+        "newField"
+      ],
+      "properties": {
+        "newField": {
+          "description": "newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeStatus": {
+      "description": "NotStableConfigTypeStatus defines the observed status of the NotStableConfigType.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
     "com.github.openshift.api.helm.v1beta1.ConnectionConfig": {
       "type": "object",
       "required": [
@@ -20980,6 +21162,32 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.CSIDriverConfigSpec": {
+      "description": "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
+      "type": "object",
+      "required": [
+        "driverType"
+      ],
+      "properties": {
+        "driverType": {
+          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to.\n\nValid values are:\n\n* vSphere\n\nAllows configuration of vsphere CSI driver topology.",
+          "type": "string",
+          "default": ""
+        },
+        "vSphere": {
+          "description": "vsphere is used to configure the vsphere CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "driverType",
+          "fields-to-discriminateBy": {
+            "vSphere": "VSphere"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1.CSISnapshotController": {
       "description": "CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -21340,6 +21548,11 @@
         "managementState"
       ],
       "properties": {
+        "driverConfig": {
+          "description": "driverConfig can be used to specify platform specific driver configuration. When omitted, this means no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.CSIDriverConfigSpec"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -22998,7 +23211,7 @@
           "format": "int32"
         },
         "reloadInterval": {
-          "description": "reloadInterval defines the minimum interval at which the router is allowed to reload to accept new changes. Increasing this value can prevent the accumulation of HAProxy processes, depending on the scenario. Increasing this interval can also lessen load imbalance on a backend's servers when using the roundrobin balancing algorithm. Alternatively, decreasing this value may decrease latency since updates to HAProxy's configuration can take effect more quickly.\n\nThe value must be a time duration value; see <https://pkg.go.dev/time#ParseDuration>. Currently, the minimum value allowed is 1s, and the maximum allowed value is 120s. Minimum and maximum allowed values may change in future versions of OpenShift. Note that if a duration outside of these bounds is provided, the value of reloadInterval will be capped/floored and not rejected (e.g. a duration of over 120s will be capped to 120s; the IngressController will not reject and replace this disallowed value with the default).\n\nA zero value for reloadInterval tells the IngressController to choose the default, which is currently 5s and subject to change without notice.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\". Valid time units are \"s\" and \"m\".\n\nNote: Setting a value significantly larger than the default of 5s can cause latency in observing updates to routes and their endpoints. HAProxy's configuration will be reloaded less frequently, and newly created routes will not be served until the subsequent reload.",
+          "description": "reloadInterval defines the minimum interval at which the router is allowed to reload to accept new changes. Increasing this value can prevent the accumulation of HAProxy processes, depending on the scenario. Increasing this interval can also lessen load imbalance on a backend's servers when using the roundrobin balancing algorithm. Alternatively, decreasing this value may decrease latency since updates to HAProxy's configuration can take effect more quickly.\n\nThe value must be a time duration value; see <https://pkg.go.dev/time#ParseDuration>. Currently, the minimum value allowed is 1s, and the maximum allowed value is 120s. Minimum and maximum allowed values may change in future versions of OpenShift. Note that if a duration outside of these bounds is provided, the value of reloadInterval will be capped/floored and not rejected (e.g. a duration of over 120s will be capped to 120s; the IngressController will not reject and replace this disallowed value with the default).\n\nA zero value for reloadInterval tells the IngressController to choose the default, which is currently 5s and subject to change without notice.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nNote: Setting a value significantly larger than the default of 5s can cause latency in observing updates to routes and their endpoints. HAProxy's configuration will be reloaded less frequently, and newly created routes will not be served until the subsequent reload.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "serverFinTimeout": {
@@ -23871,7 +24084,7 @@
         "dnsManagementPolicy": {
           "description": "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
           "type": "string",
-          "default": ""
+          "default": "Managed"
         },
         "providerParameters": {
           "description": "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
@@ -25805,6 +26018,20 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec": {
+      "description": "VSphereCSIDriverConfigSpec defines properties that can be configured for vsphere CSI driver.",
+      "type": "object",
+      "properties": {
+        "topologyCategories": {
+          "description": "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.DelegatedAuthentication": {
       "description": "DelegatedAuthentication allows authentication to be disabled.",
       "type": "object",
@@ -26556,7 +26783,7 @@
         "dnsManagementPolicy": {
           "description": "dnsManagementPolicy denotes the current policy applied on the DNS record. Records that have policy set as \"Unmanaged\" are ignored by the ingress operator.  This means that the DNS record on the cloud provider is not managed by the operator, and the \"Published\" status condition will be updated to \"Unknown\" status, since it is externally managed. Any existing record on the cloud provider can be deleted at the discretion of the cluster admin.\n\nThis field defaults to Managed. Valid values are \"Managed\" and \"Unmanaged\".",
           "type": "string",
-          "default": ""
+          "default": "Managed"
         },
         "dnsName": {
           "description": "dnsName is the hostname of the DNS record",

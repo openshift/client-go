@@ -300,6 +300,21 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: version
       type:
         scalar: string
+- name: com.github.openshift.api.operator.v1.CSIDriverConfigSpec
+  map:
+    fields:
+    - name: driverType
+      type:
+        scalar: string
+      default: ""
+    - name: vSphere
+      type:
+        namedType: com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec
+    unions:
+    - discriminator: driverType
+      fields:
+      - fieldName: vSphere
+        discriminatorValue: VSphere
 - name: com.github.openshift.api.operator.v1.CSISnapshotController
   map:
     fields:
@@ -478,6 +493,10 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.ClusterCSIDriverSpec
   map:
     fields:
+    - name: driverConfig
+      type:
+        namedType: com.github.openshift.api.operator.v1.CSIDriverConfigSpec
+      default: {}
     - name: logLevel
       type:
         scalar: string
@@ -1953,7 +1972,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: dnsManagementPolicy
       type:
         scalar: string
-      default: ""
+      default: Managed
     - name: providerParameters
       type:
         namedType: com.github.openshift.api.operator.v1.ProviderLoadBalancerParameters
@@ -2900,6 +2919,15 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.operator.v1.Upstream
+          elementRelationship: atomic
+- name: com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec
+  map:
+    fields:
+    - name: topologyCategories
+      type:
+        list:
+          elementType:
+            scalar: string
           elementRelationship: atomic
 - name: com.github.openshift.api.operator.v1alpha1.ImageContentSourcePolicy
   map:
