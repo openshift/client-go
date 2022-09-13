@@ -65,6 +65,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ConsoleSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleStatus"):
 		return &operatorv1.ConsoleStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CSIDriverConfigSpec"):
+		return &operatorv1.CSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSISnapshotController"):
 		return &operatorv1.CSISnapshotControllerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSISnapshotControllerSpec"):
@@ -299,6 +301,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.UpstreamApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UpstreamResolvers"):
 		return &operatorv1.UpstreamResolversApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSphereCSIDriverConfigSpec"):
+		return &operatorv1.VSphereCSIDriverConfigSpecApplyConfiguration{}
 
 		// Group=operator.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("ImageContentSourcePolicy"):
