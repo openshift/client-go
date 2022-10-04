@@ -7080,7 +7080,7 @@
           "type": "string",
           "default": ""
         },
-        "loadbalancer": {
+        "loadBalancer": {
           "description": "loadBalancer contains the load balancer details in general which are not only specific to the underlying infrastructure provider of the current cluster and are required for Ingress Controller to work on OpenShift.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.LoadBalancer"
@@ -9245,9 +9245,112 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec": {
+      "description": "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
+      "type": "object",
+      "required": [
+        "name",
+        "region",
+        "zone",
+        "server",
+        "topology"
+      ],
+      "properties": {
+        "name": {
+          "description": "name defines the arbitrary but unique name of a failure domain.",
+          "type": "string",
+          "default": ""
+        },
+        "region": {
+          "description": "region defines the name of a region tag that will be attached to a vCenter datacenter. The tag category in vCenter must be named openshift-region.",
+          "type": "string",
+          "default": ""
+        },
+        "server": {
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "type": "string",
+          "default": ""
+        },
+        "topology": {
+          "description": "Topology describes a given failure domain using vSphere constructs",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformTopology"
+        },
+        "zone": {
+          "description": "zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking": {
+      "description": "VSpherePlatformNodeNetworking holds the external and internal node networking spec.",
+      "type": "object",
+      "properties": {
+        "external": {
+          "description": "external represents the network configuration of the node that is externally routable.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
+        },
+        "internal": {
+          "description": "internal represents the network configuration of the node that is routable only within the cluster.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec": {
+      "description": "VSpherePlatformNodeNetworkingSpec holds the network CIDR(s) and port group name for including and excluding IP ranges in the cloud provider. This would be used for example when multiple network adapters are attached to a guest to help determine which IP address the cloud config manager should use for the external and internal node networking.",
+      "type": "object",
+      "properties": {
+        "excludeNetworkSubnetCidr": {
+          "description": "excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "network": {
+          "description": "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`",
+          "type": "string"
+        },
+        "networkSubnetCidr": {
+          "description": "networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.VSpherePlatformSpec": {
-      "description": "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. This only includes fields that can be modified in the cluster.",
-      "type": "object"
+      "description": "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. In the future the cloud provider operator, storage operator and machine operator will use these fields for configuration.",
+      "type": "object",
+      "properties": {
+        "failureDomains": {
+          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec"
+          }
+        },
+        "nodeNetworking": {
+          "description": "nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
+        },
+        "vcenters": {
+          "description": "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec"
+          }
+        }
+      }
     },
     "com.github.openshift.api.config.v1.VSpherePlatformStatus": {
       "description": "VSpherePlatformStatus holds the current status of the vSphere infrastructure provider.",
@@ -9284,6 +9387,77 @@
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformTopology": {
+      "description": "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
+      "type": "object",
+      "required": [
+        "datacenter",
+        "computeCluster",
+        "networks",
+        "datastore"
+      ],
+      "properties": {
+        "computeCluster": {
+          "description": "computeCluster the absolute path of the vCenter cluster in which virtual machine will be located. The absolute path is of the form /<datacenter>/host/<cluster>. The maximum length of the path is 2048 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "datacenter": {
+          "description": "datacenter is the name of vCenter datacenter in which virtual machines will be located. The maximum length of the datacenter name is 80 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "datastore": {
+          "description": "datastore is the absolute path of the datastore in which the virtual machine is located. The absolute path is of the form /<datacenter>/datastore/<datastore> The maximum length of the path is 2048 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "folder": {
+          "description": "folder is the absolute path of the folder where virtual machines are located. The absolute path is of the form /<datacenter>/vm/<folder>. The maximum length of the path is 2048 characters.",
+          "type": "string"
+        },
+        "networks": {
+          "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'` The single interface should be the absolute path of the form /<datacenter>/network/<portgroup>.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resourcePool": {
+          "description": "resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>. The maximum length of the path is 2048 characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec": {
+      "description": "VSpherePlatformVCenterSpec stores the vCenter connection fields. This is used by the vSphere CCM.",
+      "type": "object",
+      "required": [
+        "server",
+        "datacenters"
+      ],
+      "properties": {
+        "datacenters": {
+          "description": "The vCenter Datacenters in which the RHCOS vm guests are located. This field will be used by the Cloud Controller Manager. Each datacenter listed here should be used within a topology.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "port": {
+          "description": "port is the TCP port that will be used to communicate to the vCenter endpoint. When omitted, this means the user has no opinion and it is up to the platform to choose a sensible default, which is subject to change over time.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "server": {
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -10533,16 +10707,39 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.CELUnion": {
+      "description": "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
+      "type": "object",
+      "properties": {
+        "optionalMember": {
+          "description": "optionalMember is a union member that is optional.",
+          "type": "string"
+        },
+        "requiredMember": {
+          "description": "requiredMember is a union member that is required.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type determines which of the union members should be populated.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "optionalMember": "OptionalMember",
+            "requiredMember": "RequiredMember"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.example.v1.EvolvingUnion": {
       "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
         "type": {
           "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -10606,9 +10803,14 @@
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
       "required": [
-        "evolvingUnion"
+        "immutableField"
       ],
       "properties": {
+        "celUnion": {
+          "description": "celUnion demonstrates how to validate a discrminated union using CEL",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.CELUnion"
+        },
         "coolNewField": {
           "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
           "type": "string",
@@ -10618,6 +10820,16 @@
           "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.example.v1.EvolvingUnion"
+        },
+        "immutableField": {
+          "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+          "type": "string",
+          "default": ""
+        },
+        "optionalImmutableField": {
+          "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+          "type": "string",
+          "default": ""
         },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
@@ -11013,20 +11225,17 @@
     "com.github.openshift.api.image.v1.Image": {
       "description": "Image is an immutable representation of a container image and metadata at a point in time. Images are named by taking a hash of their contents (metadata and content) and any change in format, content, or metadata results in a new name. The images resource is primarily for use by cluster administrators and integrations like the cluster image registry - end users instead access images via the imagestreamtags or imagestreamimages resources. While image metadata is stored in the API, any integration that implements the container image registry API must provide its own storage for the raw manifest data, image config, and layer contents.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
-      "required": [
-        "dockerImageLayers"
-      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
         },
         "dockerImageConfig": {
-          "description": "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2.",
+          "description": "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2. Will not be set when the image represents a manifest list.",
           "type": "string"
         },
         "dockerImageLayers": {
-          "description": "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data.",
+          "description": "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data or if the image represents a manifest list.",
           "type": "array",
           "items": {
             "default": {},
@@ -11040,6 +11249,14 @@
         "dockerImageManifestMediaType": {
           "description": "DockerImageManifestMediaType specifies the mediaType of manifest. This is a part of manifest schema v2.",
           "type": "string"
+        },
+        "dockerImageManifests": {
+          "description": "DockerImageManifests holds information about sub-manifests when the image represents a manifest list. When this field is present, no DockerImageLayers should be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.image.v1.ImageManifest"
+          }
         },
         "dockerImageMetadata": {
           "description": "DockerImageMetadata contains metadata about this image",
@@ -11149,6 +11366,14 @@
           "description": "Image is the metadata of that image, if the image was located",
           "$ref": "#/definitions/com.github.openshift.api.image.v1.Image"
         },
+        "manifests": {
+          "description": "Manifests holds sub-manifests metadata when importing a manifest list",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.image.v1.Image"
+          }
+        },
         "status": {
           "description": "Status is the status of the image import, including errors encountered while retrieving the image",
           "default": {},
@@ -11247,6 +11472,49 @@
           "description": "local will change the docker short image references (like \"mysql\" or \"php:latest\") on objects in this namespace to the image ID whenever they match this image stream, instead of reaching out to a remote registry. The name will be fully qualified to an image ID if found. The tag's referencePolicy is taken into account on the replaced value. Only works within the current namespace.",
           "type": "boolean",
           "default": false
+        }
+      }
+    },
+    "com.github.openshift.api.image.v1.ImageManifest": {
+      "description": "ImageManifest represents sub-manifests of a manifest list. The Digest field points to a regular Image object.",
+      "type": "object",
+      "required": [
+        "digest",
+        "mediaType",
+        "manifestSize",
+        "architecture",
+        "os"
+      ],
+      "properties": {
+        "architecture": {
+          "description": "Architecture specifies the supported CPU architecture, for example `amd64` or `ppc64le`.",
+          "type": "string",
+          "default": ""
+        },
+        "digest": {
+          "description": "Digest is the unique identifier for the manifest. It refers to an Image object.",
+          "type": "string",
+          "default": ""
+        },
+        "manifestSize": {
+          "description": "ManifestSize represents the size of the raw object contents, in bytes.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "mediaType": {
+          "description": "MediaType defines the type of the manifest, possible values are application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json or application/vnd.docker.distribution.manifest.v1+json.",
+          "type": "string",
+          "default": ""
+        },
+        "os": {
+          "description": "OS specifies the operating system, for example `linux`.",
+          "type": "string",
+          "default": ""
+        },
+        "variant": {
+          "description": "Variant is an optional field repreenting a variant of the CPU, for example v6 to specify a particular CPU variant of the ARM CPU.",
+          "type": "string"
         }
       }
     },
@@ -12028,6 +12296,10 @@
       "description": "TagImportPolicy controls how images related to this tag will be imported.",
       "type": "object",
       "properties": {
+        "importMode": {
+          "description": "ImportMode describes how to import an image manifest.",
+          "type": "string"
+        },
         "insecure": {
           "description": "Insecure is true if the server may bypass certificate verification or connect directly over HTTP during image import.",
           "type": "boolean"
@@ -16046,6 +16318,11 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
+        "state": {
+          "description": "State defines whether the ControlPlaneMachineSet is Active or Inactive. When Inactive, the ControlPlaneMachineSet will not take any action on the state of the Machines within the cluster. When Active, the ControlPlaneMachineSet will reconcile the Machines and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent further action please remove the ControlPlaneMachineSet.",
+          "type": "string",
+          "default": "Inactive"
+        },
         "strategy": {
           "description": "Strategy defines how the ControlPlaneMachineSet will update Machines when it detects a change to the ProviderSpec.",
           "default": {},
@@ -16109,21 +16386,18 @@
       "properties": {
         "type": {
           "description": "Type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
-          "type": "string"
+          "type": "string",
+          "default": "RollingUpdate"
         }
       }
     },
     "com.github.openshift.api.machine.v1.ControlPlaneMachineSetTemplate": {
       "description": "ControlPlaneMachineSetTemplate is a template used by the ControlPlaneMachineSet to create the Machines that it will manage in the future.",
       "type": "object",
-      "required": [
-        "machineType"
-      ],
       "properties": {
         "machineType": {
           "description": "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "machines_v1beta1_machine_openshift_io": {
           "description": "OpenShiftMachineV1Beta1Machine defines the template for creating Machines from the v1beta1.machine.openshift.io API group.",
@@ -16142,6 +16416,9 @@
     "com.github.openshift.api.machine.v1.ControlPlaneMachineSetTemplateObjectMeta": {
       "description": "ControlPlaneMachineSetTemplateObjectMeta is a subset of the metav1.ObjectMeta struct. It allows users to specify labels and annotations that will be copied onto Machines created from this template.",
       "type": "object",
+      "required": [
+        "labels"
+      ],
       "properties": {
         "annotations": {
           "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
@@ -16152,7 +16429,7 @@
           }
         },
         "labels": {
-          "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+          "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels. This field must contain both the 'machine.openshift.io/cluster-api-machine-role' and 'machine.openshift.io/cluster-api-machine-type' labels, both with a value of 'master'. It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.",
           "type": "object",
           "additionalProperties": {
             "type": "string",
@@ -16239,16 +16516,8 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.GCPFailureDomain"
           }
         },
-        "openstack": {
-          "description": "OpenStack configures failure domain information for the OpenStack platform.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machine.v1.OpenStackFailureDomain"
-          }
-        },
         "platform": {
-          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
+          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
           "type": "string",
           "default": ""
         }
@@ -16259,8 +16528,7 @@
           "fields-to-discriminateBy": {
             "aws": "AWS",
             "azure": "Azure",
-            "gcp": "GCP",
-            "openstack": "OpenStack"
+            "gcp": "GCP"
           }
         }
       ]
@@ -16434,20 +16702,6 @@
           "description": "Spec contains the desired configuration of the Control Plane Machines. The ProviderSpec within contains platform specific details for creating the Control Plane Machines. The ProviderSe should be complete apart from the platform specific failure domain field. This will be overriden when the Machines are created based on the FailureDomains field.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.MachineSpec"
-        }
-      }
-    },
-    "com.github.openshift.api.machine.v1.OpenStackFailureDomain": {
-      "description": "OpenStackFailureDomain configures failure domain information for the OpenStack platform",
-      "type": "object",
-      "required": [
-        "availabilityZone"
-      ],
-      "properties": {
-        "availabilityZone": {
-          "description": "The availability zone from which to launch the server.",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -22101,13 +22355,25 @@
           "type": "string"
         },
         "developerCatalog": {
-          "description": "developerCatalog allows to configure the shown developer catalog categories.",
+          "description": "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCustomization"
         },
         "documentationBaseURL": {
           "description": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
           "type": "string"
+        },
+        "perspectives": {
+          "description": "perspectives allows enabling/disabling of perspective(s) that user can see in the Perspective switcher dropdown.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Perspective"
+          },
+          "x-kubernetes-list-map-keys": [
+            "id"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "projectAccess": {
           "description": "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
@@ -22293,11 +22559,11 @@
       "type": "object",
       "properties": {
         "negativeTTL": {
-          "description": "negativeTTL is optional and specifies the amount of time that a negative response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. If not configured, the value will be 0 (zero) and OpenShift will use a default value of 30 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 30 seconds is subject to change. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\". Valid time units are \"s\", \"m\", and \"h\".",
+          "description": "negativeTTL is optional and specifies the amount of time that a negative response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\", \"12h30m10s\". Values that are fractions of a second are rounded down to the nearest second. If the configured value is less than 1s, the default value will be used. If not configured, the value will be 0s and OpenShift will use a default value of 30 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 30 seconds is subject to change.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "positiveTTL": {
-          "description": "positiveTTL is optional and specifies the amount of time that a positive response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. If not configured, the value will be 0 (zero) and OpenShift will use a default value of 900 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 900 seconds is subject to change. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\". Valid time units are \"s\", \"m\", and \"h\".",
+          "description": "positiveTTL is optional and specifies the amount of time that a positive response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\", \"12h30m10s\". Values that are fractions of a second are rounded down to the nearest second. If the configured value is less than 1s, the default value will be used. If not configured, the value will be 0s and OpenShift will use a default value of 900 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 900 seconds is subject to change.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
@@ -22565,8 +22831,51 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory"
           }
+        },
+        "types": {
+          "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes": {
+      "description": "DeveloperConsoleCatalogTypes defines the state of the sub-catalog types.",
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "description": "disabled is a list of developer catalog types (sub-catalogs IDs) that are not shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is empty or all the available sub-catalog types are added, then the complete developer catalog should be hidden.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "enabled": {
+          "description": "enabled is a list of developer catalog types (sub-catalogs IDs) that will be shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is non-empty, a new type will not be shown to the user until it is added to list. If the list is empty the complete developer catalog will be shown.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "state": {
+          "description": "state defines if a list of catalog types should be enabled or disabled.",
+          "type": "string",
+          "default": "Enabled"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "disabled": "Disabled",
+            "enabled": "Enabled"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.EgressIPConfig": {
       "description": "EgressIPConfig defines the configuration knobs for egressip",
@@ -24343,6 +24652,14 @@
         "scope"
       ],
       "properties": {
+        "allowedSourceRanges": {
+          "description": "allowedSourceRanges specifies an allowlist of IP address ranges to which access to the load balancer should be restricted.  Each range must be specified using CIDR notation (e.g. \"10.0.0.0/8\" or \"fd00::/8\"). If no range is specified, \"0.0.0.0/0\" for IPv4 and \"::/0\" for IPv6 are used by default, which allows all source addresses.\n\nTo facilitate migration from earlier versions of OpenShift that did not have the allowedSourceRanges field, you may set the service.beta.kubernetes.io/load-balancer-source-ranges annotation on the \"router-<ingresscontroller name>\" service in the \"openshift-ingress\" namespace, and this annotation will take effect if allowedSourceRanges is empty on OpenShift 4.12.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
         "dnsManagementPolicy": {
           "description": "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
           "type": "string",
@@ -25280,6 +25597,51 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.Perspective": {
+      "type": "object",
+      "required": [
+        "id",
+        "visibility"
+      ],
+      "properties": {
+        "id": {
+          "description": "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
+          "type": "string",
+          "default": ""
+        },
+        "visibility": {
+          "description": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.PerspectiveVisibility"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.PerspectiveVisibility": {
+      "description": "PerspectiveVisibility defines the criteria to show/hide a perspective",
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "accessReview": {
+          "description": "accessReview defines required and missing access review checks.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ResourceAttributesAccessReview"
+        },
+        "state": {
+          "description": "state defines the perspective is enabled or disabled or access review check is required.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "accessReview": "AccessReview"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1.PolicyAuditConfig": {
       "type": "object",
       "properties": {
@@ -25393,6 +25755,28 @@
           "items": {
             "type": "string",
             "default": ""
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ResourceAttributesAccessReview": {
+      "description": "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+      "type": "object",
+      "properties": {
+        "missing": {
+          "description": "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
+          }
+        },
+        "required": {
+          "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
           }
         }
       }
