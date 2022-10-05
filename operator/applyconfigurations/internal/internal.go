@@ -676,6 +676,14 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: documentationBaseURL
       type:
         scalar: string
+    - name: perspectives
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.Perspective
+          elementRelationship: associative
+          keys:
+          - id
     - name: projectAccess
       type:
         namedType: com.github.openshift.api.operator.v1.ProjectAccess
@@ -949,6 +957,36 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory
           elementRelationship: atomic
+    - name: types
+      type:
+        namedType: com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes
+      default: {}
+- name: com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes
+  map:
+    fields:
+    - name: disabled
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: enabled
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: state
+      type:
+        scalar: string
+      default: Enabled
+    unions:
+    - discriminator: state
+      fields:
+      - fieldName: disabled
+        discriminatorValue: Disabled
+      - fieldName: enabled
+        discriminatorValue: Enabled
 - name: com.github.openshift.api.operator.v1.EgressIPConfig
   map:
     fields:
@@ -1969,6 +2007,12 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.LoadBalancerStrategy
   map:
     fields:
+    - name: allowedSourceRanges
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
     - name: dnsManagementPolicy
       type:
         scalar: string
@@ -2417,6 +2461,32 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.operator.v1.Perspective
+  map:
+    fields:
+    - name: id
+      type:
+        scalar: string
+      default: ""
+    - name: visibility
+      type:
+        namedType: com.github.openshift.api.operator.v1.PerspectiveVisibility
+      default: {}
+- name: com.github.openshift.api.operator.v1.PerspectiveVisibility
+  map:
+    fields:
+    - name: accessReview
+      type:
+        namedType: com.github.openshift.api.operator.v1.ResourceAttributesAccessReview
+    - name: state
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: state
+      fields:
+      - fieldName: accessReview
+        discriminatorValue: AccessReview
 - name: com.github.openshift.api.operator.v1.PolicyAuditConfig
   map:
     fields:
@@ -2492,6 +2562,21 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             scalar: string
+          elementRelationship: atomic
+- name: com.github.openshift.api.operator.v1.ResourceAttributesAccessReview
+  map:
+    fields:
+    - name: missing
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.authorization.v1.ResourceAttributes
+          elementRelationship: atomic
+    - name: required
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.authorization.v1.ResourceAttributes
           elementRelationship: atomic
 - name: com.github.openshift.api.operator.v1.RouteAdmissionPolicy
   map:
@@ -2968,6 +3053,30 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: io.k8s.api.authorization.v1.ResourceAttributes
+  map:
+    fields:
+    - name: group
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
+    - name: subresource
+      type:
+        scalar: string
+    - name: verb
+      type:
+        scalar: string
+    - name: version
+      type:
+        scalar: string
 - name: io.k8s.api.core.v1.LocalObjectReference
   map:
     fields:
