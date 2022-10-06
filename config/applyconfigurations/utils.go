@@ -301,8 +301,20 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.UpdateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UpdateHistory"):
 		return &configv1.UpdateHistoryApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformFailureDomainSpec"):
+		return &configv1.VSpherePlatformFailureDomainSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformNodeNetworking"):
+		return &configv1.VSpherePlatformNodeNetworkingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformNodeNetworkingSpec"):
+		return &configv1.VSpherePlatformNodeNetworkingSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformSpec"):
+		return &configv1.VSpherePlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformStatus"):
 		return &configv1.VSpherePlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformTopology"):
+		return &configv1.VSpherePlatformTopologyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformVCenterSpec"):
+		return &configv1.VSpherePlatformVCenterSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("WebhookTokenAuthenticator"):
 		return &configv1.WebhookTokenAuthenticatorApplyConfiguration{}
 

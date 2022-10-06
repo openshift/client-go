@@ -81,6 +81,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.DeveloperConsoleCatalogCategoryMetaApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("DeveloperConsoleCatalogCustomization"):
 		return &operatorv1.DeveloperConsoleCatalogCustomizationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("DeveloperConsoleCatalogTypes"):
+		return &operatorv1.DeveloperConsoleCatalogTypesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("DNS"):
 		return &operatorv1.DNSApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("DNSCache"):
@@ -237,6 +239,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.OperatorStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OVNKubernetesConfig"):
 		return &operatorv1.OVNKubernetesConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Perspective"):
+		return &operatorv1.PerspectiveApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PerspectiveVisibility"):
+		return &operatorv1.PerspectiveVisibilityApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PolicyAuditConfig"):
 		return &operatorv1.PolicyAuditConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PrivateStrategy"):
@@ -249,6 +255,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ProxyConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("QuickStarts"):
 		return &operatorv1.QuickStartsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ResourceAttributesAccessReview"):
+		return &operatorv1.ResourceAttributesAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteAdmissionPolicy"):
 		return &operatorv1.RouteAdmissionPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Server"):

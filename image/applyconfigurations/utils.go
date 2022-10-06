@@ -19,6 +19,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &imagev1.ImageLayerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageLookupPolicy"):
 		return &imagev1.ImageLookupPolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ImageManifest"):
+		return &imagev1.ImageManifestApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageSignature"):
 		return &imagev1.ImageSignatureApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageStream"):
