@@ -1069,6 +1069,28 @@ func (AzurePlatformStatus) SwaggerDoc() map[string]string {
 	return map_AzurePlatformStatus
 }
 
+var map_BGPPeer = map[string]string{
+	"":         "BGPPeer describes a BGP peer.",
+	"asn":      "asn is the Autonomous System Number of the peer.",
+	"ip":       "ip is the IP address of the peer, as reachable from the cluster. It may be either IPv4 or IPv6.",
+	"password": "password for BGP authentication against the peer.",
+}
+
+func (BGPPeer) SwaggerDoc() map[string]string {
+	return map_BGPPeer
+}
+
+var map_BGPSpeaker = map[string]string{
+	"":           "OpenStackBGPSpeaker describes the BGP speaker configuration for a given OpenStack subnet.",
+	"subnetCIDR": "subnetCIDR is the CIDR which this BGP configuration applies to.",
+	"asn":        "asn specifies the Autonomous System number to be used by the BGP speaker. If this field is not set, the cluster will assign an arbitrary number.",
+	"peers":      "peers is a list of all BGP peers of the speaker of the subnet.",
+}
+
+func (BGPSpeaker) SwaggerDoc() map[string]string {
+	return map_BGPSpeaker
+}
+
 var map_BareMetalPlatformSpec = map[string]string{
 	"": "BareMetalPlatformSpec holds the desired state of the BareMetal infrastructure provider. This only includes fields that can be modified in the cluster.",
 }
@@ -1252,7 +1274,9 @@ func (NutanixPrismEndpoint) SwaggerDoc() map[string]string {
 }
 
 var map_OpenStackPlatformSpec = map[string]string{
-	"": "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"":         "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"type":     "controlPlaneLoadBalancerType defines the type of load-balancer which will be configured for the control plane VIPs. Permitted values are `VRRP` and `BGP`. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default value is `VRRP`.",
+	"speakers": "BGPSpeakers is a list of BGP speaker configurations. We require a speaker configuration for every subnet where we want to peer. The list must contain at least one item.",
 }
 
 func (OpenStackPlatformSpec) SwaggerDoc() map[string]string {

@@ -505,9 +505,73 @@ type BareMetalPlatformStatus struct {
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 
+// BGPPeer describes a BGP peer.
+type BGPPeer struct {
+	// asn is the Autonomous System Number of the peer.
+	//
+	// +optional
+	ASN string `json:"asn,omitempty"`
+
+	// ip is the IP address of the peer, as reachable from the cluster.
+	// It may be either IPv4 or IPv6.
+	//
+	// +kubebuilder:validation:Required
+	// + ---
+	// + {IPv4 or IPv6} validation in crd.yaml-patch
+	IP string `json:"ip"`
+
+	// password for BGP authentication against the peer.
+	//
+	// +optional
+	Password string `json:"password,omitempty"`
+}
+
+// OpenStackBGPSpeaker describes the BGP speaker configuration for a given
+// OpenStack subnet.
+type BGPSpeaker struct {
+	// subnetCIDR is the CIDR which this BGP configuration applies to.
+	//
+	// + Validation is applied via a patch, we validate the format as cidr
+	// +kubebuilder:validation:Required
+	SubnetCIDR string `json:"subnetCIDR"`
+
+	// asn specifies the Autonomous System number to be used by the BGP
+	// speaker. If this field is not set, the cluster will assign an
+	// arbitrary number.
+	//
+	// +optional
+	ASN string `json:"asn"`
+
+	// peers is a list of all BGP peers of the speaker of the subnet.
+	//
+	// +kubebuilder:validation:MinItems:=1
+	Peers []BGPPeer `json:"peers"`
+}
+
 // OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type OpenStackPlatformSpec struct{}
+type OpenStackPlatformSpec struct {
+	// controlPlaneLoadBalancerType defines the type of load-balancer which will be
+	// configured for the control plane VIPs. Permitted values are `VRRP` and
+	// `BGP`.
+	// When omitted, this means no opinion and the platform is left to
+	// choose a reasonable default.
+	// The current default value is `VRRP`.
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Enum:="VRRP";"BGP"
+	// +kubebuilder:validation:Required
+	ControlPlaneLoadBalancerType string `json:"type,omitempty"`
+
+	// BGPSpeakers is a list of BGP speaker configurations. We require a
+	// speaker configuration for every subnet where we want to peer.
+	// The list must contain at least one item.
+	//
+	// +kubebuilder:validation:MinItems:=1
+	// +listType=map
+	// +listMapKey=subnetCIDR
+	BGPSpeakers []BGPSpeaker `json:"speakers,omitempty"`
+}
 
 // OpenStackPlatformStatus holds the current status of the OpenStack infrastructure provider.
 type OpenStackPlatformStatus struct {
