@@ -261,6 +261,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.RouteAdmissionPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Server"):
 		return &operatorv1.ServerApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ServiceAccountIssuerStatus"):
+		return &operatorv1.ServiceAccountIssuerStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ServiceCA"):
 		return &operatorv1.ServiceCAApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ServiceCASpec"):

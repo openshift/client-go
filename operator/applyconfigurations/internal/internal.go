@@ -1627,6 +1627,10 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.InsightsReport
   map:
     fields:
+    - name: downloadedAt
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+      default: {}
     - name: healthChecks
       type:
         list:
@@ -1721,6 +1725,12 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: numeric
       default: 0
+    - name: serviceAccountIssuers
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.ServiceAccountIssuerStatus
+          elementRelationship: atomic
     - name: version
       type:
         scalar: string
@@ -2613,6 +2623,16 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: atomic
+- name: com.github.openshift.api.operator.v1.ServiceAccountIssuerStatus
+  map:
+    fields:
+    - name: expirationTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.operator.v1.ServiceCA
   map:
     fields:
