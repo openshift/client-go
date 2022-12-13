@@ -1,6 +1,6 @@
 module github.com/openshift/client-go
 
-go 1.18
+go 1.19
 
 require (
 	github.com/openshift/api v0.0.0-20221209105451-d85cfcef97b7
