@@ -29,8 +29,14 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.AuthenticationStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSClassicLoadBalancerParameters"):
 		return &operatorv1.AWSClassicLoadBalancerParametersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSCSIDriverConfigSpec"):
+		return &operatorv1.AWSCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSLoadBalancerParameters"):
 		return &operatorv1.AWSLoadBalancerParametersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AzureCSIDriverConfigSpec"):
+		return &operatorv1.AzureCSIDriverConfigSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AzureDiskEncryptionSet"):
+		return &operatorv1.AzureDiskEncryptionSetApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClientTLS"):
 		return &operatorv1.ClientTLSApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudCredential"):
@@ -119,6 +125,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.GathererStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GatherStatus"):
 		return &operatorv1.GatherStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GCPCSIDriverConfigSpec"):
+		return &operatorv1.GCPCSIDriverConfigSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GCPKMSKeyReference"):
+		return &operatorv1.GCPKMSKeyReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPLoadBalancerParameters"):
 		return &operatorv1.GCPLoadBalancerParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GenerationStatus"):
@@ -131,6 +141,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.HTTPCompressionPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("HybridOverlayConfig"):
 		return &operatorv1.HybridOverlayConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IBMLoadBalancerParameters"):
+		return &operatorv1.IBMLoadBalancerParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressController"):
 		return &operatorv1.IngressControllerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerCaptureHTTPCookie"):
@@ -243,6 +255,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.PerspectiveApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PerspectiveVisibility"):
 		return &operatorv1.PerspectiveVisibilityApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PinnedResourceReference"):
+		return &operatorv1.PinnedResourceReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PolicyAuditConfig"):
 		return &operatorv1.PolicyAuditConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PrivateStrategy"):
