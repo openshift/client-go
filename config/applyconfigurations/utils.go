@@ -51,6 +51,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.AWSServiceEndpointApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AzurePlatformStatus"):
 		return &configv1.AzurePlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AzureResourceTag"):
+		return &configv1.AzureResourceTagApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformLoadBalancer"):
+		return &configv1.BareMetalPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformStatus"):
 		return &configv1.BareMetalPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BasicAuthIdentityProvider"):
@@ -123,6 +127,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ExternalIPConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ExternalIPPolicy"):
 		return &configv1.ExternalIPPolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ExternalPlatformSpec"):
+		return &configv1.ExternalPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGate"):
 		return &configv1.FeatureGateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateSelection"):
@@ -215,6 +221,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.NodeApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NodeSpec"):
 		return &configv1.NodeSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NutanixPlatformLoadBalancer"):
+		return &configv1.NutanixPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPlatformSpec"):
 		return &configv1.NutanixPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPlatformStatus"):
@@ -237,6 +245,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OpenIDClaimsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenIDIdentityProvider"):
 		return &configv1.OpenIDIdentityProviderApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformLoadBalancer"):
+		return &configv1.OpenStackPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformStatus"):
 		return &configv1.OpenStackPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OperandVersion"):
@@ -247,6 +257,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OperatorHubSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OperatorHubStatus"):
 		return &configv1.OperatorHubStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OvirtPlatformLoadBalancer"):
+		return &configv1.OvirtPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OvirtPlatformStatus"):
 		return &configv1.OvirtPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PlatformSpec"):
@@ -303,6 +315,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.UpdateHistoryApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformFailureDomainSpec"):
 		return &configv1.VSpherePlatformFailureDomainSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VSpherePlatformLoadBalancer"):
+		return &configv1.VSpherePlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformNodeNetworking"):
 		return &configv1.VSpherePlatformNodeNetworkingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformNodeNetworkingSpec"):

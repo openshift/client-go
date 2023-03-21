@@ -4543,8 +4543,53 @@
           "description": "resourceGroupName is the Resource Group for new Azure resources created for the cluster.",
           "type": "string",
           "default": ""
+        },
+        "resourceTags": {
+          "description": "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.AzureResourceTag"
+          }
         }
       }
+    },
+    "com.github.openshift.api.config.v1.AzureResourceTag": {
+      "description": "AzureResourceTag is a tag to apply to Azure resources created for the cluster.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the key part of the tag. A tag key can have a maximum of 128 characters and cannot be empty. Key must begin with a letter, end with a letter, number or underscore, and must contain only alphanumeric characters and the following special characters `_ . -`.",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the value part of the tag. A tag value can have a maximum of 256 characters and cannot be empty. Value must contain only alphanumeric characters and the following special characters `_ + , - . / : ; < = > ? @`.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer": {
+      "description": "BareMetalPlatformLoadBalancer defines the load balancer used by the cluster on BareMetal platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on BareMetal platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.BareMetalPlatformSpec": {
       "description": "BareMetalPlatformSpec holds the desired state of the BareMetal infrastructure provider. This only includes fields that can be modified in the cluster.",
@@ -4581,6 +4626,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for BareMetal deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -4809,17 +4861,6 @@
           "type": "number",
           "format": "float",
           "default": 0
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.CloudControllerManagerSpec": {
-      "description": "CloudControllerManagerSpec holds Cloud Controller Manager (a.k.a. CCM or CPI) related settings",
-      "type": "object",
-      "properties": {
-        "state": {
-          "description": "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nWhen set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -5855,11 +5896,6 @@
       "description": "ExternalPlatformSpec holds the desired state for the generic External infrastructure provider.",
       "type": "object",
       "properties": {
-        "cloudControllerManager": {
-          "description": "CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerSpec"
-        },
         "platformName": {
           "description": "PlatformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time. This field is solely for informational and reporting purposes and is not expected to be used for decision-making.",
           "type": "string",
@@ -6972,6 +7008,11 @@
           "type": "string",
           "default": ""
         },
+        "cpuPartitioning": {
+          "description": "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
+          "type": "string",
+          "default": "None"
+        },
         "etcdDiscoveryDomain": {
           "description": "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
           "type": "string",
@@ -7661,6 +7702,23 @@
     "com.github.openshift.api.config.v1.NodeStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer": {
+      "description": "NutanixPlatformLoadBalancer defines the load balancer used by the cluster on Nutanix platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on Nutanix platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.NutanixPlatformSpec": {
       "description": "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object",
@@ -7719,6 +7777,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer"
         }
       }
     },
@@ -8035,6 +8100,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer": {
+      "description": "OpenStackPlatformLoadBalancer defines the load balancer used by the cluster on OpenStack platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on OpenStack platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.OpenStackPlatformSpec": {
       "description": "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -8074,6 +8156,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for OpenStack deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -8192,6 +8281,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer": {
+      "description": "OvirtPlatformLoadBalancer defines the load balancer used by the cluster on Ovirt platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on Ovirt platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.OvirtPlatformSpec": {
       "description": "OvirtPlatformSpec holds the desired state of the oVirt infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -8227,6 +8333,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.",
@@ -8410,6 +8523,11 @@
         },
         "region": {
           "description": "region holds the default Power VS region for new Power VS resources created by the cluster.",
+          "type": "string",
+          "default": ""
+        },
+        "resourceGroup": {
+          "description": "resourceGroup is the resource group name for new IBMCloud resources created for a cluster. The resource group specified here will be used by cluster-image-registry-operator to set up a COS Instance in IBMCloud for the cluster registry. More about resource groups can be found here: https://cloud.ibm.com/docs/account?topic=account-rgs. When omitted, the image registry operator won't be able to configure storage, which results in the image registry cluster operator not being in an available state.",
           "type": "string",
           "default": ""
         },
@@ -9327,6 +9445,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer": {
+      "description": "VSpherePlatformLoadBalancer defines the load balancer used by the cluster on VSphere platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on VSphere platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking": {
       "description": "VSpherePlatformNodeNetworking holds the external and internal node networking spec.",
       "type": "object",
@@ -9427,6 +9562,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -12420,6 +12562,287 @@
       "properties": {
         "type": {
           "description": "Type determines how the image pull spec should be transformed when the image stream tag is used in deployment config triggers or new builds. The default value is `Source`, indicating the original location of the image should be used (if imported). The user may also specify `Local`, indicating that the pull spec should point to the integrated container image registry and leverage the registry's ability to proxy the pull to an upstream registry. `Local` allows the credentials used to pull this image to be managed from the image stream's namespace, so others on the platform can access a remote image but have no access to the remote secret. It also allows the image layers to be mirrored into the local registry which the images can still be pulled even if the upstream registry is unavailable.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGather": {
+      "description": "DataGather provides data gather configuration options and status for the particular Insights data gathering.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGatherSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGatherStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherList": {
+      "description": "DataGatherList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGather"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherSpec": {
+      "type": "object",
+      "properties": {
+        "dataPolicy": {
+          "description": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+          "type": "string",
+          "default": ""
+        },
+        "gatherers": {
+          "description": "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererConfig"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of the gatherer job.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "dataGatherState": {
+          "description": "dataGatherState reflects the current state of the data gathering process.",
+          "type": "string"
+        },
+        "finishTime": {
+          "description": "finishTime is the time when Insights data gathering finished.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "gatherers": {
+          "description": "gatherers is a list of active gatherers (and their statuses) in the last gathering.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "insightsReport": {
+          "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.InsightsReport"
+        },
+        "insightsRequestID": {
+          "description": "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+          "type": "string"
+        },
+        "relatedObjects": {
+          "description": "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.ObjectReference"
+          }
+        },
+        "startTime": {
+          "description": "startTime is the time when Insights data gathering started.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.GathererConfig": {
+      "description": "gathererConfig allows to configure specific gatherers",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of specific gatherer",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.GathererStatus": {
+      "description": "gathererStatus represents information about a particular data gatherer.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name",
+        "lastGatherDuration"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of each gatherer.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "lastGatherDuration": {
+          "description": "lastGatherDuration represents the time spent gathering.",
+          "default": 0,
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "name": {
+          "description": "name is the name of the gatherer.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.HealthCheck": {
+      "description": "healthCheck represents an Insights health check attributes.",
+      "type": "object",
+      "required": [
+        "description",
+        "totalRisk",
+        "advisorURI",
+        "state"
+      ],
+      "properties": {
+        "advisorURI": {
+          "description": "advisorURI provides the URL link to the Insights Advisor.",
+          "type": "string",
+          "default": ""
+        },
+        "description": {
+          "description": "description provides basic description of the healtcheck.",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+          "type": "string",
+          "default": ""
+        },
+        "totalRisk": {
+          "description": "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.InsightsReport": {
+      "description": "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+      "type": "object",
+      "properties": {
+        "downloadedAt": {
+          "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "healthChecks": {
+          "description": "healthChecks provides basic information about active Insights health checks in a cluster.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.HealthCheck"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "uri": {
+          "description": "uri provides the URL link from which the report was downloaded.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.ObjectReference": {
+      "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
+      "type": "object",
+      "required": [
+        "group",
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name of the referent.",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of the referent.",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
           "type": "string",
           "default": ""
         }
@@ -16603,6 +17026,26 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.NutanixCategory": {
+      "description": "NutanixCategory identifies a pair of prism category key and value",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the prism category key name",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the prism category value associated with the key",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1.NutanixMachineProviderConfig": {
       "description": "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -16620,6 +17063,23 @@
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
+        },
+        "bootType": {
+          "description": "bootType indicates the boot type (Legacy, UEFI or SecureBoot) the Machine's VM uses to boot. If this field is empty or omitted, the VM will use the default boot type \"Legacy\" to boot. \"SecureBoot\" depends on \"UEFI\" boot, i.e., enabling \"SecureBoot\" means that \"UEFI\" boot is also enabled.",
+          "type": "string",
+          "default": ""
+        },
+        "categories": {
+          "description": "categories optionally adds one or more prism categories (each with key and value) for the Machine's VM to associate with. All the category key and value pairs specified must already exist in the prism central.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixCategory"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "cluster": {
           "description": "cluster is to identify the cluster (the Prism Element under management of the Prism Central), in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
@@ -16647,6 +17107,11 @@
         "metadata": {
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "project": {
+          "description": "project optionally identifies a Prism project for the Machine's VM to associate with.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixResourceIdentifier"
         },
         "subnets": {
           "description": "subnets holds a list of identifiers (one or more) of the cluster's network subnets for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
@@ -18312,6 +18777,10 @@
           "description": "CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs. This is required if you plan to use this instance to forward routes.",
           "type": "boolean",
           "default": false
+        },
+        "confidentialCompute": {
+          "description": "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+          "type": "string"
         },
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with GCP credentials.",
@@ -21501,6 +21970,16 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.AWSCSIDriverConfigSpec": {
+      "description": "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
+      "type": "object",
+      "properties": {
+        "kmsKeyARN": {
+          "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.AWSClassicLoadBalancerParameters": {
       "description": "AWSClassicLoadBalancerParameters holds configuration parameters for an AWS Classic load balancer.",
       "type": "object",
@@ -21707,7 +22186,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -21757,6 +22236,42 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.AzureCSIDriverConfigSpec": {
+      "description": "AzureCSIDriverConfigSpec defines properties that can be configured for the Azure CSI driver.",
+      "type": "object",
+      "properties": {
+        "diskEncryptionSet": {
+          "description": "diskEncryptionSet sets the cluster default storage class to encrypt volumes with a customer-managed encryption set, rather than the default platform-managed keys.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AzureDiskEncryptionSet"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AzureDiskEncryptionSet": {
+      "description": "AzureDiskEncryptionSet defines the configuration for a disk encryption set.",
+      "type": "object",
+      "required": [
+        "subscriptionID",
+        "resourceGroup",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the disk encryption set that will be set on the default storage class. The value should consist of only alphanumberic characters, underscores (_), hyphens, and be at most 80 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "resourceGroup": {
+          "description": "resourceGroup defines the Azure resource group that contains the disk encryption set. The value should consist of only alphanumberic characters, underscores (_), parentheses, hyphens and periods. The value should not end in a period and be at most 90 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "subscriptionID": {
+          "description": "subscriptionID defines the Azure subscription that contains the disk encryption set. The value should meet the following conditions: 1. It should be a 128-bit number. 2. It should be 36 characters (32 hexadecimal characters and 4 hyphens) long. 3. It should be displayed in five groups separated by hyphens (-). 4. The first group should be 8 characters long. 5. The second, third, and fourth groups should be 4 characters long. 6. The fifth group should be 12 characters long. An Example SubscrionID: f2007bbf-f802-4a47-9336-cf7c6b89b378",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.CSIDriverConfigSpec": {
       "description": "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
       "type": "object",
@@ -21764,10 +22279,22 @@
         "driverType"
       ],
       "properties": {
+        "aws": {
+          "description": "aws is used to configure the AWS CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSCSIDriverConfigSpec"
+        },
+        "azure": {
+          "description": "azure is used to configure the Azure CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AzureCSIDriverConfigSpec"
+        },
         "driverType": {
-          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to.\n\nValid values are:\n\n* vSphere\n\nAllows configuration of vsphere CSI driver topology.",
+          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
           "type": "string",
           "default": ""
+        },
+        "gcp": {
+          "description": "gcp is used to configure the GCP CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.GCPCSIDriverConfigSpec"
         },
         "vSphere": {
           "description": "vsphere is used to configure the vsphere CSI driver.",
@@ -21778,6 +22305,9 @@
         {
           "discriminator": "driverType",
           "fields-to-discriminateBy": {
+            "aws": "AWS",
+            "azure": "Azure",
+            "gcp": "GCP",
             "vSphere": "VSphere"
           }
         }
@@ -21868,7 +22398,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -22031,7 +22561,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -22171,7 +22701,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -22321,7 +22851,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -22555,7 +23085,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleConfigRoute"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23109,7 +23639,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23230,6 +23760,46 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.GCPCSIDriverConfigSpec": {
+      "description": "GCPCSIDriverConfigSpec defines properties that can be configured for the GCP CSI driver.",
+      "type": "object",
+      "properties": {
+        "kmsKey": {
+          "description": "kmsKey sets the cluster default storage class to encrypt volumes with customer-supplied encryption keys, rather than the default keys managed by GCP.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.GCPKMSKeyReference"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.GCPKMSKeyReference": {
+      "description": "GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key",
+      "type": "object",
+      "required": [
+        "name",
+        "keyRing",
+        "projectID"
+      ],
+      "properties": {
+        "keyRing": {
+          "description": "keyRing is the name of the KMS Key Ring which the KMS Key belongs to. The value should correspond to an existing KMS key ring and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "location": {
+          "description": "location is the GCP location in which the Key Ring exists. The value must match an existing GCP location, or \"global\". Defaults to global, if not set.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is the name of the customer-managed encryption key to be used for disk encryption. The value should correspond to an existing KMS key and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "projectID": {
+          "description": "projectID is the ID of the Project in which the KMS Key Ring exists. It must be 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter. Trailing hyphens are prohibited.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -23443,6 +24013,16 @@
           "description": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IBMLoadBalancerParameters": {
+      "description": "IBMLoadBalancerParameters provides configuration settings that are specific to IBM Cloud load balancers.",
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "description": "protocol specifies whether the load balancer uses PROXY protocol to forward connections to the IngressController. See \"service.kubernetes.io/ibm-load-balancer-cloud-provider-enable-features: \"proxy-protocol\"\" at https://cloud.ibm.com/docs/containers?topic=containers-vpc-lbaas\"\n\nPROXY protocol can be used with load balancers that support it to communicate the source addresses of client connections when forwarding those connections to the IngressController.  Using PROXY protocol enables the IngressController to report those source addresses instead of reporting the load balancer's address in HTTP headers and logs.  Note that enabling PROXY protocol on the IngressController will cause connections to fail if you are not using a load balancer that uses PROXY protocol to forward connections to the IngressController.  See http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for information about PROXY protocol.\n\nValid values for protocol are TCP, PROXY and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is TCP, without the proxy protocol enabled.",
+          "type": "string"
         }
       }
     },
@@ -23973,7 +24553,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -24151,7 +24731,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -24327,7 +24907,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
@@ -24499,7 +25079,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -24648,7 +25228,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -24712,7 +25292,7 @@
           "type": "boolean"
         },
         "mtu": {
-          "description": "mtu is the MTU that Kuryr should use when creating pod networks in Neutron. The value has to be lower or equal to the MTU of the nodes network and Neutron has to allow creation of tenant networks with such MTU. If unset Pod networks will be created with the same MTU as the nodes network has.",
+          "description": "mtu is the MTU that Kuryr should use when creating pod networks in Neutron. The value has to be lower or equal to the MTU of the nodes network and Neutron has to allow creation of tenant networks with such MTU. If unset Pod networks will be created with the same MTU as the nodes network has. This also affects the services network created by cluster-network-operator.",
           "type": "integer",
           "format": "int64"
         },
@@ -24888,7 +25468,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25101,7 +25681,7 @@
           }
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
@@ -25378,7 +25958,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25513,7 +26093,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25644,7 +26224,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25831,8 +26411,12 @@
           "description": "gcp provides configuration settings that are specific to GCP load balancers.\n\nIf empty, defaults will be applied. See specific gcp fields for details about their defaults.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.GCPLoadBalancerParameters"
         },
+        "ibm": {
+          "description": "ibm provides configuration settings that are specific to IBM Cloud load balancers.\n\nIf empty, defaults will be applied. See specific ibm fields for details about their defaults.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IBMLoadBalancerParameters"
+        },
         "type": {
-          "description": "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Nutanix\", \"OpenStack\", and \"VSphere\".",
+          "description": "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"IBM\", \"Nutanix\", \"OpenStack\", and \"VSphere\".",
           "type": "string",
           "default": ""
         }
@@ -25842,7 +26426,8 @@
           "discriminator": "type",
           "fields-to-discriminateBy": {
             "aws": "AWS",
-            "gcp": "GCP"
+            "gcp": "GCP",
+            "ibm": "IBM"
           }
         }
       ]
@@ -26068,7 +26653,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26197,7 +26782,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26327,7 +26912,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26522,7 +27107,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26686,7 +27271,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -30229,7 +30814,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
