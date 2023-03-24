@@ -25,5 +25,5 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 
 // DataGathers returns a DataGatherInformer.
 func (v *version) DataGathers() DataGatherInformer {
-	return &dataGatherInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &dataGatherInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

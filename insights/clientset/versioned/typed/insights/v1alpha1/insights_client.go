@@ -20,8 +20,8 @@ type InsightsV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *InsightsV1alpha1Client) DataGathers(namespace string) DataGatherInterface {
-	return newDataGathers(c, namespace)
+func (c *InsightsV1alpha1Client) DataGathers() DataGatherInterface {
+	return newDataGathers(c)
 }
 
 // NewForConfig creates a new InsightsV1alpha1Client for the given config.

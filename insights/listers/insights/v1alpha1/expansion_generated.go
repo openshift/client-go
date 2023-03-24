@@ -5,7 +5,3 @@ package v1alpha1
 // DataGatherListerExpansion allows custom methods to be added to
 // DataGatherLister.
 type DataGatherListerExpansion interface{}
-
-// DataGatherNamespaceListerExpansion allows custom methods to be added to
-// DataGatherNamespaceLister.
-type DataGatherNamespaceListerExpansion interface{}
