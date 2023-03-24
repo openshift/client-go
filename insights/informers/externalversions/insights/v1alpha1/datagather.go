@@ -26,33 +26,32 @@ type DataGatherInformer interface {
 type dataGatherInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
-	namespace        string
 }
 
 // NewDataGatherInformer constructs a new informer for DataGather type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewDataGatherInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredDataGatherInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredDataGatherInformer(client, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredDataGatherInformer constructs a new informer for DataGather type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredDataGatherInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.InsightsV1alpha1().DataGathers(namespace).List(context.TODO(), options)
+				return client.InsightsV1alpha1().DataGathers().List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.InsightsV1alpha1().DataGathers(namespace).Watch(context.TODO(), options)
+				return client.InsightsV1alpha1().DataGathers().Watch(context.TODO(), options)
 			},
 		},
 		&insightsv1alpha1.DataGather{},
@@ -62,7 +61,7 @@ func NewFilteredDataGatherInformer(client versioned.Interface, namespace string,
 }
 
 func (f *dataGatherInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredDataGatherInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredDataGatherInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *dataGatherInformer) Informer() cache.SharedIndexInformer {

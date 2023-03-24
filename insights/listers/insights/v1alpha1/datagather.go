@@ -15,8 +15,9 @@ type DataGatherLister interface {
 	// List lists all DataGathers in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.DataGather, err error)
-	// DataGathers returns an object that can list and get DataGathers.
-	DataGathers(namespace string) DataGatherNamespaceLister
+	// Get retrieves the DataGather from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v1alpha1.DataGather, error)
 	DataGatherListerExpansion
 }
 
@@ -38,41 +39,9 @@ func (s *dataGatherLister) List(selector labels.Selector) (ret []*v1alpha1.DataG
 	return ret, err
 }
 
-// DataGathers returns an object that can list and get DataGathers.
-func (s *dataGatherLister) DataGathers(namespace string) DataGatherNamespaceLister {
-	return dataGatherNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// DataGatherNamespaceLister helps list and get DataGathers.
-// All objects returned here must be treated as read-only.
-type DataGatherNamespaceLister interface {
-	// List lists all DataGathers in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DataGather, err error)
-	// Get retrieves the DataGather from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DataGather, error)
-	DataGatherNamespaceListerExpansion
-}
-
-// dataGatherNamespaceLister implements the DataGatherNamespaceLister
-// interface.
-type dataGatherNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DataGathers in the indexer for a given namespace.
-func (s dataGatherNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DataGather, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DataGather))
-	})
-	return ret, err
-}
-
-// Get retrieves the DataGather from the indexer for a given namespace and name.
-func (s dataGatherNamespaceLister) Get(name string) (*v1alpha1.DataGather, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the DataGather from the index for a given name.
+func (s *dataGatherLister) Get(name string) (*v1alpha1.DataGather, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}

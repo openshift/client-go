@@ -161,8 +161,8 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWb
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/onsi/ginkgo/v2 v2.4.0 h1:+Ig9nvqgS5OBSACXNk15PLdp0U9XPYROt9CFzVdFGIs=
 github.com/onsi/gomega v1.23.0 h1:/oxKu9c2HVap+F3PfKort2Hw5DEU+HGlW8n+tguWsys=
-github.com/openshift/api v0.0.0-20230320192226-1fc631efd341 h1:PhLdiIlVqgN4frwrG8lNlbQdJ4eJcGdjX/vhlN6xupk=
-github.com/openshift/api v0.0.0-20230320192226-1fc631efd341/go.mod h1:ctXNyWanKEjGj8sss1KjjHQ3ENKFm33FFnS5BKaIPh4=
+github.com/openshift/api v0.0.0-20230323200117-1339ccc8302e h1:iZDT4ddUn3JhJpuLLUw/PyJHUFNMJpCALjylDUbQKos=
+github.com/openshift/api v0.0.0-20230323200117-1339ccc8302e/go.mod h1:ctXNyWanKEjGj8sss1KjjHQ3ENKFm33FFnS5BKaIPh4=
 github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d h1:RR4ah7FfaPR1WePizm0jlrsbmPu91xQZnAsVVreQV1k=
 github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d/go.mod h1:b1BuldmJlbA/xYtdZvKi+7j5YGB44qJUJDZ9zwiNCfE=
 github.com/openshift/kube-openapi v0.0.0-20220824163307-45d3b565d2f3 h1:cWYtcARgUTv/EHAYXCVeyloiYmP8CgEOSkSBMuCXFBY=

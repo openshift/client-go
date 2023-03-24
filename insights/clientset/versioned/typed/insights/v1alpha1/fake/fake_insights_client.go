@@ -12,8 +12,8 @@ type FakeInsightsV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeInsightsV1alpha1) DataGathers(namespace string) v1alpha1.DataGatherInterface {
-	return &FakeDataGathers{c, namespace}
+func (c *FakeInsightsV1alpha1) DataGathers() v1alpha1.DataGatherInterface {
+	return &FakeDataGathers{c}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

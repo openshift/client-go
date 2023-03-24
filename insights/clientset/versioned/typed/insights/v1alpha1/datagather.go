@@ -20,7 +20,7 @@ import (
 // DataGathersGetter has a method to return a DataGatherInterface.
 // A group's client should implement this interface.
 type DataGathersGetter interface {
-	DataGathers(namespace string) DataGatherInterface
+	DataGathers() DataGatherInterface
 }
 
 // DataGatherInterface has methods to work with DataGather resources.
@@ -42,14 +42,12 @@ type DataGatherInterface interface {
 // dataGathers implements DataGatherInterface
 type dataGathers struct {
 	client rest.Interface
-	ns     string
 }
 
 // newDataGathers returns a DataGathers
-func newDataGathers(c *InsightsV1alpha1Client, namespace string) *dataGathers {
+func newDataGathers(c *InsightsV1alpha1Client) *dataGathers {
 	return &dataGathers{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -57,7 +55,6 @@ func newDataGathers(c *InsightsV1alpha1Client, namespace string) *dataGathers {
 func (c *dataGathers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DataGather, err error) {
 	result = &v1alpha1.DataGather{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -74,7 +71,6 @@ func (c *dataGathers) List(ctx context.Context, opts v1.ListOptions) (result *v1
 	}
 	result = &v1alpha1.DataGatherList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("datagathers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -91,7 +87,6 @@ func (c *dataGathers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Int
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("datagathers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -102,7 +97,6 @@ func (c *dataGathers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Int
 func (c *dataGathers) Create(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.CreateOptions) (result *v1alpha1.DataGather, err error) {
 	result = &v1alpha1.DataGather{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("datagathers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(dataGather).
@@ -115,7 +109,6 @@ func (c *dataGathers) Create(ctx context.Context, dataGather *v1alpha1.DataGathe
 func (c *dataGathers) Update(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (result *v1alpha1.DataGather, err error) {
 	result = &v1alpha1.DataGather{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(dataGather.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -130,7 +123,6 @@ func (c *dataGathers) Update(ctx context.Context, dataGather *v1alpha1.DataGathe
 func (c *dataGathers) UpdateStatus(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (result *v1alpha1.DataGather, err error) {
 	result = &v1alpha1.DataGather{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(dataGather.Name).
 		SubResource("status").
@@ -144,7 +136,6 @@ func (c *dataGathers) UpdateStatus(ctx context.Context, dataGather *v1alpha1.Dat
 // Delete takes name of the dataGather and deletes it. Returns an error if one occurs.
 func (c *dataGathers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(name).
 		Body(&opts).
@@ -159,7 +150,6 @@ func (c *dataGathers) DeleteCollection(ctx context.Context, opts v1.DeleteOption
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("datagathers").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -172,7 +162,6 @@ func (c *dataGathers) DeleteCollection(ctx context.Context, opts v1.DeleteOption
 func (c *dataGathers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DataGather, err error) {
 	result = &v1alpha1.DataGather{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(name).
 		SubResource(subresources...).
@@ -199,7 +188,6 @@ func (c *dataGathers) Apply(ctx context.Context, dataGather *insightsv1alpha1.Da
 	}
 	result = &v1alpha1.DataGather{}
 	err = c.client.Patch(types.ApplyPatchType).
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(*name).
 		VersionedParams(&patchOpts, scheme.ParameterCodec).
@@ -228,7 +216,6 @@ func (c *dataGathers) ApplyStatus(ctx context.Context, dataGather *insightsv1alp
 
 	result = &v1alpha1.DataGather{}
 	err = c.client.Patch(types.ApplyPatchType).
-		Namespace(c.ns).
 		Resource("datagathers").
 		Name(*name).
 		SubResource("status").

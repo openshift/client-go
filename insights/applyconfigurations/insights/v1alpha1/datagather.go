@@ -22,10 +22,9 @@ type DataGatherApplyConfiguration struct {
 
 // DataGather constructs an declarative configuration of the DataGather type for use with
 // apply.
-func DataGather(name, namespace string) *DataGatherApplyConfiguration {
+func DataGather(name string) *DataGatherApplyConfiguration {
 	b := &DataGatherApplyConfiguration{}
 	b.WithName(name)
-	b.WithNamespace(namespace)
 	b.WithKind("DataGather")
 	b.WithAPIVersion("insights.openshift.io/v1alpha1")
 	return b
@@ -60,7 +59,6 @@ func extractDataGather(dataGather *insightsv1alpha1.DataGather, fieldManager str
 		return nil, err
 	}
 	b.WithName(dataGather.Name)
-	b.WithNamespace(dataGather.Namespace)
 
 	b.WithKind("DataGather")
 	b.WithAPIVersion("insights.openshift.io/v1alpha1")
