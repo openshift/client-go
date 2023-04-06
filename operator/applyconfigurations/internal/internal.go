@@ -3052,6 +3052,10 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: __untyped_atomic_
       default: {}
+    - name: vsphereStorageDriver
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.operator.v1.StorageStatus
   map:
     fields:

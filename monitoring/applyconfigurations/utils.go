@@ -3,7 +3,9 @@
 package applyconfigurations
 
 import (
+	v1 "github.com/openshift/api/monitoring/v1"
 	v1alpha1 "github.com/openshift/api/monitoring/v1alpha1"
+	monitoringv1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1"
 	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -12,7 +14,29 @@ import (
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=monitoring.openshift.io, Version=v1alpha1
+	// Group=monitoring.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("AlertingRule"):
+		return &monitoringv1.AlertingRuleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AlertingRuleSpec"):
+		return &monitoringv1.AlertingRuleSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AlertingRuleStatus"):
+		return &monitoringv1.AlertingRuleStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AlertRelabelConfig"):
+		return &monitoringv1.AlertRelabelConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AlertRelabelConfigSpec"):
+		return &monitoringv1.AlertRelabelConfigSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AlertRelabelConfigStatus"):
+		return &monitoringv1.AlertRelabelConfigStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PrometheusRuleRef"):
+		return &monitoringv1.PrometheusRuleRefApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RelabelConfig"):
+		return &monitoringv1.RelabelConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Rule"):
+		return &monitoringv1.RuleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RuleGroup"):
+		return &monitoringv1.RuleGroupApplyConfiguration{}
+
+		// Group=monitoring.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("AlertingRule"):
 		return &monitoringv1alpha1.AlertingRuleApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("AlertingRuleSpec"):
