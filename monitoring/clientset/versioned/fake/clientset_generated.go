@@ -4,6 +4,8 @@ package fake
 
 import (
 	clientset "github.com/openshift/client-go/monitoring/clientset/versioned"
+	monitoringv1 "github.com/openshift/client-go/monitoring/clientset/versioned/typed/monitoring/v1"
+	fakemonitoringv1 "github.com/openshift/client-go/monitoring/clientset/versioned/typed/monitoring/v1/fake"
 	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/clientset/versioned/typed/monitoring/v1alpha1"
 	fakemonitoringv1alpha1 "github.com/openshift/client-go/monitoring/clientset/versioned/typed/monitoring/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -62,6 +64,11 @@ var (
 	_ clientset.Interface = &Clientset{}
 	_ testing.FakeClient  = &Clientset{}
 )
+
+// MonitoringV1 retrieves the MonitoringV1Client
+func (c *Clientset) MonitoringV1() monitoringv1.MonitoringV1Interface {
+	return &fakemonitoringv1.FakeMonitoringV1{Fake: &c.Fake}
+}
 
 // MonitoringV1alpha1 retrieves the MonitoringV1alpha1Client
 func (c *Clientset) MonitoringV1alpha1() monitoringv1alpha1.MonitoringV1alpha1Interface {
