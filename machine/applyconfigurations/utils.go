@@ -43,6 +43,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machinev1.GCPFailureDomainApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenShiftMachineV1Beta1MachineTemplate"):
 		return &machinev1.OpenShiftMachineV1Beta1MachineTemplateApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OpenStackFailureDomain"):
+		return &machinev1.OpenStackFailureDomainApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RootVolume"):
+		return &machinev1.RootVolumeApplyConfiguration{}
 
 		// Group=machine.openshift.io, Version=v1beta1
 	case v1beta1.SchemeGroupVersion.WithKind("Condition"):
