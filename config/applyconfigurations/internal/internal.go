@@ -1063,6 +1063,32 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.FeatureGateStatus
       default: {}
+- name: com.github.openshift.api.config.v1.FeatureGateAttributes
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.FeatureGateDetails
+  map:
+    fields:
+    - name: disabled
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.FeatureGateAttributes
+          elementRelationship: atomic
+    - name: enabled
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.FeatureGateAttributes
+          elementRelationship: atomic
+    - name: version
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.config.v1.FeatureGateSpec
   map:
     fields:
@@ -1079,16 +1105,23 @@ var schemaYAML = typed.YAMLObject(`types:
         discriminatorValue: CustomNoUpgrade
 - name: com.github.openshift.api.config.v1.FeatureGateStatus
   map:
-    elementType:
-      scalar: untyped
-      list:
-        elementType:
-          namedType: __untyped_atomic_
-        elementRelationship: atomic
-      map:
-        elementType:
-          namedType: __untyped_deduced_
-        elementRelationship: separable
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: featureGates
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.FeatureGateDetails
+          elementRelationship: associative
+          keys:
+          - version
 - name: com.github.openshift.api.config.v1.GCPPlatformSpec
   map:
     elementType:
