@@ -131,10 +131,16 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ExternalPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGate"):
 		return &configv1.FeatureGateApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("FeatureGateAttributes"):
+		return &configv1.FeatureGateAttributesApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("FeatureGateDetails"):
+		return &configv1.FeatureGateDetailsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateSelection"):
 		return &configv1.FeatureGateSelectionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateSpec"):
 		return &configv1.FeatureGateSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("FeatureGateStatus"):
+		return &configv1.FeatureGateStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPPlatformStatus"):
 		return &configv1.GCPPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GitHubIdentityProvider"):
