@@ -328,7 +328,7 @@
       }
     },
     "com.github.openshift.api.apps.v1.DeploymentConfig": {
-      "description": "Deployment Configs define the template for a pod and manages deploying new images or configuration changes. A single deployment configuration is usually analogous to a single micro-service. Can support many different deployment patterns, including full restart, customizable rolling updates, and  fully custom behaviors, as well as pre- and post- deployment hooks. Each individual deployment is represented as a replication controller.\n\nA deployment is \"triggered\" when its configuration is changed or a tag in an Image Stream is changed. Triggers can be disabled to allow manual control over a deployment. The \"strategy\" determines how the deployment is carried out and may be changed at any time. The `latestVersion` field is updated when a new deployment is triggered by any means.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "Deployment Configs define the template for a pod and manages deploying new images or configuration changes. A single deployment configuration is usually analogous to a single micro-service. Can support many different deployment patterns, including full restart, customizable rolling updates, and  fully custom behaviors, as well as pre- and post- deployment hooks. Each individual deployment is represented as a replication controller.\n\nA deployment is \"triggered\" when its configuration is changed or a tag in an Image Stream is changed. Triggers can be disabled to allow manual control over a deployment. The \"strategy\" determines how the deployment is carried out and may be changed at any time. The `latestVersion` field is updated when a new deployment is triggered by any means.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer). Deprecated: Use deployments or other means for declarative updates for pods instead.",
       "type": "object",
       "required": [
         "spec"
@@ -4902,6 +4902,17 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.CloudControllerManagerStatus": {
+      "description": "CloudControllerManagerStatus holds the state of Cloud Controller Manager (a.k.a. CCM or CPI) related settings",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nValid values are \"External\", \"None\" and omitted. When set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ClusterCondition": {
       "description": "ClusterCondition is a union of typed cluster conditions.  The 'type' property determines which of the type-specific properties are relevant. When evaluated on a cluster, the condition may match, not match, or fail to evaluate.",
       "type": "object",
@@ -5982,7 +5993,14 @@
     },
     "com.github.openshift.api.config.v1.ExternalPlatformStatus": {
       "description": "ExternalPlatformStatus holds the current status of the generic External infrastructure provider.",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "cloudControllerManager": {
+          "description": "cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI). When omitted, new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerStatus"
+        }
+      }
     },
     "com.github.openshift.api.config.v1.FeatureGate": {
       "description": "Feature holds cluster-wide information about feature gates.  The canonical name is `cluster`\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -17690,6 +17708,10 @@
         "availabilityZone": {
           "description": "availabilityZone specifies the Cinder availability zone where the root volume will be created. If not specifified, the root volume will be created in the availability zone specified by the volume type in the cinder configuration. If the volume type (configured in the OpenStack cluster) does not specify an availability zone, the root volume will be created in the default availability zone specified in the cinder configuration. See https://docs.openstack.org/cinder/latest/admin/availability-zone-type.html for more details. If the OpenStack cluster is deployed with the cross_az_attach configuration option set to false, the root volume will have to be in the same availability zone as the VM (defined by OpenStackFailureDomain.AvailabilityZone). Availability zone names must NOT contain spaces otherwise it will lead to volume that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information. The maximum length of availability zone name is 63 as per labels limits.",
           "type": "string"
+        },
+        "volumeType": {
+          "description": "volumeType specifies the type of the root volume that will be provisioned. If not specifified, the root volume will be created as the type in the machine template. The maximum length of a volume type name is 255 characters, as per the OpenStack limit.",
+          "type": "string"
         }
       }
     },
@@ -18525,6 +18547,32 @@
         "id": {
           "description": "ID of resource",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.AddressesFromPool": {
+      "description": "AddressesFromPool is an IPAddressPool that will be used to create IPAddressClaims for fulfillment by an external controller.",
+      "type": "object",
+      "required": [
+        "group",
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group of the IP address pool type known to an external IPAM controller. This should be a fully qualified domain name, for example, externalipam.controller.io.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name of an IP address pool, for example, pool-config-1.",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource of the IP address pool type known to an external IPAM controller. It is normally the plural form of the resource kind in lowercase, for example, ippools.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -19892,14 +19940,38 @@
     "com.github.openshift.api.machine.v1beta1.NetworkDeviceSpec": {
       "description": "NetworkDeviceSpec defines the network configuration for a virtual machine's network device.",
       "type": "object",
-      "required": [
-        "networkName"
-      ],
       "properties": {
+        "addressesFromPools": {
+          "description": "addressesFromPools is a list of references to IP pool types and instances which are handled by an external controller. addressesFromPool configurations provided via addressesFromPools defer IP address assignment to an external controller. IP addresses provided via ipAddrs, however, are intended to allow explicit assignment of a machine's IP address. If both addressesFromPool and ipAddrs are empty or not defined, DHCP will assign an IP address. If both ipAddrs and addressesFromPools are defined, the IP addresses associated with ipAddrs will be applied first followed by IP addresses from addressesFromPools.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.AddressesFromPool"
+          }
+        },
+        "gateway": {
+          "description": "gateway is an IPv4 or IPv6 address which represents the subnet gateway, for example, 192.168.1.1.",
+          "type": "string"
+        },
+        "ipAddrs": {
+          "description": "ipAddrs is a list of one or more IPv4 and/or IPv6 addresses and CIDR to assign to this device, for example, 192.168.1.100/24. IP addresses provided via ipAddrs are intended to allow explicit assignment of a machine's IP address. IP pool configurations provided via addressesFromPool, however, defer IP address assignment to an external controller. If both addressesFromPool and ipAddrs are empty or not defined, DHCP will be used to assign an IP address. If both ipAddrs and addressesFromPools are defined, the IP addresses associated with ipAddrs will be applied first followed by IP addresses from addressesFromPools.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "nameservers": {
+          "description": "nameservers is a list of IPv4 and/or IPv6 addresses used as DNS nameservers, for example, 8.8.8.8. a nameserver is not provided by a fulfilled IPAddressClaim. If DHCP is not the source of IP addresses for this network device, nameservers should include a valid nameserver.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
         "networkName": {
-          "description": "NetworkName is the name of the vSphere network to which the device will be connected.",
-          "type": "string",
-          "default": ""
+          "description": "networkName is the name of the vSphere network or port group to which the network device will be connected, for example, port-group-1. When not provided, the vCenter API will attempt to select a default network. The available networks (port groups) can be listed using `govc ls 'network/*'`",
+          "type": "string"
         }
       }
     },
@@ -23802,7 +23874,14 @@
     },
     "com.github.openshift.api.operator.v1.ContainerLoggingDestinationParameters": {
       "description": "ContainerLoggingDestinationParameters describes parameters for the Container logging destination type.",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "maxLength": {
+          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.\n\nWhen omitted, the default value is 1024.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.DNS": {
       "description": "DNS manages the CoreDNS component to provide a name resolution service for pods and services in the cluster.\n\nThis supports the DNS-based service discovery specification: https://github.com/kubernetes/dns/blob/master/docs/specification.md\n\nMore details: https://kubernetes.io/docs/tasks/administer-cluster/coredns\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -28054,7 +28133,7 @@
           "type": "string"
         },
         "maxLength": {
-          "description": "maxLength is the maximum length of the syslog message\n\nIf this field is empty, the maxLength is set to \"1024\".",
+          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 4096, inclusive.\n\nWhen omitted, the default value is 1024.",
           "type": "integer",
           "format": "int64"
         },
