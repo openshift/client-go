@@ -60,3 +60,12 @@ replace (
 	k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
 	k8s.io/kube-openapi => github.com/openshift/kube-openapi v0.0.0-20230324164143-98c122c21a89
 )
+
+// v3.9.0 is the only tag in openshift/client-go and it was created before
+// go.mod was introduced. We retract it so that go command don't select it
+// automatically when resolving versions like @latest.
+retract v3.9.0+incompatible
+
+// To make go aware of the retraction, we need to tag a new version that can be
+// retracted by itself.
+retract v0.0.1
