@@ -69,6 +69,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.BuildOverridesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BuildSpec"):
 		return &configv1.BuildSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudControllerManagerStatus"):
+		return &configv1.CloudControllerManagerStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCondition"):
 		return &configv1.ClusterConditionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterNetworkEntry"):
@@ -133,6 +135,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ExternalIPPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ExternalPlatformSpec"):
 		return &configv1.ExternalPlatformSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ExternalPlatformStatus"):
+		return &configv1.ExternalPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGate"):
 		return &configv1.FeatureGateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateAttributes"):
