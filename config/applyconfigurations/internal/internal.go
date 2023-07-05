@@ -488,6 +488,13 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.BuildOverrides
       default: {}
+- name: com.github.openshift.api.config.v1.CloudControllerManagerStatus
+  map:
+    fields:
+    - name: state
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.config.v1.ClusterCondition
   map:
     fields:
@@ -1058,16 +1065,11 @@ var schemaYAML = typed.YAMLObject(`types:
       default: Unknown
 - name: com.github.openshift.api.config.v1.ExternalPlatformStatus
   map:
-    elementType:
-      scalar: untyped
-      list:
-        elementType:
-          namedType: __untyped_atomic_
-        elementRelationship: atomic
-      map:
-        elementType:
-          namedType: __untyped_deduced_
-        elementRelationship: separable
+    fields:
+    - name: cloudControllerManager
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudControllerManagerStatus
+      default: {}
 - name: com.github.openshift.api.config.v1.FeatureGate
   map:
     fields:

@@ -13,6 +13,7 @@ import (
 type OperatorV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ImageContentSourcePoliciesGetter
+	OLMsGetter
 }
 
 // OperatorV1alpha1Client is used to interact with features provided by the operator.openshift.io group.
@@ -22,6 +23,10 @@ type OperatorV1alpha1Client struct {
 
 func (c *OperatorV1alpha1Client) ImageContentSourcePolicies() ImageContentSourcePolicyInterface {
 	return newImageContentSourcePolicies(c)
+}
+
+func (c *OperatorV1alpha1Client) OLMs() OLMInterface {
+	return newOLMs(c)
 }
 
 // NewForConfig creates a new OperatorV1alpha1Client for the given config.

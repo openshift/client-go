@@ -63,6 +63,7 @@ for group in apiserver apps authorization build cloudnetwork image imageregistry
     "${group}:v1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   generateApplyConfiguration \
     github.com/openshift/client-go/${group} \
@@ -70,6 +71,7 @@ for group in apiserver apps authorization build cloudnetwork image imageregistry
     "${group}:v1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   bash ${CODEGEN_PKG}/generate-groups.sh "client" \
     github.com/openshift/client-go/${group} \
@@ -78,6 +80,7 @@ for group in apiserver apps authorization build cloudnetwork image imageregistry
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
 done
 
@@ -88,6 +91,7 @@ for group in machine; do
     "${group}:v1,v1beta1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   generateApplyConfiguration \
     github.com/openshift/client-go/${group} \
@@ -95,6 +99,7 @@ for group in machine; do
     "${group}:v1,v1beta1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   bash ${CODEGEN_PKG}/generate-groups.sh "client" \
     github.com/openshift/client-go/${group} \
@@ -103,6 +108,7 @@ for group in machine; do
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
 done
 
@@ -113,6 +119,7 @@ for group in console operator config monitoring; do
     "${group}:v1,v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
    generateApplyConfiguration \
     github.com/openshift/client-go/${group} \
@@ -120,6 +127,7 @@ for group in console operator config monitoring; do
     "${group}:v1,v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   bash ${CODEGEN_PKG}/generate-groups.sh "client" \
     github.com/openshift/client-go/${group} \
@@ -128,6 +136,7 @@ for group in console operator config monitoring; do
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
 done
 
@@ -138,6 +147,7 @@ for group in helm; do
     "${group}:v1beta1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   generateApplyConfiguration \
     github.com/openshift/client-go/${group} \
@@ -145,6 +155,7 @@ for group in helm; do
     "${group}:v1beta1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   bash ${CODEGEN_PKG}/generate-groups.sh "client" \
     github.com/openshift/client-go/${group} \
@@ -153,6 +164,7 @@ for group in helm; do
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
 done
 
@@ -163,6 +175,7 @@ for group in servicecertsigner operatorcontrolplane sharedresource insights; do
     "${group}:v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   generateApplyConfiguration \
     github.com/openshift/client-go/${group} \
@@ -170,6 +183,7 @@ for group in servicecertsigner operatorcontrolplane sharedresource insights; do
     "${group}:v1alpha1" \
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
   bash ${CODEGEN_PKG}/generate-groups.sh "client" \
     github.com/openshift/client-go/${group} \
@@ -178,5 +192,6 @@ for group in servicecertsigner operatorcontrolplane sharedresource insights; do
     --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
     --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
     --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
+    --trim-path-prefix github.com/openshift/client-go \
     ${verify}
 done

@@ -71,6 +71,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ConsoleSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleStatus"):
 		return &operatorv1.ConsoleStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ContainerLoggingDestinationParameters"):
+		return &operatorv1.ContainerLoggingDestinationParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSIDriverConfigSpec"):
 		return &operatorv1.CSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSISnapshotController"):
@@ -333,6 +335,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1alpha1.ImageContentSourcePolicyApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ImageContentSourcePolicySpec"):
 		return &operatorv1alpha1.ImageContentSourcePolicySpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("OLM"):
+		return &operatorv1alpha1.OLMApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("OLMSpec"):
+		return &operatorv1alpha1.OLMSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("OLMStatus"):
+		return &operatorv1alpha1.OLMStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RepositoryDigestMirrors"):
 		return &operatorv1alpha1.RepositoryDigestMirrorsApplyConfiguration{}
 
