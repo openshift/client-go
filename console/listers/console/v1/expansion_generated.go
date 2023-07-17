@@ -26,6 +26,10 @@ type ConsolePluginListerExpansion interface{}
 // ConsoleQuickStartLister.
 type ConsoleQuickStartListerExpansion interface{}
 
+// ConsoleSampleListerExpansion allows custom methods to be added to
+// ConsoleSampleLister.
+type ConsoleSampleListerExpansion interface{}
+
 // ConsoleYAMLSampleListerExpansion allows custom methods to be added to
 // ConsoleYAMLSampleLister.
 type ConsoleYAMLSampleListerExpansion interface{}

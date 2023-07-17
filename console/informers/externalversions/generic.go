@@ -50,6 +50,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsolePlugins().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("consolequickstarts"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsoleQuickStarts().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("consolesamples"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsoleSamples().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("consoleyamlsamples"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsoleYAMLSamples().Informer()}, nil
 

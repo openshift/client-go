@@ -20,6 +20,8 @@ type Interface interface {
 	ConsolePlugins() ConsolePluginInformer
 	// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
 	ConsoleQuickStarts() ConsoleQuickStartInformer
+	// ConsoleSamples returns a ConsoleSampleInformer.
+	ConsoleSamples() ConsoleSampleInformer
 	// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
 	ConsoleYAMLSamples() ConsoleYAMLSampleInformer
 }
@@ -63,6 +65,11 @@ func (v *version) ConsolePlugins() ConsolePluginInformer {
 // ConsoleQuickStarts returns a ConsoleQuickStartInformer.
 func (v *version) ConsoleQuickStarts() ConsoleQuickStartInformer {
 	return &consoleQuickStartInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ConsoleSamples returns a ConsoleSampleInformer.
+func (v *version) ConsoleSamples() ConsoleSampleInformer {
+	return &consoleSampleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.

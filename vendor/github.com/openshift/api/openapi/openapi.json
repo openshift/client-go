@@ -9910,6 +9910,110 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.Backup": {
+      "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupList": {
+      "description": "BackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Backup"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupSpec": {
+      "type": "object",
+      "required": [
+        "etcd"
+      ],
+      "properties": {
+        "etcd": {
+          "description": "etcd specifies the configuration for periodic backups of the etcd cluster",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.EtcdBackupSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupStatus": {
+      "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
+      "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
+      "type": "object",
+      "properties": {
+        "pvcName": {
+          "description": "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+          "type": "string",
+          "default": ""
+        },
+        "retentionPolicy": {
+          "description": "RetentionPolicy defines the retention policy for retaining and deleting existing backups.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionPolicy"
+        },
+        "schedule": {
+          "description": "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
+          "type": "string",
+          "default": ""
+        },
+        "timeZone": {
+          "description": "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.GatherConfig": {
       "description": "gatherConfig provides data gathering configuration options.",
       "type": "object",
@@ -10002,6 +10106,63 @@
     },
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
+      "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
+      "type": "object",
+      "properties": {
+        "maxNumberOfBackups": {
+          "description": "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionPolicy": {
+      "description": "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
+      "type": "object",
+      "required": [
+        "retentionType"
+      ],
+      "properties": {
+        "retentionNumber": {
+          "description": "RetentionNumber configures the retention policy based on the number of backups",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionNumberConfig"
+        },
+        "retentionSize": {
+          "description": "RetentionSize configures the retention policy based on the size of backups",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionSizeConfig"
+        },
+        "retentionType": {
+          "description": "RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "RetentionNumber",
+            "RetentionSize"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "retentionType",
+          "fields-to-discriminateBy": {
+            "retentionNumber": "RetentionNumber",
+            "retentionSize": "RetentionSize"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionSizeConfig": {
+      "description": "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
+      "type": "object",
+      "properties": {
+        "maxSizeOfBackupsGb": {
+          "description": "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "com.github.openshift.api.console.v1.ApplicationMenuSpec": {
       "description": "ApplicationMenuSpec is the specification of the desired section and icon used for the link in the application menu.",
@@ -10824,6 +10985,235 @@
         },
         "success": {
           "description": "success describes the succesfully passed task.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSample": {
+      "description": "ConsoleSample is an extension to customizing OpenShift web console by adding samples.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec contains configuration for a console sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleContainerImportSource": {
+      "description": "ConsoleSampleContainerImportSource let the user import a container image.",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "description": "reference to a container image that provides a HTTP service. The service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nSupported formats:\n  - <repository-name>/<image-name>\n  - docker.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>@sha256:<image hash>\n  - quay.io/<repository-name>/<image-name>:<tag>",
+          "type": "string",
+          "default": ""
+        },
+        "service": {
+          "description": "service contains configuration for the Service resource created for this sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleContainerImportSourceService"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleContainerImportSourceService": {
+      "description": "ConsoleSampleContainerImportSourceService let the samples author define defaults for the Service created for this sample.",
+      "type": "object",
+      "properties": {
+        "targetPort": {
+          "description": "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service and Route created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSource": {
+      "description": "ConsoleSampleGitImportSource let the user import code from a public Git repository.",
+      "type": "object",
+      "required": [
+        "repository"
+      ],
+      "properties": {
+        "repository": {
+          "description": "repository contains the reference to the actual Git repository.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceRepository"
+        },
+        "service": {
+          "description": "service contains configuration for the Service resource created for this sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceService"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceRepository": {
+      "description": "ConsoleSampleGitImportSourceRepository let the user import code from a public git repository.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "contextDir": {
+          "description": "contextDir is used to specify a directory within the repository to build the component. Must start with `/` and have a maximum length of 256 characters. When omitted, the default value is to build from the root of the repository.",
+          "type": "string",
+          "default": ""
+        },
+        "revision": {
+          "description": "revision is the git revision at which to clone the git repository Can be used to clone a specific branch, tag or commit SHA. Must be at most 256 characters in length. When omitted the repository's default branch is used.",
+          "type": "string",
+          "default": ""
+        },
+        "url": {
+          "description": "url of the Git repository that contains a HTTP service. The HTTP service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nOnly public repositories on GitHub, GitLab and Bitbucket are currently supported:\n\n  - https://github.com/<org>/<repository>\n  - https://gitlab.com/<org>/<repository>\n  - https://bitbucket.org/<org>/<repository>\n\nThe url must have a maximum length of 256 characters.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceService": {
+      "description": "ConsoleSampleGitImportSourceService let the samples author define defaults for the Service created for this sample.",
+      "type": "object",
+      "properties": {
+        "targetPort": {
+          "description": "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleList": {
+      "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSample"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleSource": {
+      "description": "ConsoleSampleSource is the actual sample definition and can hold different sample types. Unsupported sample types will be ignored in the web console.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "containerImport": {
+          "description": "containerImport allows the user import a container image.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleContainerImportSource"
+        },
+        "gitImport": {
+          "description": "gitImport allows the user to import code from a git repository.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSource"
+        },
+        "type": {
+          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "containerImport": "ContainerImport",
+            "gitImport": "GitImport"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleSpec": {
+      "description": "ConsoleSampleSpec is the desired sample for the web console. Samples will appear with their title, descriptions and a badge in a samples catalog.",
+      "type": "object",
+      "required": [
+        "title",
+        "abstract",
+        "description",
+        "source"
+      ],
+      "properties": {
+        "abstract": {
+          "description": "abstract is a short introduction to the sample.\n\nIt is required and must be no more than 100 characters in length.\n\nThe abstract is shown on the sample card tile below the title and provider and is limited to three lines of content.",
+          "type": "string",
+          "default": ""
+        },
+        "description": {
+          "description": "description is a long form explanation of the sample.\n\nIt is required and can have a maximum length of **4096** characters.\n\nIt is a README.md-like content for additional information, links, pre-conditions, and other instructions. It will be rendered as Markdown so that it can contain line breaks, links, and other simple formatting.",
+          "type": "string",
+          "default": ""
+        },
+        "icon": {
+          "description": "icon is an optional base64 encoded image and shown beside the sample title.\n\nThe format must follow the data: URL format and can have a maximum size of **10 KB**.\n\n  data:[<mediatype>][;base64],<base64 encoded image>\n\nFor example:\n\n  data:image;base64,             plus the base64 encoded image.\n\nVector images can also be used. SVG icons must start with:\n\n  data:image/svg+xml;base64,     plus the base64 encoded SVG image.\n\nAll sample catalog icons will be shown on a white background (also when the dark theme is used). The web console ensures that different aspect ratios work correctly. Currently, the surface of the icon is at most 40x100px.\n\nFor more information on the data URL format, please visit https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs.",
+          "type": "string",
+          "default": ""
+        },
+        "provider": {
+          "description": "provider is an optional label to honor who provides the sample.\n\nIt is optional and must be no more than 50 characters in length.\n\nA provider can be a company like \"Red Hat\" or an organization like \"CNCF\" or \"Knative\".\n\nCurrently, the provider is only shown on the sample card tile below the title with the prefix \"Provided by \"",
+          "type": "string",
+          "default": ""
+        },
+        "source": {
+          "description": "source defines where to deploy the sample service from. The sample may be sourced from an external git repository or container image.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleSource"
+        },
+        "tags": {
+          "description": "tags are optional string values that can be used to find samples in the samples catalog.\n\nExamples of common tags may be \"Java\", \"Quarkus\", etc.\n\nThey will be displayed on the samples details page.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "title": {
+          "description": "title is the display name of the sample.\n\nIt is required and must be no more than 50 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "type": {
+          "description": "type is an optional label to group multiple samples.\n\nIt is optional and must be no more than 20 characters in length.\n\nRecommendation is a singular term like \"Builder Image\", \"Devfile\" or \"Serverless Function\".\n\nCurrently, the type is shown a badge on the sample card tile in the top right corner.",
           "type": "string",
           "default": ""
         }
@@ -18873,6 +19263,17 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.ConfidentialVM": {
+      "description": "ConfidentialVM defines the UEFI settings for the virtual machine.",
+      "type": "object",
+      "properties": {
+        "uefiSettings": {
+          "description": "uefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.UEFISettings"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.DataDisk": {
       "description": "DataDisk specifies the parameters that are used to add one or more data disks to the machine. A Data Disk is a managed disk that's attached to a virtual machine to store application data. It differs from an OS Disk as it doesn't come with a pre-installed OS, and it cannot contain the boot volume. It is registered as SCSI drive and labeled with the chosen `lun`. e.g. for `lun: 0` the raw disk device will be available at `/dev/disk/azure/scsi1/lun0`.\n\nAs the Data Disk disk device is attached raw to the virtual machine, it will need to be partitioned, formatted with a filesystem and mounted, in order for it to be usable. This can be done by creating a custom userdata Secret with custom Ignition configuration to achieve the desired initialization. At this stage the previously defined `lun` is to be used as the \"device\" key for referencing the raw disk device to be initialized. Once the custom userdata Secret has been created, it can be referenced in the Machine's `.providerSpec.userDataSecret`. For further guidance and examples, please refer to the official OpenShift docs.",
       "type": "object",
@@ -20042,6 +20443,11 @@
           "description": "DiskEncryptionSet is the disk encryption set properties",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DiskEncryptionSetParameters"
         },
+        "securityProfile": {
+          "description": "securityProfile specifies the security profile for the managed disk.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.VMDiskSecurityProfile"
+        },
         "storageAccountType": {
           "description": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
           "type": "string",
@@ -20126,10 +20532,42 @@
       "type": "object",
       "properties": {
         "encryptionAtHost": {
-          "description": "This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. Default is disabled.",
+          "description": "encryptionAtHost indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.",
           "type": "boolean"
+        },
+        "settings": {
+          "description": "settings specify the security type and the UEFI settings of the virtual machine. This field can be set for Confidential VMs and Trusted Launch for VMs.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.SecuritySettings"
         }
       }
+    },
+    "com.github.openshift.api.machine.v1beta1.SecuritySettings": {
+      "description": "SecuritySettings define the security type and the UEFI settings of the virtual machine.",
+      "type": "object",
+      "properties": {
+        "confidentialVM": {
+          "description": "confidentialVM specifies the security configuration of the virtual machine. For more information regarding Confidential VMs, please refer to: https://learn.microsoft.com/azure/confidential-computing/confidential-vm-overview",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.ConfidentialVM"
+        },
+        "securityType": {
+          "description": "securityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UEFISettings. The default behavior is: UEFISettings will not be enabled unless this property is set.",
+          "type": "string"
+        },
+        "trustedLaunch": {
+          "description": "trustedLaunch specifies the security configuration of the virtual machine. For more information regarding TrustedLaunch for VMs, please refer to: https://learn.microsoft.com/azure/virtual-machines/trusted-launch",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.TrustedLaunch"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "securityType",
+          "fields-to-discriminateBy": {
+            "confidentialVM": "ConfidentialVM",
+            "trustedLaunch": "TrustedLaunch"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.machine.v1beta1.SpotMarketOptions": {
       "description": "SpotMarketOptions defines the options available to a user when configuring Machines to run on Spot instances. Most users should provide an empty struct.",
@@ -20171,6 +20609,31 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.TrustedLaunch": {
+      "description": "TrustedLaunch defines the UEFI settings for the virtual machine.",
+      "type": "object",
+      "properties": {
+        "uefiSettings": {
+          "description": "uefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.UEFISettings"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.UEFISettings": {
+      "description": "UEFISettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+      "type": "object",
+      "properties": {
+        "secureBoot": {
+          "description": "secureBoot specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is disabled.",
+          "type": "string"
+        },
+        "virtualizedTrustedPlatformModule": {
+          "description": "virtualizedTrustedPlatformModule specifies whether vTPM should be enabled on the virtual machine. When enabled the virtualized trusted platform module measurements are used to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is disabled.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.UnhealthyCondition": {
       "description": "UnhealthyCondition represents a Node condition type and value with a timeout specified as a duration.  When the named condition has been in the given status for at least the timeout value, a node is considered unhealthy.",
       "type": "object",
@@ -20192,6 +20655,21 @@
         "type": {
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.VMDiskSecurityProfile": {
+      "description": "VMDiskSecurityProfile specifies the security profile settings for the managed disk. It can be set only for Confidential VMs.",
+      "type": "object",
+      "properties": {
+        "diskEncryptionSet": {
+          "description": "diskEncryptionSet specifies the customer managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DiskEncryptionSetParameters"
+        },
+        "securityEncryptionType": {
+          "description": "securityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, the vTPM should be enabled. When set to DiskWithVMGuestState, both SecureBoot and vTPM should be enabled. If the above conditions are not fulfilled, the VM will not be created and the respective error will be returned. It can be set only for Confidential VMs. Confidential VMs are defined by their SecurityProfile.SecurityType being set to ConfidentialVM, the SecurityEncryptionType of their OS disk being set to one of the allowed values and by enabling the respective SecurityProfile.UEFISettings of the VM (i.e. vTPM and SecureBoot), depending on the selected SecurityEncryptionType. For further details on Azure Confidential VMs, please refer to the respective documentation: https://learn.microsoft.com/azure/confidential-computing/confidential-vm-overview",
+          "type": "string"
         }
       }
     },
@@ -21926,6 +22404,22 @@
         }
       }
     },
+    "com.github.openshift.api.openshiftcontrolplane.v1.APIServers": {
+      "type": "object",
+      "required": [
+        "perGroupOptions"
+      ],
+      "properties": {
+        "perGroupOptions": {
+          "description": "perGroupOptions is a list of enabled/disabled API servers in addition to the defaults",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.openshiftcontrolplane.v1.PerGroupOptions"
+          }
+        }
+      }
+    },
     "com.github.openshift.api.openshiftcontrolplane.v1.BuildControllerConfig": {
       "type": "object",
       "required": [
@@ -22367,7 +22861,8 @@
         "serviceAccountOAuthGrantMethod",
         "jenkinsPipelineConfig",
         "cloudProviderFile",
-        "apiServerArguments"
+        "apiServerArguments",
+        "apiServers"
       ],
       "properties": {
         "admission": {
@@ -22389,6 +22884,11 @@
               "default": ""
             }
           }
+        },
+        "apiServers": {
+          "description": "apiServers holds information about enabled/disabled API servers",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.openshiftcontrolplane.v1.APIServers"
         },
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -22554,6 +23054,37 @@
         "servingInfo": {
           "description": "servingInfo describes how to start serving",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTPServingInfo"
+        }
+      }
+    },
+    "com.github.openshift.api.openshiftcontrolplane.v1.PerGroupOptions": {
+      "type": "object",
+      "required": [
+        "name",
+        "enabledVersions",
+        "disabledVersions"
+      ],
+      "properties": {
+        "disabledVersions": {
+          "description": "disabledVersions is a list of versions that must be disabled in addition to the defaults. Must not collide with the list of enabled versions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "enabledVersions": {
+          "description": "enabledVersions is a list of versions that must be enabled in addition to the defaults. Must not collide with the list of disabled versions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "name is an API server name (see OpenShiftAPIserverName typed constants for a complete list of available API servers).",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -27146,7 +27677,7 @@
           "format": "int64"
         },
         "maxLogFiles": {
-          "description": "maxLogFiles specifies the maximum number of ACL_audit log files that can be present. Default: 5",
+          "description": "maxLogFiles specifies the maximum number of ACL_audit log files that can be present.",
           "type": "integer",
           "format": "int32"
         },
@@ -28214,6 +28745,26 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.BackupJobReference": {
+      "description": "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
+      "type": "object",
+      "required": [
+        "namespace",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the Job. Required",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.DelegatedAuthentication": {
       "description": "DelegatedAuthentication allows authentication to be disabled.",
       "type": "object",
@@ -28231,6 +28782,102 @@
         "disabled": {
           "description": "disabled indicates that authorization should be disabled.  By default it will use delegated authorization.",
           "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackup": {
+      "description": "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupList": {
+      "description": "EtcdBackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackup"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec": {
+      "type": "object",
+      "properties": {
+        "pvcName": {
+          "description": "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus": {
+      "type": "object",
+      "required": [
+        "backupJob"
+      ],
+      "properties": {
+        "backupJob": {
+          "description": "backupJob is the reference to the Job that executes the backup. Optional",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.BackupJobReference"
+        },
+        "conditions": {
+          "description": "conditions provide details on the status of the etcd backup job.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         }
       }
     },
@@ -30569,6 +31216,17 @@
         }
       }
     },
+    "com.github.openshift.api.route.v1.LocalObjectReference": {
+      "description": "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
+    },
     "com.github.openshift.api.route.v1.Route": {
       "description": "A route allows developers to expose services through an HTTP(S) aware load balancing and proxy layer via a public DNS entry. The route may further specify TLS options and a certificate, or specify a public CNAME that the router should also accept for HTTP and HTTPS traffic. An administrator typically configures their router to be visible outside the cluster firewall, and may also add additional security, caching, or traffic controls on the service content. Routers usually talk directly to the service endpoints.\n\nOnce a route is created, the `host` field may not be changed. Generally, routers use the oldest route with a given host when resolving conflicts.\n\nRouters are subject to additional customization and may support additional controls via the annotations field.\n\nBecause administrators may configure multiple routers, the route status field is used to return information to clients about the names and states of the route under each router. If a client chooses a duplicate name, for instance, the route status conditions are used to indicate the route cannot be chosen.\n\nTo enable HTTP/2 ALPN on a route it requires a custom (non-wildcard) certificate. This prevents connection coalescing by clients, notably web browsers. We do not support HTTP/2 ALPN on routes that use the default certificate because of the risk of connection re-use/coalescing. Routes that do not have their own custom certificate will not be HTTP/2 ALPN-enabled on either the frontend or the backend.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -30830,6 +31488,11 @@
         "destinationCACertificate": {
           "description": "destinationCACertificate provides the contents of the ca certificate of the final destination.  When using reencrypt termination this file should be provided in order to have routers use it for health checks on the secure connection. If this field is not specified, the router may provide its own destination CA and perform hostname validation using the short service name (service.namespace.svc), which allows infrastructure generated certificates to automatically verify.",
           "type": "string"
+        },
+        "externalCertificate": {
+          "description": "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.route.v1.LocalObjectReference"
         },
         "insecureEdgeTerminationPolicy": {
           "description": "insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While each router may make its own decisions on which ports to expose, this is normally port 80.\n\n* Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only) (default). * None - no traffic is allowed on the insecure port. * Redirect - clients are redirected to the secure port.",

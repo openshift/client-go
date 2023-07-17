@@ -347,12 +347,24 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.WebhookTokenAuthenticatorApplyConfiguration{}
 
 		// Group=config.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("Backup"):
+		return &configv1alpha1.BackupApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
+		return &configv1alpha1.BackupSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
+		return &configv1alpha1.EtcdBackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
 		return &configv1alpha1.GatherConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGather"):
 		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
 		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionNumberConfig"):
+		return &configv1alpha1.RetentionNumberConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
+		return &configv1alpha1.RetentionPolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionSizeConfig"):
+		return &configv1alpha1.RetentionSizeConfigApplyConfiguration{}
 
 	}
 	return nil
