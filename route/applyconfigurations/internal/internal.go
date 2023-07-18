@@ -168,7 +168,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: externalCertificate
       type:
         namedType: com.github.openshift.api.route.v1.LocalObjectReference
-      default: {}
     - name: insecureEdgeTerminationPolicy
       type:
         scalar: string
