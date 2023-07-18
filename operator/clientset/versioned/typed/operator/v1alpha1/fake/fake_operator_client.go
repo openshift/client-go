@@ -12,6 +12,10 @@ type FakeOperatorV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeOperatorV1alpha1) EtcdBackups() v1alpha1.EtcdBackupInterface {
+	return &FakeEtcdBackups{c}
+}
+
 func (c *FakeOperatorV1alpha1) ImageContentSourcePolicies() v1alpha1.ImageContentSourcePolicyInterface {
 	return &FakeImageContentSourcePolicies{c}
 }

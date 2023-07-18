@@ -23,6 +23,13 @@ func Parser() *typed.Parser {
 var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
+- name: com.github.openshift.api.route.v1.LocalObjectReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    elementRelationship: atomic
 - name: com.github.openshift.api.route.v1.Route
   map:
     fields:
@@ -158,6 +165,10 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: destinationCACertificate
       type:
         scalar: string
+    - name: externalCertificate
+      type:
+        namedType: com.github.openshift.api.route.v1.LocalObjectReference
+      default: {}
     - name: insecureEdgeTerminationPolicy
       type:
         scalar: string

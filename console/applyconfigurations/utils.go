@@ -61,6 +61,22 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &consolev1.ConsoleQuickStartTaskReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleQuickStartTaskSummary"):
 		return &consolev1.ConsoleQuickStartTaskSummaryApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSample"):
+		return &consolev1.ConsoleSampleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleContainerImportSource"):
+		return &consolev1.ConsoleSampleContainerImportSourceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleContainerImportSourceService"):
+		return &consolev1.ConsoleSampleContainerImportSourceServiceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleGitImportSource"):
+		return &consolev1.ConsoleSampleGitImportSourceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleGitImportSourceRepository"):
+		return &consolev1.ConsoleSampleGitImportSourceRepositoryApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleGitImportSourceService"):
+		return &consolev1.ConsoleSampleGitImportSourceServiceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleSource"):
+		return &consolev1.ConsoleSampleSourceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleSampleSpec"):
+		return &consolev1.ConsoleSampleSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleYAMLSample"):
 		return &consolev1.ConsoleYAMLSampleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleYAMLSampleSpec"):

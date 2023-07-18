@@ -13,6 +13,8 @@ import (
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
 	// Group=route.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("LocalObjectReference"):
+		return &routev1.LocalObjectReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Route"):
 		return &routev1.RouteApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteIngress"):
