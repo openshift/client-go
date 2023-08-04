@@ -51,58 +51,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.route.v1.RouteStatus
       default: {}
-- name: com.github.openshift.api.route.v1.RouteHTTPHeader
-  map:
-    fields:
-    - name: action
-      type:
-        namedType: com.github.openshift.api.route.v1.RouteHTTPHeaderActionUnion
-      default: {}
-    - name: name
-      type:
-        scalar: string
-      default: ""
-- name: com.github.openshift.api.route.v1.RouteHTTPHeaderActionUnion
-  map:
-    fields:
-    - name: set
-      type:
-        namedType: com.github.openshift.api.route.v1.RouteSetHTTPHeader
-    - name: type
-      type:
-        scalar: string
-      default: ""
-    unions:
-    - discriminator: type
-      fields:
-      - fieldName: set
-        discriminatorValue: Set
-- name: com.github.openshift.api.route.v1.RouteHTTPHeaderActions
-  map:
-    fields:
-    - name: request
-      type:
-        list:
-          elementType:
-            namedType: com.github.openshift.api.route.v1.RouteHTTPHeader
-          elementRelationship: associative
-          keys:
-          - name
-    - name: response
-      type:
-        list:
-          elementType:
-            namedType: com.github.openshift.api.route.v1.RouteHTTPHeader
-          elementRelationship: associative
-          keys:
-          - name
-- name: com.github.openshift.api.route.v1.RouteHTTPHeaders
-  map:
-    fields:
-    - name: actions
-      type:
-        namedType: com.github.openshift.api.route.v1.RouteHTTPHeaderActions
-      default: {}
 - name: com.github.openshift.api.route.v1.RouteIngress
   map:
     fields:
@@ -151,13 +99,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: io.k8s.apimachinery.pkg.util.intstr.IntOrString
       default: {}
-- name: com.github.openshift.api.route.v1.RouteSetHTTPHeader
-  map:
-    fields:
-    - name: value
-      type:
-        scalar: string
-      default: ""
 - name: com.github.openshift.api.route.v1.RouteSpec
   map:
     fields:
@@ -170,9 +111,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: host
       type:
         scalar: string
-    - name: httpHeaders
-      type:
-        namedType: com.github.openshift.api.route.v1.RouteHTTPHeaders
     - name: path
       type:
         scalar: string

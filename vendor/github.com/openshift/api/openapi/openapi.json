@@ -6256,76 +6256,6 @@
           "description": "region holds the region for new GCP resources created for the cluster.",
           "type": "string",
           "default": ""
-        },
-        "resourceLabels": {
-          "description": "resourceLabels is a list of additional labels to apply to GCP resources created for the cluster. See https://cloud.google.com/compute/docs/labeling-resources for information on labeling GCP resources. GCP supports a maximum of 64 labels per resource. OpenShift reserves 32 labels for internal use, allowing 32 labels for user configuration.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.GCPResourceLabel"
-          },
-          "x-kubernetes-list-map-keys": [
-            "key"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "resourceTags": {
-          "description": "resourceTags is a list of additional tags to apply to GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.GCPResourceTag"
-          },
-          "x-kubernetes-list-map-keys": [
-            "key"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.GCPResourceLabel": {
-      "description": "GCPResourceLabel is a label to apply to GCP resources created for the cluster.",
-      "type": "object",
-      "required": [
-        "key",
-        "value"
-      ],
-      "properties": {
-        "key": {
-          "description": "key is the key part of the label. A label key can have a maximum of 63 characters and cannot be empty. Label key must begin with a lowercase letter, and must contain only lowercase letters, numeric characters, and the following special characters `_-`. Label key must not have the reserved prefixes `kubernetes-io` and `openshift-io`.",
-          "type": "string",
-          "default": ""
-        },
-        "value": {
-          "description": "value is the value part of the label. A label value can have a maximum of 63 characters and cannot be empty. Value must contain only lowercase letters, numeric characters, and the following special characters `_-`.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.GCPResourceTag": {
-      "description": "GCPResourceTag is a tag to apply to GCP resources created for the cluster.",
-      "type": "object",
-      "required": [
-        "parentID",
-        "key",
-        "value"
-      ],
-      "properties": {
-        "key": {
-          "description": "key is the key part of the tag. A tag key can have a maximum of 63 characters and cannot be empty. Tag key must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `._-`.",
-          "type": "string",
-          "default": ""
-        },
-        "parentID": {
-          "description": "parentID is the ID of the hierarchical resource where the tags are defined, e.g. at the Organization or the Project level. To find the Organization or Project ID refer to the following pages: https://cloud.google.com/resource-manager/docs/creating-managing-organization#retrieving_your_organization_id, https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects. An OrganizationID must consist of decimal numbers, and cannot have leading zeroes. A ProjectID must be 6 to 30 characters in length, can only contain lowercase letters, numbers, and hyphens, and must start with a letter, and cannot end with a hyphen.",
-          "type": "string",
-          "default": ""
-        },
-        "value": {
-          "description": "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -18164,18 +18094,14 @@
     "com.github.openshift.api.machine.v1.RootVolume": {
       "description": "RootVolume represents the volume metadata to boot from. The original RootVolume struct is defined in the v1alpha1 but it's not best practice to use it directly here so we define a new one that should stay in sync with the original one.",
       "type": "object",
-      "required": [
-        "volumeType"
-      ],
       "properties": {
         "availabilityZone": {
           "description": "availabilityZone specifies the Cinder availability zone where the root volume will be created. If not specifified, the root volume will be created in the availability zone specified by the volume type in the cinder configuration. If the volume type (configured in the OpenStack cluster) does not specify an availability zone, the root volume will be created in the default availability zone specified in the cinder configuration. See https://docs.openstack.org/cinder/latest/admin/availability-zone-type.html for more details. If the OpenStack cluster is deployed with the cross_az_attach configuration option set to false, the root volume will have to be in the same availability zone as the VM (defined by OpenStackFailureDomain.AvailabilityZone). Availability zone names must NOT contain spaces otherwise it will lead to volume that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information. The maximum length of availability zone name is 63 as per labels limits.",
           "type": "string"
         },
         "volumeType": {
-          "description": "volumeType specifies the type of the root volume that will be provisioned. The maximum length of a volume type name is 255 characters, as per the OpenStack limit.",
-          "type": "string",
-          "default": ""
+          "description": "volumeType specifies the type of the root volume that will be provisioned. If not specifified, the root volume will be created as the type in the machine template. The maximum length of a volume type name is 255 characters, as per the OpenStack limit.",
+          "type": "string"
         }
       }
     },
@@ -25569,91 +25495,10 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1.IngressControllerHTTPHeader": {
-      "description": "IngressControllerHTTPHeader specifies configuration for setting or deleting an HTTP header.",
-      "type": "object",
-      "required": [
-        "name",
-        "action"
-      ],
-      "properties": {
-        "action": {
-          "description": "action specifies actions to perform on headers, such as setting or deleting headers.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeaderActionUnion"
-        },
-        "name": {
-          "description": "name specifies the name of a header on which to perform an action. Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2. The name must consist only of alphanumeric and the following special characters, \"-!#$%&'*+.^_`\". The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Host, Cookie, Set-Cookie. It must be no more than 1024 characters in length. Header name must be unique.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.operator.v1.IngressControllerHTTPHeaderActionUnion": {
-      "description": "IngressControllerHTTPHeaderActionUnion specifies an action to take on an HTTP header.",
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "set": {
-          "description": "set specifies how the HTTP header should be set. This field is required when type is Set and forbidden otherwise.",
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerSetHTTPHeader"
-        },
-        "type": {
-          "description": "type defines the type of the action to be applied on the header. Possible values are Set or Delete. Set allows you to set HTTP request and response headers. Delete allows you to delete HTTP request and response headers.",
-          "type": "string",
-          "default": ""
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "type",
-          "fields-to-discriminateBy": {
-            "set": "Set"
-          }
-        }
-      ]
-    },
-    "com.github.openshift.api.operator.v1.IngressControllerHTTPHeaderActions": {
-      "description": "IngressControllerHTTPHeaderActions defines configuration for actions on HTTP request and response headers.",
-      "type": "object",
-      "properties": {
-        "request": {
-          "description": "request is a list of HTTP request headers to modify. Actions defined here will modify the request headers of all requests passing through an ingress controller. These actions are applied to all Routes i.e. for all connections handled by the ingress controller defined within a cluster. IngressController actions for request headers will be executed before Route actions. Currently, actions may define to either `Set` or `Delete` headers values. Actions are applied in sequence as defined in this list. A maximum of 20 request header actions may be configured. Sample fetchers allowed are \"req.hdr\" and \"ssl_c_der\". Converters allowed are \"lower\" and \"base64\". Example header values: \"%[req.hdr(X-target),lower]\", \"%{+Q}[ssl_c_der,base64]\".",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeader"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "response": {
-          "description": "response is a list of HTTP response headers to modify. Actions defined here will modify the response headers of all requests passing through an ingress controller. These actions are applied to all Routes i.e. for all connections handled by the ingress controller defined within a cluster. IngressController actions for response headers will be executed after Route actions. Currently, actions may define to either `Set` or `Delete` headers values. Actions are applied in sequence as defined in this list. A maximum of 20 response header actions may be configured. Sample fetchers allowed are \"res.hdr\" and \"ssl_c_der\". Converters allowed are \"lower\" and \"base64\". Example header values: \"%[res.hdr(X-target),lower]\", \"%{+Q}[ssl_c_der,base64]\".",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeader"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1.IngressControllerHTTPHeaders": {
       "description": "IngressControllerHTTPHeaders specifies how the IngressController handles certain HTTP headers.",
       "type": "object",
       "properties": {
-        "actions": {
-          "description": "actions specifies options for modifying headers and their values. Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be modified for TLS passthrough connections. Setting the HSTS (`Strict-Transport-Security`) header is not supported via actions. `Strict-Transport-Security` may only be configured using the \"haproxy.router.openshift.io/hsts_header\" route annotation, and only in accordance with the policy specified in Ingress.Spec.RequiredHSTSPolicies. Any actions defined here are applied after any actions related to the following other fields: cache-control, spec.clientTLS, spec.httpHeaders.forwardedHeaderPolicy, spec.httpHeaders.uniqueId, and spec.httpHeaders.headerNameCaseAdjustments. In case of HTTP request headers, the actions specified in spec.httpHeaders.actions on the Route will be executed after the actions specified in the IngressController's spec.httpHeaders.actions field. In case of HTTP response headers, the actions specified in spec.httpHeaders.actions on the IngressController will be executed after the actions specified in the Route's spec.httpHeaders.actions field. Headers set using this API cannot be captured for use in access logs. The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Host, Cookie, Set-Cookie. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController. Please refer to the documentation for that API field for more details.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeaderActions"
-        },
         "forwardedHeaderPolicy": {
           "description": "forwardedHeaderPolicy specifies when and how the IngressController sets the Forwarded, X-Forwarded-For, X-Forwarded-Host, X-Forwarded-Port, X-Forwarded-Proto, and X-Forwarded-Proto-Version HTTP headers.  The value may be one of the following:\n\n* \"Append\", which specifies that the IngressController appends the\n  headers, preserving existing headers.\n\n* \"Replace\", which specifies that the IngressController sets the\n  headers, replacing any existing Forwarded or X-Forwarded-* headers.\n\n* \"IfNone\", which specifies that the IngressController sets the\n  headers if they are not already set.\n\n* \"Never\", which specifies that the IngressController never sets the\n  headers, preserving any existing headers.\n\nBy default, the policy is \"Append\".",
           "type": "string"
@@ -25723,20 +25568,6 @@
         "access": {
           "description": "access describes how the client requests should be logged.\n\nIf this field is empty, access logging is disabled.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AccessLogging"
-        }
-      }
-    },
-    "com.github.openshift.api.operator.v1.IngressControllerSetHTTPHeader": {
-      "description": "IngressControllerSetHTTPHeader defines the value which needs to be set on an HTTP header.",
-      "type": "object",
-      "required": [
-        "value"
-      ],
-      "properties": {
-        "value": {
-          "description": "value specifies a header value. Dynamic values can be added. The value will be interpreted as an HAProxy format string as defined in http://cbonte.github.io/haproxy-dconv/2.6/configuration.html#8.2.6  and may use HAProxy's %[] syntax and otherwise must be a valid HTTP header value as defined in https://datatracker.ietf.org/doc/html/rfc7230#section-3.2. The value of this field must be no more than 16384 characters in length. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController.",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -26886,6 +26717,175 @@
           "description": "to is the MTU to migrate to.",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineConfiguration": {
+      "description": "MachineConfiguration provides information to configure an operator to manage Machine Configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the Machine Config Operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfigurationSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the Machine Config Operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfigurationStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineConfigurationList": {
+      "description": "MachineConfigurationList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "Items contains the items",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfiguration"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineConfigurationSpec": {
+      "type": "object",
+      "required": [
+        "managementState",
+        "forceRedeploymentReason"
+      ],
+      "properties": {
+        "failedRevisionLimit": {
+          "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "forceRedeploymentReason": {
+          "description": "forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
+          "type": "string",
+          "default": ""
+        },
+        "logLevel": {
+          "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+          "type": "string"
+        },
+        "managementState": {
+          "description": "managementState indicates whether and how the operator should manage the component",
+          "type": "string",
+          "default": ""
+        },
+        "observedConfig": {
+          "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "operatorLogLevel": {
+          "description": "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+          "type": "string"
+        },
+        "succeededRevisionLimit": {
+          "description": "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "unsupportedConfigOverrides": {
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
+      "type": "object",
+      "required": [
+        "readyReplicas"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
+          }
+        },
+        "generations": {
+          "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
+          }
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "latestAvailableRevisionReason": {
+          "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
+          "type": "string",
+          "default": ""
+        },
+        "nodeStatuses": {
+          "description": "nodeStatuses track the deployment values and errors across individual nodes",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
+          }
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the last generation change you've dealt with",
+          "type": "integer",
+          "format": "int64"
+        },
+        "readyReplicas": {
+          "description": "readyReplicas indicates how many replicas are ready and at the desired state",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "version": {
+          "description": "version is the level this availability applies to",
+          "type": "string"
         }
       }
     },
@@ -31428,93 +31428,6 @@
         }
       }
     },
-    "com.github.openshift.api.route.v1.RouteHTTPHeader": {
-      "description": "RouteHTTPHeader specifies configuration for setting or deleting an HTTP header.",
-      "type": "object",
-      "required": [
-        "name",
-        "action"
-      ],
-      "properties": {
-        "action": {
-          "description": "action specifies actions to perform on headers, such as setting or deleting headers.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteHTTPHeaderActionUnion"
-        },
-        "name": {
-          "description": "name specifies the name of a header on which to perform an action. Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2. The name must consist only of alphanumeric and the following special characters, \"-!#$%&'*+.^_`\". The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Cookie, Set-Cookie. It must be no more than 1024 characters in length. Header name must be unique.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.route.v1.RouteHTTPHeaderActionUnion": {
-      "description": "RouteHTTPHeaderActionUnion specifies an action to take on an HTTP header.",
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "set": {
-          "description": "set defines the HTTP header that should be set: added if it doesn't exist or replaced if it does. This field is required when type is Set and forbidden otherwise.",
-          "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteSetHTTPHeader"
-        },
-        "type": {
-          "description": "type defines the type of the action to be applied on the header. Possible values are Set or Delete. Set allows you to set HTTP request and response headers. Delete allows you to delete HTTP request and response headers.",
-          "type": "string",
-          "default": ""
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "type",
-          "fields-to-discriminateBy": {
-            "set": "Set"
-          }
-        }
-      ]
-    },
-    "com.github.openshift.api.route.v1.RouteHTTPHeaderActions": {
-      "description": "RouteHTTPHeaderActions defines configuration for actions on HTTP request and response headers.",
-      "type": "object",
-      "properties": {
-        "request": {
-          "description": "request is a list of HTTP request headers to modify. Currently, actions may define to either `Set` or `Delete` headers values. Actions defined here will modify the request headers of all requests made through a route. These actions are applied to a specific Route defined within a cluster i.e. connections made through a route. Currently, actions may define to either `Set` or `Delete` headers values. Route actions will be executed after IngressController actions for request headers. Actions are applied in sequence as defined in this list. A maximum of 20 request header actions may be configured. You can use this field to specify HTTP request headers that should be set or deleted when forwarding connections from the client to your application. Sample fetchers allowed are \"req.hdr\" and \"ssl_c_der\". Converters allowed are \"lower\" and \"base64\". Example header values: \"%[req.hdr(X-target),lower]\", \"%{+Q}[ssl_c_der,base64]\". Any request header configuration applied directly via a Route resource using this API will override header configuration for a header of the same name applied via spec.httpHeaders.actions on the IngressController or route annotation. Note: This field cannot be used if your route uses TLS passthrough.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteHTTPHeader"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "response": {
-          "description": "response is a list of HTTP response headers to modify. Currently, actions may define to either `Set` or `Delete` headers values. Actions defined here will modify the response headers of all requests made through a route. These actions are applied to a specific Route defined within a cluster i.e. connections made through a route. Route actions will be executed before IngressController actions for response headers. Actions are applied in sequence as defined in this list. A maximum of 20 response header actions may be configured. You can use this field to specify HTTP response headers that should be set or deleted when forwarding responses from your application to the client. Sample fetchers allowed are \"res.hdr\" and \"ssl_c_der\". Converters allowed are \"lower\" and \"base64\". Example header values: \"%[res.hdr(X-target),lower]\", \"%{+Q}[ssl_c_der,base64]\". Note: This field cannot be used if your route uses TLS passthrough.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteHTTPHeader"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.route.v1.RouteHTTPHeaders": {
-      "description": "RouteHTTPHeaders defines policy for HTTP headers.",
-      "type": "object",
-      "properties": {
-        "actions": {
-          "description": "actions specifies options for modifying headers and their values. Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be modified for TLS passthrough connections. Setting the HSTS (`Strict-Transport-Security`) header is not supported via actions. `Strict-Transport-Security` may only be configured using the \"haproxy.router.openshift.io/hsts_header\" route annotation, and only in accordance with the policy specified in Ingress.Spec.RequiredHSTSPolicies. In case of HTTP request headers, the actions specified in spec.httpHeaders.actions on the Route will be executed after the actions specified in the IngressController's spec.httpHeaders.actions field. In case of HTTP response headers, the actions specified in spec.httpHeaders.actions on the IngressController will be executed after the actions specified in the Route's spec.httpHeaders.actions field. The headers set via this API will not appear in access logs. Any actions defined here are applied after any actions related to the following other fields: cache-control, spec.clientTLS, spec.httpHeaders.forwardedHeaderPolicy, spec.httpHeaders.uniqueId, and spec.httpHeaders.headerNameCaseAdjustments. The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Cookie, Set-Cookie. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController. Please refer to the documentation for that API field for more details.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteHTTPHeaderActions"
-        }
-      }
-    },
     "com.github.openshift.api.route.v1.RouteIngress": {
       "description": "RouteIngress holds information about the places where a route is exposed.",
       "type": "object",
@@ -31621,20 +31534,6 @@
         }
       }
     },
-    "com.github.openshift.api.route.v1.RouteSetHTTPHeader": {
-      "description": "RouteSetHTTPHeader specifies what value needs to be set on an HTTP header.",
-      "type": "object",
-      "required": [
-        "value"
-      ],
-      "properties": {
-        "value": {
-          "description": "value specifies a header value. Dynamic values can be added. The value will be interpreted as an HAProxy format string as defined in http://cbonte.github.io/haproxy-dconv/2.6/configuration.html#8.2.6 and may use HAProxy's %[] syntax and otherwise must be a valid HTTP header value as defined in https://datatracker.ietf.org/doc/html/rfc7230#section-3.2. The value of this field must be no more than 16384 characters in length. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.route.v1.RouteSpec": {
       "description": "RouteSpec describes the hostname or path the route exposes, any security information, and one to four backends (services) the route points to. Requests are distributed among the backends depending on the weights assigned to each backend. When using roundrobin scheduling the portion of requests that go to each backend is the backend weight divided by the sum of all of the backend weights. When the backend has more than one endpoint the requests that end up on the backend are roundrobin distributed among the endpoints. Weights are between 0 and 256 with default 100. Weight 0 causes no requests to the backend. If all weights are zero the route will be considered to have no backends and return a standard 503 response.\n\nThe `tls` field is optional and allows specific certificates or behavior for the route. Routers typically configure a default certificate on a wildcard domain to terminate routes without explicit certificates, but custom hostnames usually must choose passthrough (send traffic directly to the backend via the TLS Server-Name- Indication field) or provide a certificate.",
       "type": "object",
@@ -31653,10 +31552,6 @@
         "host": {
           "description": "host is an alias/DNS that points to the service. Optional. If not specified a route name will typically be automatically chosen. Must follow DNS952 subdomain conventions.",
           "type": "string"
-        },
-        "httpHeaders": {
-          "description": "httpHeaders defines policy for HTTP headers.",
-          "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteHTTPHeaders"
         },
         "path": {
           "description": "path that the router watches for, to route traffic for to the service. Optional",
@@ -31776,7 +31671,7 @@
           "type": "string"
         },
         "termination": {
-          "description": "termination indicates termination type.\n\n* edge - TLS termination is done by the router and http is used to communicate with the backend (default) * passthrough - Traffic is sent straight to the destination without the router providing TLS termination * reencrypt - TLS termination is done by the router and https is used to communicate with the backend\n\nNote: passthrough termination is incompatible with httpHeader actions",
+          "description": "termination indicates termination type.\n\n* edge - TLS termination is done by the router and http is used to communicate with the backend (default) * passthrough - Traffic is sent straight to the destination without the router providing TLS termination * reencrypt - TLS termination is done by the router and https is used to communicate with the backend",
           "type": "string",
           "default": ""
         }

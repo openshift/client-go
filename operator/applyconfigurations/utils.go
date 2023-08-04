@@ -155,20 +155,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IngressControllerCaptureHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerCaptureHTTPHeaders"):
 		return &operatorv1.IngressControllerCaptureHTTPHeadersApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeader"):
-		return &operatorv1.IngressControllerHTTPHeaderApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeaderActions"):
-		return &operatorv1.IngressControllerHTTPHeaderActionsApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeaderActionUnion"):
-		return &operatorv1.IngressControllerHTTPHeaderActionUnionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeaders"):
 		return &operatorv1.IngressControllerHTTPHeadersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPUniqueIdHeaderPolicy"):
 		return &operatorv1.IngressControllerHTTPUniqueIdHeaderPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerLogging"):
 		return &operatorv1.IngressControllerLoggingApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("IngressControllerSetHTTPHeader"):
-		return &operatorv1.IngressControllerSetHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerSpec"):
 		return &operatorv1.IngressControllerSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerStatus"):
@@ -217,6 +209,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.LoadBalancerStrategyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LoggingDestination"):
 		return &operatorv1.LoggingDestinationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfiguration"):
+		return &operatorv1.MachineConfigurationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfigurationSpec"):
+		return &operatorv1.MachineConfigurationSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfigurationStatus"):
+		return &operatorv1.MachineConfigurationStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MTUMigration"):
 		return &operatorv1.MTUMigrationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MTUMigrationValues"):

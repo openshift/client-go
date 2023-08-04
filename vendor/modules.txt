@@ -76,7 +76,7 @@ github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 ## explicit
 github.com/munnerz/goautoneg
-# github.com/openshift/api v0.0.0-20230807121159-a81c3efc8824
+# github.com/openshift/api v0.0.0-20230807121159-a81c3efc8824 => github.com/jkyros/api v0.0.0-20230804193108-c3f001422ebe
 ## explicit; go 1.20
 github.com/openshift/api/apiserver/v1
 github.com/openshift/api/apps/v1
@@ -475,3 +475,4 @@ sigs.k8s.io/structured-merge-diff/v4/value
 sigs.k8s.io/yaml
 # k8s.io/code-generator => github.com/openshift/kubernetes-code-generator v0.0.0-20220822200235-042483082c5e
 # k8s.io/kube-openapi => github.com/openshift/kube-openapi v0.0.0-20230324164143-98c122c21a89
+# github.com/openshift/api => github.com/jkyros/api v0.0.0-20230804193108-c3f001422ebe
