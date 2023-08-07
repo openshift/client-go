@@ -1173,6 +1173,48 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: resourceLabels
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.GCPResourceLabel
+          elementRelationship: associative
+          keys:
+          - key
+    - name: resourceTags
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.GCPResourceTag
+          elementRelationship: associative
+          keys:
+          - key
+- name: com.github.openshift.api.config.v1.GCPResourceLabel
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.GCPResourceTag
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: parentID
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.config.v1.GitHubIdentityProvider
   map:
     fields:

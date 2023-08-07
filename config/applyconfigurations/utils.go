@@ -151,6 +151,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.FeatureGateStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPPlatformStatus"):
 		return &configv1.GCPPlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GCPResourceLabel"):
+		return &configv1.GCPResourceLabelApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GCPResourceTag"):
+		return &configv1.GCPResourceTagApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GitHubIdentityProvider"):
 		return &configv1.GitHubIdentityProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GitLabIdentityProvider"):

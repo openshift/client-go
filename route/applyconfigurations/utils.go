@@ -17,12 +17,22 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &routev1.LocalObjectReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Route"):
 		return &routev1.RouteApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RouteHTTPHeader"):
+		return &routev1.RouteHTTPHeaderApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RouteHTTPHeaderActions"):
+		return &routev1.RouteHTTPHeaderActionsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RouteHTTPHeaderActionUnion"):
+		return &routev1.RouteHTTPHeaderActionUnionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RouteHTTPHeaders"):
+		return &routev1.RouteHTTPHeadersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteIngress"):
 		return &routev1.RouteIngressApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteIngressCondition"):
 		return &routev1.RouteIngressConditionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RoutePort"):
 		return &routev1.RoutePortApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("RouteSetHTTPHeader"):
+		return &routev1.RouteSetHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteSpec"):
 		return &routev1.RouteSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RouteStatus"):
