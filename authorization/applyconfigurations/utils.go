@@ -21,14 +21,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &authorizationv1.ClusterRoleBindingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GroupRestriction"):
 		return &authorizationv1.GroupRestrictionApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("LocalResourceAccessReview"):
-		return &authorizationv1.LocalResourceAccessReviewApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("LocalSubjectAccessReview"):
-		return &authorizationv1.LocalSubjectAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PolicyRule"):
 		return &authorizationv1.PolicyRuleApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("ResourceAccessReview"):
-		return &authorizationv1.ResourceAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Role"):
 		return &authorizationv1.RoleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RoleBinding"):
@@ -41,8 +35,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &authorizationv1.ServiceAccountReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ServiceAccountRestriction"):
 		return &authorizationv1.ServiceAccountRestrictionApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("SubjectAccessReview"):
-		return &authorizationv1.SubjectAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UserRestriction"):
 		return &authorizationv1.UserRestrictionApplyConfiguration{}
 
