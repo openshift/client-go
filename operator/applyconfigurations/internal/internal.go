@@ -1083,6 +1083,10 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.EtcdSpec
   map:
     fields:
+    - name: controlPlaneHardwareSpeed
+      type:
+        scalar: string
+      default: ""
     - name: failedRevisionLimit
       type:
         scalar: numeric
@@ -1120,6 +1124,10 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: com.github.openshift.api.operator.v1.OperatorCondition
           elementRelationship: atomic
+    - name: controlPlaneHardwareSpeed
+      type:
+        scalar: string
+      default: ""
     - name: generations
       type:
         list:
@@ -1230,6 +1238,14 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: ipForwarding
       type:
         scalar: string
+    - name: ipv4
+      type:
+        namedType: com.github.openshift.api.operator.v1.IPv4GatewayConfig
+      default: {}
+    - name: ipv6
+      type:
+        namedType: com.github.openshift.api.operator.v1.IPv6GatewayConfig
+      default: {}
     - name: routingViaHost
       type:
         scalar: boolean
@@ -1385,6 +1401,18 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
+- name: com.github.openshift.api.operator.v1.IPv4GatewayConfig
+  map:
+    fields:
+    - name: internalMasqueradeSubnet
+      type:
+        scalar: string
+- name: com.github.openshift.api.operator.v1.IPv6GatewayConfig
+  map:
+    fields:
+    - name: internalMasqueradeSubnet
+      type:
+        scalar: string
 - name: com.github.openshift.api.operator.v1.IngressController
   map:
     fields:

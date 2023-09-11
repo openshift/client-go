@@ -84,6 +84,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.machine.v1.AzureFailureDomain
   map:
     fields:
+    - name: subnet
+      type:
+        scalar: string
     - name: zone
       type:
         scalar: string
