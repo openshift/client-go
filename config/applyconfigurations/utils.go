@@ -169,6 +169,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.HubSourceStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IBMCloudPlatformStatus"):
 		return &configv1.IBMCloudPlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IBMCloudServiceEndpoint"):
+		return &configv1.IBMCloudServiceEndpointApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IdentityProvider"):
 		return &configv1.IdentityProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IdentityProviderConfig"):
