@@ -3,7 +3,7 @@ module github.com/openshift/client-go
 go 1.20
 
 require (
-	github.com/openshift/api v0.0.0-20230914190027-15f6221a9976
+	github.com/openshift/api v0.0.0-20230915112357-693d4b64813c
 	github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d
 	github.com/spf13/pflag v1.0.5
 	k8s.io/api v0.28.2
@@ -50,7 +50,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/gengo v0.0.0-20220902162205-c0856e24416d // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20230905202853-d090da108d2f // indirect
+	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
 	k8s.io/utils v0.0.0-20230505201702-9f6742963106 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
