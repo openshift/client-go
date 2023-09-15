@@ -76,7 +76,7 @@ github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 ## explicit
 github.com/munnerz/goautoneg
-# github.com/openshift/api v0.0.0-20230914190027-15f6221a9976
+# github.com/openshift/api v0.0.0-20230915112357-693d4b64813c
 ## explicit; go 1.20
 github.com/openshift/api/apiserver/v1
 github.com/openshift/api/apps/v1
@@ -421,7 +421,7 @@ k8s.io/klog/v2/internal/clock
 k8s.io/klog/v2/internal/dbg
 k8s.io/klog/v2/internal/serialize
 k8s.io/klog/v2/internal/severity
-# k8s.io/kube-openapi v0.0.0-20230905202853-d090da108d2f => github.com/openshift/kube-openapi v0.0.0-20230816122517-ffc8f001abb0
+# k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 => github.com/openshift/kube-openapi v0.0.0-20230816122517-ffc8f001abb0
 ## explicit; go 1.19
 k8s.io/kube-openapi/cmd/openapi-gen/args
 k8s.io/kube-openapi/pkg/builder3/util
