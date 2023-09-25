@@ -7,11 +7,10 @@ import (
 	json "encoding/json"
 	"fmt"
 
-	monitoringv1 "github.com/openshift/api/monitoring/v1"
-	applyconfigurationsmonitoringv1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "github.com/openshift/api/monitoring/v1"
+	monitoringv1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -23,25 +22,25 @@ type FakeAlertRelabelConfigs struct {
 	ns   string
 }
 
-var alertrelabelconfigsResource = schema.GroupVersionResource{Group: "monitoring.openshift.io", Version: "v1", Resource: "alertrelabelconfigs"}
+var alertrelabelconfigsResource = v1.SchemeGroupVersion.WithResource("alertrelabelconfigs")
 
-var alertrelabelconfigsKind = schema.GroupVersionKind{Group: "monitoring.openshift.io", Version: "v1", Kind: "AlertRelabelConfig"}
+var alertrelabelconfigsKind = v1.SchemeGroupVersion.WithKind("AlertRelabelConfig")
 
 // Get takes name of the alertRelabelConfig, and returns the corresponding alertRelabelConfig object, and an error if there is any.
-func (c *FakeAlertRelabelConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AlertRelabelConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(alertrelabelconfigsResource, c.ns, name), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewGetAction(alertrelabelconfigsResource, c.ns, name), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // List takes label and field selectors, and returns the list of AlertRelabelConfigs that match those selectors.
-func (c *FakeAlertRelabelConfigs) List(ctx context.Context, opts v1.ListOptions) (result *monitoringv1.AlertRelabelConfigList, err error) {
+func (c *FakeAlertRelabelConfigs) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AlertRelabelConfigList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(alertrelabelconfigsResource, alertrelabelconfigsKind, c.ns, opts), &monitoringv1.AlertRelabelConfigList{})
+		Invokes(testing.NewListAction(alertrelabelconfigsResource, alertrelabelconfigsKind, c.ns, opts), &v1.AlertRelabelConfigList{})
 
 	if obj == nil {
 		return nil, err
@@ -51,8 +50,8 @@ func (c *FakeAlertRelabelConfigs) List(ctx context.Context, opts v1.ListOptions)
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &monitoringv1.AlertRelabelConfigList{ListMeta: obj.(*monitoringv1.AlertRelabelConfigList).ListMeta}
-	for _, item := range obj.(*monitoringv1.AlertRelabelConfigList).Items {
+	list := &v1.AlertRelabelConfigList{ListMeta: obj.(*v1.AlertRelabelConfigList).ListMeta}
+	for _, item := range obj.(*v1.AlertRelabelConfigList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -61,75 +60,75 @@ func (c *FakeAlertRelabelConfigs) List(ctx context.Context, opts v1.ListOptions)
 }
 
 // Watch returns a watch.Interface that watches the requested alertRelabelConfigs.
-func (c *FakeAlertRelabelConfigs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeAlertRelabelConfigs) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(alertrelabelconfigsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a alertRelabelConfig and creates it.  Returns the server's representation of the alertRelabelConfig, and an error, if there is any.
-func (c *FakeAlertRelabelConfigs) Create(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfig, opts v1.CreateOptions) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) Create(ctx context.Context, alertRelabelConfig *v1.AlertRelabelConfig, opts metav1.CreateOptions) (result *v1.AlertRelabelConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(alertrelabelconfigsResource, c.ns, alertRelabelConfig), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewCreateAction(alertrelabelconfigsResource, c.ns, alertRelabelConfig), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // Update takes the representation of a alertRelabelConfig and updates it. Returns the server's representation of the alertRelabelConfig, and an error, if there is any.
-func (c *FakeAlertRelabelConfigs) Update(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfig, opts v1.UpdateOptions) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) Update(ctx context.Context, alertRelabelConfig *v1.AlertRelabelConfig, opts metav1.UpdateOptions) (result *v1.AlertRelabelConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(alertrelabelconfigsResource, c.ns, alertRelabelConfig), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewUpdateAction(alertrelabelconfigsResource, c.ns, alertRelabelConfig), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeAlertRelabelConfigs) UpdateStatus(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfig, opts v1.UpdateOptions) (*monitoringv1.AlertRelabelConfig, error) {
+func (c *FakeAlertRelabelConfigs) UpdateStatus(ctx context.Context, alertRelabelConfig *v1.AlertRelabelConfig, opts metav1.UpdateOptions) (*v1.AlertRelabelConfig, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(alertrelabelconfigsResource, "status", c.ns, alertRelabelConfig), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewUpdateSubresourceAction(alertrelabelconfigsResource, "status", c.ns, alertRelabelConfig), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // Delete takes name of the alertRelabelConfig and deletes it. Returns an error if one occurs.
-func (c *FakeAlertRelabelConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeAlertRelabelConfigs) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(alertrelabelconfigsResource, c.ns, name, opts), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewDeleteActionWithOptions(alertrelabelconfigsResource, c.ns, name, opts), &v1.AlertRelabelConfig{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeAlertRelabelConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeAlertRelabelConfigs) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(alertrelabelconfigsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &monitoringv1.AlertRelabelConfigList{})
+	_, err := c.Fake.Invokes(action, &v1.AlertRelabelConfigList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched alertRelabelConfig.
-func (c *FakeAlertRelabelConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.AlertRelabelConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, name, pt, data, subresources...), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, name, pt, data, subresources...), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // Apply takes the given apply declarative configuration, applies it and returns the applied alertRelabelConfig.
-func (c *FakeAlertRelabelConfigs) Apply(ctx context.Context, alertRelabelConfig *applyconfigurationsmonitoringv1.AlertRelabelConfigApplyConfiguration, opts v1.ApplyOptions) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) Apply(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfigApplyConfiguration, opts metav1.ApplyOptions) (result *v1.AlertRelabelConfig, err error) {
 	if alertRelabelConfig == nil {
 		return nil, fmt.Errorf("alertRelabelConfig provided to Apply must not be nil")
 	}
@@ -142,17 +141,17 @@ func (c *FakeAlertRelabelConfigs) Apply(ctx context.Context, alertRelabelConfig 
 		return nil, fmt.Errorf("alertRelabelConfig.Name must be provided to Apply")
 	}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }
 
 // ApplyStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeAlertRelabelConfigs) ApplyStatus(ctx context.Context, alertRelabelConfig *applyconfigurationsmonitoringv1.AlertRelabelConfigApplyConfiguration, opts v1.ApplyOptions) (result *monitoringv1.AlertRelabelConfig, err error) {
+func (c *FakeAlertRelabelConfigs) ApplyStatus(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfigApplyConfiguration, opts metav1.ApplyOptions) (result *v1.AlertRelabelConfig, err error) {
 	if alertRelabelConfig == nil {
 		return nil, fmt.Errorf("alertRelabelConfig provided to Apply must not be nil")
 	}
@@ -165,10 +164,10 @@ func (c *FakeAlertRelabelConfigs) ApplyStatus(ctx context.Context, alertRelabelC
 		return nil, fmt.Errorf("alertRelabelConfig.Name must be provided to Apply")
 	}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data, "status"), &monitoringv1.AlertRelabelConfig{})
+		Invokes(testing.NewPatchSubresourceAction(alertrelabelconfigsResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1.AlertRelabelConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*monitoringv1.AlertRelabelConfig), err
+	return obj.(*v1.AlertRelabelConfig), err
 }

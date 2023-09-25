@@ -17,8 +17,7 @@ type Interface interface {
 	ServicecertsignerV1alpha1() servicecertsignerv1alpha1.ServicecertsignerV1alpha1Interface
 }
 
-// Clientset contains the clients for groups. Each group has exactly one
-// version included in a Clientset.
+// Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
 	servicecertsignerV1alpha1 *servicecertsignerv1alpha1.ServicecertsignerV1alpha1Client

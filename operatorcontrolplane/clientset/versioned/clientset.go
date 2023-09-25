@@ -17,8 +17,7 @@ type Interface interface {
 	ControlplaneV1alpha1() controlplanev1alpha1.ControlplaneV1alpha1Interface
 }
 
-// Clientset contains the clients for groups. Each group has exactly one
-// version included in a Clientset.
+// Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
 	controlplaneV1alpha1 *controlplanev1alpha1.ControlplaneV1alpha1Client

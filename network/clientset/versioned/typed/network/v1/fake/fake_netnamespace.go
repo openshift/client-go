@@ -7,11 +7,10 @@ import (
 	json "encoding/json"
 	"fmt"
 
-	networkv1 "github.com/openshift/api/network/v1"
-	applyconfigurationsnetworkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "github.com/openshift/api/network/v1"
+	networkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -22,24 +21,24 @@ type FakeNetNamespaces struct {
 	Fake *FakeNetworkV1
 }
 
-var netnamespacesResource = schema.GroupVersionResource{Group: "network.openshift.io", Version: "v1", Resource: "netnamespaces"}
+var netnamespacesResource = v1.SchemeGroupVersion.WithResource("netnamespaces")
 
-var netnamespacesKind = schema.GroupVersionKind{Group: "network.openshift.io", Version: "v1", Kind: "NetNamespace"}
+var netnamespacesKind = v1.SchemeGroupVersion.WithKind("NetNamespace")
 
 // Get takes name of the netNamespace, and returns the corresponding netNamespace object, and an error if there is any.
-func (c *FakeNetNamespaces) Get(ctx context.Context, name string, options v1.GetOptions) (result *networkv1.NetNamespace, err error) {
+func (c *FakeNetNamespaces) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.NetNamespace, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(netnamespacesResource, name), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootGetAction(netnamespacesResource, name), &v1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*networkv1.NetNamespace), err
+	return obj.(*v1.NetNamespace), err
 }
 
 // List takes label and field selectors, and returns the list of NetNamespaces that match those selectors.
-func (c *FakeNetNamespaces) List(ctx context.Context, opts v1.ListOptions) (result *networkv1.NetNamespaceList, err error) {
+func (c *FakeNetNamespaces) List(ctx context.Context, opts metav1.ListOptions) (result *v1.NetNamespaceList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(netnamespacesResource, netnamespacesKind, opts), &networkv1.NetNamespaceList{})
+		Invokes(testing.NewRootListAction(netnamespacesResource, netnamespacesKind, opts), &v1.NetNamespaceList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -48,8 +47,8 @@ func (c *FakeNetNamespaces) List(ctx context.Context, opts v1.ListOptions) (resu
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &networkv1.NetNamespaceList{ListMeta: obj.(*networkv1.NetNamespaceList).ListMeta}
-	for _, item := range obj.(*networkv1.NetNamespaceList).Items {
+	list := &v1.NetNamespaceList{ListMeta: obj.(*v1.NetNamespaceList).ListMeta}
+	for _, item := range obj.(*v1.NetNamespaceList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,58 +57,58 @@ func (c *FakeNetNamespaces) List(ctx context.Context, opts v1.ListOptions) (resu
 }
 
 // Watch returns a watch.Interface that watches the requested netNamespaces.
-func (c *FakeNetNamespaces) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeNetNamespaces) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(netnamespacesResource, opts))
 }
 
 // Create takes the representation of a netNamespace and creates it.  Returns the server's representation of the netNamespace, and an error, if there is any.
-func (c *FakeNetNamespaces) Create(ctx context.Context, netNamespace *networkv1.NetNamespace, opts v1.CreateOptions) (result *networkv1.NetNamespace, err error) {
+func (c *FakeNetNamespaces) Create(ctx context.Context, netNamespace *v1.NetNamespace, opts metav1.CreateOptions) (result *v1.NetNamespace, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(netnamespacesResource, netNamespace), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootCreateAction(netnamespacesResource, netNamespace), &v1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*networkv1.NetNamespace), err
+	return obj.(*v1.NetNamespace), err
 }
 
 // Update takes the representation of a netNamespace and updates it. Returns the server's representation of the netNamespace, and an error, if there is any.
-func (c *FakeNetNamespaces) Update(ctx context.Context, netNamespace *networkv1.NetNamespace, opts v1.UpdateOptions) (result *networkv1.NetNamespace, err error) {
+func (c *FakeNetNamespaces) Update(ctx context.Context, netNamespace *v1.NetNamespace, opts metav1.UpdateOptions) (result *v1.NetNamespace, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(netnamespacesResource, netNamespace), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootUpdateAction(netnamespacesResource, netNamespace), &v1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*networkv1.NetNamespace), err
+	return obj.(*v1.NetNamespace), err
 }
 
 // Delete takes name of the netNamespace and deletes it. Returns an error if one occurs.
-func (c *FakeNetNamespaces) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeNetNamespaces) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(netnamespacesResource, name, opts), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootDeleteActionWithOptions(netnamespacesResource, name, opts), &v1.NetNamespace{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeNetNamespaces) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeNetNamespaces) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewRootDeleteCollectionAction(netnamespacesResource, listOpts)
 
-	_, err := c.Fake.Invokes(action, &networkv1.NetNamespaceList{})
+	_, err := c.Fake.Invokes(action, &v1.NetNamespaceList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched netNamespace.
-func (c *FakeNetNamespaces) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *networkv1.NetNamespace, err error) {
+func (c *FakeNetNamespaces) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.NetNamespace, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, name, pt, data, subresources...), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, name, pt, data, subresources...), &v1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*networkv1.NetNamespace), err
+	return obj.(*v1.NetNamespace), err
 }
 
 // Apply takes the given apply declarative configuration, applies it and returns the applied netNamespace.
-func (c *FakeNetNamespaces) Apply(ctx context.Context, netNamespace *applyconfigurationsnetworkv1.NetNamespaceApplyConfiguration, opts v1.ApplyOptions) (result *networkv1.NetNamespace, err error) {
+func (c *FakeNetNamespaces) Apply(ctx context.Context, netNamespace *networkv1.NetNamespaceApplyConfiguration, opts metav1.ApplyOptions) (result *v1.NetNamespace, err error) {
 	if netNamespace == nil {
 		return nil, fmt.Errorf("netNamespace provided to Apply must not be nil")
 	}
@@ -122,9 +121,9 @@ func (c *FakeNetNamespaces) Apply(ctx context.Context, netNamespace *applyconfig
 		return nil, fmt.Errorf("netNamespace.Name must be provided to Apply")
 	}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, *name, types.ApplyPatchType, data), &networkv1.NetNamespace{})
+		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, *name, types.ApplyPatchType, data), &v1.NetNamespace{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*networkv1.NetNamespace), err
+	return obj.(*v1.NetNamespace), err
 }
