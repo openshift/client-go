@@ -56,6 +56,11 @@ function generateApplyConfiguration(){
       "$@"
 }
 
+# Until we get https://github.com/kubernetes/kubernetes/pull/120877 merged we need to
+# explicitly set these two variables which are not defaulted properly in generate-internal-groups.sh
+export CLIENTSET_PKG=clientset
+export CLIENTSET_NAME=versioned
+
 for group in apiserver apps authorization build cloudnetwork image imageregistry network oauth project quota route samples security securityinternal template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
