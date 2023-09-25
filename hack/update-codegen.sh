@@ -13,6 +13,8 @@ set -x
 # Because go mod sux, we have to fake the vendor for generator in order to be able to build it...
 mv ${CODEGEN_PKG}/generate-groups.sh ${CODEGEN_PKG}/generate-groups.sh.orig
 sed 's/go install/#GO111MODULE=on go install/g' ${CODEGEN_PKG}/generate-groups.sh.orig > ${CODEGEN_PKG}/generate-groups.sh
+# Originally this script doesn't have permissions to run
+sed 's/^exec "$(dirname "${BASH_SOURCE\[0\]}")\/generate-internal-groups.sh"/bash "$(dirname "${BASH_SOURCE\[0\]}")\/generate-internal-groups.sh"/g' ${CODEGEN_PKG}/generate-groups.sh.orig > ${CODEGEN_PKG}/generate-groups.sh
 function cleanup {
   mv ${CODEGEN_PKG}/generate-groups.sh.orig ${CODEGEN_PKG}/generate-groups.sh
 }
