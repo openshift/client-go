@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	quotav1 "github.com/openshift/api/quota/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "github.com/openshift/api/quota/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	testing "k8s.io/client-go/testing"
 )
 
@@ -18,25 +17,25 @@ type FakeAppliedClusterResourceQuotas struct {
 	ns   string
 }
 
-var appliedclusterresourcequotasResource = schema.GroupVersionResource{Group: "quota.openshift.io", Version: "v1", Resource: "appliedclusterresourcequotas"}
+var appliedclusterresourcequotasResource = v1.SchemeGroupVersion.WithResource("appliedclusterresourcequotas")
 
-var appliedclusterresourcequotasKind = schema.GroupVersionKind{Group: "quota.openshift.io", Version: "v1", Kind: "AppliedClusterResourceQuota"}
+var appliedclusterresourcequotasKind = v1.SchemeGroupVersion.WithKind("AppliedClusterResourceQuota")
 
 // Get takes name of the appliedClusterResourceQuota, and returns the corresponding appliedClusterResourceQuota object, and an error if there is any.
-func (c *FakeAppliedClusterResourceQuotas) Get(ctx context.Context, name string, options v1.GetOptions) (result *quotav1.AppliedClusterResourceQuota, err error) {
+func (c *FakeAppliedClusterResourceQuotas) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AppliedClusterResourceQuota, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(appliedclusterresourcequotasResource, c.ns, name), &quotav1.AppliedClusterResourceQuota{})
+		Invokes(testing.NewGetAction(appliedclusterresourcequotasResource, c.ns, name), &v1.AppliedClusterResourceQuota{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*quotav1.AppliedClusterResourceQuota), err
+	return obj.(*v1.AppliedClusterResourceQuota), err
 }
 
 // List takes label and field selectors, and returns the list of AppliedClusterResourceQuotas that match those selectors.
-func (c *FakeAppliedClusterResourceQuotas) List(ctx context.Context, opts v1.ListOptions) (result *quotav1.AppliedClusterResourceQuotaList, err error) {
+func (c *FakeAppliedClusterResourceQuotas) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AppliedClusterResourceQuotaList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(appliedclusterresourcequotasResource, appliedclusterresourcequotasKind, c.ns, opts), &quotav1.AppliedClusterResourceQuotaList{})
+		Invokes(testing.NewListAction(appliedclusterresourcequotasResource, appliedclusterresourcequotasKind, c.ns, opts), &v1.AppliedClusterResourceQuotaList{})
 
 	if obj == nil {
 		return nil, err
@@ -46,8 +45,8 @@ func (c *FakeAppliedClusterResourceQuotas) List(ctx context.Context, opts v1.Lis
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &quotav1.AppliedClusterResourceQuotaList{ListMeta: obj.(*quotav1.AppliedClusterResourceQuotaList).ListMeta}
-	for _, item := range obj.(*quotav1.AppliedClusterResourceQuotaList).Items {
+	list := &v1.AppliedClusterResourceQuotaList{ListMeta: obj.(*v1.AppliedClusterResourceQuotaList).ListMeta}
+	for _, item := range obj.(*v1.AppliedClusterResourceQuotaList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}

@@ -11,7 +11,6 @@ import (
 	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -23,9 +22,9 @@ type FakeAlertingRules struct {
 	ns   string
 }
 
-var alertingrulesResource = schema.GroupVersionResource{Group: "monitoring.openshift.io", Version: "v1alpha1", Resource: "alertingrules"}
+var alertingrulesResource = v1alpha1.SchemeGroupVersion.WithResource("alertingrules")
 
-var alertingrulesKind = schema.GroupVersionKind{Group: "monitoring.openshift.io", Version: "v1alpha1", Kind: "AlertingRule"}
+var alertingrulesKind = v1alpha1.SchemeGroupVersion.WithKind("AlertingRule")
 
 // Get takes name of the alertingRule, and returns the corresponding alertingRule object, and an error if there is any.
 func (c *FakeAlertingRules) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.AlertingRule, err error) {

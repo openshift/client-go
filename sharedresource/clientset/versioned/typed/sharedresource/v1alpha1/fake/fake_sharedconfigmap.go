@@ -11,7 +11,6 @@ import (
 	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -22,9 +21,9 @@ type FakeSharedConfigMaps struct {
 	Fake *FakeSharedresourceV1alpha1
 }
 
-var sharedconfigmapsResource = schema.GroupVersionResource{Group: "sharedresource.openshift.io", Version: "v1alpha1", Resource: "sharedconfigmaps"}
+var sharedconfigmapsResource = v1alpha1.SchemeGroupVersion.WithResource("sharedconfigmaps")
 
-var sharedconfigmapsKind = schema.GroupVersionKind{Group: "sharedresource.openshift.io", Version: "v1alpha1", Kind: "SharedConfigMap"}
+var sharedconfigmapsKind = v1alpha1.SchemeGroupVersion.WithKind("SharedConfigMap")
 
 // Get takes name of the sharedConfigMap, and returns the corresponding sharedConfigMap object, and an error if there is any.
 func (c *FakeSharedConfigMaps) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SharedConfigMap, err error) {

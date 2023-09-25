@@ -11,7 +11,6 @@ import (
 	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -23,9 +22,9 @@ type FakeAlertRelabelConfigs struct {
 	ns   string
 }
 
-var alertrelabelconfigsResource = schema.GroupVersionResource{Group: "monitoring.openshift.io", Version: "v1alpha1", Resource: "alertrelabelconfigs"}
+var alertrelabelconfigsResource = v1alpha1.SchemeGroupVersion.WithResource("alertrelabelconfigs")
 
-var alertrelabelconfigsKind = schema.GroupVersionKind{Group: "monitoring.openshift.io", Version: "v1alpha1", Kind: "AlertRelabelConfig"}
+var alertrelabelconfigsKind = v1alpha1.SchemeGroupVersion.WithKind("AlertRelabelConfig")
 
 // Get takes name of the alertRelabelConfig, and returns the corresponding alertRelabelConfig object, and an error if there is any.
 func (c *FakeAlertRelabelConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.AlertRelabelConfig, err error) {

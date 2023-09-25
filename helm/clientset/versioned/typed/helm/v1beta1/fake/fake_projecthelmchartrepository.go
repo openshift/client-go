@@ -11,7 +11,6 @@ import (
 	helmv1beta1 "github.com/openshift/client-go/helm/applyconfigurations/helm/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -23,9 +22,9 @@ type FakeProjectHelmChartRepositories struct {
 	ns   string
 }
 
-var projecthelmchartrepositoriesResource = schema.GroupVersionResource{Group: "helm.openshift.io", Version: "v1beta1", Resource: "projecthelmchartrepositories"}
+var projecthelmchartrepositoriesResource = v1beta1.SchemeGroupVersion.WithResource("projecthelmchartrepositories")
 
-var projecthelmchartrepositoriesKind = schema.GroupVersionKind{Group: "helm.openshift.io", Version: "v1beta1", Kind: "ProjectHelmChartRepository"}
+var projecthelmchartrepositoriesKind = v1beta1.SchemeGroupVersion.WithKind("ProjectHelmChartRepository")
 
 // Get takes name of the projectHelmChartRepository, and returns the corresponding projectHelmChartRepository object, and an error if there is any.
 func (c *FakeProjectHelmChartRepositories) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.ProjectHelmChartRepository, err error) {

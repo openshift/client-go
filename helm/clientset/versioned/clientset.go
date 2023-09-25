@@ -17,8 +17,7 @@ type Interface interface {
 	HelmV1beta1() helmv1beta1.HelmV1beta1Interface
 }
 
-// Clientset contains the clients for groups. Each group has exactly one
-// version included in a Clientset.
+// Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
 	helmV1beta1 *helmv1beta1.HelmV1beta1Client

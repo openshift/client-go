@@ -11,7 +11,6 @@ import (
 	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -22,9 +21,9 @@ type FakeDataGathers struct {
 	Fake *FakeInsightsV1alpha1
 }
 
-var datagathersResource = schema.GroupVersionResource{Group: "insights.openshift.io", Version: "v1alpha1", Resource: "datagathers"}
+var datagathersResource = v1alpha1.SchemeGroupVersion.WithResource("datagathers")
 
-var datagathersKind = schema.GroupVersionKind{Group: "insights.openshift.io", Version: "v1alpha1", Kind: "DataGather"}
+var datagathersKind = v1alpha1.SchemeGroupVersion.WithKind("DataGather")
 
 // Get takes name of the dataGather, and returns the corresponding dataGather object, and an error if there is any.
 func (c *FakeDataGathers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DataGather, err error) {
