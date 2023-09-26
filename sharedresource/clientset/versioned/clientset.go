@@ -17,8 +17,7 @@ type Interface interface {
 	SharedresourceV1alpha1() sharedresourcev1alpha1.SharedresourceV1alpha1Interface
 }
 
-// Clientset contains the clients for groups. Each group has exactly one
-// version included in a Clientset.
+// Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
 	sharedresourceV1alpha1 *sharedresourcev1alpha1.SharedresourceV1alpha1Client
