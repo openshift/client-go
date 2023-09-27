@@ -249,7 +249,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: failureDomains
       type:
         namedType: com.github.openshift.api.machine.v1.FailureDomains
-      default: {}
     - name: metadata
       type:
         namedType: com.github.openshift.api.machine.v1.ControlPlaneMachineSetTemplateObjectMeta
