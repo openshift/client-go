@@ -221,6 +221,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.LoadBalancerStrategyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LoggingDestination"):
 		return &operatorv1.LoggingDestinationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfiguration"):
+		return &operatorv1.MachineConfigurationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfigurationSpec"):
+		return &operatorv1.MachineConfigurationSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("MachineConfigurationStatus"):
+		return &operatorv1.MachineConfigurationStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MTUMigration"):
 		return &operatorv1.MTUMigrationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("MTUMigrationValues"):
