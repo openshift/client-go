@@ -55,7 +55,25 @@ function generateApplyConfiguration(){
       done
     done
 
-    echo "Generating applyconfigurations"
+   if [ "$OUTPUT_PKG" == "github.com/openshift/client-go/machineconfiguration" ] 
+   then
+    # TODO(jkyros): this is a temporary hack to ensure proper generation until the MCO can sort
+    # out their embedded corev1.ObjectReference in MachineConfigPoolStatusConfiguration, which needs
+    # to be resolved by the end of release-4.15 so this hack can be removed
+    echo "Generating applyconfigurations specifically for MCO"
+    applyconfigurationgen_external_apis_csv="$(codegen::join , "${FQ_APIS[@]}")"
+    applyconfigurations_package="${OUTPUT_PKG}/${CLIENTSET_PKG_NAME:-applyconfigurations}"
+    ${APPLYCONFIGURATION_GEN}  \
+      --output-package "${applyconfigurations_package}" \
+      --input-dirs "${applyconfigurationgen_external_apis_csv}" \
+      --external-applyconfigurations k8s.io/api/core/v1.ObjectReference:k8s.io/client-go/applyconfigurations/core/v1 \
+      --external-applyconfigurations github.com/openshift/api/operator/v1.OperatorSpec:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
+      --external-applyconfigurations github.com/openshift/api/operator/v1.OperatorStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
+      --external-applyconfigurations github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
+      --external-applyconfigurations github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
+      "$@"
+   else
+    echo "Generating applyconfigurations for $OUTPUT_PKG"
     applyconfigurationgen_external_apis_csv="$(codegen::join , "${FQ_APIS[@]}")"
     applyconfigurations_package="${OUTPUT_PKG}/${CLIENTSET_PKG_NAME:-applyconfigurations}"
     ${APPLYCONFIGURATION_GEN}  \
@@ -66,6 +84,9 @@ function generateApplyConfiguration(){
       --external-applyconfigurations github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
       --external-applyconfigurations github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1 \
       "$@"
+   fi
+
+
 }
 
 # Until we get https://github.com/kubernetes/kubernetes/pull/120877 merged we need to
@@ -73,7 +94,7 @@ function generateApplyConfiguration(){
 export CLIENTSET_PKG=clientset
 export CLIENTSET_NAME=versioned
 
-for group in apiserver apps authorization build cloudnetwork image imageregistry network oauth project quota route samples security securityinternal template user; do
+for group in apiserver apps authorization build cloudnetwork image imageregistry machineconfiguration network oauth project quota route samples security securityinternal template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
