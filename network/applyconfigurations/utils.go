@@ -4,7 +4,9 @@ package applyconfigurations
 
 import (
 	v1 "github.com/openshift/api/network/v1"
+	v1alpha1 "github.com/openshift/api/network/v1alpha1"
 	networkv1 "github.com/openshift/client-go/network/applyconfigurations/network/v1"
+	networkv1alpha1 "github.com/openshift/client-go/network/applyconfigurations/network/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -29,6 +31,18 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &networkv1.HostSubnetApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NetNamespace"):
 		return &networkv1.NetNamespaceApplyConfiguration{}
+
+		// Group=network.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolver"):
+		return &networkv1alpha1.DNSNameResolverApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolverResolvedAddress"):
+		return &networkv1alpha1.DNSNameResolverResolvedAddressApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolverResolvedName"):
+		return &networkv1alpha1.DNSNameResolverResolvedNameApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolverSpec"):
+		return &networkv1alpha1.DNSNameResolverSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolverStatus"):
+		return &networkv1alpha1.DNSNameResolverStatusApplyConfiguration{}
 
 	}
 	return nil
