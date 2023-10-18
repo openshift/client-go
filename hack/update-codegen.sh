@@ -94,7 +94,7 @@ function generateApplyConfiguration(){
 export CLIENTSET_PKG=clientset
 export CLIENTSET_NAME=versioned
 
-for group in apiserver apps authorization build cloudnetwork image imageregistry machineconfiguration network oauth project quota route samples security securityinternal template user; do
+for group in apiserver apps authorization build cloudnetwork image imageregistry machineconfiguration oauth project quota route samples security securityinternal template user; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \
@@ -150,7 +150,7 @@ for group in machine; do
     ${verify}
 done
 
-for group in console operator config monitoring; do
+for group in console operator config monitoring network; do
   bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
     github.com/openshift/client-go/${group} \
     github.com/openshift/api \

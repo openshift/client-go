@@ -6,6 +6,8 @@ import (
 	clientset "github.com/openshift/client-go/network/clientset/versioned"
 	networkv1 "github.com/openshift/client-go/network/clientset/versioned/typed/network/v1"
 	fakenetworkv1 "github.com/openshift/client-go/network/clientset/versioned/typed/network/v1/fake"
+	networkv1alpha1 "github.com/openshift/client-go/network/clientset/versioned/typed/network/v1alpha1"
+	fakenetworkv1alpha1 "github.com/openshift/client-go/network/clientset/versioned/typed/network/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -66,4 +68,9 @@ var (
 // NetworkV1 retrieves the NetworkV1Client
 func (c *Clientset) NetworkV1() networkv1.NetworkV1Interface {
 	return &fakenetworkv1.FakeNetworkV1{Fake: &c.Fake}
+}
+
+// NetworkV1alpha1 retrieves the NetworkV1alpha1Client
+func (c *Clientset) NetworkV1alpha1() networkv1alpha1.NetworkV1alpha1Interface {
+	return &fakenetworkv1alpha1.FakeNetworkV1alpha1{Fake: &c.Fake}
 }
