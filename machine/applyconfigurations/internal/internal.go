@@ -225,6 +225,12 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: vsphere
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machine.v1.VSphereFailureDomain
+          elementRelationship: atomic
     unions:
     - discriminator: platform
       fields:
@@ -236,6 +242,8 @@ var schemaYAML = typed.YAMLObject(`types:
         discriminatorValue: GCP
       - fieldName: openstack
         discriminatorValue: OpenStack
+      - fieldName: vsphere
+        discriminatorValue: VSphere
 - name: com.github.openshift.api.machine.v1.GCPFailureDomain
   map:
     fields:
@@ -273,6 +281,13 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
     - name: volumeType
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machine.v1.VSphereFailureDomain
+  map:
+    fields:
+    - name: name
       type:
         scalar: string
       default: ""

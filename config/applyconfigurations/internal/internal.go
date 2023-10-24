@@ -3101,6 +3101,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: resourcePool
       type:
         scalar: string
+    - name: template
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec
   map:
     fields:

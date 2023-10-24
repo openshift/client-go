@@ -13,6 +13,7 @@ type FailureDomainsApplyConfiguration struct {
 	AWS       *[]AWSFailureDomainApplyConfiguration      `json:"aws,omitempty"`
 	Azure     *[]AzureFailureDomainApplyConfiguration    `json:"azure,omitempty"`
 	GCP       *[]GCPFailureDomainApplyConfiguration      `json:"gcp,omitempty"`
+	VSphere   []VSphereFailureDomainApplyConfiguration   `json:"vsphere,omitempty"`
 	OpenStack []OpenStackFailureDomainApplyConfiguration `json:"openstack,omitempty"`
 }
 
@@ -86,6 +87,19 @@ func (b *FailureDomainsApplyConfiguration) WithGCP(values ...*GCPFailureDomainAp
 			panic("nil value passed to WithGCP")
 		}
 		*b.GCP = append(*b.GCP, *values[i])
+	}
+	return b
+}
+
+// WithVSphere adds the given value to the VSphere field in the declarative configuration
+// and returns the receiver, so that objects can be build by chaining "With" function invocations.
+// If called multiple times, values provided by each call will be appended to the VSphere field.
+func (b *FailureDomainsApplyConfiguration) WithVSphere(values ...*VSphereFailureDomainApplyConfiguration) *FailureDomainsApplyConfiguration {
+	for i := range values {
+		if values[i] == nil {
+			panic("nil value passed to WithVSphere")
+		}
+		b.VSphere = append(b.VSphere, *values[i])
 	}
 	return b
 }
