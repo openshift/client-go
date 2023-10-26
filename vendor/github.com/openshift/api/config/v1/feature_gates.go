@@ -53,16 +53,6 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
-	FeatureGateRetroactiveDefaultStorageClass = FeatureGateName("RetroactiveDefaultStorageClass")
-	retroactiveDefaultStorageClass            = FeatureGateDescription{
-		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateRetroactiveDefaultStorageClass,
-		},
-		OwningJiraComponent: "storage",
-		ResponsiblePerson:   "RomanBednar",
-		OwningProduct:       kubernetes,
-	}
-
 	FeatureGateExternalCloudProvider = FeatureGateName("ExternalCloudProvider")
 	externalCloudProvider            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
@@ -309,6 +299,26 @@ var (
 		},
 		OwningJiraComponent: "splat",
 		ResponsiblePerson:   "rvanderp3",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateMachineConfigNodes = FeatureGateName("MachineConfigNodes")
+	machineConfigNodes            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateMachineConfigNodes,
+		},
+		OwningJiraComponent: "MachineConfigOperator",
+		ResponsiblePerson:   "cdoern",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateClusterAPIInstall = FeatureGateName("ClusterAPIInstall")
+	clusterAPIInstall            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateClusterAPIInstall,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "vincepri",
 		OwningProduct:       ocpSpecific,
 	}
 )

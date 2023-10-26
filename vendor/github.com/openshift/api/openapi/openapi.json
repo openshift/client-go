@@ -4515,6 +4515,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapNameReference"
         },
+        "oidcProviders": {
+          "description": "OIDCProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\".\n\nAt most one provider can be configured.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.OIDCProvider"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "serviceAccountIssuer": {
           "description": "serviceAccountIssuer is the identifier of the bound service account token issuer. The default is https://kubernetes.default.svc WARNING: Updating this field will not result in immediate invalidation of all bound tokens with the previous issuer value. Instead, the tokens issued by previous service account issuer will continue to be trusted for a time period chosen by the platform (currently set to 24h). This time period is subject to change over time. This allows internal components to transition to use new service account issuer without service distruption.",
           "type": "string",
@@ -4526,7 +4538,7 @@
           "default": ""
         },
         "webhookTokenAuthenticator": {
-          "description": "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.",
+          "description": "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.\n\nCan only be set if \"Type\" is set to \"None\".",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.WebhookTokenAuthenticator"
         },
         "webhookTokenAuthenticators": {
@@ -4535,7 +4547,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.DeprecatedWebhookTokenAuthenticator"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -8291,6 +8304,40 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OIDCProvider": {
+      "type": "object",
+      "required": [
+        "name",
+        "issuer",
+        "claimMappings"
+      ],
+      "properties": {
+        "claimMappings": {
+          "description": "ClaimMappings describes rules on how to transform information from an ID token into a cluster identity",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimMappings"
+        },
+        "claimValidationRules": {
+          "description": "ClaimValidationRules are rules that are applied to validate token claims to authenticate users.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimValidationRule"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "issuer": {
+          "description": "Issuer describes atributes of the OIDC token issuer",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenIssuer"
+        },
+        "name": {
+          "description": "Name of the OIDC provider",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ObjectReference": {
       "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
       "type": "object",
@@ -8883,6 +8930,25 @@
         },
         "url": {
           "description": "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PrefixedClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim",
+        "prefix"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        },
+        "prefix": {
+          "description": "Prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
           "type": "string",
           "default": ""
         }
@@ -9643,6 +9709,52 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TokenClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenClaimMappings": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "description": "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PrefixedClaimMapping"
+        },
+        "username": {
+          "description": "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernameClaimMapping"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenClaimValidationRule": {
+      "type": "object",
+      "required": [
+        "type",
+        "requiredClaim"
+      ],
+      "properties": {
+        "requiredClaim": {
+          "description": "RequiredClaim allows configuring a required claim name and its expected value",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
+        },
+        "type": {
+          "description": "Type sets the type of the validation rule",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.TokenConfig": {
       "description": "TokenConfig holds the necessary configuration options for authorization and access tokens",
       "type": "object",
@@ -9660,6 +9772,54 @@
           "description": "accessTokenMaxAgeSeconds defines the maximum age of access tokens",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenIssuer": {
+      "type": "object",
+      "required": [
+        "issuerURL",
+        "audiences",
+        "issuerCertificateAuthority"
+      ],
+      "properties": {
+        "audiences": {
+          "description": "Audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "issuerCertificateAuthority": {
+          "description": "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapNameReference"
+        },
+        "issuerURL": {
+          "description": "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenRequiredClaim": {
+      "type": "object",
+      "required": [
+        "claim",
+        "requiredValue"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a name of a required claim. Only claims with string values are supported.",
+          "type": "string",
+          "default": ""
+        },
+        "requiredValue": {
+          "description": "RequiredValue is the required value for the claim.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -9730,6 +9890,41 @@
         },
         "version": {
           "description": "version is a semantic version identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.UsernameClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim",
+        "prefixPolicy",
+        "prefix"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        },
+        "prefix": {
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
+        },
+        "prefixPolicy": {
+          "description": "PrefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.UsernamePrefix": {
+      "type": "object",
+      "required": [
+        "prefixString"
+      ],
+      "properties": {
+        "prefixString": {
           "type": "string",
           "default": ""
         }
@@ -18289,6 +18484,33 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1alpha1.AdditionalBlockDevice": {
+      "description": "additionalBlockDevice is a block device to attach to the server.",
+      "type": "object",
+      "required": [
+        "name",
+        "sizeGiB",
+        "storage"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of the block device in the context of a machine. If the block device is a volume, the Cinder volume will be named as a combination of the machine name and this name. Also, this name will be used for tagging the block device. Information about the block device tag can be obtained from the OpenStack metadata API or the config drive.",
+          "type": "string",
+          "default": ""
+        },
+        "sizeGiB": {
+          "description": "sizeGiB is the size of the block device in gibibytes (GiB).",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "storage": {
+          "description": "storage specifies the storage type of the block device and additional storage options.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.BlockDeviceStorage"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1alpha1.AddressPair": {
       "type": "object",
       "properties": {
@@ -18296,6 +18518,46 @@
           "type": "string"
         },
         "macAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1alpha1.BlockDeviceStorage": {
+      "description": "blockDeviceStorage is the storage type of a block device to create and contains additional storage options.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "type is the type of block device to create. This can be either \"Volume\" or \"Local\".",
+          "type": "string",
+          "default": ""
+        },
+        "volume": {
+          "description": "volume contains additional storage options for a volume block device.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.BlockDeviceVolume"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "volume": "Volume"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.machine.v1alpha1.BlockDeviceVolume": {
+      "description": "blockDeviceVolume contains additional storage options for a volume block device.",
+      "type": "object",
+      "properties": {
+        "availabilityZone": {
+          "description": "availabilityZone is the volume availability zone to create the volume in. If omitted, the availability zone of the server will be used. The availability zone must NOT contain spaces otherwise it will lead to volume that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the Cinder volume type of the volume. If omitted, the default Cinder volume type that is configured in the OpenStack cloud will be used.",
           "type": "string"
         }
       }
@@ -18451,6 +18713,18 @@
         "image"
       ],
       "properties": {
+        "additionalBlockDevices": {
+          "description": "additionalBlockDevices is a list of specifications for additional block devices to attach to the server instance",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.AdditionalBlockDevice"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
@@ -20944,6 +21218,172 @@
         "server": {
           "description": "Server is the IP address or FQDN of the vSphere endpoint.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference": {
+      "description": "MCOObjectReference holds information about an object the MCO either owns or modifies in some way",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the object name. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNode": {
+      "description": "MachineConfigNode describes the health of the Machines on the system Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec describes the configuration of the machine config node.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpec"
+        },
+        "status": {
+          "description": "status describes the last observed state of this machine config node.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeList": {
+      "description": "MachineConfigNodeList describes all of the MachinesStates on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNode"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpec": {
+      "description": "MachineConfigNodeSpec describes the MachineConfigNode we are managing.",
+      "type": "object",
+      "required": [
+        "node",
+        "pool",
+        "configVersion"
+      ],
+      "properties": {
+        "configVersion": {
+          "description": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecMachineConfigVersion"
+        },
+        "node": {
+          "description": "node contains a reference to the node for this machine config node.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
+        },
+        "pool": {
+          "description": "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecMachineConfigVersion": {
+      "description": "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired; the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+      "type": "object",
+      "required": [
+        "desired"
+      ],
+      "properties": {
+        "desired": {
+          "description": "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatus": {
+      "description": "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
+      "type": "object",
+      "required": [
+        "configVersion"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of a machine config node's current state.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "configVersion": {
+          "description": "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusMachineConfigVersion"
+        },
+        "observedGeneration": {
+          "description": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusMachineConfigVersion": {
+      "description": "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+      "type": "object",
+      "required": [
+        "desired"
+      ],
+      "properties": {
+        "current": {
+          "description": "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "desired": {
+          "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
         }
       }
     },
