@@ -13,6 +13,10 @@ import (
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
 	// Group=imageregistry.operator.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("AzureNetworkAccess"):
+		return &imageregistryv1.AzureNetworkAccessApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AzureNetworkAccessInternal"):
+		return &imageregistryv1.AzureNetworkAccessInternalApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Config"):
 		return &imageregistryv1.ConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("EncryptionAlibaba"):

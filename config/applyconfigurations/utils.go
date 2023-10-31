@@ -57,6 +57,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.AzureResourceTagApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformLoadBalancer"):
 		return &configv1.BareMetalPlatformLoadBalancerApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformSpec"):
+		return &configv1.BareMetalPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformStatus"):
 		return &configv1.BareMetalPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BasicAuthIdentityProvider"):
@@ -241,6 +243,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.NodeApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NodeSpec"):
 		return &configv1.NodeSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NutanixFailureDomain"):
+		return &configv1.NutanixFailureDomainApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPlatformLoadBalancer"):
 		return &configv1.NutanixPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPlatformSpec"):
@@ -251,6 +255,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.NutanixPrismElementEndpointApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPrismEndpoint"):
 		return &configv1.NutanixPrismEndpointApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NutanixResourceIdentifier"):
+		return &configv1.NutanixResourceIdentifierApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OAuth"):
 		return &configv1.OAuthApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OAuthRemoteConnectionInfo"):
@@ -269,6 +275,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OpenIDIdentityProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformLoadBalancer"):
 		return &configv1.OpenStackPlatformLoadBalancerApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformSpec"):
+		return &configv1.OpenStackPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformStatus"):
 		return &configv1.OpenStackPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OperandVersion"):
