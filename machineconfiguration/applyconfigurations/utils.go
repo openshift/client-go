@@ -4,7 +4,9 @@ package applyconfigurations
 
 import (
 	v1 "github.com/openshift/api/machineconfiguration/v1"
+	v1alpha1 "github.com/openshift/api/machineconfiguration/v1alpha1"
 	machineconfigurationv1 "github.com/openshift/client-go/machineconfiguration/applyconfigurations/machineconfiguration/v1"
+	machineconfigurationv1alpha1 "github.com/openshift/client-go/machineconfiguration/applyconfigurations/machineconfiguration/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -61,6 +63,20 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.MachineConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NetworkInfo"):
 		return &machineconfigurationv1.NetworkInfoApplyConfiguration{}
+
+		// Group=machineconfiguration.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNode"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpec"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpecMachineConfigVersion"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeSpecMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatus"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatusMachineConfigVersion"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeStatusMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MCOObjectReference"):
+		return &machineconfigurationv1alpha1.MCOObjectReferenceApplyConfiguration{}
 
 	}
 	return nil

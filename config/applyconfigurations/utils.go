@@ -261,6 +261,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OAuthTemplatesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ObjectReference"):
 		return &configv1.ObjectReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OIDCProvider"):
+		return &configv1.OIDCProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenIDClaims"):
 		return &configv1.OpenIDClaimsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenIDIdentityProvider"):
@@ -291,6 +293,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.PowerVSPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PowerVSServiceEndpoint"):
 		return &configv1.PowerVSServiceEndpointApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PrefixedClaimMapping"):
+		return &configv1.PrefixedClaimMappingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Project"):
 		return &configv1.ProjectApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ProjectSpec"):
@@ -327,12 +331,26 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.TLSProfileSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TLSSecurityProfile"):
 		return &configv1.TLSSecurityProfileApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenClaimMapping"):
+		return &configv1.TokenClaimMappingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenClaimMappings"):
+		return &configv1.TokenClaimMappingsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenClaimValidationRule"):
+		return &configv1.TokenClaimValidationRuleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TokenConfig"):
 		return &configv1.TokenConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenIssuer"):
+		return &configv1.TokenIssuerApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenRequiredClaim"):
+		return &configv1.TokenRequiredClaimApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Update"):
 		return &configv1.UpdateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UpdateHistory"):
 		return &configv1.UpdateHistoryApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("UsernameClaimMapping"):
+		return &configv1.UsernameClaimMappingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("UsernamePrefix"):
+		return &configv1.UsernamePrefixApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformFailureDomainSpec"):
 		return &configv1.VSpherePlatformFailureDomainSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VSpherePlatformLoadBalancer"):
