@@ -182,7 +182,9 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(adminNetworkPolicy).
 		with(dnsNameResolver).
 		with(machineConfigNodes).
-		with(clusterAPIInstall).
+		with(metricsServer).
+		without(installAlternateInfrastructureAWS).
+		without(clusterAPIInstall).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),
