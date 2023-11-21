@@ -215,6 +215,14 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: com.github.openshift.api.machine.v1.GCPFailureDomain
           elementRelationship: atomic
+    - name: nutanix
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machine.v1.NutanixFailureDomainReference
+          elementRelationship: associative
+          keys:
+          - name
     - name: openstack
       type:
         list:
@@ -240,6 +248,8 @@ var schemaYAML = typed.YAMLObject(`types:
         discriminatorValue: Azure
       - fieldName: gcp
         discriminatorValue: GCP
+      - fieldName: nutanix
+        discriminatorValue: Nutanix
       - fieldName: openstack
         discriminatorValue: OpenStack
       - fieldName: vsphere
@@ -248,6 +258,13 @@ var schemaYAML = typed.YAMLObject(`types:
   map:
     fields:
     - name: zone
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machine.v1.NutanixFailureDomainReference
+  map:
+    fields:
+    - name: name
       type:
         scalar: string
       default: ""

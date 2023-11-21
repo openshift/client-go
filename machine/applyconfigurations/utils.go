@@ -41,6 +41,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machinev1.FailureDomainsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPFailureDomain"):
 		return &machinev1.GCPFailureDomainApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NutanixFailureDomainReference"):
+		return &machinev1.NutanixFailureDomainReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenShiftMachineV1Beta1MachineTemplate"):
 		return &machinev1.OpenShiftMachineV1Beta1MachineTemplateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackFailureDomain"):
