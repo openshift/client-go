@@ -57,8 +57,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.AzureResourceTagApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformLoadBalancer"):
 		return &configv1.BareMetalPlatformLoadBalancerApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformSpec"):
-		return &configv1.BareMetalPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BareMetalPlatformStatus"):
 		return &configv1.BareMetalPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BasicAuthIdentityProvider"):
@@ -267,6 +265,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OAuthTemplatesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ObjectReference"):
 		return &configv1.ObjectReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OIDCClientConfig"):
+		return &configv1.OIDCClientConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OIDCClientReference"):
+		return &configv1.OIDCClientReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OIDCClientStatus"):
+		return &configv1.OIDCClientStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OIDCProvider"):
 		return &configv1.OIDCProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenIDClaims"):
@@ -275,8 +279,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OpenIDIdentityProviderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformLoadBalancer"):
 		return &configv1.OpenStackPlatformLoadBalancerApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformSpec"):
-		return &configv1.OpenStackPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OpenStackPlatformStatus"):
 		return &configv1.OpenStackPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OperandVersion"):
