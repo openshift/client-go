@@ -5,15 +5,24 @@ package v1
 // AzureNetworkAccessInternalApplyConfiguration represents an declarative configuration of the AzureNetworkAccessInternal type for use
 // with apply.
 type AzureNetworkAccessInternalApplyConfiguration struct {
-	VNetName            *string `json:"vnetName,omitempty"`
-	SubnetName          *string `json:"subnetName,omitempty"`
-	PrivateEndpointName *string `json:"privateEndpointName,omitempty"`
+	NetworkResourceGroupName *string `json:"networkResourceGroupName,omitempty"`
+	VNetName                 *string `json:"vnetName,omitempty"`
+	SubnetName               *string `json:"subnetName,omitempty"`
+	PrivateEndpointName      *string `json:"privateEndpointName,omitempty"`
 }
 
 // AzureNetworkAccessInternalApplyConfiguration constructs an declarative configuration of the AzureNetworkAccessInternal type for use with
 // apply.
 func AzureNetworkAccessInternal() *AzureNetworkAccessInternalApplyConfiguration {
 	return &AzureNetworkAccessInternalApplyConfiguration{}
+}
+
+// WithNetworkResourceGroupName sets the NetworkResourceGroupName field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the NetworkResourceGroupName field is set to the value of the last call.
+func (b *AzureNetworkAccessInternalApplyConfiguration) WithNetworkResourceGroupName(value string) *AzureNetworkAccessInternalApplyConfiguration {
+	b.NetworkResourceGroupName = &value
+	return b
 }
 
 // WithVNetName sets the VNetName field in the declarative configuration to the given value

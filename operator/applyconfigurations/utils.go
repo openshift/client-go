@@ -143,6 +143,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.HTTPCompressionPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("HybridOverlayConfig"):
 		return &operatorv1.HybridOverlayConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IBMCloudCSIDriverConfigSpec"):
+		return &operatorv1.IBMCloudCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IBMLoadBalancerParameters"):
 		return &operatorv1.IBMLoadBalancerParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressController"):
@@ -215,8 +217,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.KubeStorageVersionMigratorSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubeStorageVersionMigratorStatus"):
 		return &operatorv1.KubeStorageVersionMigratorStatusApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("KuryrConfig"):
-		return &operatorv1.KuryrConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LoadBalancerStrategy"):
 		return &operatorv1.LoadBalancerStrategyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LoggingDestination"):
