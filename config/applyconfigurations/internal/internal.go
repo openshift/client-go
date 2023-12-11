@@ -682,7 +682,20 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.config.v1.ComponentOverride
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - kind
+          - group
+          - namespace
+          - name
+    - name: signatureStores
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.SignatureStore
+          elementRelationship: associative
+          keys:
+          - url
     - name: upstream
       type:
         scalar: string
@@ -710,7 +723,9 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.config.v1.ClusterOperatorStatusCondition
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - type
     - name: desired
       type:
         namedType: com.github.openshift.api.config.v1.Release
@@ -2907,7 +2922,7 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             scalar: string
-          elementRelationship: atomic
+          elementRelationship: associative
     - name: image
       type:
         scalar: string
@@ -3056,6 +3071,17 @@ var schemaYAML = typed.YAMLObject(`types:
   map:
     fields:
     - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.SignatureStore
+  map:
+    fields:
+    - name: ca
+      type:
+        namedType: com.github.openshift.api.config.v1.ConfigMapNameReference
+      default: {}
+    - name: url
       type:
         scalar: string
       default: ""

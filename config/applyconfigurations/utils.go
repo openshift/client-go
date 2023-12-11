@@ -335,6 +335,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.SchedulerSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("SecretNameReference"):
 		return &configv1.SecretNameReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("SignatureStore"):
+		return &configv1.SignatureStoreApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TemplateReference"):
 		return &configv1.TemplateReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TLSProfileSpec"):
