@@ -335,6 +335,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.SchedulerSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("SecretNameReference"):
 		return &configv1.SecretNameReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("SignatureStore"):
+		return &configv1.SignatureStoreApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TemplateReference"):
 		return &configv1.TemplateReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TLSProfileSpec"):
@@ -385,14 +387,42 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.BackupApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
 		return &configv1alpha1.BackupSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ClusterImagePolicy"):
+		return &configv1alpha1.ClusterImagePolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ClusterImagePolicySpec"):
+		return &configv1alpha1.ClusterImagePolicySpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ClusterImagePolicyStatus"):
+		return &configv1alpha1.ClusterImagePolicyStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
 		return &configv1alpha1.EtcdBackupSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("FulcioCAWithRekor"):
+		return &configv1alpha1.FulcioCAWithRekorApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
 		return &configv1alpha1.GatherConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ImagePolicy"):
+		return &configv1alpha1.ImagePolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ImagePolicySpec"):
+		return &configv1alpha1.ImagePolicySpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ImagePolicyStatus"):
+		return &configv1alpha1.ImagePolicyStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGather"):
 		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
 		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("Policy"):
+		return &configv1alpha1.PolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PolicyFulcioSubject"):
+		return &configv1alpha1.PolicyFulcioSubjectApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PolicyIdentity"):
+		return &configv1alpha1.PolicyIdentityApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PolicyMatchExactRepository"):
+		return &configv1alpha1.PolicyMatchExactRepositoryApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PolicyMatchRemapIdentity"):
+		return &configv1alpha1.PolicyMatchRemapIdentityApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PolicyRootOfTrust"):
+		return &configv1alpha1.PolicyRootOfTrustApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PublicKey"):
+		return &configv1alpha1.PublicKeyApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RetentionNumberConfig"):
 		return &configv1alpha1.RetentionNumberConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
