@@ -71,6 +71,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.BuildSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudControllerManagerStatus"):
 		return &configv1.CloudControllerManagerStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudLoadBalancerConfig"):
+		return &configv1.CloudLoadBalancerConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudLoadBalancerIPs"):
+		return &configv1.CloudLoadBalancerIPsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCondition"):
 		return &configv1.ClusterConditionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterNetworkEntry"):
