@@ -4159,7 +4159,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSServiceEndpoint"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -4181,7 +4182,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSResourceTag"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "serviceEndpoints": {
           "description": "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
@@ -4189,7 +4191,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSServiceEndpoint"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -4613,7 +4616,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AzureResourceTag"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -4676,7 +4680,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -4688,7 +4693,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -4937,6 +4943,62 @@
           "description": "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nValid values are \"External\", \"None\" and omitted. When set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.CloudLoadBalancerConfig": {
+      "description": "CloudLoadBalancerConfig contains an union discriminator indicating the type of DNS solution in use within the cluster. When the DNSType is `ClusterHosted`, the cloud's Load Balancer configuration needs to be provided so that the DNS solution hosted within the cluster can be configured with those values.",
+      "type": "object",
+      "properties": {
+        "clusterHosted": {
+          "description": "clusterHosted holds the IP addresses of API, API-Int and Ingress Load Balancers on Cloud Platforms. The DNS solution hosted within the cluster use these IP addresses to provide resolution for API, API-Int and Ingress services.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerIPs"
+        },
+        "dnsType": {
+          "description": "dnsType indicates the type of DNS solution in use within the cluster. Its default value of `PlatformDefault` indicates that the cluster's DNS is the default provided by the cloud platform. It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode, the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed. The cluster's use of the cloud's Load Balancers is unaffected by this setting. The value is immutable after it has been set at install time. Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS. Enabling this functionality allows the user to start their own DNS solution outside the cluster after installation is complete. The customer would be responsible for configuring this custom DNS solution, and it can be run in addition to the in-cluster DNS solution.",
+          "type": "string",
+          "default": "PlatformDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "dnsType",
+          "fields-to-discriminateBy": {
+            "clusterHosted": "ClusterHosted"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1.CloudLoadBalancerIPs": {
+      "description": "CloudLoadBalancerIPs contains the Load Balancer IPs for the cloud's API, API-Int and Ingress Load balancers. They will be populated as soon as the respective Load Balancers have been configured. These values are utilized to configure the DNS solution hosted within the cluster.",
+      "type": "object",
+      "properties": {
+        "apiIntLoadBalancerIPs": {
+          "description": "apiIntLoadBalancerIPs holds Load Balancer IPs for the internal API service. These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses. Entries in the apiIntLoadBalancerIPs must be unique. A maximum of 16 IP addresses are permitted.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "apiLoadBalancerIPs": {
+          "description": "apiLoadBalancerIPs holds Load Balancer IPs for the API service. These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses. Could be empty for private clusters. Entries in the apiLoadBalancerIPs must be unique. A maximum of 16 IP addresses are permitted.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "ingressLoadBalancerIPs": {
+          "description": "ingressLoadBalancerIPs holds IPs for Ingress Load Balancers. These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses. Entries in the ingressLoadBalancerIPs must be unique. A maximum of 16 IP addresses are permitted.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
         }
       }
     },
@@ -5250,7 +5312,26 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentOverride"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "kind",
+            "group",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "signatureStores": {
+          "description": "signatureStores contains the upstream URIs to verify release signatures and optional reference to a config map by name containing the PEM-encoded CA bundle.\n\nBy default, CVO will use existing signature stores if this property is empty. The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature in these stores in parallel only when local ConfigMaps did not include a valid signature. Validation will fail if none of the signature stores reply with valid signature before timeout. Setting signatureStores will replace the default signature stores with custom signature stores. Default stores can be used with custom signature stores by adding them manually.\n\nA maximum of 32 signature stores may be configured.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.SignatureStore"
+          },
+          "x-kubernetes-list-map-keys": [
+            "url"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "upstream": {
           "description": "upstream may be used to specify the preferred update server. By default it will use the appropriate update server for the cluster and region.",
@@ -5275,7 +5356,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.Release"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "capabilities": {
           "description": "capabilities describes the state of optional, core cluster components.",
@@ -5297,7 +5379,13 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterOperatorStatusCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "desired": {
           "description": "desired is the version that the cluster is reconciling towards. If the cluster is not yet fully initialized desired will be set with the information available, which may be an image or a tag.",
@@ -5310,7 +5398,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.UpdateHistory"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration reports which version of the spec is being synced. If this value is not equal to metadata.generation, then the desired and conditions fields may represent a previous version.",
@@ -6274,10 +6363,12 @@
         "region"
       ],
       "properties": {
-        "clusterHostedDNS": {
-          "description": "clusterHostedDNS indicates the type of DNS solution in use within the cluster. Its default value of \"Disabled\" indicates that the cluster's DNS is the default provided by the cloud platform. It can be \"Enabled\" during install to bypass the configuration of the cloud default DNS. When \"Enabled\", the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed. The cluster's use of the cloud's Load Balancers is unaffected by this setting. The value is immutable after it has been set at install time. Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS. Enabling this functionality allows the user to start their own DNS solution outside the cluster after installation is complete. The customer would be responsible for configuring this custom DNS solution, and it can be run in addition to the in-cluster DNS solution.",
-          "type": "string",
-          "default": "Disabled"
+        "cloudLoadBalancerConfig": {
+          "description": "cloudLoadBalancerConfig is a union that contains the IP addresses of API, API-Int and Ingress Load Balancers created on the cloud platform. These values would not be populated on on-prem platforms. These Load Balancer IPs are used to configure the in-cluster DNS instances for API, API-Int and Ingress services. `dnsType` is expected to be set to `ClusterHosted` when these Load Balancer IP addresses are populated and used.",
+          "default": {
+            "dnsType": "PlatformDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
         },
         "projectID": {
           "description": "resourceGroupName is the Project ID for new GCP resources created for the cluster.",
@@ -8173,7 +8264,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -8185,7 +8277,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -8750,7 +8843,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "cloudName": {
           "description": "cloudName is the name of the desired OpenStack cloud in the client configuration file (`clouds.yaml`).",
@@ -8766,7 +8860,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -8933,7 +9028,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -8945,7 +9041,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -9150,7 +9247,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.PowerVSServiceEndpoint"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "zone": {
           "description": "zone holds the default zone for the new Power VS resources created by the cluster. Note: Currently only single-zone OCP clusters are supported",
@@ -9475,7 +9576,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "image": {
           "description": "image is a container image location that contains the update. When this field is part of spec, image is optional if version is specified and the availableUpdates field contains a matching version.",
@@ -9811,6 +9913,25 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.NamedCertificate"
           }
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.SignatureStore": {
+      "description": "SignatureStore represents the URL of custom Signature Store",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "ca": {
+          "description": "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the signature store is not honored. If the specified ca data is not valid, the signature store is not honored. If empty, we fall back to the CA configured via Proxy, which is appended to the default system roots. The namespace for this config map is openshift-config.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapNameReference"
+        },
+        "url": {
+          "description": "url contains the upstream custom signature store URL. url should be a valid absolute http/https URI of an upstream signature store as per rfc1738. This must be provided and cannot be empty.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -10255,7 +10376,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "network": {
           "description": "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`",
@@ -10267,7 +10389,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         }
       }
     },
@@ -10281,7 +10404,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "nodeNetworking": {
           "description": "nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
@@ -10294,7 +10421,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -10316,7 +10444,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -10328,7 +10457,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -10378,7 +10508,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "resourcePool": {
           "description": "resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>. The maximum length of the path is 2048 characters.",
@@ -10404,7 +10535,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "set"
         },
         "port": {
           "description": "port is the TCP port that will be used to communicate to the vCenter endpoint. When omitted, this means the user has no opinion and it is up to the platform to choose a sensible default, which is subject to change over time.",
