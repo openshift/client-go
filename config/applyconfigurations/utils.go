@@ -71,6 +71,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.BuildSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudControllerManagerStatus"):
 		return &configv1.CloudControllerManagerStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudLoadBalancerConfig"):
+		return &configv1.CloudLoadBalancerConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudLoadBalancerIPs"):
+		return &configv1.CloudLoadBalancerIPsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCondition"):
 		return &configv1.ClusterConditionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterNetworkEntry"):
@@ -335,6 +339,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.SchedulerSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("SecretNameReference"):
 		return &configv1.SecretNameReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("SignatureStore"):
+		return &configv1.SignatureStoreApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TemplateReference"):
 		return &configv1.TemplateReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TLSProfileSpec"):
