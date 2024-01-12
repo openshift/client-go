@@ -11,22 +11,20 @@ verify="${VERIFY:-}"
 
 set -x
 # Because go mod sux, we have to fake the vendor for generator in order to be able to build it...
-mv ${CODEGEN_PKG}/generate-groups.sh ${CODEGEN_PKG}/generate-groups.sh.orig
-sed 's/go install/#GO111MODULE=on go install/g' ${CODEGEN_PKG}/generate-groups.sh.orig > ${CODEGEN_PKG}/generate-groups.sh
+mv ${CODEGEN_PKG}/generate-internal-groups.sh ${CODEGEN_PKG}/generate-internal-groups.sh.orig
+sed 's/GO111MODULE=on go install/#GO111MODULE=on go install/g' ${CODEGEN_PKG}/generate-internal-groups.sh.orig > ${CODEGEN_PKG}/generate-internal-groups.sh
 # Originally this script doesn't have permissions to run
+mv ${CODEGEN_PKG}/generate-groups.sh ${CODEGEN_PKG}/generate-groups.sh.orig
 sed 's/^exec "$(dirname "${BASH_SOURCE\[0\]}")\/generate-internal-groups.sh"/bash "$(dirname "${BASH_SOURCE\[0\]}")\/generate-internal-groups.sh"/g' ${CODEGEN_PKG}/generate-groups.sh.orig > ${CODEGEN_PKG}/generate-groups.sh
 # For verification we need to ensure we don't remove files
 # TODO (soltysh): this should be properly resolved upstream so that we can get
 # rid of the below if condition for verify scripts
 if [ ! -z "$verify" ]; then
-  mv ${CODEGEN_PKG}/generate-internal-groups.sh ${CODEGEN_PKG}/generate-internal-groups.sh.orig
   sed 's/xargs \-0 rm \-f/xargs -0 echo ""/g' ${CODEGEN_PKG}/generate-internal-groups.sh.orig > ${CODEGEN_PKG}/generate-internal-groups.sh
 fi
 function cleanup {
   mv ${CODEGEN_PKG}/generate-groups.sh.orig ${CODEGEN_PKG}/generate-groups.sh
-  if [ ! -z "$verify" ]; then
-    mv ${CODEGEN_PKG}/generate-internal-groups.sh.orig ${CODEGEN_PKG}/generate-internal-groups.sh
-  fi
+  mv ${CODEGEN_PKG}/generate-internal-groups.sh.orig ${CODEGEN_PKG}/generate-internal-groups.sh
 }
 trap cleanup EXIT
 
