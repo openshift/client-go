@@ -313,6 +313,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.PowerVSServiceEndpointApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PrefixedClaimMapping"):
 		return &configv1.PrefixedClaimMappingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ProfileCustomizations"):
+		return &configv1.ProfileCustomizationsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Project"):
 		return &configv1.ProjectApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ProjectSpec"):

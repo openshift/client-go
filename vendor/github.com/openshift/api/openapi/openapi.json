@@ -5593,7 +5593,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represents the observations of the conditional update's current status. Known types are: * Evaluating, for whether the cluster-version operator will attempt to evaluate any risks[].matchingRules. * Recommended, for whether the update is recommended for the current cluster.",
+          "description": "conditions represents the observations of the conditional update's current status. Known types are: * Recommended, for whether the update is recommended for the current cluster.",
           "type": "array",
           "items": {
             "default": {},
@@ -9375,6 +9375,17 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ProfileCustomizations": {
+      "description": "ProfileCustomizations contains various parameters for modifying the default behavior of certain profiles",
+      "type": "object",
+      "properties": {
+        "dynamicResourceAllocation": {
+          "description": "dynamicResourceAllocation allows to enable or disable dynamic resource allocation within the scheduler. Dynamic resource allocation is an API for requesting and sharing resources between pods and containers inside a pod. Third-party resource drivers are responsible for tracking and allocating resources. Different kinds of resources support arbitrary parameters for defining requirements and initialization. Valid values are Enabled, Disabled and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Disabled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Project": {
       "description": "Project holds cluster-wide information about Project.  The canonical name is `cluster`\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -9916,6 +9927,11 @@
         "profile": {
           "description": "profile sets which scheduling profile should be set in order to configure scheduling decisions for new pods.\n\nValid values are \"LowNodeUtilization\", \"HighNodeUtilization\", \"NoScoring\" Defaults to \"LowNodeUtilization\"",
           "type": "string"
+        },
+        "profileCustomizations": {
+          "description": "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ProfileCustomizations"
         }
       }
     },
@@ -10917,7 +10933,7 @@
         "fulcioCAData": {
           "description": "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         },
         "fulcioSubject": {
           "description": "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
@@ -10927,7 +10943,7 @@
         "rekorKeyData": {
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         }
       }
     },
@@ -11270,11 +11286,12 @@
         "keyData": {
           "description": "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         },
         "rekorKeyData": {
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -33386,7 +33403,7 @@
           "default": ""
         },
         "type": {
-          "description": "Type is the type of the condition. Currently only Admitted.",
+          "description": "Type is the type of the condition. Currently only Admitted or UnservableInFutureVersions.",
           "type": "string",
           "default": ""
         }
@@ -33715,6 +33732,15 @@
         "samplesRegistry": {
           "description": "samplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.",
           "type": "string"
+        },
+        "skippedHelmCharts": {
+          "description": "skippedHelmCharts specifies names of helm charts that should NOT be managed. Admins can use this to allow them to delete content they don’t want. They will still have to MANUALLY DELETE the content but the operator will not recreate(or update) anything listed here. Few examples of the name of helmcharts which can be skipped are 'redhat-redhat-perl-imagestreams','redhat-redhat-nodejs-imagestreams','redhat-nginx-imagestreams', 'redhat-redhat-ruby-imagestreams','redhat-redhat-python-imagestreams','redhat-redhat-php-imagestreams', 'redhat-httpd-imagestreams','redhat-redhat-dotnet-imagestreams'. Rest of the names can be obtained from openshift console --> helmcharts -->installed helmcharts. This will display the list of all the 12 helmcharts(of imagestreams)being installed by Samples Operator. The skippedHelmCharts must be a valid Kubernetes resource name. May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character. It must be non-empty and at most 253 characters in length",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
         },
         "skippedImagestreams": {
           "description": "skippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
