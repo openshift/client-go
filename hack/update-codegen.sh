@@ -12,64 +12,36 @@ source "${CODEGEN_PKG}/kube_codegen.sh"
 # TODO(soltysh):
 # verify script
 
-for group in apiserver apps authorization build cloudnetwork image imageregistry oauth project quota route samples security securityinternal template user; do
+for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane project quota route samples security securityinternal servicecertsigner sharedresource template user; do
+  echo "# Processing ${group} ..."
   kube::codegen::gen_client \
       --with-watch \
       --with-applyconfig \
       --applyconfig-name "applyconfigurations" \
+      --applyconfig-externals "github.com/openshift/api/operator/v1.OperatorSpec:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1" \
+      --applyconfig-openapi-schema "vendor/github.com/openshift/api/openapi/openapi.json" \
       --input-pkg-root "github.com/openshift/api" \
       --one-input-api "${group}" \
       --output-pkg-root "github.com/openshift/client-go/${group}" \
       --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
-      --plural-exceptions "SecurityContextConstraints:SecurityContextConstraints" \
+      --plural-exceptions "DNS:DNSes,DNSList:DNSList,SecurityContextConstraints:SecurityContextConstraints" \
       --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
 
-for group in machine; do
+# machineconfiguration is almost identical to the above call, except for the additional
+# --applyconfig-externals value 'k8s.io/api/core/v1.ObjectReference:k8s.io/client-go/applyconfigurations/core/v1'
+for group in machineconfiguration; do
+  echo "# Processing ${group} ..."
   kube::codegen::gen_client \
       --with-watch \
       --with-applyconfig \
       --applyconfig-name "applyconfigurations" \
+      --applyconfig-externals "k8s.io/api/core/v1.ObjectReference:k8s.io/client-go/applyconfigurations/core/v1,github.com/openshift/api/operator/v1.OperatorSpec:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1" \
+      --applyconfig-openapi-schema "vendor/github.com/openshift/api/openapi/openapi.json" \
       --input-pkg-root "github.com/openshift/api" \
       --one-input-api "${group}" \
       --output-pkg-root "github.com/openshift/client-go/${group}" \
       --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
-      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
-done
-
-for group in config console operator monitoring network machineconfiguration; do
-  kube::codegen::gen_client \
-      --with-watch \
-      --with-applyconfig \
-      --applyconfig-name "applyconfigurations" \
-      --input-pkg-root "github.com/openshift/api" \
-      --one-input-api "${group}" \
-      --output-pkg-root "github.com/openshift/client-go/${group}" \
-      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
-      --plural-exceptions "DNS:DNSes,DNSList:DNSList" \
-      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
-done
-
-for group in helm; do
-  kube::codegen::gen_client \
-      --with-watch \
-      --with-applyconfig \
-      --applyconfig-name "applyconfigurations" \
-      --input-pkg-root "github.com/openshift/api" \
-      --one-input-api "${group}" \
-      --output-pkg-root "github.com/openshift/client-go/${group}" \
-      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
-      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
-done
-
-for group in servicecertsigner operatorcontrolplane sharedresource insights; do
-  kube::codegen::gen_client \
-      --with-watch \
-      --with-applyconfig \
-      --applyconfig-name "applyconfigurations" \
-      --input-pkg-root "github.com/openshift/api" \
-      --one-input-api "${group}" \
-      --output-pkg-root "github.com/openshift/client-go/${group}" \
-      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --plural-exceptions "DNS:DNSes,DNSList:DNSList,SecurityContextConstraints:SecurityContextConstraints" \
       --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
