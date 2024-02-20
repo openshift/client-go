@@ -7,7 +7,10 @@ set -o pipefail
 SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
 CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../../../k8s.io/code-generator)}
 
-verify="${VERIFY:-}"
+source "${CODEGEN_PKG}/kube_codegen.sh"
+
+# TODO(soltysh):
+# verify script
 
 set -x
 # Because go mod sux, we have to fake the vendor for generator in order to be able to build it...
@@ -55,7 +58,7 @@ function generateApplyConfiguration(){
       done
     done
 
-   if [ "$OUTPUT_PKG" == "github.com/openshift/client-go/machineconfiguration" ] 
+   if [ "$OUTPUT_PKG" == "github.com/openshift/client-go/machineconfiguration" ]
    then
     # TODO(jkyros): this is a temporary hack to ensure proper generation until the MCO can sort
     # out their embedded corev1.ObjectReference in MachineConfigPoolStatusConfiguration, which needs
@@ -95,141 +98,63 @@ export CLIENTSET_PKG=clientset
 export CLIENTSET_NAME=versioned
 
 for group in apiserver apps authorization build cloudnetwork image imageregistry oauth project quota route samples security securityinternal template user; do
-  bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  generateApplyConfiguration \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  bash ${CODEGEN_PKG}/generate-groups.sh "client" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
+  kube::codegen::gen_client \
+      --with-watch \
+      --with-applyconfig \
+      --applyconfig-name "applyconfigurations" \
+      --input-pkg-root "github.com/openshift/api" \
+      --one-input-api "${group}" \
+      --output-pkg-root "github.com/openshift/client-go/${group}" \
+      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --plural-exceptions "SecurityContextConstraints:SecurityContextConstraints" \
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
 
 for group in machine; do
-  bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  generateApplyConfiguration \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  bash ${CODEGEN_PKG}/generate-groups.sh "client" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
+  kube::codegen::gen_client \
+      --with-watch \
+      --with-applyconfig \
+      --applyconfig-name "applyconfigurations" \
+      --input-pkg-root "github.com/openshift/api" \
+      --one-input-api "${group}" \
+      --output-pkg-root "github.com/openshift/client-go/${group}" \
+      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
 
-for group in console operator config monitoring network machineconfiguration; do
-  bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-   generateApplyConfiguration \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  bash ${CODEGEN_PKG}/generate-groups.sh "client" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1,v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
+for group in config console operator monitoring network machineconfiguration; do
+  kube::codegen::gen_client \
+      --with-watch \
+      --with-applyconfig \
+      --applyconfig-name "applyconfigurations" \
+      --input-pkg-root "github.com/openshift/api" \
+      --one-input-api "${group}" \
+      --output-pkg-root "github.com/openshift/client-go/${group}" \
+      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --plural-exceptions "DNS:DNSes,DNSList:DNSList" \
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
 
 for group in helm; do
-  bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  generateApplyConfiguration \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  bash ${CODEGEN_PKG}/generate-groups.sh "client" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1beta1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
+  kube::codegen::gen_client \
+      --with-watch \
+      --with-applyconfig \
+      --applyconfig-name "applyconfigurations" \
+      --input-pkg-root "github.com/openshift/api" \
+      --one-input-api "${group}" \
+      --output-pkg-root "github.com/openshift/client-go/${group}" \
+      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
 
 for group in servicecertsigner operatorcontrolplane sharedresource insights; do
-  bash ${CODEGEN_PKG}/generate-groups.sh "lister,informer" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  generateApplyConfiguration \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --openapi-schema ./vendor/github.com/openshift/api/openapi/openapi.json \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
-  bash ${CODEGEN_PKG}/generate-groups.sh "client" \
-    github.com/openshift/client-go/${group} \
-    github.com/openshift/api \
-    "${group}:v1alpha1" \
-    --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.txt \
-    --plural-exceptions=DNS:DNSes,DNSList:DNSList,Endpoints:Endpoints,Features:Features,FeaturesList:FeaturesList,SecurityContextConstraints:SecurityContextConstraints \
-    --apply-configuration-package github.com/openshift/client-go/${group}/applyconfigurations \
-    --trim-path-prefix github.com/openshift/client-go \
-    ${verify}
+  kube::codegen::gen_client \
+      --with-watch \
+      --with-applyconfig \
+      --applyconfig-name "applyconfigurations" \
+      --input-pkg-root "github.com/openshift/api" \
+      --one-input-api "${group}" \
+      --output-pkg-root "github.com/openshift/client-go/${group}" \
+      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
 done
