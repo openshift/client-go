@@ -67,6 +67,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.PinnedImageSetRefApplyConfiguration{}
 
 		// Group=machineconfiguration.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("BuildHistory"):
+		return &machineconfigurationv1alpha1.BuildHistoryApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("BuildInputs"):
+		return &machineconfigurationv1alpha1.BuildInputsApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ImageSecretObjectReference"):
+		return &machineconfigurationv1alpha1.ImageSecretObjectReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNode"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpec"):
@@ -77,6 +83,24 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatusMachineConfigVersion"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigPoolReference"):
+		return &machineconfigurationv1alpha1.MachineConfigPoolReferenceApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSBuild"):
+		return &machineconfigurationv1alpha1.MachineOSBuildApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSBuildSpec"):
+		return &machineconfigurationv1alpha1.MachineOSBuildSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSBuildStatus"):
+		return &machineconfigurationv1alpha1.MachineOSBuildStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSConfig"):
+		return &machineconfigurationv1alpha1.MachineOSConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSConfigSpec"):
+		return &machineconfigurationv1alpha1.MachineOSConfigSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSConfigStatus"):
+		return &machineconfigurationv1alpha1.MachineOSConfigStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSContainerfile"):
+		return &machineconfigurationv1alpha1.MachineOSContainerfileApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineOSRebuild"):
+		return &machineconfigurationv1alpha1.MachineOSRebuildApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MCOObjectReference"):
 		return &machineconfigurationv1alpha1.MCOObjectReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageRef"):
@@ -85,6 +109,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.PinnedImageSetApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSetSpec"):
 		return &machineconfigurationv1alpha1.PinnedImageSetSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSetStatus"):
+		return &machineconfigurationv1alpha1.PinnedImageSetStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RenderedMachineConfigReference"):
+		return &machineconfigurationv1alpha1.RenderedMachineConfigReferenceApplyConfiguration{}
 
 	}
 	return nil
