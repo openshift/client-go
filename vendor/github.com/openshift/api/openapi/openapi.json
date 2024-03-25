@@ -10119,19 +10119,19 @@
       "type": "object",
       "properties": {
         "custom": {
-          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n  minTLSVersion: VersionTLS11",
+          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  ciphers:\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n  minTLSVersion: VersionTLS11",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CustomTLSProfile"
         },
         "intermediate": {
-          "description": "intermediate is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28recommended.29\n\nand looks like this (yaml):\n\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n  minTLSVersion: VersionTLS12",
+          "description": "intermediate is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28recommended.29\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n  minTLSVersion: VersionTLS12",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.IntermediateTLSProfile"
         },
         "modern": {
-          "description": "modern is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n  minTLSVersion: VersionTLS13\n\nNOTE: Currently unsupported.",
+          "description": "modern is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n  minTLSVersion: VersionTLS13",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ModernTLSProfile"
         },
         "old": {
-          "description": "old is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA\n  minTLSVersion: VersionTLS10",
+          "description": "old is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n    - DHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-ECDSA-AES128-SHA256\n\n    - ECDHE-RSA-AES128-SHA256\n\n    - ECDHE-ECDSA-AES128-SHA\n\n    - ECDHE-RSA-AES128-SHA\n\n    - ECDHE-ECDSA-AES256-SHA384\n\n    - ECDHE-RSA-AES256-SHA384\n\n    - ECDHE-ECDSA-AES256-SHA\n\n    - ECDHE-RSA-AES256-SHA\n\n    - DHE-RSA-AES128-SHA256\n\n    - DHE-RSA-AES256-SHA256\n\n    - AES128-GCM-SHA256\n\n    - AES256-GCM-SHA384\n\n    - AES128-SHA256\n\n    - AES256-SHA256\n\n    - AES128-SHA\n\n    - AES256-SHA\n\n    - DES-CBC3-SHA\n\n  minTLSVersion: VersionTLS10",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.OldTLSProfile"
         },
         "type": {
@@ -10692,25 +10692,40 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.featureSetBuilder": {
+    "com.github.openshift.api.config.v1.featureGateBuilder": {
       "type": "object",
       "required": [
-        "forceOn",
-        "forceOff"
+        "name",
+        "owningJiraComponent",
+        "responsiblePerson",
+        "owningProduct",
+        "statusByClusterProfileByFeatureSet"
       ],
       "properties": {
-        "forceOff": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
-          }
+        "name": {
+          "type": "string",
+          "default": ""
         },
-        "forceOn": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
+        "owningJiraComponent": {
+          "type": "string",
+          "default": ""
+        },
+        "owningProduct": {
+          "type": "string",
+          "default": ""
+        },
+        "responsiblePerson": {
+          "type": "string",
+          "default": ""
+        },
+        "statusByClusterProfileByFeatureSet": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean",
+              "default": false
+            }
           }
         }
       }
@@ -22355,6 +22370,96 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageRef": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSet": {
+      "description": "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec describes the configuration of this pinned image set.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetList": {
+      "description": "PinnedImageSetList is a list of PinnedImageSet resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSet"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetSpec": {
+      "description": "PinnedImageSetSpec defines the desired state of a PinnedImageSet.",
+      "type": "object",
+      "required": [
+        "pinnedImages"
+      ],
+      "properties": {
+        "pinnedImages": {
+          "description": "pinnedImages is a list of OCI Image referenced by digest that should be pinned and pre-loaded by the nodes of a MachineConfigPool. Translates into a new file inside the /etc/crio/crio.conf.d directory with content similar to this:\n\n     pinned_images = [\n             \"quay.io/openshift-release-dev/ocp-release@sha256:...\",\n             \"quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:...\",\n             \"quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:...\",\n             ...\n     ]\n\nThese image references should all be by digest, tags aren't allowed.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageRef"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.monitoring.v1.AlertRelabelConfig": {
       "description": "AlertRelabelConfig defines a set of relabel configs for alerts.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -25185,7 +25290,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25193,7 +25302,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "oauthAPIServer": {
           "description": "OAuthAPIServer holds status specific only to oauth-apiserver",
@@ -25405,7 +25515,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25413,7 +25527,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25570,7 +25685,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25578,7 +25697,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25712,7 +25832,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25720,7 +25844,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25863,7 +25988,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25871,7 +26000,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26100,7 +26230,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -26108,7 +26242,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26670,7 +26805,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "controlPlaneHardwareSpeed": {
           "description": "Possible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
@@ -26687,7 +26826,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -26704,7 +26844,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -27749,7 +27893,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "gatherStatus": {
           "description": "gatherStatus provides basic information about the last Insights data gathering. When omitted, this means no data gathering has taken place yet.",
@@ -27762,7 +27910,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "insightsReport": {
           "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet.",
@@ -27929,7 +28078,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -27937,7 +28090,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -27954,7 +28108,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28110,7 +28268,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28118,7 +28280,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28135,7 +28298,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28277,7 +28444,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28285,7 +28456,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28302,7 +28474,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28426,7 +28602,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28434,7 +28614,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28633,10 +28814,20 @@
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
         },
+        "managedBootImages": {
+          "description": "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, no boot images will be updated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ManagedBootImages"
+        },
         "managementState": {
           "description": "managementState indicates whether and how the operator should manage the component",
           "type": "string",
           "default": ""
+        },
+        "nodeDisruptionPolicy": {
+          "description": "nodeDisruptionPolicy allows an admin to set granular node disruption actions for MachineConfig-based updates, such as drains, service reloads, etc. Specifying this will allow for less downtime when doing small configuration updates to the cluster. This configuration has no effect on cluster upgrades which will still incur node disruption where required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyConfig"
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
@@ -28671,7 +28862,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28679,7 +28874,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28690,13 +28886,22 @@
           "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
           "type": "string"
         },
+        "nodeDisruptionPolicyStatus": {
+          "description": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus"
+        },
         "nodeStatuses": {
           "description": "nodeStatuses track the deployment values and errors across individual nodes",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28712,6 +28917,75 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineManager": {
+      "description": "MachineManager describes a target machine resource that is registered for boot image updates. It stores identifying information such as the resource type and the API Group of the resource. It also provides granular control via the selection field.",
+      "type": "object",
+      "required": [
+        "resource",
+        "apiGroup",
+        "selection"
+      ],
+      "properties": {
+        "apiGroup": {
+          "description": "apiGroup is name of the APIGroup that the machine management resource belongs to. The only current valid value is machine.openshift.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group.",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+          "type": "string",
+          "default": ""
+        },
+        "selection": {
+          "description": "selection allows granular control of the machine management resources that will be registered for boot image updates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineManagerSelector"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineManagerSelector": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+          "type": "string",
+          "default": ""
+        },
+        "partial": {
+          "description": "partial provides label selector(s) that can be used to match machine management resources. Only permitted when mode is set to \"Partial\".",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.PartialSelector"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "partial": "Partial"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.ManagedBootImages": {
+      "type": "object",
+      "properties": {
+        "machineManagers": {
+          "description": "machineManagers can be used to register machine management resources for boot image updates. The Machine Config Operator will watch for changes to this list. Only one entry is permitted per type of machine management resource.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineManager"
+          },
+          "x-kubernetes-list-map-keys": [
+            "resource",
+            "apiGroup"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -28790,7 +29064,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28798,7 +29076,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29015,7 +29294,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29023,7 +29306,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29039,6 +29323,278 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus": {
+      "description": "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
+      "type": "object",
+      "properties": {
+        "files": {
+          "description": "files is a list of MachineConfig file definitions and actions to take to changes on those paths",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusFile"
+          },
+          "x-kubernetes-list-map-keys": [
+            "path"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "sshkey": {
+          "description": "sshkey is the overall sshkey MachineConfig definition",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusSSHKey"
+        },
+        "units": {
+          "description": "units is a list MachineConfig unit definitions and actions to take on changes to those services",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusUnit"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyConfig": {
+      "description": "NodeDisruptionPolicyConfig is the overall spec definition for files/units/sshkeys",
+      "type": "object",
+      "properties": {
+        "files": {
+          "description": "files is a list of MachineConfig file definitions and actions to take to changes on those paths This list supports a maximum of 50 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecFile"
+          },
+          "x-kubernetes-list-map-keys": [
+            "path"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "sshkey": {
+          "description": "sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this will apply to all sshkey changes in the cluster",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecSSHKey"
+        },
+        "units": {
+          "description": "units is a list MachineConfig unit definitions and actions to take on changes to those services This list supports a maximum of 50 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecUnit"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "reload": {
+          "description": "reload specifies the service to reload, only valid if type is reload",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ReloadService"
+        },
+        "restart": {
+          "description": "restart specifies the service to restart, only valid if type is restart",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
+        },
+        "type": {
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "reload": "Reload",
+            "restart": "Restart"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecFile": {
+      "description": "NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "path",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "path": {
+          "description": "path is the location of a file being managed through a MachineConfig. The Actions in the policy will apply to changes to the file at this path.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecSSHKey": {
+      "description": "NodeDisruptionPolicySpecSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecUnit": {
+      "description": "NodeDisruptionPolicySpecUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "name",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "name": {
+          "description": "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus": {
+      "type": "object",
+      "properties": {
+        "clusterPolicies": {
+          "description": "clusterPolicies is a merge of cluster default and user provided node disruption policies.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "reload": {
+          "description": "reload specifies the service to reload, only valid if type is reload",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ReloadService"
+        },
+        "restart": {
+          "description": "restart specifies the service to restart, only valid if type is restart",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
+        },
+        "type": {
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "reload": "Reload",
+            "restart": "Restart"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusFile": {
+      "description": "NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "path",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "path": {
+          "description": "path is the location of a file being managed through a MachineConfig. The Actions in the policy will apply to changes to the file at this path.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusSSHKey": {
+      "description": "NodeDisruptionPolicyStatusSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusUnit": {
+      "description": "NodeDisruptionPolicyStatusUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "name",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "name": {
+          "description": "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -29104,7 +29660,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "lastFailedTime": {
           "description": "lastFailedTime is the time the last failed revision failed the last time.",
@@ -29292,7 +29849,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29300,7 +29861,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
@@ -29429,7 +29991,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29437,7 +30003,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29560,7 +30127,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29568,7 +30139,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29584,6 +30156,16 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.PartialSelector": {
+      "description": "PartialSelector provides label selector(s) that can be used to match machine management resources.",
+      "type": "object",
+      "properties": {
+        "machineResourceSelector": {
+          "description": "machineResourceSelector is a label selector that can be used to select machine resources like MachineSets.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },
@@ -29794,6 +30376,20 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ReloadService": {
+      "description": "ReloadService allows the user to specify the services to be reloaded",
+      "type": "object",
+      "required": [
+        "serviceName"
+      ],
+      "properties": {
+        "serviceName": {
+          "description": "serviceName is the full name (e.g. crio.service) of the service to be reloaded Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ResourceAttributesAccessReview": {
       "description": "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
       "type": "object",
@@ -29813,6 +30409,20 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
           }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.RestartService": {
+      "description": "RestartService allows the user to specify the services to be restarted",
+      "type": "object",
+      "required": [
+        "serviceName"
+      ],
+      "properties": {
+        "serviceName": {
+          "description": "serviceName is the full name (e.g. crio.service) of the service to be restarted Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -29996,7 +30606,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30004,7 +30618,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30127,7 +30742,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30135,7 +30754,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30259,7 +30879,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30267,7 +30891,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30455,7 +31080,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30463,7 +31092,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -30480,7 +31110,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30624,7 +31258,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30632,7 +31270,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30682,7 +31321,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.Upstream": {
-      "description": "Upstream can either be of type SystemResolvConf, or of type Network.\n\n* For an Upstream of type SystemResolvConf, no further fields are necessary:\n  The upstream will be configured to use /etc/resolv.conf.\n* For an Upstream of type Network, a NetworkResolver field needs to be defined\n  with an IP address or IP:port if the upstream listens on a port other than 53.",
+      "description": "Upstream can either be of type SystemResolvConf, or of type Network.\n\n  - For an Upstream of type SystemResolvConf, no further fields are necessary:\n    The upstream will be configured to use /etc/resolv.conf.\n  - For an Upstream of type Network, a NetworkResolver field needs to be defined\n    with an IP address or IP:port if the upstream listens on a port other than 53.",
       "type": "object",
       "required": [
         "type"
@@ -31198,7 +31837,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -31206,7 +31849,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -34577,7 +35221,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -34585,7 +35233,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",

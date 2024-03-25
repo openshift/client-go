@@ -121,7 +121,9 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.operator.v1.OperatorCondition
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - type
     - name: generations
       type:
         list:
