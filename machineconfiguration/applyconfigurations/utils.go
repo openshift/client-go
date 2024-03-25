@@ -63,6 +63,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.MachineConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NetworkInfo"):
 		return &machineconfigurationv1.NetworkInfoApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PinnedImageSetRef"):
+		return &machineconfigurationv1.PinnedImageSetRefApplyConfiguration{}
 
 		// Group=machineconfiguration.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNode"):
@@ -77,6 +79,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusMachineConfigVersionApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MCOObjectReference"):
 		return &machineconfigurationv1alpha1.MCOObjectReferenceApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageRef"):
+		return &machineconfigurationv1alpha1.PinnedImageRefApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSet"):
+		return &machineconfigurationv1alpha1.PinnedImageSetApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSetSpec"):
+		return &machineconfigurationv1alpha1.PinnedImageSetSpecApplyConfiguration{}
 
 	}
 	return nil
