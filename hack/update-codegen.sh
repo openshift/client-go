@@ -26,12 +26,12 @@ for group in apiserver apps authorization build cloudnetwork config console helm
       --applyconfig-name "applyconfigurations" \
       --applyconfig-externals "github.com/openshift/api/operator/v1.OperatorSpec:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1" \
       --applyconfig-openapi-schema "vendor/github.com/openshift/api/openapi/openapi.json" \
-      --input-pkg-root "github.com/openshift/api" \
       --one-input-api "${group}" \
-      --output-pkg-root "github.com/openshift/client-go/${group}" \
-      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --output-pkg "github.com/openshift/client-go/${group}" \
+      --output-dir "${SCRIPT_ROOT}/${group}" \
       --plural-exceptions "DNS:DNSes,DNSList:DNSList,SecurityContextConstraints:SecurityContextConstraints" \
-      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt" \
+      "${SCRIPT_ROOT}/vendor/github.com/openshift/api"
 done
 
 # machineconfiguration is almost identical to the above call, except for the additional
@@ -44,10 +44,10 @@ for group in machineconfiguration; do
       --applyconfig-name "applyconfigurations" \
       --applyconfig-externals "k8s.io/api/core/v1.ObjectReference:k8s.io/client-go/applyconfigurations/core/v1,github.com/openshift/api/operator/v1.OperatorSpec:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.OperatorCondition:github.com/openshift/client-go/operator/applyconfigurations/operator/v1,github.com/openshift/api/operator/v1.GenerationStatus:github.com/openshift/client-go/operator/applyconfigurations/operator/v1" \
       --applyconfig-openapi-schema "vendor/github.com/openshift/api/openapi/openapi.json" \
-      --input-pkg-root "github.com/openshift/api" \
       --one-input-api "${group}" \
-      --output-pkg-root "github.com/openshift/client-go/${group}" \
-      --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
+      --output-pkg "github.com/openshift/client-go/${group}" \
+      --output-dir "${SCRIPT_ROOT}/${group}" \
       --plural-exceptions "DNS:DNSes,DNSList:DNSList,SecurityContextConstraints:SecurityContextConstraints" \
-      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt"
+      --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt" \
+      "${SCRIPT_ROOT}/vendor/github.com/openshift/api"
 done
