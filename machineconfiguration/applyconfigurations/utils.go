@@ -73,10 +73,14 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.MachineConfigNodeSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpecMachineConfigVersion"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeSpecMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpecPinnedImageSet"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeSpecPinnedImageSetApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatus"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatusMachineConfigVersion"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatusPinnedImageSet"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeStatusPinnedImageSetApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MCOObjectReference"):
 		return &machineconfigurationv1alpha1.MCOObjectReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageRef"):
@@ -85,6 +89,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.PinnedImageSetApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSetSpec"):
 		return &machineconfigurationv1alpha1.PinnedImageSetSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("PinnedImageSetStatus"):
+		return &machineconfigurationv1alpha1.PinnedImageSetStatusApplyConfiguration{}
 
 	}
 	return nil

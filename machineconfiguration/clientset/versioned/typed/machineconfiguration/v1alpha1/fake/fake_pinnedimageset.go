@@ -82,6 +82,17 @@ func (c *FakePinnedImageSets) Update(ctx context.Context, pinnedImageSet *v1alph
 	return obj.(*v1alpha1.PinnedImageSet), err
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakePinnedImageSets) UpdateStatus(ctx context.Context, pinnedImageSet *v1alpha1.PinnedImageSet, opts v1.UpdateOptions) (*v1alpha1.PinnedImageSet, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootUpdateSubresourceAction(pinnedimagesetsResource, "status", pinnedImageSet), &v1alpha1.PinnedImageSet{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PinnedImageSet), err
+}
+
 // Delete takes name of the pinnedImageSet and deletes it. Returns an error if one occurs.
 func (c *FakePinnedImageSets) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
@@ -122,6 +133,28 @@ func (c *FakePinnedImageSets) Apply(ctx context.Context, pinnedImageSet *machine
 	}
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(pinnedimagesetsResource, *name, types.ApplyPatchType, data), &v1alpha1.PinnedImageSet{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.PinnedImageSet), err
+}
+
+// ApplyStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+func (c *FakePinnedImageSets) ApplyStatus(ctx context.Context, pinnedImageSet *machineconfigurationv1alpha1.PinnedImageSetApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.PinnedImageSet, err error) {
+	if pinnedImageSet == nil {
+		return nil, fmt.Errorf("pinnedImageSet provided to Apply must not be nil")
+	}
+	data, err := json.Marshal(pinnedImageSet)
+	if err != nil {
+		return nil, err
+	}
+	name := pinnedImageSet.Name
+	if name == nil {
+		return nil, fmt.Errorf("pinnedImageSet.Name must be provided to Apply")
+	}
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(pinnedimagesetsResource, *name, types.ApplyPatchType, data, "status"), &v1alpha1.PinnedImageSet{})
 	if obj == nil {
 		return nil, err
 	}
