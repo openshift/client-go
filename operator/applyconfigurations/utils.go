@@ -193,8 +193,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IPsecConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IPv4GatewayConfig"):
 		return &operatorv1.IPv4GatewayConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IPv4OVNKubernetesConfig"):
+		return &operatorv1.IPv4OVNKubernetesConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IPv6GatewayConfig"):
 		return &operatorv1.IPv6GatewayConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IPv6OVNKubernetesConfig"):
+		return &operatorv1.IPv6OVNKubernetesConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubeAPIServer"):
 		return &operatorv1.KubeAPIServerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubeAPIServerSpec"):

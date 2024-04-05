@@ -1424,10 +1424,28 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: internalMasqueradeSubnet
       type:
         scalar: string
+- name: com.github.openshift.api.operator.v1.IPv4OVNKubernetesConfig
+  map:
+    fields:
+    - name: internalJoinSubnet
+      type:
+        scalar: string
+    - name: internalTransitSwitchSubnet
+      type:
+        scalar: string
 - name: com.github.openshift.api.operator.v1.IPv6GatewayConfig
   map:
     fields:
     - name: internalMasqueradeSubnet
+      type:
+        scalar: string
+- name: com.github.openshift.api.operator.v1.IPv6OVNKubernetesConfig
+  map:
+    fields:
+    - name: internalJoinSubnet
+      type:
+        scalar: string
+    - name: internalTransitSwitchSubnet
       type:
         scalar: string
 - name: com.github.openshift.api.operator.v1.IngressController
@@ -2757,6 +2775,12 @@ var schemaYAML = typed.YAMLObject(`types:
         namedType: com.github.openshift.api.operator.v1.IPsecConfig
       default:
         mode: Disabled
+    - name: ipv4
+      type:
+        namedType: com.github.openshift.api.operator.v1.IPv4OVNKubernetesConfig
+    - name: ipv6
+      type:
+        namedType: com.github.openshift.api.operator.v1.IPv6OVNKubernetesConfig
     - name: mtu
       type:
         scalar: numeric
