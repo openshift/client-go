@@ -237,6 +237,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.MTUMigrationValuesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Network"):
 		return &configv1.NetworkApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NetworkDiagnostics"):
+		return &configv1.NetworkDiagnosticsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NetworkDiagnosticsSourcePlacement"):
+		return &configv1.NetworkDiagnosticsSourcePlacementApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NetworkDiagnosticsTargetPlacement"):
+		return &configv1.NetworkDiagnosticsTargetPlacementApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NetworkMigration"):
 		return &configv1.NetworkMigrationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NetworkSpec"):
