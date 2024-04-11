@@ -83,6 +83,7 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &consolev1.LinkApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NamespaceDashboardSpec"):
 		return &consolev1.NamespaceDashboardSpecApplyConfiguration{}
+
 	}
 	return nil
 }

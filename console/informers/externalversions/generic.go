@@ -53,6 +53,7 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsoleSamples().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("consoleyamlsamples"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Console().V1().ConsoleYAMLSamples().Informer()}, nil
+
 	}
 
 	return nil, fmt.Errorf("no informer found for %v", resource)

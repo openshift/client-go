@@ -4,17 +4,18 @@ package v1alpha1
 
 import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
 // DataGatherStatusApplyConfiguration represents an declarative configuration of the DataGatherStatus type for use
 // with apply.
 type DataGatherStatusApplyConfiguration struct {
-	Conditions        []v1.Condition                      `json:"conditions,omitempty"`
+	Conditions        []v1.ConditionApplyConfiguration    `json:"conditions,omitempty"`
 	State             *v1alpha1.DataGatherState           `json:"dataGatherState,omitempty"`
 	Gatherers         []GathererStatusApplyConfiguration  `json:"gatherers,omitempty"`
-	StartTime         *v1.Time                            `json:"startTime,omitempty"`
-	FinishTime        *v1.Time                            `json:"finishTime,omitempty"`
+	StartTime         *metav1.Time                        `json:"startTime,omitempty"`
+	FinishTime        *metav1.Time                        `json:"finishTime,omitempty"`
 	RelatedObjects    []ObjectReferenceApplyConfiguration `json:"relatedObjects,omitempty"`
 	InsightsRequestID *string                             `json:"insightsRequestID,omitempty"`
 	InsightsReport    *InsightsReportApplyConfiguration   `json:"insightsReport,omitempty"`
@@ -29,9 +30,12 @@ func DataGatherStatus() *DataGatherStatusApplyConfiguration {
 // WithConditions adds the given value to the Conditions field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the Conditions field.
-func (b *DataGatherStatusApplyConfiguration) WithConditions(values ...v1.Condition) *DataGatherStatusApplyConfiguration {
+func (b *DataGatherStatusApplyConfiguration) WithConditions(values ...*v1.ConditionApplyConfiguration) *DataGatherStatusApplyConfiguration {
 	for i := range values {
-		b.Conditions = append(b.Conditions, values[i])
+		if values[i] == nil {
+			panic("nil value passed to WithConditions")
+		}
+		b.Conditions = append(b.Conditions, *values[i])
 	}
 	return b
 }
@@ -60,7 +64,7 @@ func (b *DataGatherStatusApplyConfiguration) WithGatherers(values ...*GathererSt
 // WithStartTime sets the StartTime field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the StartTime field is set to the value of the last call.
-func (b *DataGatherStatusApplyConfiguration) WithStartTime(value v1.Time) *DataGatherStatusApplyConfiguration {
+func (b *DataGatherStatusApplyConfiguration) WithStartTime(value metav1.Time) *DataGatherStatusApplyConfiguration {
 	b.StartTime = &value
 	return b
 }
@@ -68,7 +72,7 @@ func (b *DataGatherStatusApplyConfiguration) WithStartTime(value v1.Time) *DataG
 // WithFinishTime sets the FinishTime field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the FinishTime field is set to the value of the last call.
-func (b *DataGatherStatusApplyConfiguration) WithFinishTime(value v1.Time) *DataGatherStatusApplyConfiguration {
+func (b *DataGatherStatusApplyConfiguration) WithFinishTime(value metav1.Time) *DataGatherStatusApplyConfiguration {
 	b.FinishTime = &value
 	return b
 }
