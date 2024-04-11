@@ -5,8 +5,8 @@ go 1.22.0
 toolchain go1.22.1
 
 require (
-	github.com/openshift/api v0.0.0-20240509165319-a8a5b79cc248
-	github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d
+	github.com/openshift/api v0.0.0-20240521185306-0314f31e7774
+	github.com/openshift/build-machinery-go v0.0.0-20240419090851-af9c868bcf52
 	github.com/spf13/pflag v1.0.5
 	k8s.io/api v0.30.0
 	k8s.io/apimachinery v0.30.0
