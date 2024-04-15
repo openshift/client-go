@@ -65,6 +65,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.NetworkInfoApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PinnedImageSetRef"):
 		return &machineconfigurationv1.PinnedImageSetRefApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PoolSynchronizerStatus"):
+		return &machineconfigurationv1.PoolSynchronizerStatusApplyConfiguration{}
 
 		// Group=machineconfiguration.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("BuildInputs"):
