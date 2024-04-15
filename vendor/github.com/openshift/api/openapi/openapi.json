@@ -6389,6 +6389,28 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FeatureGateTests": {
+      "type": "object",
+      "required": [
+        "featureGate",
+        "tests"
+      ],
+      "properties": {
+        "featureGate": {
+          "description": "FeatureGate is the name of the FeatureGate as it appears in The FeatureGate CR instance.",
+          "type": "string",
+          "default": ""
+        },
+        "tests": {
+          "description": "Tests contains an item for every TestName",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TestDetails"
+          }
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.GCPPlatformSpec": {
       "description": "GCPPlatformSpec holds the desired state of the Google Cloud Platform infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -10236,6 +10258,69 @@
           "default": ""
         }
       }
+    },
+    "com.github.openshift.api.config.v1.TestDetails": {
+      "type": "object",
+      "required": [
+        "testName"
+      ],
+      "properties": {
+        "testName": {
+          "description": "TestName is the name of the test as it appears in junit XMLs. It does not include the suite name since the same test can be executed in many suites.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReporting": {
+      "description": "TestReporting is used for origin (and potentially others) to report the test names for a given FeatureGate into the payload for later analysis on a per-payload basis. This doesn't need any CRD because it's never stored in the cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TestReportingSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TestReportingStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReportingSpec": {
+      "type": "object",
+      "required": [
+        "testsForFeatureGates"
+      ],
+      "properties": {
+        "testsForFeatureGates": {
+          "description": "TestsForFeatureGates is a list, indexed by FeatureGate and includes information about testing.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateTests"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReportingStatus": {
+      "type": "object"
     },
     "com.github.openshift.api.config.v1.TokenClaimMapping": {
       "type": "object",
@@ -22721,7 +22806,6 @@
       "description": "MachineOSBuildStatus describes the state of a build and other helpful information.",
       "type": "object",
       "required": [
-        "builderReference",
         "buildStart"
       ],
       "properties": {
@@ -22869,8 +22953,7 @@
       "type": "object",
       "required": [
         "machineConfigPool",
-        "buildInputs",
-        "buildOutputs"
+        "buildInputs"
       ],
       "properties": {
         "buildInputs": {
@@ -32063,6 +32146,21 @@
       "description": "VSphereCSIDriverConfigSpec defines properties that can be configured for vsphere CSI driver.",
       "type": "object",
       "properties": {
+        "globalMaxSnapshotsPerBlockVolume": {
+          "description": "globalMaxSnapshotsPerBlockVolume is a global configuration parameter that applies to volumes on all kinds of datastores. If omitted, the platform chooses a default, which is subject to change over time, currently that default is 3. Snapshots can not be disabled using this parameter. Increasing number of snapshots above 3 can have negative impact on performance, for more details see: https://kb.vmware.com/s/article/1025279 Volume snapshot documentation: https://docs.vmware.com/en/VMware-vSphere-Container-Storage-Plug-in/3.0/vmware-vsphere-csp-getting-started/GUID-E0B41C69-7EEB-450F-A73D-5FD2FF39E891.html",
+          "type": "integer",
+          "format": "int64"
+        },
+        "granularMaxSnapshotsPerBlockVolumeInVSAN": {
+          "description": "granularMaxSnapshotsPerBlockVolumeInVSAN is a granular configuration parameter on vSAN datastore only. It overrides GlobalMaxSnapshotsPerBlockVolume if set, while it falls back to the global constraint if unset. Snapshots for VSAN can not be disabled using this parameter.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "granularMaxSnapshotsPerBlockVolumeInVVOL": {
+          "description": "granularMaxSnapshotsPerBlockVolumeInVVOL is a granular configuration parameter on Virtual Volumes datastore only. It overrides GlobalMaxSnapshotsPerBlockVolume if set, while it falls back to the global constraint if unset. Snapshots for VVOL can not be disabled using this parameter.",
+          "type": "integer",
+          "format": "int64"
+        },
         "topologyCategories": {
           "description": "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
           "type": "array",
