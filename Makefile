@@ -15,7 +15,7 @@ GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
 GO_LD_FLAGS:=
 
 RUNTIME ?= podman
-RUNTIME_IMAGE_NAME ?= registry.ci.openshift.org/openshift/release:rhel-9-release-golang-1.21-openshift-4.16
+RUNTIME_IMAGE_NAME ?= registry.ci.openshift.org/openshift/release:rhel-9-release-golang-1.22-openshift-4.17
 
 examples:
 	go build -o examples/build/app ./examples/build/
