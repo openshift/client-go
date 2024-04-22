@@ -4,9 +4,7 @@ package applyconfigurations
 
 import (
 	v1 "github.com/openshift/api/monitoring/v1"
-	v1alpha1 "github.com/openshift/api/monitoring/v1alpha1"
 	monitoringv1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1"
-	monitoringv1alpha1 "github.com/openshift/client-go/monitoring/applyconfigurations/monitoring/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -35,28 +33,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &monitoringv1.RuleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RuleGroup"):
 		return &monitoringv1.RuleGroupApplyConfiguration{}
-
-		// Group=monitoring.openshift.io, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertingRule"):
-		return &monitoringv1alpha1.AlertingRuleApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertingRuleSpec"):
-		return &monitoringv1alpha1.AlertingRuleSpecApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertingRuleStatus"):
-		return &monitoringv1alpha1.AlertingRuleStatusApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertRelabelConfig"):
-		return &monitoringv1alpha1.AlertRelabelConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertRelabelConfigSpec"):
-		return &monitoringv1alpha1.AlertRelabelConfigSpecApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("AlertRelabelConfigStatus"):
-		return &monitoringv1alpha1.AlertRelabelConfigStatusApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("PrometheusRuleRef"):
-		return &monitoringv1alpha1.PrometheusRuleRefApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RelabelConfig"):
-		return &monitoringv1alpha1.RelabelConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("Rule"):
-		return &monitoringv1alpha1.RuleApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RuleGroup"):
-		return &monitoringv1alpha1.RuleGroupApplyConfiguration{}
 
 	}
 	return nil
