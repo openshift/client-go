@@ -4,9 +4,7 @@ package applyconfigurations
 
 import (
 	v1 "github.com/openshift/api/console/v1"
-	v1alpha1 "github.com/openshift/api/console/v1alpha1"
 	consolev1 "github.com/openshift/client-go/console/applyconfigurations/console/v1"
-	consolev1alpha1 "github.com/openshift/client-go/console/applyconfigurations/console/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -85,19 +83,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &consolev1.LinkApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NamespaceDashboardSpec"):
 		return &consolev1.NamespaceDashboardSpecApplyConfiguration{}
-
-		// Group=console.openshift.io, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithKind("ConsolePlugin"):
-		return &consolev1alpha1.ConsolePluginApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("ConsolePluginProxy"):
-		return &consolev1alpha1.ConsolePluginProxyApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("ConsolePluginProxyServiceConfig"):
-		return &consolev1alpha1.ConsolePluginProxyServiceConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("ConsolePluginService"):
-		return &consolev1alpha1.ConsolePluginServiceApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("ConsolePluginSpec"):
-		return &consolev1alpha1.ConsolePluginSpecApplyConfiguration{}
-
 	}
 	return nil
 }
