@@ -3,17 +3,19 @@
 package v1beta1
 
 import (
+	machinev1beta1 "github.com/openshift/api/machine/v1beta1"
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
 // MachineSetSpecApplyConfiguration represents an declarative configuration of the MachineSetSpec type for use
 // with apply.
 type MachineSetSpecApplyConfiguration struct {
-	Replicas        *int32                                 `json:"replicas,omitempty"`
-	MinReadySeconds *int32                                 `json:"minReadySeconds,omitempty"`
-	DeletePolicy    *string                                `json:"deletePolicy,omitempty"`
-	Selector        *v1.LabelSelectorApplyConfiguration    `json:"selector,omitempty"`
-	Template        *MachineTemplateSpecApplyConfiguration `json:"template,omitempty"`
+	Replicas         *int32                                 `json:"replicas,omitempty"`
+	MinReadySeconds  *int32                                 `json:"minReadySeconds,omitempty"`
+	DeletePolicy     *string                                `json:"deletePolicy,omitempty"`
+	Selector         *v1.LabelSelectorApplyConfiguration    `json:"selector,omitempty"`
+	Template         *MachineTemplateSpecApplyConfiguration `json:"template,omitempty"`
+	AuthoritativeAPI *machinev1beta1.MachineAuthority       `json:"authoritativeAPI,omitempty"`
 }
 
 // MachineSetSpecApplyConfiguration constructs an declarative configuration of the MachineSetSpec type for use with
@@ -59,5 +61,13 @@ func (b *MachineSetSpecApplyConfiguration) WithSelector(value *v1.LabelSelectorA
 // If called multiple times, the Template field is set to the value of the last call.
 func (b *MachineSetSpecApplyConfiguration) WithTemplate(value *MachineTemplateSpecApplyConfiguration) *MachineSetSpecApplyConfiguration {
 	b.Template = value
+	return b
+}
+
+// WithAuthoritativeAPI sets the AuthoritativeAPI field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the AuthoritativeAPI field is set to the value of the last call.
+func (b *MachineSetSpecApplyConfiguration) WithAuthoritativeAPI(value machinev1beta1.MachineAuthority) *MachineSetSpecApplyConfiguration {
+	b.AuthoritativeAPI = &value
 	return b
 }
