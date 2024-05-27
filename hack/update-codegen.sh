@@ -7,15 +7,6 @@ set -o pipefail
 SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
 CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../../../k8s.io/code-generator)}
 
-# TODO(soltysh/dinhxuanvu): this should be removed when bumping to k8s 1.30,
-# which already includes these changes, including hack/kube_codegen.sh file:
-mv "${CODEGEN_PKG}/kube_codegen.sh" "${CODEGEN_PKG}/kube_codegen.sh.orig"
-cp "${SCRIPT_ROOT}/hack/kube_codegen.sh" "${CODEGEN_PKG}/kube_codegen.sh"
-function cleanup {
-  mv "${CODEGEN_PKG}/kube_codegen.sh.orig" "${CODEGEN_PKG}/kube_codegen.sh"
-}
-trap cleanup EXIT
-
 source "${CODEGEN_PKG}/kube_codegen.sh"
 
 for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane project quota route samples security securityinternal servicecertsigner sharedresource template user; do
