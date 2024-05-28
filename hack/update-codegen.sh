@@ -7,23 +7,6 @@ set -o pipefail
 SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
 CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../../../k8s.io/code-generator)}
 
-# TODO(soltysh): this should be removed after https://github.com/kubernetes/kubernetes/pull/123893
-# merges, since it already includes these changes:
-mv "${CODEGEN_PKG}/kube_codegen.sh" "${CODEGEN_PKG}/kube_codegen.sh.orig"
-cp "${SCRIPT_ROOT}/hack/kube_codegen.sh" "${CODEGEN_PKG}/kube_codegen.sh"
-# TODO(soltysh): this should be removed after https://github.com/kubernetes/kubernetes/pull/124193
-# merges, since it already includes these changes:
-mv "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/applyconfiguration.go" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/applyconfiguration.go.orig"
-cp "${SCRIPT_ROOT}/hack/applyconfiguration.go.patch" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/applyconfiguration.go"
-mv "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/targets.go" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/targets.go.orig"
-cp "${SCRIPT_ROOT}/hack/targets.go.patch" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/targets.go"
-function cleanup {
-  mv "${CODEGEN_PKG}/kube_codegen.sh.orig" "${CODEGEN_PKG}/kube_codegen.sh"
-  mv "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/applyconfiguration.go.orig" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/applyconfiguration.go"
-  mv "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/targets.go.orig" "${SCRIPT_ROOT}/vendor/k8s.io/code-generator/cmd/applyconfiguration-gen/generators/targets.go"
-}
-trap cleanup EXIT
-
 source "${CODEGEN_PKG}/kube_codegen.sh"
 
 for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane project quota route samples security securityinternal servicecertsigner sharedresource template user; do

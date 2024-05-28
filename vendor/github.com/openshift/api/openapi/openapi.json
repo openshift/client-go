@@ -18218,7 +18218,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -18239,7 +18240,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AWSResourceFilter"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "id": {
           "description": "ID of resource.",
@@ -18758,7 +18760,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AWSFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "azure": {
           "description": "Azure configures failure domain information for the Azure platform.",
@@ -18766,7 +18769,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AzureFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "gcp": {
           "description": "GCP configures failure domain information for the GCP platform.",
@@ -18774,7 +18778,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.GCPFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "nutanix": {
           "description": "nutanix configures failure domain information for the Nutanix platform.",
@@ -18794,7 +18799,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.OpenStackFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "platform": {
           "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
@@ -21330,7 +21336,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "currentHealthy": {
           "description": "total number of machines counted by this machine health check",
@@ -21442,6 +21452,10 @@
         "selector"
       ],
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+          "type": "string"
+        },
         "deletePolicy": {
           "description": "DeletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
           "type": "string"
@@ -21475,6 +21489,10 @@
         "replicas"
       ],
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+          "type": "string"
+        },
         "availableReplicas": {
           "description": "The number of available replicas (ready for at least minReadySeconds) for this MachineSet.",
           "type": "integer",
@@ -21507,6 +21525,11 @@
           "type": "integer",
           "format": "int32",
           "default": 0
+        },
+        "synchronizedGeneration": {
+          "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -21514,6 +21537,10 @@
       "description": "MachineSpec defines the desired state of Machine",
       "type": "object",
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+          "type": "string"
+        },
         "lifecycleHooks": {
           "description": "LifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
           "default": {},
@@ -21539,7 +21566,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.Taint"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -21553,7 +21581,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.NodeAddress"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+          "type": "string"
         },
         "conditions": {
           "description": "Conditions defines the current state of the Machine",
@@ -21561,7 +21594,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "errorMessage": {
           "description": "ErrorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
@@ -21590,6 +21627,11 @@
         "providerStatus": {
           "description": "ProviderStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "synchronizedGeneration": {
+          "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -21771,6 +21813,10 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference"
           },
+          "x-kubernetes-list-map-keys": [
+            "uid"
+          ],
+          "x-kubernetes-list-type": "map",
           "x-kubernetes-patch-merge-key": "uid",
           "x-kubernetes-patch-strategy": "merge"
         }
@@ -26353,6 +26399,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleCustomization"
         },
+        "ingress": {
+          "description": "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27491,6 +27542,22 @@
         "internalTransitSwitchSubnet": {
           "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value cannot be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accomadate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.Ingress": {
+      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
+      "type": "object",
+      "properties": {
+        "clientDownloadsURL": {
+          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        },
+        "consoleURL": {
+          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -31578,7 +31645,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -37349,8 +37417,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the ConfigMap must be defined",
@@ -37371,8 +37440,9 @@
           "default": ""
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the ConfigMap or its key must be defined",
@@ -37459,8 +37529,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional specify whether the ConfigMap or its keys must be defined",
@@ -37487,8 +37558,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional specify whether the ConfigMap or its keys must be defined",
@@ -39054,6 +39126,9 @@
     "io.k8s.api.core.v1.HostAlias": {
       "description": "HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the pod's hosts file.",
       "type": "object",
+      "required": [
+        "ip"
+      ],
       "properties": {
         "hostnames": {
           "description": "Hostnames for the above IP address.",
@@ -39066,7 +39141,8 @@
         },
         "ip": {
           "description": "IP address of the host file entry.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -39500,8 +39576,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         }
       },
       "x-kubernetes-map-type": "atomic"
@@ -42968,8 +43045,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the Secret must be defined",
@@ -42990,8 +43068,9 @@
           "default": ""
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the Secret or its key must be defined",
@@ -43044,8 +43123,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional field specify whether the Secret or its key must be defined",
@@ -43527,7 +43607,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SessionAffinityConfig"
         },
         "trafficDistribution": {
-          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone).",
+          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone). This is an alpha field and requires enabling ServiceTrafficDistribution feature.",
           "type": "string"
         },
         "type": {

@@ -147,6 +147,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IBMCloudCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IBMLoadBalancerParameters"):
 		return &operatorv1.IBMLoadBalancerParametersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Ingress"):
+		return &operatorv1.IngressApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressController"):
 		return &operatorv1.IngressControllerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerCaptureHTTPCookie"):
