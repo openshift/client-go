@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// ProjectHelmChartRepositoryApplyConfiguration represents an declarative configuration of the ProjectHelmChartRepository type for use
+// ProjectHelmChartRepositoryApplyConfiguration represents a declarative configuration of the ProjectHelmChartRepository type for use
 // with apply.
 type ProjectHelmChartRepositoryApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type ProjectHelmChartRepositoryApplyConfiguration struct {
 	Status                           *HelmChartRepositoryStatusApplyConfiguration      `json:"status,omitempty"`
 }
 
-// ProjectHelmChartRepository constructs an declarative configuration of the ProjectHelmChartRepository type for use with
+// ProjectHelmChartRepository constructs a declarative configuration of the ProjectHelmChartRepository type for use with
 // apply.
 func ProjectHelmChartRepository(name, namespace string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b := &ProjectHelmChartRepositoryApplyConfiguration{}
@@ -239,4 +239,10 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithSpec(value *ProjectHe
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithStatus(value *HelmChartRepositoryStatusApplyConfiguration) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *ProjectHelmChartRepositoryApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

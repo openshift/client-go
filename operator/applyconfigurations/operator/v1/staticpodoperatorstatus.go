@@ -2,7 +2,7 @@
 
 package v1
 
-// StaticPodOperatorStatusApplyConfiguration represents an declarative configuration of the StaticPodOperatorStatus type for use
+// StaticPodOperatorStatusApplyConfiguration represents a declarative configuration of the StaticPodOperatorStatus type for use
 // with apply.
 type StaticPodOperatorStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
@@ -10,7 +10,7 @@ type StaticPodOperatorStatusApplyConfiguration struct {
 	NodeStatuses                     []NodeStatusApplyConfiguration `json:"nodeStatuses,omitempty"`
 }
 
-// StaticPodOperatorStatusApplyConfiguration constructs an declarative configuration of the StaticPodOperatorStatus type for use with
+// StaticPodOperatorStatusApplyConfiguration constructs a declarative configuration of the StaticPodOperatorStatus type for use with
 // apply.
 func StaticPodOperatorStatus() *StaticPodOperatorStatusApplyConfiguration {
 	return &StaticPodOperatorStatusApplyConfiguration{}

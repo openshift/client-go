@@ -27,20 +27,22 @@ var clusternetworksKind = v1.SchemeGroupVersion.WithKind("ClusterNetwork")
 
 // Get takes name of the clusterNetwork, and returns the corresponding clusterNetwork object, and an error if there is any.
 func (c *FakeClusterNetworks) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ClusterNetwork, err error) {
+	emptyResult := &v1.ClusterNetwork{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(clusternetworksResource, name), &v1.ClusterNetwork{})
+		Invokes(testing.NewRootGetActionWithOptions(clusternetworksResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ClusterNetwork), err
 }
 
 // List takes label and field selectors, and returns the list of ClusterNetworks that match those selectors.
 func (c *FakeClusterNetworks) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ClusterNetworkList, err error) {
+	emptyResult := &v1.ClusterNetworkList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(clusternetworksResource, clusternetworksKind, opts), &v1.ClusterNetworkList{})
+		Invokes(testing.NewRootListActionWithOptions(clusternetworksResource, clusternetworksKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeClusterNetworks) List(ctx context.Context, opts metav1.ListOptions)
 // Watch returns a watch.Interface that watches the requested clusterNetworks.
 func (c *FakeClusterNetworks) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(clusternetworksResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(clusternetworksResource, opts))
 }
 
 // Create takes the representation of a clusterNetwork and creates it.  Returns the server's representation of the clusterNetwork, and an error, if there is any.
 func (c *FakeClusterNetworks) Create(ctx context.Context, clusterNetwork *v1.ClusterNetwork, opts metav1.CreateOptions) (result *v1.ClusterNetwork, err error) {
+	emptyResult := &v1.ClusterNetwork{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(clusternetworksResource, clusterNetwork), &v1.ClusterNetwork{})
+		Invokes(testing.NewRootCreateActionWithOptions(clusternetworksResource, clusterNetwork, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ClusterNetwork), err
 }
 
 // Update takes the representation of a clusterNetwork and updates it. Returns the server's representation of the clusterNetwork, and an error, if there is any.
 func (c *FakeClusterNetworks) Update(ctx context.Context, clusterNetwork *v1.ClusterNetwork, opts metav1.UpdateOptions) (result *v1.ClusterNetwork, err error) {
+	emptyResult := &v1.ClusterNetwork{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(clusternetworksResource, clusterNetwork), &v1.ClusterNetwork{})
+		Invokes(testing.NewRootUpdateActionWithOptions(clusternetworksResource, clusterNetwork, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ClusterNetwork), err
 }
@@ -91,7 +95,7 @@ func (c *FakeClusterNetworks) Delete(ctx context.Context, name string, opts meta
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeClusterNetworks) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(clusternetworksResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(clusternetworksResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ClusterNetworkList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeClusterNetworks) DeleteCollection(ctx context.Context, opts metav1.
 
 // Patch applies the patch and returns the patched clusterNetwork.
 func (c *FakeClusterNetworks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ClusterNetwork, err error) {
+	emptyResult := &v1.ClusterNetwork{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(clusternetworksResource, name, pt, data, subresources...), &v1.ClusterNetwork{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(clusternetworksResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ClusterNetwork), err
 }
@@ -120,10 +125,11 @@ func (c *FakeClusterNetworks) Apply(ctx context.Context, clusterNetwork *network
 	if name == nil {
 		return nil, fmt.Errorf("clusterNetwork.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ClusterNetwork{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(clusternetworksResource, *name, types.ApplyPatchType, data), &v1.ClusterNetwork{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(clusternetworksResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ClusterNetwork), err
 }

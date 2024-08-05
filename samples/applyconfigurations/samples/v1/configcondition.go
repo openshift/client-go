@@ -8,7 +8,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ConfigConditionApplyConfiguration represents an declarative configuration of the ConfigCondition type for use
+// ConfigConditionApplyConfiguration represents a declarative configuration of the ConfigCondition type for use
 // with apply.
 type ConfigConditionApplyConfiguration struct {
 	Type               *v1.ConfigConditionType `json:"type,omitempty"`
@@ -19,7 +19,7 @@ type ConfigConditionApplyConfiguration struct {
 	Message            *string                 `json:"message,omitempty"`
 }
 
-// ConfigConditionApplyConfiguration constructs an declarative configuration of the ConfigCondition type for use with
+// ConfigConditionApplyConfiguration constructs a declarative configuration of the ConfigCondition type for use with
 // apply.
 func ConfigCondition() *ConfigConditionApplyConfiguration {
 	return &ConfigConditionApplyConfiguration{}

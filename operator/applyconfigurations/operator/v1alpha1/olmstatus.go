@@ -6,13 +6,13 @@ import (
 	v1 "github.com/openshift/client-go/operator/applyconfigurations/operator/v1"
 )
 
-// OLMStatusApplyConfiguration represents an declarative configuration of the OLMStatus type for use
+// OLMStatusApplyConfiguration represents a declarative configuration of the OLMStatus type for use
 // with apply.
 type OLMStatusApplyConfiguration struct {
 	v1.OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// OLMStatusApplyConfiguration constructs an declarative configuration of the OLMStatus type for use with
+// OLMStatusApplyConfiguration constructs a declarative configuration of the OLMStatus type for use with
 // apply.
 func OLMStatus() *OLMStatusApplyConfiguration {
 	return &OLMStatusApplyConfiguration{}

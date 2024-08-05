@@ -6,7 +6,7 @@ import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 )
 
-// HealthCheckApplyConfiguration represents an declarative configuration of the HealthCheck type for use
+// HealthCheckApplyConfiguration represents a declarative configuration of the HealthCheck type for use
 // with apply.
 type HealthCheckApplyConfiguration struct {
 	Description *string                    `json:"description,omitempty"`
@@ -15,7 +15,7 @@ type HealthCheckApplyConfiguration struct {
 	State       *v1alpha1.HealthCheckState `json:"state,omitempty"`
 }
 
-// HealthCheckApplyConfiguration constructs an declarative configuration of the HealthCheck type for use with
+// HealthCheckApplyConfiguration constructs a declarative configuration of the HealthCheck type for use with
 // apply.
 func HealthCheck() *HealthCheckApplyConfiguration {
 	return &HealthCheckApplyConfiguration{}

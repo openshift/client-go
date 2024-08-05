@@ -6,7 +6,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// InsightsReportApplyConfiguration represents an declarative configuration of the InsightsReport type for use
+// InsightsReportApplyConfiguration represents a declarative configuration of the InsightsReport type for use
 // with apply.
 type InsightsReportApplyConfiguration struct {
 	DownloadedAt *v1.Time                        `json:"downloadedAt,omitempty"`
@@ -14,7 +14,7 @@ type InsightsReportApplyConfiguration struct {
 	URI          *string                         `json:"uri,omitempty"`
 }
 
-// InsightsReportApplyConfiguration constructs an declarative configuration of the InsightsReport type for use with
+// InsightsReportApplyConfiguration constructs a declarative configuration of the InsightsReport type for use with
 // apply.
 func InsightsReport() *InsightsReportApplyConfiguration {
 	return &InsightsReportApplyConfiguration{}

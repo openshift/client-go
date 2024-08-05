@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// SharedConfigMapApplyConfiguration represents an declarative configuration of the SharedConfigMap type for use
+// SharedConfigMapApplyConfiguration represents a declarative configuration of the SharedConfigMap type for use
 // with apply.
 type SharedConfigMapApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type SharedConfigMapApplyConfiguration struct {
 	Status                           *SharedConfigMapStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// SharedConfigMap constructs an declarative configuration of the SharedConfigMap type for use with
+// SharedConfigMap constructs a declarative configuration of the SharedConfigMap type for use with
 // apply.
 func SharedConfigMap(name string) *SharedConfigMapApplyConfiguration {
 	b := &SharedConfigMapApplyConfiguration{}
@@ -237,4 +237,10 @@ func (b *SharedConfigMapApplyConfiguration) WithSpec(value *SharedConfigMapSpecA
 func (b *SharedConfigMapApplyConfiguration) WithStatus(value *SharedConfigMapStatusApplyConfiguration) *SharedConfigMapApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *SharedConfigMapApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }
