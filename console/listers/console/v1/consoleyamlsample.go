@@ -4,8 +4,8 @@ package v1
 
 import (
 	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type ConsoleYAMLSampleLister interface {
 
 // consoleYAMLSampleLister implements the ConsoleYAMLSampleLister interface.
 type consoleYAMLSampleLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1.ConsoleYAMLSample]
 }
 
 // NewConsoleYAMLSampleLister returns a new ConsoleYAMLSampleLister.
 func NewConsoleYAMLSampleLister(indexer cache.Indexer) ConsoleYAMLSampleLister {
-	return &consoleYAMLSampleLister{indexer: indexer}
-}
-
-// List lists all ConsoleYAMLSamples in the indexer.
-func (s *consoleYAMLSampleLister) List(selector labels.Selector) (ret []*v1.ConsoleYAMLSample, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.ConsoleYAMLSample))
-	})
-	return ret, err
-}
-
-// Get retrieves the ConsoleYAMLSample from the index for a given name.
-func (s *consoleYAMLSampleLister) Get(name string) (*v1.ConsoleYAMLSample, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("consoleyamlsample"), name)
-	}
-	return obj.(*v1.ConsoleYAMLSample), nil
+	return &consoleYAMLSampleLister{listers.New[*v1.ConsoleYAMLSample](indexer, v1.Resource("consoleyamlsample"))}
 }

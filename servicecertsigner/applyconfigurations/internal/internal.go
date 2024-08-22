@@ -56,7 +56,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: lastTransitionTime
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: message
       type:
         scalar: string
@@ -105,14 +104,12 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: observedConfig
       type:
         namedType: __untyped_atomic_
-      default: {}
     - name: operatorLogLevel
       type:
         scalar: string
     - name: unsupportedConfigOverrides
       type:
         namedType: __untyped_atomic_
-      default: {}
 - name: com.github.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfigStatus
   map:
     fields:
@@ -187,7 +184,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: creationTimestamp
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: deletionGracePeriodSeconds
       type:
         scalar: numeric

@@ -5,9 +5,12 @@ package applyconfigurations
 import (
 	v1 "github.com/openshift/api/machine/v1"
 	v1beta1 "github.com/openshift/api/machine/v1beta1"
+	internal "github.com/openshift/client-go/machine/applyconfigurations/internal"
 	machinev1 "github.com/openshift/client-go/machine/applyconfigurations/machine/v1"
 	machinev1beta1 "github.com/openshift/client-go/machine/applyconfigurations/machine/v1beta1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	testing "k8s.io/client-go/testing"
 )
 
 // ForKind returns an apply configuration type for the given GroupVersionKind, or nil if no
@@ -90,4 +93,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 
 	}
 	return nil
+}
+
+func NewTypeConverter(scheme *runtime.Scheme) *testing.TypeConverter {
+	return &testing.TypeConverter{Scheme: scheme, TypeResolver: internal.Parser()}
 }

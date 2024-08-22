@@ -5,7 +5,10 @@ package applyconfigurations
 import (
 	v1 "github.com/openshift/api/authorization/v1"
 	authorizationv1 "github.com/openshift/client-go/authorization/applyconfigurations/authorization/v1"
+	internal "github.com/openshift/client-go/authorization/applyconfigurations/internal"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	testing "k8s.io/client-go/testing"
 )
 
 // ForKind returns an apply configuration type for the given GroupVersionKind, or nil if no
@@ -21,8 +24,14 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &authorizationv1.ClusterRoleBindingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GroupRestriction"):
 		return &authorizationv1.GroupRestrictionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("LocalResourceAccessReview"):
+		return &authorizationv1.LocalResourceAccessReviewApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("LocalSubjectAccessReview"):
+		return &authorizationv1.LocalSubjectAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PolicyRule"):
 		return &authorizationv1.PolicyRuleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ResourceAccessReview"):
+		return &authorizationv1.ResourceAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Role"):
 		return &authorizationv1.RoleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RoleBinding"):
@@ -35,9 +44,15 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &authorizationv1.ServiceAccountReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ServiceAccountRestriction"):
 		return &authorizationv1.ServiceAccountRestrictionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("SubjectAccessReview"):
+		return &authorizationv1.SubjectAccessReviewApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UserRestriction"):
 		return &authorizationv1.UserRestrictionApplyConfiguration{}
 
 	}
 	return nil
+}
+
+func NewTypeConverter(scheme *runtime.Scheme) *testing.TypeConverter {
+	return &testing.TypeConverter{Scheme: scheme, TypeResolver: internal.Parser()}
 }

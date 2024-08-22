@@ -28,22 +28,24 @@ var podnetworkconnectivitychecksKind = v1alpha1.SchemeGroupVersion.WithKind("Pod
 
 // Get takes name of the podNetworkConnectivityCheck, and returns the corresponding podNetworkConnectivityCheck object, and an error if there is any.
 func (c *FakePodNetworkConnectivityChecks) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(podnetworkconnectivitychecksResource, c.ns, name), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewGetActionWithOptions(podnetworkconnectivitychecksResource, c.ns, name, options), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
 
 // List takes label and field selectors, and returns the list of PodNetworkConnectivityChecks that match those selectors.
 func (c *FakePodNetworkConnectivityChecks) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PodNetworkConnectivityCheckList, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheckList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(podnetworkconnectivitychecksResource, podnetworkconnectivitychecksKind, c.ns, opts), &v1alpha1.PodNetworkConnectivityCheckList{})
+		Invokes(testing.NewListActionWithOptions(podnetworkconnectivitychecksResource, podnetworkconnectivitychecksKind, c.ns, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -62,40 +64,43 @@ func (c *FakePodNetworkConnectivityChecks) List(ctx context.Context, opts v1.Lis
 // Watch returns a watch.Interface that watches the requested podNetworkConnectivityChecks.
 func (c *FakePodNetworkConnectivityChecks) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(podnetworkconnectivitychecksResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchActionWithOptions(podnetworkconnectivitychecksResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a podNetworkConnectivityCheck and creates it.  Returns the server's representation of the podNetworkConnectivityCheck, and an error, if there is any.
 func (c *FakePodNetworkConnectivityChecks) Create(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.CreateOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(podnetworkconnectivitychecksResource, c.ns, podNetworkConnectivityCheck), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewCreateActionWithOptions(podnetworkconnectivitychecksResource, c.ns, podNetworkConnectivityCheck, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
 
 // Update takes the representation of a podNetworkConnectivityCheck and updates it. Returns the server's representation of the podNetworkConnectivityCheck, and an error, if there is any.
 func (c *FakePodNetworkConnectivityChecks) Update(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(podnetworkconnectivitychecksResource, c.ns, podNetworkConnectivityCheck), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewUpdateActionWithOptions(podnetworkconnectivitychecksResource, c.ns, podNetworkConnectivityCheck, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePodNetworkConnectivityChecks) UpdateStatus(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (*v1alpha1.PodNetworkConnectivityCheck, error) {
+func (c *FakePodNetworkConnectivityChecks) UpdateStatus(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(podnetworkconnectivitychecksResource, "status", c.ns, podNetworkConnectivityCheck), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewUpdateSubresourceActionWithOptions(podnetworkconnectivitychecksResource, "status", c.ns, podNetworkConnectivityCheck, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
@@ -110,7 +115,7 @@ func (c *FakePodNetworkConnectivityChecks) Delete(ctx context.Context, name stri
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakePodNetworkConnectivityChecks) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(podnetworkconnectivitychecksResource, c.ns, listOpts)
+	action := testing.NewDeleteCollectionActionWithOptions(podnetworkconnectivitychecksResource, c.ns, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.PodNetworkConnectivityCheckList{})
 	return err
@@ -118,11 +123,12 @@ func (c *FakePodNetworkConnectivityChecks) DeleteCollection(ctx context.Context,
 
 // Patch applies the patch and returns the patched podNetworkConnectivityCheck.
 func (c *FakePodNetworkConnectivityChecks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PodNetworkConnectivityCheck, err error) {
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, name, pt, data, subresources...), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(podnetworkconnectivitychecksResource, c.ns, name, pt, data, opts, subresources...), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
@@ -140,11 +146,12 @@ func (c *FakePodNetworkConnectivityChecks) Apply(ctx context.Context, podNetwork
 	if name == nil {
 		return nil, fmt.Errorf("podNetworkConnectivityCheck.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }
@@ -163,11 +170,12 @@ func (c *FakePodNetworkConnectivityChecks) ApplyStatus(ctx context.Context, podN
 	if name == nil {
 		return nil, fmt.Errorf("podNetworkConnectivityCheck.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.PodNetworkConnectivityCheck{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.PodNetworkConnectivityCheck{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(podnetworkconnectivitychecksResource, c.ns, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.PodNetworkConnectivityCheck), err
 }

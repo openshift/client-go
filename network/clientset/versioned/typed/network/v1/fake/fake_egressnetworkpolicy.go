@@ -28,22 +28,24 @@ var egressnetworkpoliciesKind = v1.SchemeGroupVersion.WithKind("EgressNetworkPol
 
 // Get takes name of the egressNetworkPolicy, and returns the corresponding egressNetworkPolicy object, and an error if there is any.
 func (c *FakeEgressNetworkPolicies) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.EgressNetworkPolicy, err error) {
+	emptyResult := &v1.EgressNetworkPolicy{}
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(egressnetworkpoliciesResource, c.ns, name), &v1.EgressNetworkPolicy{})
+		Invokes(testing.NewGetActionWithOptions(egressnetworkpoliciesResource, c.ns, name, options), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.EgressNetworkPolicy), err
 }
 
 // List takes label and field selectors, and returns the list of EgressNetworkPolicies that match those selectors.
 func (c *FakeEgressNetworkPolicies) List(ctx context.Context, opts metav1.ListOptions) (result *v1.EgressNetworkPolicyList, err error) {
+	emptyResult := &v1.EgressNetworkPolicyList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(egressnetworkpoliciesResource, egressnetworkpoliciesKind, c.ns, opts), &v1.EgressNetworkPolicyList{})
+		Invokes(testing.NewListActionWithOptions(egressnetworkpoliciesResource, egressnetworkpoliciesKind, c.ns, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -62,28 +64,30 @@ func (c *FakeEgressNetworkPolicies) List(ctx context.Context, opts metav1.ListOp
 // Watch returns a watch.Interface that watches the requested egressNetworkPolicies.
 func (c *FakeEgressNetworkPolicies) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(egressnetworkpoliciesResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchActionWithOptions(egressnetworkpoliciesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a egressNetworkPolicy and creates it.  Returns the server's representation of the egressNetworkPolicy, and an error, if there is any.
 func (c *FakeEgressNetworkPolicies) Create(ctx context.Context, egressNetworkPolicy *v1.EgressNetworkPolicy, opts metav1.CreateOptions) (result *v1.EgressNetworkPolicy, err error) {
+	emptyResult := &v1.EgressNetworkPolicy{}
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(egressnetworkpoliciesResource, c.ns, egressNetworkPolicy), &v1.EgressNetworkPolicy{})
+		Invokes(testing.NewCreateActionWithOptions(egressnetworkpoliciesResource, c.ns, egressNetworkPolicy, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.EgressNetworkPolicy), err
 }
 
 // Update takes the representation of a egressNetworkPolicy and updates it. Returns the server's representation of the egressNetworkPolicy, and an error, if there is any.
 func (c *FakeEgressNetworkPolicies) Update(ctx context.Context, egressNetworkPolicy *v1.EgressNetworkPolicy, opts metav1.UpdateOptions) (result *v1.EgressNetworkPolicy, err error) {
+	emptyResult := &v1.EgressNetworkPolicy{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(egressnetworkpoliciesResource, c.ns, egressNetworkPolicy), &v1.EgressNetworkPolicy{})
+		Invokes(testing.NewUpdateActionWithOptions(egressnetworkpoliciesResource, c.ns, egressNetworkPolicy, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.EgressNetworkPolicy), err
 }
@@ -98,7 +102,7 @@ func (c *FakeEgressNetworkPolicies) Delete(ctx context.Context, name string, opt
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeEgressNetworkPolicies) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(egressnetworkpoliciesResource, c.ns, listOpts)
+	action := testing.NewDeleteCollectionActionWithOptions(egressnetworkpoliciesResource, c.ns, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.EgressNetworkPolicyList{})
 	return err
@@ -106,11 +110,12 @@ func (c *FakeEgressNetworkPolicies) DeleteCollection(ctx context.Context, opts m
 
 // Patch applies the patch and returns the patched egressNetworkPolicy.
 func (c *FakeEgressNetworkPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.EgressNetworkPolicy, err error) {
+	emptyResult := &v1.EgressNetworkPolicy{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(egressnetworkpoliciesResource, c.ns, name, pt, data, subresources...), &v1.EgressNetworkPolicy{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(egressnetworkpoliciesResource, c.ns, name, pt, data, opts, subresources...), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.EgressNetworkPolicy), err
 }
@@ -128,11 +133,12 @@ func (c *FakeEgressNetworkPolicies) Apply(ctx context.Context, egressNetworkPoli
 	if name == nil {
 		return nil, fmt.Errorf("egressNetworkPolicy.Name must be provided to Apply")
 	}
+	emptyResult := &v1.EgressNetworkPolicy{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(egressnetworkpoliciesResource, c.ns, *name, types.ApplyPatchType, data), &v1.EgressNetworkPolicy{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(egressnetworkpoliciesResource, c.ns, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.EgressNetworkPolicy), err
 }

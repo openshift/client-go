@@ -2,14 +2,14 @@
 
 package v1alpha1
 
-// SharedConfigMapReferenceApplyConfiguration represents an declarative configuration of the SharedConfigMapReference type for use
+// SharedConfigMapReferenceApplyConfiguration represents a declarative configuration of the SharedConfigMapReference type for use
 // with apply.
 type SharedConfigMapReferenceApplyConfiguration struct {
 	Name      *string `json:"name,omitempty"`
 	Namespace *string `json:"namespace,omitempty"`
 }
 
-// SharedConfigMapReferenceApplyConfiguration constructs an declarative configuration of the SharedConfigMapReference type for use with
+// SharedConfigMapReferenceApplyConfiguration constructs a declarative configuration of the SharedConfigMapReference type for use with
 // apply.
 func SharedConfigMapReference() *SharedConfigMapReferenceApplyConfiguration {
 	return &SharedConfigMapReferenceApplyConfiguration{}

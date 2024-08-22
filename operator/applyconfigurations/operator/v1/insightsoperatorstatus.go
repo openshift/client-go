@@ -2,7 +2,7 @@
 
 package v1
 
-// InsightsOperatorStatusApplyConfiguration represents an declarative configuration of the InsightsOperatorStatus type for use
+// InsightsOperatorStatusApplyConfiguration represents a declarative configuration of the InsightsOperatorStatus type for use
 // with apply.
 type InsightsOperatorStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
@@ -10,7 +10,7 @@ type InsightsOperatorStatusApplyConfiguration struct {
 	InsightsReport                   *InsightsReportApplyConfiguration `json:"insightsReport,omitempty"`
 }
 
-// InsightsOperatorStatusApplyConfiguration constructs an declarative configuration of the InsightsOperatorStatus type for use with
+// InsightsOperatorStatusApplyConfiguration constructs a declarative configuration of the InsightsOperatorStatus type for use with
 // apply.
 func InsightsOperatorStatus() *InsightsOperatorStatusApplyConfiguration {
 	return &InsightsOperatorStatusApplyConfiguration{}

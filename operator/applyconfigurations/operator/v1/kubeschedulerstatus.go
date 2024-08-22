@@ -2,13 +2,13 @@
 
 package v1
 
-// KubeSchedulerStatusApplyConfiguration represents an declarative configuration of the KubeSchedulerStatus type for use
+// KubeSchedulerStatusApplyConfiguration represents a declarative configuration of the KubeSchedulerStatus type for use
 // with apply.
 type KubeSchedulerStatusApplyConfiguration struct {
 	StaticPodOperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// KubeSchedulerStatusApplyConfiguration constructs an declarative configuration of the KubeSchedulerStatus type for use with
+// KubeSchedulerStatusApplyConfiguration constructs a declarative configuration of the KubeSchedulerStatus type for use with
 // apply.
 func KubeSchedulerStatus() *KubeSchedulerStatusApplyConfiguration {
 	return &KubeSchedulerStatusApplyConfiguration{}

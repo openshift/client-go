@@ -2,14 +2,14 @@
 
 package v1
 
-// AuthenticationStatusApplyConfiguration represents an declarative configuration of the AuthenticationStatus type for use
+// AuthenticationStatusApplyConfiguration represents a declarative configuration of the AuthenticationStatus type for use
 // with apply.
 type AuthenticationStatusApplyConfiguration struct {
 	OAuthAPIServer                   *OAuthAPIServerStatusApplyConfiguration `json:"oauthAPIServer,omitempty"`
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// AuthenticationStatusApplyConfiguration constructs an declarative configuration of the AuthenticationStatus type for use with
+// AuthenticationStatusApplyConfiguration constructs a declarative configuration of the AuthenticationStatus type for use with
 // apply.
 func AuthenticationStatus() *AuthenticationStatusApplyConfiguration {
 	return &AuthenticationStatusApplyConfiguration{}

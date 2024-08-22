@@ -4,8 +4,8 @@ package v1
 
 import (
 	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type ConsoleLinkLister interface {
 
 // consoleLinkLister implements the ConsoleLinkLister interface.
 type consoleLinkLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1.ConsoleLink]
 }
 
 // NewConsoleLinkLister returns a new ConsoleLinkLister.
 func NewConsoleLinkLister(indexer cache.Indexer) ConsoleLinkLister {
-	return &consoleLinkLister{indexer: indexer}
-}
-
-// List lists all ConsoleLinks in the indexer.
-func (s *consoleLinkLister) List(selector labels.Selector) (ret []*v1.ConsoleLink, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.ConsoleLink))
-	})
-	return ret, err
-}
-
-// Get retrieves the ConsoleLink from the index for a given name.
-func (s *consoleLinkLister) Get(name string) (*v1.ConsoleLink, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("consolelink"), name)
-	}
-	return obj.(*v1.ConsoleLink), nil
+	return &consoleLinkLister{listers.New[*v1.ConsoleLink](indexer, v1.Resource("consolelink"))}
 }

@@ -4,8 +4,8 @@ package v1alpha1
 
 import (
 	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type SharedConfigMapLister interface {
 
 // sharedConfigMapLister implements the SharedConfigMapLister interface.
 type sharedConfigMapLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1alpha1.SharedConfigMap]
 }
 
 // NewSharedConfigMapLister returns a new SharedConfigMapLister.
 func NewSharedConfigMapLister(indexer cache.Indexer) SharedConfigMapLister {
-	return &sharedConfigMapLister{indexer: indexer}
-}
-
-// List lists all SharedConfigMaps in the indexer.
-func (s *sharedConfigMapLister) List(selector labels.Selector) (ret []*v1alpha1.SharedConfigMap, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SharedConfigMap))
-	})
-	return ret, err
-}
-
-// Get retrieves the SharedConfigMap from the index for a given name.
-func (s *sharedConfigMapLister) Get(name string) (*v1alpha1.SharedConfigMap, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("sharedconfigmap"), name)
-	}
-	return obj.(*v1alpha1.SharedConfigMap), nil
+	return &sharedConfigMapLister{listers.New[*v1alpha1.SharedConfigMap](indexer, v1alpha1.Resource("sharedconfigmap"))}
 }

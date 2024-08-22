@@ -2,13 +2,13 @@
 
 package v1
 
-// ServiceCatalogControllerManagerStatusApplyConfiguration represents an declarative configuration of the ServiceCatalogControllerManagerStatus type for use
+// ServiceCatalogControllerManagerStatusApplyConfiguration represents a declarative configuration of the ServiceCatalogControllerManagerStatus type for use
 // with apply.
 type ServiceCatalogControllerManagerStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// ServiceCatalogControllerManagerStatusApplyConfiguration constructs an declarative configuration of the ServiceCatalogControllerManagerStatus type for use with
+// ServiceCatalogControllerManagerStatusApplyConfiguration constructs a declarative configuration of the ServiceCatalogControllerManagerStatus type for use with
 // apply.
 func ServiceCatalogControllerManagerStatus() *ServiceCatalogControllerManagerStatusApplyConfiguration {
 	return &ServiceCatalogControllerManagerStatusApplyConfiguration{}

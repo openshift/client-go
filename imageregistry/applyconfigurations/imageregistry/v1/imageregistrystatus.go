@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/client-go/operator/applyconfigurations/operator/v1"
 )
 
-// ImageRegistryStatusApplyConfiguration represents an declarative configuration of the ImageRegistryStatus type for use
+// ImageRegistryStatusApplyConfiguration represents a declarative configuration of the ImageRegistryStatus type for use
 // with apply.
 type ImageRegistryStatusApplyConfiguration struct {
 	v1.OperatorStatusApplyConfiguration `json:",inline"`
@@ -14,7 +14,7 @@ type ImageRegistryStatusApplyConfiguration struct {
 	Storage                             *ImageRegistryConfigStorageApplyConfiguration `json:"storage,omitempty"`
 }
 
-// ImageRegistryStatusApplyConfiguration constructs an declarative configuration of the ImageRegistryStatus type for use with
+// ImageRegistryStatusApplyConfiguration constructs a declarative configuration of the ImageRegistryStatus type for use with
 // apply.
 func ImageRegistryStatus() *ImageRegistryStatusApplyConfiguration {
 	return &ImageRegistryStatusApplyConfiguration{}

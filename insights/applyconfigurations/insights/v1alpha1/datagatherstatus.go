@@ -8,7 +8,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// DataGatherStatusApplyConfiguration represents an declarative configuration of the DataGatherStatus type for use
+// DataGatherStatusApplyConfiguration represents a declarative configuration of the DataGatherStatus type for use
 // with apply.
 type DataGatherStatusApplyConfiguration struct {
 	Conditions        []v1.ConditionApplyConfiguration    `json:"conditions,omitempty"`
@@ -21,7 +21,7 @@ type DataGatherStatusApplyConfiguration struct {
 	InsightsReport    *InsightsReportApplyConfiguration   `json:"insightsReport,omitempty"`
 }
 
-// DataGatherStatusApplyConfiguration constructs an declarative configuration of the DataGatherStatus type for use with
+// DataGatherStatusApplyConfiguration constructs a declarative configuration of the DataGatherStatus type for use with
 // apply.
 func DataGatherStatus() *DataGatherStatusApplyConfiguration {
 	return &DataGatherStatusApplyConfiguration{}

@@ -6,7 +6,7 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
-// ActionApplyConfiguration represents an declarative configuration of the Action type for use
+// ActionApplyConfiguration represents a declarative configuration of the Action type for use
 // with apply.
 type ActionApplyConfiguration struct {
 	Namespace        *string               `json:"namespace,omitempty"`
@@ -20,7 +20,7 @@ type ActionApplyConfiguration struct {
 	Content          *runtime.RawExtension `json:"content,omitempty"`
 }
 
-// ActionApplyConfiguration constructs an declarative configuration of the Action type for use with
+// ActionApplyConfiguration constructs a declarative configuration of the Action type for use with
 // apply.
 func Action() *ActionApplyConfiguration {
 	return &ActionApplyConfiguration{}
