@@ -19,6 +19,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.AccessLoggingApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AdditionalNetworkDefinition"):
 		return &operatorv1.AdditionalNetworkDefinitionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AdditionalRoutingCapabilities"):
+		return &operatorv1.AdditionalRoutingCapabilitiesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AddPage"):
 		return &operatorv1.AddPageApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Authentication"):
@@ -31,12 +33,24 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.AWSClassicLoadBalancerParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSCSIDriverConfigSpec"):
 		return &operatorv1.AWSCSIDriverConfigSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSEFSVolumeMetrics"):
+		return &operatorv1.AWSEFSVolumeMetricsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSEFSVolumeMetricsRecursiveWalkConfig"):
+		return &operatorv1.AWSEFSVolumeMetricsRecursiveWalkConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSLoadBalancerParameters"):
 		return &operatorv1.AWSLoadBalancerParametersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSNetworkLoadBalancerParameters"):
+		return &operatorv1.AWSNetworkLoadBalancerParametersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AWSSubnets"):
+		return &operatorv1.AWSSubnetsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AzureCSIDriverConfigSpec"):
 		return &operatorv1.AzureCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AzureDiskEncryptionSet"):
 		return &operatorv1.AzureDiskEncryptionSetApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Capability"):
+		return &operatorv1.CapabilityApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CapabilityVisibility"):
+		return &operatorv1.CapabilityVisibilityApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClientTLS"):
 		return &operatorv1.ClientTLSApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudCredential"):

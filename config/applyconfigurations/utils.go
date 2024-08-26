@@ -253,6 +253,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.NodeApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NodeSpec"):
 		return &configv1.NodeSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("NodeStatus"):
+		return &configv1.NodeStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixFailureDomain"):
 		return &configv1.NutanixFailureDomainApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("NutanixPlatformLoadBalancer"):
