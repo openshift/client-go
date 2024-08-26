@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/api/operator/v1"
 )
 
-// ConfigStatusApplyConfiguration represents an declarative configuration of the ConfigStatus type for use
+// ConfigStatusApplyConfiguration represents a declarative configuration of the ConfigStatus type for use
 // with apply.
 type ConfigStatusApplyConfiguration struct {
 	ManagementState     *v1.ManagementState                 `json:"managementState,omitempty"`
@@ -18,7 +18,7 @@ type ConfigStatusApplyConfiguration struct {
 	Version             *string                             `json:"version,omitempty"`
 }
 
-// ConfigStatusApplyConfiguration constructs an declarative configuration of the ConfigStatus type for use with
+// ConfigStatusApplyConfiguration constructs a declarative configuration of the ConfigStatus type for use with
 // apply.
 func ConfigStatus() *ConfigStatusApplyConfiguration {
 	return &ConfigStatusApplyConfiguration{}

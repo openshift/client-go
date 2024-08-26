@@ -2,13 +2,13 @@
 
 package v1
 
-// CSISnapshotControllerStatusApplyConfiguration represents an declarative configuration of the CSISnapshotControllerStatus type for use
+// CSISnapshotControllerStatusApplyConfiguration represents a declarative configuration of the CSISnapshotControllerStatus type for use
 // with apply.
 type CSISnapshotControllerStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// CSISnapshotControllerStatusApplyConfiguration constructs an declarative configuration of the CSISnapshotControllerStatus type for use with
+// CSISnapshotControllerStatusApplyConfiguration constructs a declarative configuration of the CSISnapshotControllerStatus type for use with
 // apply.
 func CSISnapshotControllerStatus() *CSISnapshotControllerStatusApplyConfiguration {
 	return &CSISnapshotControllerStatusApplyConfiguration{}

@@ -27,20 +27,22 @@ var netnamespacesKind = v1.SchemeGroupVersion.WithKind("NetNamespace")
 
 // Get takes name of the netNamespace, and returns the corresponding netNamespace object, and an error if there is any.
 func (c *FakeNetNamespaces) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.NetNamespace, err error) {
+	emptyResult := &v1.NetNamespace{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(netnamespacesResource, name), &v1.NetNamespace{})
+		Invokes(testing.NewRootGetActionWithOptions(netnamespacesResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.NetNamespace), err
 }
 
 // List takes label and field selectors, and returns the list of NetNamespaces that match those selectors.
 func (c *FakeNetNamespaces) List(ctx context.Context, opts metav1.ListOptions) (result *v1.NetNamespaceList, err error) {
+	emptyResult := &v1.NetNamespaceList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(netnamespacesResource, netnamespacesKind, opts), &v1.NetNamespaceList{})
+		Invokes(testing.NewRootListActionWithOptions(netnamespacesResource, netnamespacesKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeNetNamespaces) List(ctx context.Context, opts metav1.ListOptions) (
 // Watch returns a watch.Interface that watches the requested netNamespaces.
 func (c *FakeNetNamespaces) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(netnamespacesResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(netnamespacesResource, opts))
 }
 
 // Create takes the representation of a netNamespace and creates it.  Returns the server's representation of the netNamespace, and an error, if there is any.
 func (c *FakeNetNamespaces) Create(ctx context.Context, netNamespace *v1.NetNamespace, opts metav1.CreateOptions) (result *v1.NetNamespace, err error) {
+	emptyResult := &v1.NetNamespace{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(netnamespacesResource, netNamespace), &v1.NetNamespace{})
+		Invokes(testing.NewRootCreateActionWithOptions(netnamespacesResource, netNamespace, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.NetNamespace), err
 }
 
 // Update takes the representation of a netNamespace and updates it. Returns the server's representation of the netNamespace, and an error, if there is any.
 func (c *FakeNetNamespaces) Update(ctx context.Context, netNamespace *v1.NetNamespace, opts metav1.UpdateOptions) (result *v1.NetNamespace, err error) {
+	emptyResult := &v1.NetNamespace{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(netnamespacesResource, netNamespace), &v1.NetNamespace{})
+		Invokes(testing.NewRootUpdateActionWithOptions(netnamespacesResource, netNamespace, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.NetNamespace), err
 }
@@ -91,7 +95,7 @@ func (c *FakeNetNamespaces) Delete(ctx context.Context, name string, opts metav1
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeNetNamespaces) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(netnamespacesResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(netnamespacesResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.NetNamespaceList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeNetNamespaces) DeleteCollection(ctx context.Context, opts metav1.De
 
 // Patch applies the patch and returns the patched netNamespace.
 func (c *FakeNetNamespaces) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.NetNamespace, err error) {
+	emptyResult := &v1.NetNamespace{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, name, pt, data, subresources...), &v1.NetNamespace{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(netnamespacesResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.NetNamespace), err
 }
@@ -120,10 +125,11 @@ func (c *FakeNetNamespaces) Apply(ctx context.Context, netNamespace *networkv1.N
 	if name == nil {
 		return nil, fmt.Errorf("netNamespace.Name must be provided to Apply")
 	}
+	emptyResult := &v1.NetNamespace{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(netnamespacesResource, *name, types.ApplyPatchType, data), &v1.NetNamespace{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(netnamespacesResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.NetNamespace), err
 }

@@ -2,13 +2,13 @@
 
 package v1
 
-// StorageStatusApplyConfiguration represents an declarative configuration of the StorageStatus type for use
+// StorageStatusApplyConfiguration represents a declarative configuration of the StorageStatus type for use
 // with apply.
 type StorageStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// StorageStatusApplyConfiguration constructs an declarative configuration of the StorageStatus type for use with
+// StorageStatusApplyConfiguration constructs a declarative configuration of the StorageStatus type for use with
 // apply.
 func StorageStatus() *StorageStatusApplyConfiguration {
 	return &StorageStatusApplyConfiguration{}

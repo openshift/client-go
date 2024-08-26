@@ -28,22 +28,24 @@ var dnsnameresolversKind = v1alpha1.SchemeGroupVersion.WithKind("DNSNameResolver
 
 // Get takes name of the dNSNameResolver, and returns the corresponding dNSNameResolver object, and an error if there is any.
 func (c *FakeDNSNameResolvers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DNSNameResolver, err error) {
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(dnsnameresolversResource, c.ns, name), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewGetActionWithOptions(dnsnameresolversResource, c.ns, name, options), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
 
 // List takes label and field selectors, and returns the list of DNSNameResolvers that match those selectors.
 func (c *FakeDNSNameResolvers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DNSNameResolverList, err error) {
+	emptyResult := &v1alpha1.DNSNameResolverList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(dnsnameresolversResource, dnsnameresolversKind, c.ns, opts), &v1alpha1.DNSNameResolverList{})
+		Invokes(testing.NewListActionWithOptions(dnsnameresolversResource, dnsnameresolversKind, c.ns, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -62,40 +64,43 @@ func (c *FakeDNSNameResolvers) List(ctx context.Context, opts v1.ListOptions) (r
 // Watch returns a watch.Interface that watches the requested dNSNameResolvers.
 func (c *FakeDNSNameResolvers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(dnsnameresolversResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchActionWithOptions(dnsnameresolversResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a dNSNameResolver and creates it.  Returns the server's representation of the dNSNameResolver, and an error, if there is any.
 func (c *FakeDNSNameResolvers) Create(ctx context.Context, dNSNameResolver *v1alpha1.DNSNameResolver, opts v1.CreateOptions) (result *v1alpha1.DNSNameResolver, err error) {
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(dnsnameresolversResource, c.ns, dNSNameResolver), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewCreateActionWithOptions(dnsnameresolversResource, c.ns, dNSNameResolver, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
 
 // Update takes the representation of a dNSNameResolver and updates it. Returns the server's representation of the dNSNameResolver, and an error, if there is any.
 func (c *FakeDNSNameResolvers) Update(ctx context.Context, dNSNameResolver *v1alpha1.DNSNameResolver, opts v1.UpdateOptions) (result *v1alpha1.DNSNameResolver, err error) {
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(dnsnameresolversResource, c.ns, dNSNameResolver), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewUpdateActionWithOptions(dnsnameresolversResource, c.ns, dNSNameResolver, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDNSNameResolvers) UpdateStatus(ctx context.Context, dNSNameResolver *v1alpha1.DNSNameResolver, opts v1.UpdateOptions) (*v1alpha1.DNSNameResolver, error) {
+func (c *FakeDNSNameResolvers) UpdateStatus(ctx context.Context, dNSNameResolver *v1alpha1.DNSNameResolver, opts v1.UpdateOptions) (result *v1alpha1.DNSNameResolver, err error) {
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(dnsnameresolversResource, "status", c.ns, dNSNameResolver), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewUpdateSubresourceActionWithOptions(dnsnameresolversResource, "status", c.ns, dNSNameResolver, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
@@ -110,7 +115,7 @@ func (c *FakeDNSNameResolvers) Delete(ctx context.Context, name string, opts v1.
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeDNSNameResolvers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(dnsnameresolversResource, c.ns, listOpts)
+	action := testing.NewDeleteCollectionActionWithOptions(dnsnameresolversResource, c.ns, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.DNSNameResolverList{})
 	return err
@@ -118,11 +123,12 @@ func (c *FakeDNSNameResolvers) DeleteCollection(ctx context.Context, opts v1.Del
 
 // Patch applies the patch and returns the patched dNSNameResolver.
 func (c *FakeDNSNameResolvers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DNSNameResolver, err error) {
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(dnsnameresolversResource, c.ns, name, pt, data, subresources...), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(dnsnameresolversResource, c.ns, name, pt, data, opts, subresources...), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
@@ -140,11 +146,12 @@ func (c *FakeDNSNameResolvers) Apply(ctx context.Context, dNSNameResolver *netwo
 	if name == nil {
 		return nil, fmt.Errorf("dNSNameResolver.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(dnsnameresolversResource, c.ns, *name, types.ApplyPatchType, data), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(dnsnameresolversResource, c.ns, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }
@@ -163,11 +170,12 @@ func (c *FakeDNSNameResolvers) ApplyStatus(ctx context.Context, dNSNameResolver 
 	if name == nil {
 		return nil, fmt.Errorf("dNSNameResolver.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.DNSNameResolver{}
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(dnsnameresolversResource, c.ns, *name, types.ApplyPatchType, data, "status"), &v1alpha1.DNSNameResolver{})
+		Invokes(testing.NewPatchSubresourceActionWithOptions(dnsnameresolversResource, c.ns, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.DNSNameResolver), err
 }

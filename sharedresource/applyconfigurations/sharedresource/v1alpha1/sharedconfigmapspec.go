@@ -2,14 +2,14 @@
 
 package v1alpha1
 
-// SharedConfigMapSpecApplyConfiguration represents an declarative configuration of the SharedConfigMapSpec type for use
+// SharedConfigMapSpecApplyConfiguration represents a declarative configuration of the SharedConfigMapSpec type for use
 // with apply.
 type SharedConfigMapSpecApplyConfiguration struct {
 	ConfigMapRef *SharedConfigMapReferenceApplyConfiguration `json:"configMapRef,omitempty"`
 	Description  *string                                     `json:"description,omitempty"`
 }
 
-// SharedConfigMapSpecApplyConfiguration constructs an declarative configuration of the SharedConfigMapSpec type for use with
+// SharedConfigMapSpecApplyConfiguration constructs a declarative configuration of the SharedConfigMapSpec type for use with
 // apply.
 func SharedConfigMapSpec() *SharedConfigMapSpecApplyConfiguration {
 	return &SharedConfigMapSpecApplyConfiguration{}

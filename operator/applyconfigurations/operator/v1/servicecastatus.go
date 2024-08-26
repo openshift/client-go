@@ -2,13 +2,13 @@
 
 package v1
 
-// ServiceCAStatusApplyConfiguration represents an declarative configuration of the ServiceCAStatus type for use
+// ServiceCAStatusApplyConfiguration represents a declarative configuration of the ServiceCAStatus type for use
 // with apply.
 type ServiceCAStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// ServiceCAStatusApplyConfiguration constructs an declarative configuration of the ServiceCAStatus type for use with
+// ServiceCAStatusApplyConfiguration constructs a declarative configuration of the ServiceCAStatus type for use with
 // apply.
 func ServiceCAStatus() *ServiceCAStatusApplyConfiguration {
 	return &ServiceCAStatusApplyConfiguration{}

@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// ServiceCertSignerOperatorConfigApplyConfiguration represents an declarative configuration of the ServiceCertSignerOperatorConfig type for use
+// ServiceCertSignerOperatorConfigApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfig type for use
 // with apply.
 type ServiceCertSignerOperatorConfigApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type ServiceCertSignerOperatorConfigApplyConfiguration struct {
 	Status                           *ServiceCertSignerOperatorConfigStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// ServiceCertSignerOperatorConfig constructs an declarative configuration of the ServiceCertSignerOperatorConfig type for use with
+// ServiceCertSignerOperatorConfig constructs a declarative configuration of the ServiceCertSignerOperatorConfig type for use with
 // apply.
 func ServiceCertSignerOperatorConfig(name string) *ServiceCertSignerOperatorConfigApplyConfiguration {
 	b := &ServiceCertSignerOperatorConfigApplyConfiguration{}
@@ -237,4 +237,10 @@ func (b *ServiceCertSignerOperatorConfigApplyConfiguration) WithSpec(value *Serv
 func (b *ServiceCertSignerOperatorConfigApplyConfiguration) WithStatus(value *ServiceCertSignerOperatorConfigStatusApplyConfiguration) *ServiceCertSignerOperatorConfigApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *ServiceCertSignerOperatorConfigApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

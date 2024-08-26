@@ -2,13 +2,13 @@
 
 package v1
 
-// ClusterCSIDriverStatusApplyConfiguration represents an declarative configuration of the ClusterCSIDriverStatus type for use
+// ClusterCSIDriverStatusApplyConfiguration represents a declarative configuration of the ClusterCSIDriverStatus type for use
 // with apply.
 type ClusterCSIDriverStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// ClusterCSIDriverStatusApplyConfiguration constructs an declarative configuration of the ClusterCSIDriverStatus type for use with
+// ClusterCSIDriverStatusApplyConfiguration constructs a declarative configuration of the ClusterCSIDriverStatus type for use with
 // apply.
 func ClusterCSIDriverStatus() *ClusterCSIDriverStatusApplyConfiguration {
 	return &ClusterCSIDriverStatusApplyConfiguration{}

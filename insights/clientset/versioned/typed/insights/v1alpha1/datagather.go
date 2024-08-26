@@ -4,9 +4,6 @@ package v1alpha1
 
 import (
 	"context"
-	json "encoding/json"
-	"fmt"
-	"time"
 
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
@@ -14,7 +11,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
-	rest "k8s.io/client-go/rest"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // DataGathersGetter has a method to return a DataGatherInterface.
@@ -27,6 +24,7 @@ type DataGathersGetter interface {
 type DataGatherInterface interface {
 	Create(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.CreateOptions) (*v1alpha1.DataGather, error)
 	Update(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (*v1alpha1.DataGather, error)
+	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (*v1alpha1.DataGather, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
@@ -35,193 +33,25 @@ type DataGatherInterface interface {
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DataGather, err error)
 	Apply(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
 	ApplyStatus(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error)
 	DataGatherExpansion
 }
 
 // dataGathers implements DataGatherInterface
 type dataGathers struct {
-	client rest.Interface
+	*gentype.ClientWithListAndApply[*v1alpha1.DataGather, *v1alpha1.DataGatherList, *insightsv1alpha1.DataGatherApplyConfiguration]
 }
 
 // newDataGathers returns a DataGathers
 func newDataGathers(c *InsightsV1alpha1Client) *dataGathers {
 	return &dataGathers{
-		client: c.RESTClient(),
+		gentype.NewClientWithListAndApply[*v1alpha1.DataGather, *v1alpha1.DataGatherList, *insightsv1alpha1.DataGatherApplyConfiguration](
+			"datagathers",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *v1alpha1.DataGather { return &v1alpha1.DataGather{} },
+			func() *v1alpha1.DataGatherList { return &v1alpha1.DataGatherList{} }),
 	}
-}
-
-// Get takes name of the dataGather, and returns the corresponding dataGather object, and an error if there is any.
-func (c *dataGathers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DataGather, err error) {
-	result = &v1alpha1.DataGather{}
-	err = c.client.Get().
-		Resource("datagathers").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of DataGathers that match those selectors.
-func (c *dataGathers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DataGatherList, err error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	result = &v1alpha1.DataGatherList{}
-	err = c.client.Get().
-		Resource("datagathers").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested dataGathers.
-func (c *dataGathers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	opts.Watch = true
-	return c.client.Get().
-		Resource("datagathers").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Watch(ctx)
-}
-
-// Create takes the representation of a dataGather and creates it.  Returns the server's representation of the dataGather, and an error, if there is any.
-func (c *dataGathers) Create(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.CreateOptions) (result *v1alpha1.DataGather, err error) {
-	result = &v1alpha1.DataGather{}
-	err = c.client.Post().
-		Resource("datagathers").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(dataGather).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Update takes the representation of a dataGather and updates it. Returns the server's representation of the dataGather, and an error, if there is any.
-func (c *dataGathers) Update(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (result *v1alpha1.DataGather, err error) {
-	result = &v1alpha1.DataGather{}
-	err = c.client.Put().
-		Resource("datagathers").
-		Name(dataGather.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(dataGather).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *dataGathers) UpdateStatus(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (result *v1alpha1.DataGather, err error) {
-	result = &v1alpha1.DataGather{}
-	err = c.client.Put().
-		Resource("datagathers").
-		Name(dataGather.Name).
-		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(dataGather).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Delete takes name of the dataGather and deletes it. Returns an error if one occurs.
-func (c *dataGathers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	return c.client.Delete().
-		Resource("datagathers").
-		Name(name).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *dataGathers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
-	}
-	return c.client.Delete().
-		Resource("datagathers").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// Patch applies the patch and returns the patched dataGather.
-func (c *dataGathers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DataGather, err error) {
-	result = &v1alpha1.DataGather{}
-	err = c.client.Patch(pt).
-		Resource("datagathers").
-		Name(name).
-		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied dataGather.
-func (c *dataGathers) Apply(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error) {
-	if dataGather == nil {
-		return nil, fmt.Errorf("dataGather provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(dataGather)
-	if err != nil {
-		return nil, err
-	}
-	name := dataGather.Name
-	if name == nil {
-		return nil, fmt.Errorf("dataGather.Name must be provided to Apply")
-	}
-	result = &v1alpha1.DataGather{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Resource("datagathers").
-		Name(*name).
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *dataGathers) ApplyStatus(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error) {
-	if dataGather == nil {
-		return nil, fmt.Errorf("dataGather provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(dataGather)
-	if err != nil {
-		return nil, err
-	}
-
-	name := dataGather.Name
-	if name == nil {
-		return nil, fmt.Errorf("dataGather.Name must be provided to Apply")
-	}
-
-	result = &v1alpha1.DataGather{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Resource("datagathers").
-		Name(*name).
-		SubResource("status").
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
 }

@@ -2,7 +2,7 @@
 
 package v1alpha1
 
-// PodNetworkConnectivityCheckStatusApplyConfiguration represents an declarative configuration of the PodNetworkConnectivityCheckStatus type for use
+// PodNetworkConnectivityCheckStatusApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckStatus type for use
 // with apply.
 type PodNetworkConnectivityCheckStatusApplyConfiguration struct {
 	Successes  []LogEntryApplyConfiguration                             `json:"successes,omitempty"`
@@ -11,7 +11,7 @@ type PodNetworkConnectivityCheckStatusApplyConfiguration struct {
 	Conditions []PodNetworkConnectivityCheckConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
-// PodNetworkConnectivityCheckStatusApplyConfiguration constructs an declarative configuration of the PodNetworkConnectivityCheckStatus type for use with
+// PodNetworkConnectivityCheckStatusApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckStatus type for use with
 // apply.
 func PodNetworkConnectivityCheckStatus() *PodNetworkConnectivityCheckStatusApplyConfiguration {
 	return &PodNetworkConnectivityCheckStatusApplyConfiguration{}

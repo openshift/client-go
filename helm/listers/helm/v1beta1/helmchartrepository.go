@@ -4,8 +4,8 @@ package v1beta1
 
 import (
 	v1beta1 "github.com/openshift/api/helm/v1beta1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type HelmChartRepositoryLister interface {
 
 // helmChartRepositoryLister implements the HelmChartRepositoryLister interface.
 type helmChartRepositoryLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1beta1.HelmChartRepository]
 }
 
 // NewHelmChartRepositoryLister returns a new HelmChartRepositoryLister.
 func NewHelmChartRepositoryLister(indexer cache.Indexer) HelmChartRepositoryLister {
-	return &helmChartRepositoryLister{indexer: indexer}
-}
-
-// List lists all HelmChartRepositories in the indexer.
-func (s *helmChartRepositoryLister) List(selector labels.Selector) (ret []*v1beta1.HelmChartRepository, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1beta1.HelmChartRepository))
-	})
-	return ret, err
-}
-
-// Get retrieves the HelmChartRepository from the index for a given name.
-func (s *helmChartRepositoryLister) Get(name string) (*v1beta1.HelmChartRepository, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1beta1.Resource("helmchartrepository"), name)
-	}
-	return obj.(*v1beta1.HelmChartRepository), nil
+	return &helmChartRepositoryLister{listers.New[*v1beta1.HelmChartRepository](indexer, v1beta1.Resource("helmchartrepository"))}
 }

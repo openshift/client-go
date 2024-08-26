@@ -7,7 +7,7 @@ import (
 	samplesv1 "github.com/openshift/api/samples/v1"
 )
 
-// ConfigSpecApplyConfiguration represents an declarative configuration of the ConfigSpec type for use
+// ConfigSpecApplyConfiguration represents a declarative configuration of the ConfigSpec type for use
 // with apply.
 type ConfigSpecApplyConfiguration struct {
 	ManagementState     *v1.ManagementState       `json:"managementState,omitempty"`
@@ -18,7 +18,7 @@ type ConfigSpecApplyConfiguration struct {
 	SkippedHelmCharts   []samplesv1.HelmChartName `json:"skippedHelmCharts,omitempty"`
 }
 
-// ConfigSpecApplyConfiguration constructs an declarative configuration of the ConfigSpec type for use with
+// ConfigSpecApplyConfiguration constructs a declarative configuration of the ConfigSpec type for use with
 // apply.
 func ConfigSpec() *ConfigSpecApplyConfiguration {
 	return &ConfigSpecApplyConfiguration{}

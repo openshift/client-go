@@ -4,8 +4,8 @@ package v1
 
 import (
 	v1 "github.com/openshift/api/monitoring/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -22,25 +22,17 @@ type AlertingRuleLister interface {
 
 // alertingRuleLister implements the AlertingRuleLister interface.
 type alertingRuleLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1.AlertingRule]
 }
 
 // NewAlertingRuleLister returns a new AlertingRuleLister.
 func NewAlertingRuleLister(indexer cache.Indexer) AlertingRuleLister {
-	return &alertingRuleLister{indexer: indexer}
-}
-
-// List lists all AlertingRules in the indexer.
-func (s *alertingRuleLister) List(selector labels.Selector) (ret []*v1.AlertingRule, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.AlertingRule))
-	})
-	return ret, err
+	return &alertingRuleLister{listers.New[*v1.AlertingRule](indexer, v1.Resource("alertingrule"))}
 }
 
 // AlertingRules returns an object that can list and get AlertingRules.
 func (s *alertingRuleLister) AlertingRules(namespace string) AlertingRuleNamespaceLister {
-	return alertingRuleNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return alertingRuleNamespaceLister{listers.NewNamespaced[*v1.AlertingRule](s.ResourceIndexer, namespace)}
 }
 
 // AlertingRuleNamespaceLister helps list and get AlertingRules.
@@ -58,26 +50,5 @@ type AlertingRuleNamespaceLister interface {
 // alertingRuleNamespaceLister implements the AlertingRuleNamespaceLister
 // interface.
 type alertingRuleNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all AlertingRules in the indexer for a given namespace.
-func (s alertingRuleNamespaceLister) List(selector labels.Selector) (ret []*v1.AlertingRule, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.AlertingRule))
-	})
-	return ret, err
-}
-
-// Get retrieves the AlertingRule from the indexer for a given namespace and name.
-func (s alertingRuleNamespaceLister) Get(name string) (*v1.AlertingRule, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("alertingrule"), name)
-	}
-	return obj.(*v1.AlertingRule), nil
+	listers.ResourceIndexer[*v1.AlertingRule]
 }

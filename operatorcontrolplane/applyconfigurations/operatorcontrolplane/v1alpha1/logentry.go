@@ -6,7 +6,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// LogEntryApplyConfiguration represents an declarative configuration of the LogEntry type for use
+// LogEntryApplyConfiguration represents a declarative configuration of the LogEntry type for use
 // with apply.
 type LogEntryApplyConfiguration struct {
 	Start   *v1.Time     `json:"time,omitempty"`
@@ -16,7 +16,7 @@ type LogEntryApplyConfiguration struct {
 	Latency *v1.Duration `json:"latency,omitempty"`
 }
 
-// LogEntryApplyConfiguration constructs an declarative configuration of the LogEntry type for use with
+// LogEntryApplyConfiguration constructs a declarative configuration of the LogEntry type for use with
 // apply.
 func LogEntry() *LogEntryApplyConfiguration {
 	return &LogEntryApplyConfiguration{}

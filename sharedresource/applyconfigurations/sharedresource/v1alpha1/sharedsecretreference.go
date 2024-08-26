@@ -2,14 +2,14 @@
 
 package v1alpha1
 
-// SharedSecretReferenceApplyConfiguration represents an declarative configuration of the SharedSecretReference type for use
+// SharedSecretReferenceApplyConfiguration represents a declarative configuration of the SharedSecretReference type for use
 // with apply.
 type SharedSecretReferenceApplyConfiguration struct {
 	Name      *string `json:"name,omitempty"`
 	Namespace *string `json:"namespace,omitempty"`
 }
 
-// SharedSecretReferenceApplyConfiguration constructs an declarative configuration of the SharedSecretReference type for use with
+// SharedSecretReferenceApplyConfiguration constructs a declarative configuration of the SharedSecretReference type for use with
 // apply.
 func SharedSecretReference() *SharedSecretReferenceApplyConfiguration {
 	return &SharedSecretReferenceApplyConfiguration{}

@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/api/config/v1"
 )
 
-// ConnectionConfigNamespaceScopedApplyConfiguration represents an declarative configuration of the ConnectionConfigNamespaceScoped type for use
+// ConnectionConfigNamespaceScopedApplyConfiguration represents a declarative configuration of the ConnectionConfigNamespaceScoped type for use
 // with apply.
 type ConnectionConfigNamespaceScopedApplyConfiguration struct {
 	URL             *string                    `json:"url,omitempty"`
@@ -15,7 +15,7 @@ type ConnectionConfigNamespaceScopedApplyConfiguration struct {
 	BasicAuthConfig *v1.SecretNameReference    `json:"basicAuthConfig,omitempty"`
 }
 
-// ConnectionConfigNamespaceScopedApplyConfiguration constructs an declarative configuration of the ConnectionConfigNamespaceScoped type for use with
+// ConnectionConfigNamespaceScopedApplyConfiguration constructs a declarative configuration of the ConnectionConfigNamespaceScoped type for use with
 // apply.
 func ConnectionConfigNamespaceScoped() *ConnectionConfigNamespaceScopedApplyConfiguration {
 	return &ConnectionConfigNamespaceScopedApplyConfiguration{}

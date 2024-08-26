@@ -2,13 +2,13 @@
 
 package v1
 
-// ServiceCatalogAPIServerStatusApplyConfiguration represents an declarative configuration of the ServiceCatalogAPIServerStatus type for use
+// ServiceCatalogAPIServerStatusApplyConfiguration represents a declarative configuration of the ServiceCatalogAPIServerStatus type for use
 // with apply.
 type ServiceCatalogAPIServerStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// ServiceCatalogAPIServerStatusApplyConfiguration constructs an declarative configuration of the ServiceCatalogAPIServerStatus type for use with
+// ServiceCatalogAPIServerStatusApplyConfiguration constructs a declarative configuration of the ServiceCatalogAPIServerStatus type for use with
 // apply.
 func ServiceCatalogAPIServerStatus() *ServiceCatalogAPIServerStatusApplyConfiguration {
 	return &ServiceCatalogAPIServerStatusApplyConfiguration{}

@@ -6,7 +6,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// OutageEntryApplyConfiguration represents an declarative configuration of the OutageEntry type for use
+// OutageEntryApplyConfiguration represents a declarative configuration of the OutageEntry type for use
 // with apply.
 type OutageEntryApplyConfiguration struct {
 	Start     *v1.Time                     `json:"start,omitempty"`
@@ -16,7 +16,7 @@ type OutageEntryApplyConfiguration struct {
 	Message   *string                      `json:"message,omitempty"`
 }
 
-// OutageEntryApplyConfiguration constructs an declarative configuration of the OutageEntry type for use with
+// OutageEntryApplyConfiguration constructs a declarative configuration of the OutageEntry type for use with
 // apply.
 func OutageEntry() *OutageEntryApplyConfiguration {
 	return &OutageEntryApplyConfiguration{}

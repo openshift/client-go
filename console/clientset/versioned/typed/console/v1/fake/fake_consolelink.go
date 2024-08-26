@@ -27,20 +27,22 @@ var consolelinksKind = v1.SchemeGroupVersion.WithKind("ConsoleLink")
 
 // Get takes name of the consoleLink, and returns the corresponding consoleLink object, and an error if there is any.
 func (c *FakeConsoleLinks) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleLink, err error) {
+	emptyResult := &v1.ConsoleLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consolelinksResource, name), &v1.ConsoleLink{})
+		Invokes(testing.NewRootGetActionWithOptions(consolelinksResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleLink), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleLinks that match those selectors.
 func (c *FakeConsoleLinks) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleLinkList, err error) {
+	emptyResult := &v1.ConsoleLinkList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consolelinksResource, consolelinksKind, opts), &v1.ConsoleLinkList{})
+		Invokes(testing.NewRootListActionWithOptions(consolelinksResource, consolelinksKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleLinks) List(ctx context.Context, opts metav1.ListOptions) (r
 // Watch returns a watch.Interface that watches the requested consoleLinks.
 func (c *FakeConsoleLinks) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consolelinksResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consolelinksResource, opts))
 }
 
 // Create takes the representation of a consoleLink and creates it.  Returns the server's representation of the consoleLink, and an error, if there is any.
 func (c *FakeConsoleLinks) Create(ctx context.Context, consoleLink *v1.ConsoleLink, opts metav1.CreateOptions) (result *v1.ConsoleLink, err error) {
+	emptyResult := &v1.ConsoleLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consolelinksResource, consoleLink), &v1.ConsoleLink{})
+		Invokes(testing.NewRootCreateActionWithOptions(consolelinksResource, consoleLink, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleLink), err
 }
 
 // Update takes the representation of a consoleLink and updates it. Returns the server's representation of the consoleLink, and an error, if there is any.
 func (c *FakeConsoleLinks) Update(ctx context.Context, consoleLink *v1.ConsoleLink, opts metav1.UpdateOptions) (result *v1.ConsoleLink, err error) {
+	emptyResult := &v1.ConsoleLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consolelinksResource, consoleLink), &v1.ConsoleLink{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consolelinksResource, consoleLink, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleLink), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleLinks) Delete(ctx context.Context, name string, opts metav1.
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleLinks) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consolelinksResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consolelinksResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleLinkList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleLinks) DeleteCollection(ctx context.Context, opts metav1.Del
 
 // Patch applies the patch and returns the patched consoleLink.
 func (c *FakeConsoleLinks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleLink, err error) {
+	emptyResult := &v1.ConsoleLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolelinksResource, name, pt, data, subresources...), &v1.ConsoleLink{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolelinksResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleLink), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleLinks) Apply(ctx context.Context, consoleLink *consolev1.Con
 	if name == nil {
 		return nil, fmt.Errorf("consoleLink.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolelinksResource, *name, types.ApplyPatchType, data), &v1.ConsoleLink{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolelinksResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleLink), err
 }

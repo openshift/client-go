@@ -4,9 +4,6 @@ package v1alpha1
 
 import (
 	"context"
-	json "encoding/json"
-	"fmt"
-	"time"
 
 	v1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
 	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
@@ -14,7 +11,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
-	rest "k8s.io/client-go/rest"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // ServiceCertSignerOperatorConfigsGetter has a method to return a ServiceCertSignerOperatorConfigInterface.
@@ -27,6 +24,7 @@ type ServiceCertSignerOperatorConfigsGetter interface {
 type ServiceCertSignerOperatorConfigInterface interface {
 	Create(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
 	Update(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
+	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
@@ -35,193 +33,27 @@ type ServiceCertSignerOperatorConfigInterface interface {
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
 	Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
 	ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
 	ServiceCertSignerOperatorConfigExpansion
 }
 
 // serviceCertSignerOperatorConfigs implements ServiceCertSignerOperatorConfigInterface
 type serviceCertSignerOperatorConfigs struct {
-	client rest.Interface
+	*gentype.ClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration]
 }
 
 // newServiceCertSignerOperatorConfigs returns a ServiceCertSignerOperatorConfigs
 func newServiceCertSignerOperatorConfigs(c *ServicecertsignerV1alpha1Client) *serviceCertSignerOperatorConfigs {
 	return &serviceCertSignerOperatorConfigs{
-		client: c.RESTClient(),
+		gentype.NewClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration](
+			"servicecertsigneroperatorconfigs",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *v1alpha1.ServiceCertSignerOperatorConfig { return &v1alpha1.ServiceCertSignerOperatorConfig{} },
+			func() *v1alpha1.ServiceCertSignerOperatorConfigList {
+				return &v1alpha1.ServiceCertSignerOperatorConfigList{}
+			}),
 	}
-}
-
-// Get takes name of the serviceCertSignerOperatorConfig, and returns the corresponding serviceCertSignerOperatorConfig object, and an error if there is any.
-func (c *serviceCertSignerOperatorConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Get().
-		Resource("servicecertsigneroperatorconfigs").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of ServiceCertSignerOperatorConfigs that match those selectors.
-func (c *serviceCertSignerOperatorConfigs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ServiceCertSignerOperatorConfigList, err error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	result = &v1alpha1.ServiceCertSignerOperatorConfigList{}
-	err = c.client.Get().
-		Resource("servicecertsigneroperatorconfigs").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested serviceCertSignerOperatorConfigs.
-func (c *serviceCertSignerOperatorConfigs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	opts.Watch = true
-	return c.client.Get().
-		Resource("servicecertsigneroperatorconfigs").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Watch(ctx)
-}
-
-// Create takes the representation of a serviceCertSignerOperatorConfig and creates it.  Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
-func (c *serviceCertSignerOperatorConfigs) Create(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Post().
-		Resource("servicecertsigneroperatorconfigs").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(serviceCertSignerOperatorConfig).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Update takes the representation of a serviceCertSignerOperatorConfig and updates it. Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
-func (c *serviceCertSignerOperatorConfigs) Update(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Put().
-		Resource("servicecertsigneroperatorconfigs").
-		Name(serviceCertSignerOperatorConfig.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(serviceCertSignerOperatorConfig).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *serviceCertSignerOperatorConfigs) UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Put().
-		Resource("servicecertsigneroperatorconfigs").
-		Name(serviceCertSignerOperatorConfig.Name).
-		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(serviceCertSignerOperatorConfig).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Delete takes name of the serviceCertSignerOperatorConfig and deletes it. Returns an error if one occurs.
-func (c *serviceCertSignerOperatorConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	return c.client.Delete().
-		Resource("servicecertsigneroperatorconfigs").
-		Name(name).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *serviceCertSignerOperatorConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
-	}
-	return c.client.Delete().
-		Resource("servicecertsigneroperatorconfigs").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// Patch applies the patch and returns the patched serviceCertSignerOperatorConfig.
-func (c *serviceCertSignerOperatorConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Patch(pt).
-		Resource("servicecertsigneroperatorconfigs").
-		Name(name).
-		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied serviceCertSignerOperatorConfig.
-func (c *serviceCertSignerOperatorConfigs) Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	if serviceCertSignerOperatorConfig == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(serviceCertSignerOperatorConfig)
-	if err != nil {
-		return nil, err
-	}
-	name := serviceCertSignerOperatorConfig.Name
-	if name == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
-	}
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Resource("servicecertsigneroperatorconfigs").
-		Name(*name).
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *serviceCertSignerOperatorConfigs) ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	if serviceCertSignerOperatorConfig == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
-	}
-	patchOpts := opts.ToPatchOptions()
-	data, err := json.Marshal(serviceCertSignerOperatorConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	name := serviceCertSignerOperatorConfig.Name
-	if name == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
-	}
-
-	result = &v1alpha1.ServiceCertSignerOperatorConfig{}
-	err = c.client.Patch(types.ApplyPatchType).
-		Resource("servicecertsigneroperatorconfigs").
-		Name(*name).
-		SubResource("status").
-		VersionedParams(&patchOpts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
 }

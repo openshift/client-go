@@ -4,8 +4,8 @@ package v1beta1
 
 import (
 	v1beta1 "github.com/openshift/api/helm/v1beta1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -22,25 +22,17 @@ type ProjectHelmChartRepositoryLister interface {
 
 // projectHelmChartRepositoryLister implements the ProjectHelmChartRepositoryLister interface.
 type projectHelmChartRepositoryLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1beta1.ProjectHelmChartRepository]
 }
 
 // NewProjectHelmChartRepositoryLister returns a new ProjectHelmChartRepositoryLister.
 func NewProjectHelmChartRepositoryLister(indexer cache.Indexer) ProjectHelmChartRepositoryLister {
-	return &projectHelmChartRepositoryLister{indexer: indexer}
-}
-
-// List lists all ProjectHelmChartRepositories in the indexer.
-func (s *projectHelmChartRepositoryLister) List(selector labels.Selector) (ret []*v1beta1.ProjectHelmChartRepository, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1beta1.ProjectHelmChartRepository))
-	})
-	return ret, err
+	return &projectHelmChartRepositoryLister{listers.New[*v1beta1.ProjectHelmChartRepository](indexer, v1beta1.Resource("projecthelmchartrepository"))}
 }
 
 // ProjectHelmChartRepositories returns an object that can list and get ProjectHelmChartRepositories.
 func (s *projectHelmChartRepositoryLister) ProjectHelmChartRepositories(namespace string) ProjectHelmChartRepositoryNamespaceLister {
-	return projectHelmChartRepositoryNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return projectHelmChartRepositoryNamespaceLister{listers.NewNamespaced[*v1beta1.ProjectHelmChartRepository](s.ResourceIndexer, namespace)}
 }
 
 // ProjectHelmChartRepositoryNamespaceLister helps list and get ProjectHelmChartRepositories.
@@ -58,26 +50,5 @@ type ProjectHelmChartRepositoryNamespaceLister interface {
 // projectHelmChartRepositoryNamespaceLister implements the ProjectHelmChartRepositoryNamespaceLister
 // interface.
 type projectHelmChartRepositoryNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ProjectHelmChartRepositories in the indexer for a given namespace.
-func (s projectHelmChartRepositoryNamespaceLister) List(selector labels.Selector) (ret []*v1beta1.ProjectHelmChartRepository, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1beta1.ProjectHelmChartRepository))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProjectHelmChartRepository from the indexer for a given namespace and name.
-func (s projectHelmChartRepositoryNamespaceLister) Get(name string) (*v1beta1.ProjectHelmChartRepository, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1beta1.Resource("projecthelmchartrepository"), name)
-	}
-	return obj.(*v1beta1.ProjectHelmChartRepository), nil
+	listers.ResourceIndexer[*v1beta1.ProjectHelmChartRepository]
 }

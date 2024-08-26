@@ -4,8 +4,8 @@ package v1alpha1
 
 import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type DataGatherLister interface {
 
 // dataGatherLister implements the DataGatherLister interface.
 type dataGatherLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1alpha1.DataGather]
 }
 
 // NewDataGatherLister returns a new DataGatherLister.
 func NewDataGatherLister(indexer cache.Indexer) DataGatherLister {
-	return &dataGatherLister{indexer: indexer}
-}
-
-// List lists all DataGathers in the indexer.
-func (s *dataGatherLister) List(selector labels.Selector) (ret []*v1alpha1.DataGather, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DataGather))
-	})
-	return ret, err
-}
-
-// Get retrieves the DataGather from the index for a given name.
-func (s *dataGatherLister) Get(name string) (*v1alpha1.DataGather, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("datagather"), name)
-	}
-	return obj.(*v1alpha1.DataGather), nil
+	return &dataGatherLister{listers.New[*v1alpha1.DataGather](indexer, v1alpha1.Resource("datagather"))}
 }

@@ -27,20 +27,22 @@ var cloudprivateipconfigsKind = v1.SchemeGroupVersion.WithKind("CloudPrivateIPCo
 
 // Get takes name of the cloudPrivateIPConfig, and returns the corresponding cloudPrivateIPConfig object, and an error if there is any.
 func (c *FakeCloudPrivateIPConfigs) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.CloudPrivateIPConfig, err error) {
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(cloudprivateipconfigsResource, name), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootGetActionWithOptions(cloudprivateipconfigsResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
 
 // List takes label and field selectors, and returns the list of CloudPrivateIPConfigs that match those selectors.
 func (c *FakeCloudPrivateIPConfigs) List(ctx context.Context, opts metav1.ListOptions) (result *v1.CloudPrivateIPConfigList, err error) {
+	emptyResult := &v1.CloudPrivateIPConfigList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(cloudprivateipconfigsResource, cloudprivateipconfigsKind, opts), &v1.CloudPrivateIPConfigList{})
+		Invokes(testing.NewRootListActionWithOptions(cloudprivateipconfigsResource, cloudprivateipconfigsKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,36 +61,39 @@ func (c *FakeCloudPrivateIPConfigs) List(ctx context.Context, opts metav1.ListOp
 // Watch returns a watch.Interface that watches the requested cloudPrivateIPConfigs.
 func (c *FakeCloudPrivateIPConfigs) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(cloudprivateipconfigsResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(cloudprivateipconfigsResource, opts))
 }
 
 // Create takes the representation of a cloudPrivateIPConfig and creates it.  Returns the server's representation of the cloudPrivateIPConfig, and an error, if there is any.
 func (c *FakeCloudPrivateIPConfigs) Create(ctx context.Context, cloudPrivateIPConfig *v1.CloudPrivateIPConfig, opts metav1.CreateOptions) (result *v1.CloudPrivateIPConfig, err error) {
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(cloudprivateipconfigsResource, cloudPrivateIPConfig), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootCreateActionWithOptions(cloudprivateipconfigsResource, cloudPrivateIPConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
 
 // Update takes the representation of a cloudPrivateIPConfig and updates it. Returns the server's representation of the cloudPrivateIPConfig, and an error, if there is any.
 func (c *FakeCloudPrivateIPConfigs) Update(ctx context.Context, cloudPrivateIPConfig *v1.CloudPrivateIPConfig, opts metav1.UpdateOptions) (result *v1.CloudPrivateIPConfig, err error) {
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(cloudprivateipconfigsResource, cloudPrivateIPConfig), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootUpdateActionWithOptions(cloudprivateipconfigsResource, cloudPrivateIPConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeCloudPrivateIPConfigs) UpdateStatus(ctx context.Context, cloudPrivateIPConfig *v1.CloudPrivateIPConfig, opts metav1.UpdateOptions) (*v1.CloudPrivateIPConfig, error) {
+func (c *FakeCloudPrivateIPConfigs) UpdateStatus(ctx context.Context, cloudPrivateIPConfig *v1.CloudPrivateIPConfig, opts metav1.UpdateOptions) (result *v1.CloudPrivateIPConfig, err error) {
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceAction(cloudprivateipconfigsResource, "status", cloudPrivateIPConfig), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(cloudprivateipconfigsResource, "status", cloudPrivateIPConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
@@ -102,7 +107,7 @@ func (c *FakeCloudPrivateIPConfigs) Delete(ctx context.Context, name string, opt
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeCloudPrivateIPConfigs) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(cloudprivateipconfigsResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(cloudprivateipconfigsResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.CloudPrivateIPConfigList{})
 	return err
@@ -110,10 +115,11 @@ func (c *FakeCloudPrivateIPConfigs) DeleteCollection(ctx context.Context, opts m
 
 // Patch applies the patch and returns the patched cloudPrivateIPConfig.
 func (c *FakeCloudPrivateIPConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.CloudPrivateIPConfig, err error) {
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(cloudprivateipconfigsResource, name, pt, data, subresources...), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(cloudprivateipconfigsResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
@@ -131,10 +137,11 @@ func (c *FakeCloudPrivateIPConfigs) Apply(ctx context.Context, cloudPrivateIPCon
 	if name == nil {
 		return nil, fmt.Errorf("cloudPrivateIPConfig.Name must be provided to Apply")
 	}
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(cloudprivateipconfigsResource, *name, types.ApplyPatchType, data), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(cloudprivateipconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }
@@ -153,10 +160,11 @@ func (c *FakeCloudPrivateIPConfigs) ApplyStatus(ctx context.Context, cloudPrivat
 	if name == nil {
 		return nil, fmt.Errorf("cloudPrivateIPConfig.Name must be provided to Apply")
 	}
+	emptyResult := &v1.CloudPrivateIPConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(cloudprivateipconfigsResource, *name, types.ApplyPatchType, data, "status"), &v1.CloudPrivateIPConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(cloudprivateipconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.CloudPrivateIPConfig), err
 }

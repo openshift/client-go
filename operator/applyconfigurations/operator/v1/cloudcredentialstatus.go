@@ -2,13 +2,13 @@
 
 package v1
 
-// CloudCredentialStatusApplyConfiguration represents an declarative configuration of the CloudCredentialStatus type for use
+// CloudCredentialStatusApplyConfiguration represents a declarative configuration of the CloudCredentialStatus type for use
 // with apply.
 type CloudCredentialStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// CloudCredentialStatusApplyConfiguration constructs an declarative configuration of the CloudCredentialStatus type for use with
+// CloudCredentialStatusApplyConfiguration constructs a declarative configuration of the CloudCredentialStatus type for use with
 // apply.
 func CloudCredentialStatus() *CloudCredentialStatusApplyConfiguration {
 	return &CloudCredentialStatusApplyConfiguration{}

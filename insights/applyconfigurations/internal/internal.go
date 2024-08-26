@@ -74,7 +74,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: finishTime
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: gatherers
       type:
         list:
@@ -99,7 +98,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: startTime
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
 - name: com.github.openshift.api.insights.v1alpha1.GathererConfig
   map:
     fields:
@@ -125,7 +123,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: lastGatherDuration
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
-      default: 0
     - name: name
       type:
         scalar: string
@@ -155,7 +152,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: downloadedAt
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: healthChecks
       type:
         list:
@@ -189,7 +185,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: lastTransitionTime
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: message
       type:
         scalar: string
@@ -258,7 +253,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: creationTimestamp
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: deletionGracePeriodSeconds
       type:
         scalar: numeric

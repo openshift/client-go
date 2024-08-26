@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/api/config/v1"
 )
 
-// PodNetworkConnectivityCheckSpecApplyConfiguration represents an declarative configuration of the PodNetworkConnectivityCheckSpec type for use
+// PodNetworkConnectivityCheckSpecApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckSpec type for use
 // with apply.
 type PodNetworkConnectivityCheckSpecApplyConfiguration struct {
 	SourcePod      *string                 `json:"sourcePod,omitempty"`
@@ -14,7 +14,7 @@ type PodNetworkConnectivityCheckSpecApplyConfiguration struct {
 	TLSClientCert  *v1.SecretNameReference `json:"tlsClientCert,omitempty"`
 }
 
-// PodNetworkConnectivityCheckSpecApplyConfiguration constructs an declarative configuration of the PodNetworkConnectivityCheckSpec type for use with
+// PodNetworkConnectivityCheckSpecApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckSpec type for use with
 // apply.
 func PodNetworkConnectivityCheckSpec() *PodNetworkConnectivityCheckSpecApplyConfiguration {
 	return &PodNetworkConnectivityCheckSpecApplyConfiguration{}

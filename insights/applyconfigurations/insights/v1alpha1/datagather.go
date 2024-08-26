@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// DataGatherApplyConfiguration represents an declarative configuration of the DataGather type for use
+// DataGatherApplyConfiguration represents a declarative configuration of the DataGather type for use
 // with apply.
 type DataGatherApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type DataGatherApplyConfiguration struct {
 	Status                           *DataGatherStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// DataGather constructs an declarative configuration of the DataGather type for use with
+// DataGather constructs a declarative configuration of the DataGather type for use with
 // apply.
 func DataGather(name string) *DataGatherApplyConfiguration {
 	b := &DataGatherApplyConfiguration{}
@@ -237,4 +237,10 @@ func (b *DataGatherApplyConfiguration) WithSpec(value *DataGatherSpecApplyConfig
 func (b *DataGatherApplyConfiguration) WithStatus(value *DataGatherStatusApplyConfiguration) *DataGatherApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *DataGatherApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

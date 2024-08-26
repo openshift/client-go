@@ -6,14 +6,14 @@ import (
 	operatorv1 "github.com/openshift/api/operator/v1"
 )
 
-// EtcdStatusApplyConfiguration represents an declarative configuration of the EtcdStatus type for use
+// EtcdStatusApplyConfiguration represents a declarative configuration of the EtcdStatus type for use
 // with apply.
 type EtcdStatusApplyConfiguration struct {
 	StaticPodOperatorStatusApplyConfiguration `json:",inline"`
 	HardwareSpeed                             *operatorv1.ControlPlaneHardwareSpeed `json:"controlPlaneHardwareSpeed,omitempty"`
 }
 
-// EtcdStatusApplyConfiguration constructs an declarative configuration of the EtcdStatus type for use with
+// EtcdStatusApplyConfiguration constructs a declarative configuration of the EtcdStatus type for use with
 // apply.
 func EtcdStatus() *EtcdStatusApplyConfiguration {
 	return &EtcdStatusApplyConfiguration{}

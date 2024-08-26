@@ -6,14 +6,14 @@ import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 )
 
-// DataGatherSpecApplyConfiguration represents an declarative configuration of the DataGatherSpec type for use
+// DataGatherSpecApplyConfiguration represents a declarative configuration of the DataGatherSpec type for use
 // with apply.
 type DataGatherSpecApplyConfiguration struct {
 	DataPolicy *v1alpha1.DataPolicy               `json:"dataPolicy,omitempty"`
 	Gatherers  []GathererConfigApplyConfiguration `json:"gatherers,omitempty"`
 }
 
-// DataGatherSpecApplyConfiguration constructs an declarative configuration of the DataGatherSpec type for use with
+// DataGatherSpecApplyConfiguration constructs a declarative configuration of the DataGatherSpec type for use with
 // apply.
 func DataGatherSpec() *DataGatherSpecApplyConfiguration {
 	return &DataGatherSpecApplyConfiguration{}

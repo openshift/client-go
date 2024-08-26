@@ -2,14 +2,14 @@
 
 package v1
 
-// KubeAPIServerStatusApplyConfiguration represents an declarative configuration of the KubeAPIServerStatus type for use
+// KubeAPIServerStatusApplyConfiguration represents a declarative configuration of the KubeAPIServerStatus type for use
 // with apply.
 type KubeAPIServerStatusApplyConfiguration struct {
 	StaticPodOperatorStatusApplyConfiguration `json:",inline"`
 	ServiceAccountIssuers                     []ServiceAccountIssuerStatusApplyConfiguration `json:"serviceAccountIssuers,omitempty"`
 }
 
-// KubeAPIServerStatusApplyConfiguration constructs an declarative configuration of the KubeAPIServerStatus type for use with
+// KubeAPIServerStatusApplyConfiguration constructs a declarative configuration of the KubeAPIServerStatus type for use with
 // apply.
 func KubeAPIServerStatus() *KubeAPIServerStatusApplyConfiguration {
 	return &KubeAPIServerStatusApplyConfiguration{}
