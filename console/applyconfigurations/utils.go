@@ -40,6 +40,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &consolev1.ConsolePluginApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsolePluginBackend"):
 		return &consolev1.ConsolePluginBackendApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsolePluginCSP"):
+		return &consolev1.ConsolePluginCSPApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsolePluginI18n"):
 		return &consolev1.ConsolePluginI18nApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsolePluginProxy"):
