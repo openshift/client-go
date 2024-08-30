@@ -13,8 +13,6 @@ import (
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
 	// Group=authorization.openshift.io, Version=v1
-	case v1.SchemeGroupVersion.WithKind("Action"):
-		return &authorizationv1.ActionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterRole"):
 		return &authorizationv1.ClusterRoleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterRoleBinding"):
