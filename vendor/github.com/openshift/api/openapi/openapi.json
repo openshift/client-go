@@ -5825,7 +5825,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
@@ -6809,7 +6810,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the name of the IBM Cloud service. Possible values are: CIS, COS, DNSServices, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC. For example, the IBM Cloud Private IAM service could be configured with the service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com` Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`",
+          "description": "name is the name of the IBM Cloud service. Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC. For example, the IBM Cloud Private IAM service could be configured with the service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com` Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`",
           "type": "string",
           "default": ""
         },
@@ -7205,7 +7206,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.RegistryLocation"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "externalRegistryHostnames": {
           "description": "externalRegistryHostnames provides the hostnames for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The first value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
@@ -7213,7 +7215,17 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal` or the empty string. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported. When empty, the behaviour will be decided based on the payload type advertised by the ClusterVersion status, i.e single arch payload implies the import mode is Legacy and multi payload implies PreserveOriginal.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Legacy",
+            "PreserveOriginal"
+          ]
         },
         "registrySources": {
           "description": "registrySources contains configuration that determines how the container runtime should treat individual registries when accessing images for builds+pods. (e.g. whether or not to allow insecure access).  It does not contain configuration for the internal cluster registry.",
@@ -7231,7 +7243,16 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal`. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported. This value will be reconciled based on either the spec value or if no spec value is specified, the image registry operator would look at the ClusterVersion status to determine the payload type and set the import mode accordingly, i.e single arch payload implies the import mode is Legacy and multi payload implies PreserveOriginal.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+          "type": "string",
+          "enum": [
+            "Legacy",
+            "PreserveOriginal"
+          ]
         },
         "internalRegistryHostname": {
           "description": "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. This value is set by the image registry operator which controls the internal registry hostname.",
@@ -8051,15 +8072,15 @@
       }
     },
     "com.github.openshift.api.config.v1.NetworkMigration": {
-      "description": "NetworkMigration represents the cluster network configuration.",
+      "description": "NetworkMigration represents the network migration status.",
       "type": "object",
       "properties": {
         "mtu": {
-          "description": "MTU contains the MTU migration configuration.",
+          "description": "MTU is the MTU configuration that is being deployed.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.MTUMigration"
         },
         "networkType": {
-          "description": "NetworkType is the target plugin that is to be deployed. Currently supported values are: OpenShiftSDN, OVNKubernetes",
+          "description": "NetworkType is the target plugin that is being deployed. DEPRECATED: network type migration is no longer supported, so this should always be unset.",
           "type": "string"
         }
       }
@@ -8092,7 +8113,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnostics"
         },
         "networkType": {
-          "description": "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
+          "description": "NetworkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
           "type": "string",
           "default": ""
         },
@@ -8130,7 +8151,7 @@
           "format": "int32"
         },
         "conditions": {
-          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
+          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkDiagnosticsAvailable\"",
           "type": "array",
           "items": {
             "default": {},
@@ -8148,7 +8169,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkMigration"
         },
         "networkType": {
-          "description": "NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).",
+          "description": "NetworkType is the plugin that is deployed (e.g. OVNKubernetes).",
           "type": "string"
         },
         "serviceNetwork": {
@@ -8238,7 +8259,23 @@
       }
     },
     "com.github.openshift.api.config.v1.NodeStatus": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions contain the details and the current state of the nodes.config object",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
     },
     "com.github.openshift.api.config.v1.NutanixFailureDomain": {
       "description": "NutanixFailureDomain configures failure domain information for the Nutanix platform.",
@@ -9665,7 +9702,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "blockedRegistries": {
           "description": "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
@@ -9673,7 +9711,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "containerRuntimeSearchRegistries": {
           "description": "containerRuntimeSearchRegistries are registries that will be searched when pulling images that do not have fully qualified domains in their pull specs. Registries will be searched in the order provided in the list. Note: this search list only works with the container runtime, i.e CRI-O. Will NOT work with builds or imagestream imports.",
@@ -9690,7 +9729,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -10150,7 +10190,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
@@ -10643,7 +10684,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
         },
         "vcenters": {
-          "description": "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported.",
+          "description": "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported, but in tech preview 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except in the case where the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
           "type": "array",
           "items": {
             "default": {},
@@ -10739,7 +10780,7 @@
           "type": "string"
         },
         "networks": {
-          "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'` The single interface should be the absolute path of the form /<datacenter>/network/<portgroup>.",
+          "description": "networks is the list of port group network names within this failure domain. If feature gate VSphereMultiNetworks is enabled, up to 10 network adapters may be defined. 10 is the maximum number of virtual network devices which may be attached to a VM as defined by: https://configmax.esp.vmware.com/guest?vmwareproduct=vSphere&release=vSphere%208.0&categories=1-0 The available networks (port groups) can be listed using `govc ls 'network/*'` Networks should be in the form of an absolute path: /<datacenter>/network/<portgroup>.",
           "type": "array",
           "items": {
             "type": "string",
@@ -10954,7 +10995,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Policy"
         },
         "scopes": {
-          "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. Please be aware that the scopes should not be nested under the repositories of OpenShift Container Platform images. If configured, the policies for OpenShift Container Platform repositories will not be in effect. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+          "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
           "type": "array",
           "items": {
             "type": "string",
@@ -11126,7 +11167,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Policy"
         },
         "scopes": {
-          "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. Please be aware that the scopes should not be nested under the repositories of OpenShift Container Platform images. If configured, the policies for OpenShift Container Platform repositories will not be in effect. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+          "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
           "type": "array",
           "items": {
             "type": "string",
@@ -12764,6 +12805,14 @@
           "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
           "type": "string",
           "default": ""
+        },
+        "set": {
+          "description": "set demonstrates how to define and validate set of strings",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
@@ -18902,6 +18951,38 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.NutanixGPU": {
+      "description": "NutanixGPU holds the identity of a Nutanix GPU resource in the Prism Central",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "deviceID": {
+          "description": "deviceID is the GPU device ID with the integer value.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "name is the GPU device name",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the identifier type of the GPU device. Valid values are Name and DeviceID.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "deviceID": "DeviceID",
+            "name": "Name"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.machine.v1.NutanixMachineProviderConfig": {
       "description": "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -18946,9 +19027,27 @@
           "description": "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "dataDisks": {
+          "description": "dataDisks holds information of the data disks to attach to the Machine's VM",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMDisk"
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "failureDomain": {
           "description": "failureDomain refers to the name of the FailureDomain with which this Machine is associated. If this is configured, the Nutanix machine controller will use the prism_central endpoint and credentials defined in the referenced FailureDomain to communicate to the prism_central. It will also verify that the 'cluster' and subnets' configuration in the NutanixMachineProviderConfig is consistent with that in the referenced failureDomain.",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixFailureDomainReference"
+        },
+        "gpus": {
+          "description": "gpus is a list of GPU devices to attach to the machine's VM. The GPU devices should already exist in Prism Central and associated with one of the Prism Element's hosts and available for the VM to attach (in \"UNUSED\" status).",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixGPU"
+          },
+          "x-kubernetes-list-type": "set"
         },
         "image": {
           "description": "image is to identify the rhcos image uploaded to the Prism Central (PC) The image identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
@@ -19061,6 +19160,99 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.machine.v1.NutanixStorageResourceIdentifier": {
+      "description": "NutanixStorageResourceIdentifier holds the identity of a Nutanix storage resource (storage_container, etc.)",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "type is the identifier type to use for this resource. The valid value is \"uuid\".",
+          "type": "string",
+          "default": ""
+        },
+        "uuid": {
+          "description": "uuid is the UUID of the storage resource in the PC.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "uuid": "UUID"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMDisk": {
+      "description": "NutanixDataDisk specifies the VM data disk configuration parameters.",
+      "type": "object",
+      "required": [
+        "diskSize"
+      ],
+      "properties": {
+        "dataSource": {
+          "description": "dataSource refers to a data source image for the VM disk.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixResourceIdentifier"
+        },
+        "deviceProperties": {
+          "description": "deviceProperties are the properties of the disk device.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMDiskDeviceProperties"
+        },
+        "diskSize": {
+          "description": "diskSize is size (in Quantity format) of the disk attached to the VM. See https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Format for the Quantity format and example documentation. The minimum diskSize is 1GB.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "storageConfig": {
+          "description": "storageConfig are the storage configuration parameters of the VM disks.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMStorageConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMDiskDeviceProperties": {
+      "description": "NutanixVMDiskDeviceProperties specifies the disk device properties.",
+      "type": "object",
+      "required": [
+        "deviceType"
+      ],
+      "properties": {
+        "adapterType": {
+          "description": "adapterType is the adapter type of the disk address. If the deviceType is \"Disk\", the valid adapterType can be \"SCSI\", \"IDE\", \"PCI\", \"SATA\" or \"SPAPR\". If the deviceType is \"CDRom\", the valid adapterType can be \"IDE\" or \"SATA\".",
+          "type": "string"
+        },
+        "deviceIndex": {
+          "description": "deviceIndex is the index of the disk address. The valid values are non-negative integers, with the default value 0. For a Machine VM, the deviceIndex for the disks with the same deviceType.adapterType combination should start from 0 and increase consecutively afterwards. Note that for each Machine VM, the Disk.SCSI.0 and CDRom.IDE.0 are reserved to be used by the VM's system. So for dataDisks of Disk.SCSI and CDRom.IDE, the deviceIndex should start from 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "deviceType": {
+          "description": "deviceType specifies the disk device type. The valid values are \"Disk\" and \"CDRom\", and the default is \"Disk\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMStorageConfig": {
+      "description": "NutanixVMStorageConfig specifies the storage configuration parameters for VM disks.",
+      "type": "object",
+      "required": [
+        "diskMode"
+      ],
+      "properties": {
+        "diskMode": {
+          "description": "diskMode specifies the disk mode. The valid values are Standard and Flash, and the default is Standard.",
+          "type": "string",
+          "default": ""
+        },
+        "storageContainer": {
+          "description": "storageContainer refers to the storage_container used by the VM disk.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixStorageResourceIdentifier"
+        }
+      }
     },
     "com.github.openshift.api.machine.v1.OpenShiftMachineV1Beta1MachineTemplate": {
       "description": "OpenShiftMachineV1Beta1MachineTemplate is a template for the ControlPlaneMachineSet to create Machines from the v1beta1.machine.openshift.io API group.",
@@ -20039,6 +20231,11 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.BlockDeviceMappingSpec"
           }
         },
+        "capacityReservationId": {
+          "description": "capacityReservationId specifies the target Capacity Reservation into which the instance should be launched. The field size should be greater than 0 and the field input must start with cr-***",
+          "type": "string",
+          "default": ""
+        },
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -20095,6 +20292,11 @@
         "placementGroupName": {
           "description": "PlacementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
           "type": "string"
+        },
+        "placementGroupPartition": {
+          "description": "placementGroupPartition is the partition number within the placement group in which to launch the instance. This must be an integer value between 1 and 7. It is only valid if the placement group, referred in `PlacementGroupName` was created with strategy set to partition.",
+          "type": "integer",
+          "format": "int32"
         },
         "publicIp": {
           "description": "PublicIP specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
@@ -21497,6 +21699,18 @@
           "description": "The number of available replicas (ready for at least minReadySeconds) for this MachineSet.",
           "type": "integer",
           "format": "int32"
+        },
+        "conditions": {
+          "description": "Conditions defines the current state of the MachineSet",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "errorMessage": {
           "type": "string"
@@ -23308,7 +23522,7 @@
       }
     },
     "com.github.openshift.api.network.v1.ClusterNetwork": {
-      "description": "ClusterNetwork describes the cluster network. There is normally only one object of this type, named \"default\", which is created by the SDN network plugin based on the master configuration when the cluster is brought up for the first time.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "ClusterNetwork was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "serviceNetwork",
@@ -23418,7 +23632,7 @@
       }
     },
     "com.github.openshift.api.network.v1.EgressNetworkPolicy": {
-      "description": "EgressNetworkPolicy describes the current egress network policy for a Namespace. When using the 'redhat/openshift-ovs-multitenant' network plugin, traffic from a pod to an IP address outside the cluster will be checked against each EgressNetworkPolicyRule in the pod's namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy is present) then the traffic will be allowed by default.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "EgressNetworkPolicy was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "spec"
@@ -23526,7 +23740,7 @@
       }
     },
     "com.github.openshift.api.network.v1.HostSubnet": {
-      "description": "HostSubnet describes the container subnet network on a node. The HostSubnet object must have the same name as the Node object it corresponds to.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "HostSubnet was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "host",
@@ -23611,7 +23825,7 @@
       }
     },
     "com.github.openshift.api.network.v1.NetNamespace": {
-      "description": "NetNamespace describes a single isolated network. When using the redhat/openshift-ovs-multitenant plugin, every Namespace will have a corresponding NetNamespace object with the same name. (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "NetNamespace was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "netname",
@@ -24790,6 +25004,15 @@
             "default": ""
           }
         },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode provides the import mode value for  imagestreams. It can be `Legacy` or `PreserveOriginal`. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Legacy",
+            "PreserveOriginal"
+          ]
+        },
         "internalRegistryHostname": {
           "description": "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
           "type": "string",
@@ -25283,6 +25506,10 @@
       "description": "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
       "type": "object",
       "properties": {
+        "efsVolumeMetrics": {
+          "description": "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics"
+        },
         "kmsKeyARN": {
           "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
           "type": "string"
@@ -25296,6 +25523,52 @@
         "connectionIdleTimeout": {
           "description": "connectionIdleTimeout specifies the maximum time period that a connection may be idle before the load balancer closes the connection.  The value must be parseable as a time duration value; see <https://pkg.go.dev/time#ParseDuration>.  A nil or zero value means no opinion, in which case a default value is used.  The default value for this field is 60s.  This default is subject to change.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "subnets": {
+          "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics": {
+      "description": "AWSEFSVolumeMetrics defines the configuration for volume metrics in the EFS CSI Driver.",
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "recursiveWalk": {
+          "description": "recursiveWalk provides additional configuration for collecting volume metrics in the AWS EFS CSI Driver when the state is set to RecursiveWalk.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsRecursiveWalkConfig"
+        },
+        "state": {
+          "description": "state defines the state of metric collection in the AWS EFS CSI Driver. This field is required and must be set to one of the following values: Disabled or RecursiveWalk. Disabled means no metrics collection will be performed. This is the default value. RecursiveWalk means the AWS EFS CSI Driver will recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "recursiveWalk": "RecursiveWalk"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsRecursiveWalkConfig": {
+      "description": "AWSEFSVolumeMetricsRecursiveWalkConfig defines options for volume metrics in the EFS CSI Driver.",
+      "type": "object",
+      "properties": {
+        "fsRateLimit": {
+          "description": "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 5. The valid range is from 1 to 100 goroutines.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "refreshPeriodMinutes": {
+          "description": "refreshPeriodMinutes specifies the frequency, in minutes, at which volume metrics are refreshed. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 240. The valid range is from 1 to 43200 minutes (30 days).",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -25331,8 +25604,47 @@
       ]
     },
     "com.github.openshift.api.operator.v1.AWSNetworkLoadBalancerParameters": {
-      "description": "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer.",
-      "type": "object"
+      "description": "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer. For Example: Setting AWS EIPs https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html",
+      "type": "object",
+      "properties": {
+        "eipAllocations": {
+          "description": "eipAllocations is a list of IDs for Elastic IP (EIP) addresses that are assigned to the Network Load Balancer. The following restrictions apply:\n\neipAllocations can only be used with external scope, not internal. An EIP can be allocated to only a single IngressController. The number of EIP allocations must match the number of subnets that are used for the load balancer. Each EIP allocation must be unique. A maximum of 10 EIP allocations are permitted.\n\nSee https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general information about configuration, characteristics, and limitations of Elastic IP addresses.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "subnets": {
+          "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AWSSubnets": {
+      "description": "AWSSubnets contains a list of references to AWS subnets by ID or name.",
+      "type": "object",
+      "properties": {
+        "ids": {
+          "description": "ids specifies a list of AWS subnets by subnet ID. Subnet IDs must start with \"subnet-\", consist only of alphanumeric characters, must be exactly 24 characters long, must be unique, and the total number of subnets specified by ids and names must not exceed 10.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "names": {
+          "description": "names specifies a list of AWS subnets by subnet name. Subnet names must not start with \"subnet-\", must not include commas, must be under 256 characters in length, must be unique, and the total number of subnets specified by ids and names must not exceed 10.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.AccessLogging": {
       "description": "AccessLogging describes how client requests should be logged.",
@@ -25352,7 +25664,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerCaptureHTTPCookie"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "httpCaptureHeaders": {
           "description": "httpCaptureHeaders defines HTTP headers that should be captured in access logs.  If this field is empty, no headers are captured.\n\nNote that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be captured for TLS passthrough connections.",
@@ -25412,6 +25725,24 @@
           "description": "type is the type of network The supported values are NetworkTypeRaw, NetworkTypeSimpleMacvlan",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AdditionalRoutingCapabilities": {
+      "description": "AdditionalRoutingCapabilities describes components and relevant configuration providing advanced routing capabilities.",
+      "type": "object",
+      "required": [
+        "providers"
+      ],
+      "properties": {
+        "providers": {
+          "description": "providers is a set of enabled components that provide additional routing capabilities. Entries on this list must be unique. The  only valid value is currrently \"FRR\" which provides FRR routing capabilities through the deployment of FRR.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -25771,6 +26102,46 @@
           "type": "string"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.Capability": {
+      "description": "Capabilities contains set of UI capabilities and their state in the console UI.",
+      "type": "object",
+      "required": [
+        "name",
+        "visibility"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton and GettingStartedBanner.",
+          "type": "string",
+          "default": ""
+        },
+        "visibility": {
+          "description": "visibility defines the visibility state of the capability.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.CapabilityVisibility"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.CapabilityVisibility": {
+      "description": "CapabilityVisibility defines the criteria to enable/disable a capability.",
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "description": "state defines if the capability is enabled or disabled in the console UI. Enabling the capability in the console UI is represented by the \"Enabled\" value. Disabling the capability in the console UI is represented by the \"Disabled\" value.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {}
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.ClientTLS": {
       "description": "ClientTLS specifies TLS configuration to enable client-to-server authentication, which can be used for mutual TLS.",
@@ -26304,6 +26675,18 @@
           "description": "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
           "type": "string"
         },
+        "capabilities": {
+          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Capability"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "customLogoFile": {
           "description": "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
           "default": {},
@@ -26717,7 +27100,7 @@
       ],
       "properties": {
         "openshiftSDNConfig": {
-          "description": "openShiftSDNConfig configures the openshift-sdn plugin",
+          "description": "openShiftSDNConfig was previously used to configure the openshift-sdn plugin. DEPRECATED: OpenShift SDN is no longer supported.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.OpenShiftSDNConfig"
         },
         "ovnKubernetesConfig": {
@@ -27124,15 +27507,15 @@
       "type": "object",
       "properties": {
         "egressFirewall": {
-          "description": "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+          "description": "egressFirewall specified whether or not the Egress Firewall configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         },
         "egressIP": {
-          "description": "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+          "description": "egressIP specified whether or not the Egress IP configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         },
         "multicast": {
-          "description": "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+          "description": "multicast specified whether or not the multicast configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         }
       }
@@ -27426,7 +27809,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "hybridOverlayVXLANPort": {
           "description": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
@@ -27486,7 +27870,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -27688,7 +28073,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerCaptureHTTPHeader"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "response": {
           "description": "response specifies which HTTP response headers to capture.\n\nIf this field is empty, no response headers are captured.",
@@ -27696,7 +28082,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerCaptureHTTPHeader"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -27795,7 +28182,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "uniqueId": {
           "description": "uniqueId describes configuration for a custom HTTP header that the ingress controller should inject into incoming HTTP requests. Typically, this header is configured to have a value that is unique to the HTTP request.  The header can be used by applications or included in access logs to facilitate tracing individual HTTP requests.\n\nIf this field is empty, no such header is injected into requests.",
@@ -27972,7 +28360,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "domain": {
           "description": "domain is the actual domain in use.",
@@ -28929,7 +29321,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "dnsManagementPolicy": {
           "description": "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
@@ -28979,7 +29372,7 @@
       ]
     },
     "com.github.openshift.api.operator.v1.MTUMigration": {
-      "description": "MTUMigration MTU contains infomation about MTU migration.",
+      "description": "MTUMigration contains infomation about MTU migration.",
       "type": "object",
       "properties": {
         "machine": {
@@ -29346,7 +29739,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29407,24 +29801,23 @@
       }
     },
     "com.github.openshift.api.operator.v1.NetworkMigration": {
-      "description": "NetworkMigration represents the cluster network configuration.",
+      "description": "NetworkMigration represents the cluster network migration configuration.",
       "type": "object",
       "properties": {
         "features": {
-          "description": "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+          "description": "features was previously used to configure which network plugin features would be migrated in a network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.FeaturesMigration"
         },
         "mode": {
-          "description": "mode indicates the mode of network migration. The supported values are \"Live\", \"Offline\" and omitted. A \"Live\" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration. An \"Offline\" migration operation will cause service interruption. During an \"Offline\" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration. When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default value is \"Offline\".",
-          "type": "string",
-          "default": ""
+          "description": "mode indicates the mode of network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
+          "type": "string"
         },
         "mtu": {
           "description": "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.MTUMigration"
         },
         "networkType": {
-          "description": "networkType is the target type of network migration. Set this to the target network type to allow changing the default network. If unset, the operation of changing cluster default network plugin will be rejected. The supported values are OpenShiftSDN, OVNKubernetes",
+          "description": "networkType was previously used when changing the default network type. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
           "type": "string"
         }
       }
@@ -29445,15 +29838,24 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalNetworkDefinition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "additionalRoutingCapabilities": {
+          "description": "additionalRoutingCapabilities describes components and relevant configuration providing additional routing capabilities. When set, it enables such components and the usage of the routing capabilities they provide for the machine network. Upstream operators, like MetalLB operator, requiring these capabilities may rely on, or automatically set this attribute. Network plugins may leverage advanced routing capabilities acquired through the enablement of these components but may require specific configuration on their side to do so; refer to their respective documentation and configuration options.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalRoutingCapabilities"
         },
         "clusterNetwork": {
-          "description": "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
+          "description": "clusterNetwork is the IP address pool to use for pod IPs. Some network providers support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultNetwork": {
           "description": "defaultNetwork is the \"default\" network that all pods will receive",
@@ -29461,7 +29863,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.DefaultNetworkDefinition"
         },
         "deployKubeProxy": {
-          "description": "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
+          "description": "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when ovn-kubernetes is used and true otherwise.",
           "type": "boolean"
         },
         "disableMultiNetwork": {
@@ -29478,7 +29880,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ExportNetworkFlows"
         },
         "kubeProxyConfig": {
-          "description": "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
+          "description": "kubeProxyConfig lets us configure desired proxy configuration, if deployKubeProxy is true. If not specified, sensible defaults will be chosen by OpenShift directly.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ProxyConfig"
         },
         "logLevel": {
@@ -29491,7 +29893,7 @@
           "default": ""
         },
         "migration": {
-          "description": "migration enables and configures the cluster network migration. The migration procedure allows to change the network type and the MTU.",
+          "description": "migration enables and configures cluster network migration, for network changes that cannot be made instantly.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.NetworkMigration"
         },
         "observedConfig": {
@@ -29509,7 +29911,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
@@ -29853,7 +30256,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29980,6 +30384,10 @@
         "policyAuditConfig": {
           "description": "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.PolicyAuditConfig"
+        },
+        "routeAdvertisements": {
+          "description": "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+          "type": "string"
         },
         "v4InternalSubnet": {
           "description": "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is 100.64.0.0/16",
@@ -30273,7 +30681,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.OpenShiftSDNConfig": {
-      "description": "OpenShiftSDNConfig configures the three openshift-sdn plugins",
+      "description": "OpenShiftSDNConfig was used to configure the OpenShift SDN plugin. It is no longer used.",
       "type": "object",
       "required": [
         "mode"
@@ -30294,7 +30702,7 @@
           "format": "int64"
         },
         "useExternalOpenvswitch": {
-          "description": "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored. DEPRECATED: non-functional as of 4.6",
+          "description": "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored.",
           "type": "boolean"
         },
         "vxlanPort": {
@@ -30698,7 +31106,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31208,7 +31617,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMAddresses"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "dns": {
           "description": "DNS configures DNS for the interface",
@@ -31220,7 +31630,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMRoutes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31238,7 +31649,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "search": {
           "description": "Search configures priority ordered search domains for short hostname lookups",
@@ -31246,7 +31658,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -34266,7 +34679,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteIngressCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "host": {
           "description": "Host is the host string under which the route is exposed; this value is required",
@@ -34389,7 +34806,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteTargetReference"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name",
+            "kind"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "host": {
           "description": "host is an alias/DNS that points to the service. Optional. If not specified a route name will typically be automatically chosen. Must follow DNS952 subdomain conventions.",
@@ -34436,7 +34858,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteIngress"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -34757,7 +35180,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.IDRange"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "type": {
           "description": "Type is the strategy that will dictate what FSGroup is used in the SecurityContext.",
@@ -35120,7 +35544,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "allowedFlexVolumes": {
           "description": "AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes is allowed in the \"Volumes\" field.",
@@ -35128,7 +35553,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.AllowedFlexVolume"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "allowedUnsafeSysctls": {
           "description": "AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed. Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.\n\nExamples: e.g. \"foo/*\" allows \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" allows \"foo.bar\", \"foo.baz\", etc.",
@@ -35136,7 +35562,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -35148,7 +35575,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultAllowPrivilegeEscalation": {
           "description": "DefaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",
@@ -35160,7 +35588,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "fsGroup": {
           "description": "FSGroup is the strategy that will dictate what fs group is used by the SecurityContext.",
@@ -35173,7 +35602,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -35200,7 +35630,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "runAsUser": {
           "description": "RunAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
@@ -35218,12 +35649,18 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "supplementalGroups": {
           "description": "SupplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.security.v1.SupplementalGroupsStrategyOptions"
+        },
+        "userNamespaceLevel": {
+          "description": "userNamespaceLevel determines if the policy allows host users in containers. Valid values are \"AllowHostLevel\", \"RequirePodLevel\", and omitted. When \"AllowHostLevel\" is set, a pod author may set `hostUsers` to either `true` or `false`. When \"RequirePodLevel\" is set, a pod author must set `hostUsers` to `false`. When omitted, the default value is \"AllowHostLevel\".",
+          "type": "string",
+          "default": "AllowHostLevel"
         },
         "users": {
           "description": "The users who have permissions to use this security context constraints",
@@ -35231,7 +35668,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "volumes": {
           "description": "Volumes is a white list of allowed volume plugins.  FSType corresponds directly with the field names of a VolumeSource (azureFile, configMap, emptyDir).  To allow all volumes you may use \"*\". To allow no volumes, set to [\"none\"].",
@@ -35239,7 +35677,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -35310,7 +35749,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.IDRange"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "type": {
           "description": "Type is the strategy that will dictate what supplemental groups is used in the SecurityContext.",
