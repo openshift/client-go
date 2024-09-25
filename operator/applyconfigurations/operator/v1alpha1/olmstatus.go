@@ -55,6 +55,14 @@ func (b *OLMStatusApplyConfiguration) WithReadyReplicas(value int32) *OLMStatusA
 	return b
 }
 
+// WithLatestAvailableRevision sets the LatestAvailableRevision field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the LatestAvailableRevision field is set to the value of the last call.
+func (b *OLMStatusApplyConfiguration) WithLatestAvailableRevision(value int32) *OLMStatusApplyConfiguration {
+	b.LatestAvailableRevision = &value
+	return b
+}
+
 // WithGenerations adds the given value to the Generations field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the Generations field.

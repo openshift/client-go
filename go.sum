@@ -61,8 +61,8 @@ github.com/onsi/ginkgo/v2 v2.15.0 h1:79HwNRBAZHOEwrczrgSOPy+eFTTlIGELKy5as+ClttY
 github.com/onsi/ginkgo/v2 v2.15.0/go.mod h1:HlxMHtYF57y6Dpf+mc5529KKmSq9h2FpCF+/ZkwUxKM=
 github.com/onsi/gomega v1.31.0 h1:54UJxxj6cPInHS3a35wm6BK/F9nHYueZ1NVujHDrnXE=
 github.com/onsi/gomega v1.31.0/go.mod h1:DW9aCi7U6Yi40wNVAvT6kzFnEVEI5n3DloYBiKiT6zk=
-github.com/openshift/api v0.0.0-20240918014254-07bccfd9266f h1:jw869n5Wfttrj56lRolhl7+loudoEvxJt4oa7CbO+QM=
-github.com/openshift/api v0.0.0-20240918014254-07bccfd9266f/go.mod h1:OOh6Qopf21pSzqNVCB5gomomBXb8o5sGKZxG2KNpaXM=
+github.com/openshift/api v0.0.0-20240924220842-3c700b6cb32b h1:3CDA+4Ed9JWKNs3czWoq1DcI2rjWMShIpoIiPFey11o=
+github.com/openshift/api v0.0.0-20240924220842-3c700b6cb32b/go.mod h1:OOh6Qopf21pSzqNVCB5gomomBXb8o5sGKZxG2KNpaXM=
 github.com/openshift/build-machinery-go v0.0.0-20240419090851-af9c868bcf52 h1:bqBwrXG7sbJUqP1Og1bR8FvVh7qb7CrMgy9saKmOZFs=
 github.com/openshift/build-machinery-go v0.0.0-20240419090851-af9c868bcf52/go.mod h1:b1BuldmJlbA/xYtdZvKi+7j5YGB44qJUJDZ9zwiNCfE=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

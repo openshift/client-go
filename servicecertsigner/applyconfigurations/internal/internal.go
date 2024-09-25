@@ -135,6 +135,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric

@@ -353,6 +353,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: oauthAPIServer
       type:
         namedType: com.github.openshift.api.operator.v1.OAuthAPIServerStatus
@@ -487,6 +490,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -601,6 +607,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -682,6 +691,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -766,6 +778,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -927,6 +942,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -1954,6 +1972,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.operator.v1.InsightsReport
       default: {}
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -2345,6 +2366,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -2670,6 +2694,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3085,6 +3112,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3410,6 +3440,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3484,6 +3517,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3558,6 +3594,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3714,6 +3753,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
@@ -3935,6 +3977,9 @@ var schemaYAML = typed.YAMLObject(`types:
           - resource
           - namespace
           - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
     - name: observedGeneration
       type:
         scalar: numeric
