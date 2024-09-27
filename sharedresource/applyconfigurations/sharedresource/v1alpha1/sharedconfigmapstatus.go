@@ -6,13 +6,13 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// SharedConfigMapStatusApplyConfiguration represents an declarative configuration of the SharedConfigMapStatus type for use
+// SharedConfigMapStatusApplyConfiguration represents a declarative configuration of the SharedConfigMapStatus type for use
 // with apply.
 type SharedConfigMapStatusApplyConfiguration struct {
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
-// SharedConfigMapStatusApplyConfiguration constructs an declarative configuration of the SharedConfigMapStatus type for use with
+// SharedConfigMapStatusApplyConfiguration constructs a declarative configuration of the SharedConfigMapStatus type for use with
 // apply.
 func SharedConfigMapStatus() *SharedConfigMapStatusApplyConfiguration {
 	return &SharedConfigMapStatusApplyConfiguration{}

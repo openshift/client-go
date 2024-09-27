@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// PodNetworkConnectivityCheckApplyConfiguration represents an declarative configuration of the PodNetworkConnectivityCheck type for use
+// PodNetworkConnectivityCheckApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheck type for use
 // with apply.
 type PodNetworkConnectivityCheckApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type PodNetworkConnectivityCheckApplyConfiguration struct {
 	Status                           *PodNetworkConnectivityCheckStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// PodNetworkConnectivityCheck constructs an declarative configuration of the PodNetworkConnectivityCheck type for use with
+// PodNetworkConnectivityCheck constructs a declarative configuration of the PodNetworkConnectivityCheck type for use with
 // apply.
 func PodNetworkConnectivityCheck(name, namespace string) *PodNetworkConnectivityCheckApplyConfiguration {
 	b := &PodNetworkConnectivityCheckApplyConfiguration{}
@@ -239,4 +239,10 @@ func (b *PodNetworkConnectivityCheckApplyConfiguration) WithSpec(value *PodNetwo
 func (b *PodNetworkConnectivityCheckApplyConfiguration) WithStatus(value *PodNetworkConnectivityCheckStatusApplyConfiguration) *PodNetworkConnectivityCheckApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *PodNetworkConnectivityCheckApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

@@ -27,20 +27,22 @@ var servicecertsigneroperatorconfigsKind = v1alpha1.SchemeGroupVersion.WithKind(
 
 // Get takes name of the serviceCertSignerOperatorConfig, and returns the corresponding serviceCertSignerOperatorConfig object, and an error if there is any.
 func (c *FakeServiceCertSignerOperatorConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(servicecertsigneroperatorconfigsResource, name), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootGetActionWithOptions(servicecertsigneroperatorconfigsResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
 
 // List takes label and field selectors, and returns the list of ServiceCertSignerOperatorConfigs that match those selectors.
 func (c *FakeServiceCertSignerOperatorConfigs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ServiceCertSignerOperatorConfigList, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfigList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(servicecertsigneroperatorconfigsResource, servicecertsigneroperatorconfigsKind, opts), &v1alpha1.ServiceCertSignerOperatorConfigList{})
+		Invokes(testing.NewRootListActionWithOptions(servicecertsigneroperatorconfigsResource, servicecertsigneroperatorconfigsKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,36 +61,39 @@ func (c *FakeServiceCertSignerOperatorConfigs) List(ctx context.Context, opts v1
 // Watch returns a watch.Interface that watches the requested serviceCertSignerOperatorConfigs.
 func (c *FakeServiceCertSignerOperatorConfigs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(servicecertsigneroperatorconfigsResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(servicecertsigneroperatorconfigsResource, opts))
 }
 
 // Create takes the representation of a serviceCertSignerOperatorConfig and creates it.  Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
 func (c *FakeServiceCertSignerOperatorConfigs) Create(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootCreateActionWithOptions(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
 
 // Update takes the representation of a serviceCertSignerOperatorConfig and updates it. Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
 func (c *FakeServiceCertSignerOperatorConfigs) Update(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootUpdateActionWithOptions(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeServiceCertSignerOperatorConfigs) UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error) {
+func (c *FakeServiceCertSignerOperatorConfigs) UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceAction(servicecertsigneroperatorconfigsResource, "status", serviceCertSignerOperatorConfig), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, "status", serviceCertSignerOperatorConfig, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
@@ -102,7 +107,7 @@ func (c *FakeServiceCertSignerOperatorConfigs) Delete(ctx context.Context, name 
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeServiceCertSignerOperatorConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(servicecertsigneroperatorconfigsResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(servicecertsigneroperatorconfigsResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.ServiceCertSignerOperatorConfigList{})
 	return err
@@ -110,10 +115,11 @@ func (c *FakeServiceCertSignerOperatorConfigs) DeleteCollection(ctx context.Cont
 
 // Patch applies the patch and returns the patched serviceCertSignerOperatorConfig.
 func (c *FakeServiceCertSignerOperatorConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, name, pt, data, subresources...), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
@@ -131,10 +137,11 @@ func (c *FakeServiceCertSignerOperatorConfigs) Apply(ctx context.Context, servic
 	if name == nil {
 		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }
@@ -153,10 +160,11 @@ func (c *FakeServiceCertSignerOperatorConfigs) ApplyStatus(ctx context.Context, 
 	if name == nil {
 		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
 	}
+	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, "status"), &v1alpha1.ServiceCertSignerOperatorConfig{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }

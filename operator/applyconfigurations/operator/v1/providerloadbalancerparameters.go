@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/api/operator/v1"
 )
 
-// ProviderLoadBalancerParametersApplyConfiguration represents an declarative configuration of the ProviderLoadBalancerParameters type for use
+// ProviderLoadBalancerParametersApplyConfiguration represents a declarative configuration of the ProviderLoadBalancerParameters type for use
 // with apply.
 type ProviderLoadBalancerParametersApplyConfiguration struct {
 	Type *v1.LoadBalancerProviderType                 `json:"type,omitempty"`
@@ -15,7 +15,7 @@ type ProviderLoadBalancerParametersApplyConfiguration struct {
 	IBM  *IBMLoadBalancerParametersApplyConfiguration `json:"ibm,omitempty"`
 }
 
-// ProviderLoadBalancerParametersApplyConfiguration constructs an declarative configuration of the ProviderLoadBalancerParameters type for use with
+// ProviderLoadBalancerParametersApplyConfiguration constructs a declarative configuration of the ProviderLoadBalancerParameters type for use with
 // apply.
 func ProviderLoadBalancerParameters() *ProviderLoadBalancerParametersApplyConfiguration {
 	return &ProviderLoadBalancerParametersApplyConfiguration{}

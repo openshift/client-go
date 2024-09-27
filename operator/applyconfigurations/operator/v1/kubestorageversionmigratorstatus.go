@@ -2,13 +2,13 @@
 
 package v1
 
-// KubeStorageVersionMigratorStatusApplyConfiguration represents an declarative configuration of the KubeStorageVersionMigratorStatus type for use
+// KubeStorageVersionMigratorStatusApplyConfiguration represents a declarative configuration of the KubeStorageVersionMigratorStatus type for use
 // with apply.
 type KubeStorageVersionMigratorStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// KubeStorageVersionMigratorStatusApplyConfiguration constructs an declarative configuration of the KubeStorageVersionMigratorStatus type for use with
+// KubeStorageVersionMigratorStatusApplyConfiguration constructs a declarative configuration of the KubeStorageVersionMigratorStatus type for use with
 // apply.
 func KubeStorageVersionMigratorStatus() *KubeStorageVersionMigratorStatusApplyConfiguration {
 	return &KubeStorageVersionMigratorStatusApplyConfiguration{}

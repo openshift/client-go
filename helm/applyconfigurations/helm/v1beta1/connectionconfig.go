@@ -6,7 +6,7 @@ import (
 	v1 "github.com/openshift/api/config/v1"
 )
 
-// ConnectionConfigApplyConfiguration represents an declarative configuration of the ConnectionConfig type for use
+// ConnectionConfigApplyConfiguration represents a declarative configuration of the ConnectionConfig type for use
 // with apply.
 type ConnectionConfigApplyConfiguration struct {
 	URL             *string                    `json:"url,omitempty"`
@@ -14,7 +14,7 @@ type ConnectionConfigApplyConfiguration struct {
 	TLSClientConfig *v1.SecretNameReference    `json:"tlsClientConfig,omitempty"`
 }
 
-// ConnectionConfigApplyConfiguration constructs an declarative configuration of the ConnectionConfig type for use with
+// ConnectionConfigApplyConfiguration constructs a declarative configuration of the ConnectionConfig type for use with
 // apply.
 func ConnectionConfig() *ConnectionConfigApplyConfiguration {
 	return &ConnectionConfigApplyConfiguration{}

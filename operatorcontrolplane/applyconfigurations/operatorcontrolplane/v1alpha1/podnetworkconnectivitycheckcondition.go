@@ -7,7 +7,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// PodNetworkConnectivityCheckConditionApplyConfiguration represents an declarative configuration of the PodNetworkConnectivityCheckCondition type for use
+// PodNetworkConnectivityCheckConditionApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckCondition type for use
 // with apply.
 type PodNetworkConnectivityCheckConditionApplyConfiguration struct {
 	Type               *v1alpha1.PodNetworkConnectivityCheckConditionType `json:"type,omitempty"`
@@ -17,7 +17,7 @@ type PodNetworkConnectivityCheckConditionApplyConfiguration struct {
 	LastTransitionTime *v1.Time                                           `json:"lastTransitionTime,omitempty"`
 }
 
-// PodNetworkConnectivityCheckConditionApplyConfiguration constructs an declarative configuration of the PodNetworkConnectivityCheckCondition type for use with
+// PodNetworkConnectivityCheckConditionApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckCondition type for use with
 // apply.
 func PodNetworkConnectivityCheckCondition() *PodNetworkConnectivityCheckConditionApplyConfiguration {
 	return &PodNetworkConnectivityCheckConditionApplyConfiguration{}

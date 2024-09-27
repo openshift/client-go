@@ -6,13 +6,13 @@ import (
 	v1 "github.com/openshift/client-go/operator/applyconfigurations/operator/v1"
 )
 
-// ServiceCertSignerOperatorConfigStatusApplyConfiguration represents an declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use
+// ServiceCertSignerOperatorConfigStatusApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use
 // with apply.
 type ServiceCertSignerOperatorConfigStatusApplyConfiguration struct {
 	v1.OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// ServiceCertSignerOperatorConfigStatusApplyConfiguration constructs an declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use with
+// ServiceCertSignerOperatorConfigStatusApplyConfiguration constructs a declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use with
 // apply.
 func ServiceCertSignerOperatorConfigStatus() *ServiceCertSignerOperatorConfigStatusApplyConfiguration {
 	return &ServiceCertSignerOperatorConfigStatusApplyConfiguration{}

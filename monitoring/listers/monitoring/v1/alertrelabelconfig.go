@@ -4,8 +4,8 @@ package v1
 
 import (
 	v1 "github.com/openshift/api/monitoring/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -22,25 +22,17 @@ type AlertRelabelConfigLister interface {
 
 // alertRelabelConfigLister implements the AlertRelabelConfigLister interface.
 type alertRelabelConfigLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1.AlertRelabelConfig]
 }
 
 // NewAlertRelabelConfigLister returns a new AlertRelabelConfigLister.
 func NewAlertRelabelConfigLister(indexer cache.Indexer) AlertRelabelConfigLister {
-	return &alertRelabelConfigLister{indexer: indexer}
-}
-
-// List lists all AlertRelabelConfigs in the indexer.
-func (s *alertRelabelConfigLister) List(selector labels.Selector) (ret []*v1.AlertRelabelConfig, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.AlertRelabelConfig))
-	})
-	return ret, err
+	return &alertRelabelConfigLister{listers.New[*v1.AlertRelabelConfig](indexer, v1.Resource("alertrelabelconfig"))}
 }
 
 // AlertRelabelConfigs returns an object that can list and get AlertRelabelConfigs.
 func (s *alertRelabelConfigLister) AlertRelabelConfigs(namespace string) AlertRelabelConfigNamespaceLister {
-	return alertRelabelConfigNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return alertRelabelConfigNamespaceLister{listers.NewNamespaced[*v1.AlertRelabelConfig](s.ResourceIndexer, namespace)}
 }
 
 // AlertRelabelConfigNamespaceLister helps list and get AlertRelabelConfigs.
@@ -58,26 +50,5 @@ type AlertRelabelConfigNamespaceLister interface {
 // alertRelabelConfigNamespaceLister implements the AlertRelabelConfigNamespaceLister
 // interface.
 type alertRelabelConfigNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all AlertRelabelConfigs in the indexer for a given namespace.
-func (s alertRelabelConfigNamespaceLister) List(selector labels.Selector) (ret []*v1.AlertRelabelConfig, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.AlertRelabelConfig))
-	})
-	return ret, err
-}
-
-// Get retrieves the AlertRelabelConfig from the indexer for a given namespace and name.
-func (s alertRelabelConfigNamespaceLister) Get(name string) (*v1.AlertRelabelConfig, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("alertrelabelconfig"), name)
-	}
-	return obj.(*v1.AlertRelabelConfig), nil
+	listers.ResourceIndexer[*v1.AlertRelabelConfig]
 }

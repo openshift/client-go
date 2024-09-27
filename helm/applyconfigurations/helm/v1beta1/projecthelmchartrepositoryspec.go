@@ -2,7 +2,7 @@
 
 package v1beta1
 
-// ProjectHelmChartRepositorySpecApplyConfiguration represents an declarative configuration of the ProjectHelmChartRepositorySpec type for use
+// ProjectHelmChartRepositorySpecApplyConfiguration represents a declarative configuration of the ProjectHelmChartRepositorySpec type for use
 // with apply.
 type ProjectHelmChartRepositorySpecApplyConfiguration struct {
 	Disabled                *bool                                              `json:"disabled,omitempty"`
@@ -11,7 +11,7 @@ type ProjectHelmChartRepositorySpecApplyConfiguration struct {
 	ProjectConnectionConfig *ConnectionConfigNamespaceScopedApplyConfiguration `json:"connectionConfig,omitempty"`
 }
 
-// ProjectHelmChartRepositorySpecApplyConfiguration constructs an declarative configuration of the ProjectHelmChartRepositorySpec type for use with
+// ProjectHelmChartRepositorySpecApplyConfiguration constructs a declarative configuration of the ProjectHelmChartRepositorySpec type for use with
 // apply.
 func ProjectHelmChartRepositorySpec() *ProjectHelmChartRepositorySpecApplyConfiguration {
 	return &ProjectHelmChartRepositorySpecApplyConfiguration{}

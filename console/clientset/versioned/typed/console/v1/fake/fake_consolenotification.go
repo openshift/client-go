@@ -27,20 +27,22 @@ var consolenotificationsKind = v1.SchemeGroupVersion.WithKind("ConsoleNotificati
 
 // Get takes name of the consoleNotification, and returns the corresponding consoleNotification object, and an error if there is any.
 func (c *FakeConsoleNotifications) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleNotification, err error) {
+	emptyResult := &v1.ConsoleNotification{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consolenotificationsResource, name), &v1.ConsoleNotification{})
+		Invokes(testing.NewRootGetActionWithOptions(consolenotificationsResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleNotification), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleNotifications that match those selectors.
 func (c *FakeConsoleNotifications) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleNotificationList, err error) {
+	emptyResult := &v1.ConsoleNotificationList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consolenotificationsResource, consolenotificationsKind, opts), &v1.ConsoleNotificationList{})
+		Invokes(testing.NewRootListActionWithOptions(consolenotificationsResource, consolenotificationsKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleNotifications) List(ctx context.Context, opts metav1.ListOpt
 // Watch returns a watch.Interface that watches the requested consoleNotifications.
 func (c *FakeConsoleNotifications) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consolenotificationsResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consolenotificationsResource, opts))
 }
 
 // Create takes the representation of a consoleNotification and creates it.  Returns the server's representation of the consoleNotification, and an error, if there is any.
 func (c *FakeConsoleNotifications) Create(ctx context.Context, consoleNotification *v1.ConsoleNotification, opts metav1.CreateOptions) (result *v1.ConsoleNotification, err error) {
+	emptyResult := &v1.ConsoleNotification{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consolenotificationsResource, consoleNotification), &v1.ConsoleNotification{})
+		Invokes(testing.NewRootCreateActionWithOptions(consolenotificationsResource, consoleNotification, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleNotification), err
 }
 
 // Update takes the representation of a consoleNotification and updates it. Returns the server's representation of the consoleNotification, and an error, if there is any.
 func (c *FakeConsoleNotifications) Update(ctx context.Context, consoleNotification *v1.ConsoleNotification, opts metav1.UpdateOptions) (result *v1.ConsoleNotification, err error) {
+	emptyResult := &v1.ConsoleNotification{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consolenotificationsResource, consoleNotification), &v1.ConsoleNotification{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consolenotificationsResource, consoleNotification, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleNotification), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleNotifications) Delete(ctx context.Context, name string, opts
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleNotifications) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consolenotificationsResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consolenotificationsResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleNotificationList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleNotifications) DeleteCollection(ctx context.Context, opts me
 
 // Patch applies the patch and returns the patched consoleNotification.
 func (c *FakeConsoleNotifications) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleNotification, err error) {
+	emptyResult := &v1.ConsoleNotification{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolenotificationsResource, name, pt, data, subresources...), &v1.ConsoleNotification{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolenotificationsResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleNotification), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleNotifications) Apply(ctx context.Context, consoleNotificatio
 	if name == nil {
 		return nil, fmt.Errorf("consoleNotification.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleNotification{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolenotificationsResource, *name, types.ApplyPatchType, data), &v1.ConsoleNotification{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolenotificationsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleNotification), err
 }

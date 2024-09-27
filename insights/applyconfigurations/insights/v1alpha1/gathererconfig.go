@@ -6,14 +6,14 @@ import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 )
 
-// GathererConfigApplyConfiguration represents an declarative configuration of the GathererConfig type for use
+// GathererConfigApplyConfiguration represents a declarative configuration of the GathererConfig type for use
 // with apply.
 type GathererConfigApplyConfiguration struct {
 	Name  *string                 `json:"name,omitempty"`
 	State *v1alpha1.GathererState `json:"state,omitempty"`
 }
 
-// GathererConfigApplyConfiguration constructs an declarative configuration of the GathererConfig type for use with
+// GathererConfigApplyConfiguration constructs a declarative configuration of the GathererConfig type for use with
 // apply.
 func GathererConfig() *GathererConfigApplyConfiguration {
 	return &GathererConfigApplyConfiguration{}
