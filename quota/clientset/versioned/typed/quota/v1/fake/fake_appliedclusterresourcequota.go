@@ -23,22 +23,24 @@ var appliedclusterresourcequotasKind = v1.SchemeGroupVersion.WithKind("AppliedCl
 
 // Get takes name of the appliedClusterResourceQuota, and returns the corresponding appliedClusterResourceQuota object, and an error if there is any.
 func (c *FakeAppliedClusterResourceQuotas) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AppliedClusterResourceQuota, err error) {
+	emptyResult := &v1.AppliedClusterResourceQuota{}
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(appliedclusterresourcequotasResource, c.ns, name), &v1.AppliedClusterResourceQuota{})
+		Invokes(testing.NewGetActionWithOptions(appliedclusterresourcequotasResource, c.ns, name, options), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.AppliedClusterResourceQuota), err
 }
 
 // List takes label and field selectors, and returns the list of AppliedClusterResourceQuotas that match those selectors.
 func (c *FakeAppliedClusterResourceQuotas) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AppliedClusterResourceQuotaList, err error) {
+	emptyResult := &v1.AppliedClusterResourceQuotaList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(appliedclusterresourcequotasResource, appliedclusterresourcequotasKind, c.ns, opts), &v1.AppliedClusterResourceQuotaList{})
+		Invokes(testing.NewListActionWithOptions(appliedclusterresourcequotasResource, appliedclusterresourcequotasKind, c.ns, opts), emptyResult)
 
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)

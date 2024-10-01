@@ -6,13 +6,13 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// HelmChartRepositoryStatusApplyConfiguration represents an declarative configuration of the HelmChartRepositoryStatus type for use
+// HelmChartRepositoryStatusApplyConfiguration represents a declarative configuration of the HelmChartRepositoryStatus type for use
 // with apply.
 type HelmChartRepositoryStatusApplyConfiguration struct {
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
-// HelmChartRepositoryStatusApplyConfiguration constructs an declarative configuration of the HelmChartRepositoryStatus type for use with
+// HelmChartRepositoryStatusApplyConfiguration constructs a declarative configuration of the HelmChartRepositoryStatus type for use with
 // apply.
 func HelmChartRepositoryStatus() *HelmChartRepositoryStatusApplyConfiguration {
 	return &HelmChartRepositoryStatusApplyConfiguration{}

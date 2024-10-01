@@ -2,7 +2,7 @@
 
 package v1
 
-// OperatorStatusApplyConfiguration represents an declarative configuration of the OperatorStatus type for use
+// OperatorStatusApplyConfiguration represents a declarative configuration of the OperatorStatus type for use
 // with apply.
 type OperatorStatusApplyConfiguration struct {
 	ObservedGeneration      *int64                                `json:"observedGeneration,omitempty"`
@@ -13,7 +13,7 @@ type OperatorStatusApplyConfiguration struct {
 	Generations             []GenerationStatusApplyConfiguration  `json:"generations,omitempty"`
 }
 
-// OperatorStatusApplyConfiguration constructs an declarative configuration of the OperatorStatus type for use with
+// OperatorStatusApplyConfiguration constructs a declarative configuration of the OperatorStatus type for use with
 // apply.
 func OperatorStatus() *OperatorStatusApplyConfiguration {
 	return &OperatorStatusApplyConfiguration{}

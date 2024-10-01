@@ -4,8 +4,8 @@ package v1
 
 import (
 	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/client-go/listers"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -23,30 +23,10 @@ type ConsolePluginLister interface {
 
 // consolePluginLister implements the ConsolePluginLister interface.
 type consolePluginLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*v1.ConsolePlugin]
 }
 
 // NewConsolePluginLister returns a new ConsolePluginLister.
 func NewConsolePluginLister(indexer cache.Indexer) ConsolePluginLister {
-	return &consolePluginLister{indexer: indexer}
-}
-
-// List lists all ConsolePlugins in the indexer.
-func (s *consolePluginLister) List(selector labels.Selector) (ret []*v1.ConsolePlugin, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.ConsolePlugin))
-	})
-	return ret, err
-}
-
-// Get retrieves the ConsolePlugin from the index for a given name.
-func (s *consolePluginLister) Get(name string) (*v1.ConsolePlugin, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("consoleplugin"), name)
-	}
-	return obj.(*v1.ConsolePlugin), nil
+	return &consolePluginLister{listers.New[*v1.ConsolePlugin](indexer, v1.Resource("consoleplugin"))}
 }

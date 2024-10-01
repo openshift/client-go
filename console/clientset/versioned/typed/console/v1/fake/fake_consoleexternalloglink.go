@@ -27,20 +27,22 @@ var consoleexternalloglinksKind = v1.SchemeGroupVersion.WithKind("ConsoleExterna
 
 // Get takes name of the consoleExternalLogLink, and returns the corresponding consoleExternalLogLink object, and an error if there is any.
 func (c *FakeConsoleExternalLogLinks) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleExternalLogLink, err error) {
+	emptyResult := &v1.ConsoleExternalLogLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consoleexternalloglinksResource, name), &v1.ConsoleExternalLogLink{})
+		Invokes(testing.NewRootGetActionWithOptions(consoleexternalloglinksResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleExternalLogLink), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleExternalLogLinks that match those selectors.
 func (c *FakeConsoleExternalLogLinks) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleExternalLogLinkList, err error) {
+	emptyResult := &v1.ConsoleExternalLogLinkList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consoleexternalloglinksResource, consoleexternalloglinksKind, opts), &v1.ConsoleExternalLogLinkList{})
+		Invokes(testing.NewRootListActionWithOptions(consoleexternalloglinksResource, consoleexternalloglinksKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleExternalLogLinks) List(ctx context.Context, opts metav1.List
 // Watch returns a watch.Interface that watches the requested consoleExternalLogLinks.
 func (c *FakeConsoleExternalLogLinks) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consoleexternalloglinksResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consoleexternalloglinksResource, opts))
 }
 
 // Create takes the representation of a consoleExternalLogLink and creates it.  Returns the server's representation of the consoleExternalLogLink, and an error, if there is any.
 func (c *FakeConsoleExternalLogLinks) Create(ctx context.Context, consoleExternalLogLink *v1.ConsoleExternalLogLink, opts metav1.CreateOptions) (result *v1.ConsoleExternalLogLink, err error) {
+	emptyResult := &v1.ConsoleExternalLogLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consoleexternalloglinksResource, consoleExternalLogLink), &v1.ConsoleExternalLogLink{})
+		Invokes(testing.NewRootCreateActionWithOptions(consoleexternalloglinksResource, consoleExternalLogLink, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleExternalLogLink), err
 }
 
 // Update takes the representation of a consoleExternalLogLink and updates it. Returns the server's representation of the consoleExternalLogLink, and an error, if there is any.
 func (c *FakeConsoleExternalLogLinks) Update(ctx context.Context, consoleExternalLogLink *v1.ConsoleExternalLogLink, opts metav1.UpdateOptions) (result *v1.ConsoleExternalLogLink, err error) {
+	emptyResult := &v1.ConsoleExternalLogLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consoleexternalloglinksResource, consoleExternalLogLink), &v1.ConsoleExternalLogLink{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consoleexternalloglinksResource, consoleExternalLogLink, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleExternalLogLink), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleExternalLogLinks) Delete(ctx context.Context, name string, o
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleExternalLogLinks) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consoleexternalloglinksResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consoleexternalloglinksResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleExternalLogLinkList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleExternalLogLinks) DeleteCollection(ctx context.Context, opts
 
 // Patch applies the patch and returns the patched consoleExternalLogLink.
 func (c *FakeConsoleExternalLogLinks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleExternalLogLink, err error) {
+	emptyResult := &v1.ConsoleExternalLogLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consoleexternalloglinksResource, name, pt, data, subresources...), &v1.ConsoleExternalLogLink{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleexternalloglinksResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleExternalLogLink), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleExternalLogLinks) Apply(ctx context.Context, consoleExternal
 	if name == nil {
 		return nil, fmt.Errorf("consoleExternalLogLink.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleExternalLogLink{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consoleexternalloglinksResource, *name, types.ApplyPatchType, data), &v1.ConsoleExternalLogLink{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleexternalloglinksResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleExternalLogLink), err
 }

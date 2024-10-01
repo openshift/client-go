@@ -11,7 +11,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// SharedSecretApplyConfiguration represents an declarative configuration of the SharedSecret type for use
+// SharedSecretApplyConfiguration represents a declarative configuration of the SharedSecret type for use
 // with apply.
 type SharedSecretApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -20,7 +20,7 @@ type SharedSecretApplyConfiguration struct {
 	Status                           *SharedSecretStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// SharedSecret constructs an declarative configuration of the SharedSecret type for use with
+// SharedSecret constructs a declarative configuration of the SharedSecret type for use with
 // apply.
 func SharedSecret(name string) *SharedSecretApplyConfiguration {
 	b := &SharedSecretApplyConfiguration{}
@@ -237,4 +237,10 @@ func (b *SharedSecretApplyConfiguration) WithSpec(value *SharedSecretSpecApplyCo
 func (b *SharedSecretApplyConfiguration) WithStatus(value *SharedSecretStatusApplyConfiguration) *SharedSecretApplyConfiguration {
 	b.Status = value
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *SharedSecretApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

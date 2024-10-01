@@ -6,13 +6,13 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// SharedSecretStatusApplyConfiguration represents an declarative configuration of the SharedSecretStatus type for use
+// SharedSecretStatusApplyConfiguration represents a declarative configuration of the SharedSecretStatus type for use
 // with apply.
 type SharedSecretStatusApplyConfiguration struct {
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
-// SharedSecretStatusApplyConfiguration constructs an declarative configuration of the SharedSecretStatus type for use with
+// SharedSecretStatusApplyConfiguration constructs a declarative configuration of the SharedSecretStatus type for use with
 // apply.
 func SharedSecretStatus() *SharedSecretStatusApplyConfiguration {
 	return &SharedSecretStatusApplyConfiguration{}

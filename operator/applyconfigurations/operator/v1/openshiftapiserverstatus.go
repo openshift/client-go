@@ -2,13 +2,13 @@
 
 package v1
 
-// OpenShiftAPIServerStatusApplyConfiguration represents an declarative configuration of the OpenShiftAPIServerStatus type for use
+// OpenShiftAPIServerStatusApplyConfiguration represents a declarative configuration of the OpenShiftAPIServerStatus type for use
 // with apply.
 type OpenShiftAPIServerStatusApplyConfiguration struct {
 	OperatorStatusApplyConfiguration `json:",inline"`
 }
 
-// OpenShiftAPIServerStatusApplyConfiguration constructs an declarative configuration of the OpenShiftAPIServerStatus type for use with
+// OpenShiftAPIServerStatusApplyConfiguration constructs a declarative configuration of the OpenShiftAPIServerStatus type for use with
 // apply.
 func OpenShiftAPIServerStatus() *OpenShiftAPIServerStatusApplyConfiguration {
 	return &OpenShiftAPIServerStatusApplyConfiguration{}

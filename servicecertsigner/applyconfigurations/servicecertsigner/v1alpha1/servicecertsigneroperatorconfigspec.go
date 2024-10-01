@@ -8,13 +8,13 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
-// ServiceCertSignerOperatorConfigSpecApplyConfiguration represents an declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use
+// ServiceCertSignerOperatorConfigSpecApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use
 // with apply.
 type ServiceCertSignerOperatorConfigSpecApplyConfiguration struct {
 	v1.OperatorSpecApplyConfiguration `json:",inline"`
 }
 
-// ServiceCertSignerOperatorConfigSpecApplyConfiguration constructs an declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use with
+// ServiceCertSignerOperatorConfigSpecApplyConfiguration constructs a declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use with
 // apply.
 func ServiceCertSignerOperatorConfigSpec() *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
 	return &ServiceCertSignerOperatorConfigSpecApplyConfiguration{}

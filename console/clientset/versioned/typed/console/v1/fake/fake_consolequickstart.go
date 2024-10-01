@@ -27,20 +27,22 @@ var consolequickstartsKind = v1.SchemeGroupVersion.WithKind("ConsoleQuickStart")
 
 // Get takes name of the consoleQuickStart, and returns the corresponding consoleQuickStart object, and an error if there is any.
 func (c *FakeConsoleQuickStarts) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleQuickStart, err error) {
+	emptyResult := &v1.ConsoleQuickStart{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consolequickstartsResource, name), &v1.ConsoleQuickStart{})
+		Invokes(testing.NewRootGetActionWithOptions(consolequickstartsResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleQuickStart), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleQuickStarts that match those selectors.
 func (c *FakeConsoleQuickStarts) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleQuickStartList, err error) {
+	emptyResult := &v1.ConsoleQuickStartList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consolequickstartsResource, consolequickstartsKind, opts), &v1.ConsoleQuickStartList{})
+		Invokes(testing.NewRootListActionWithOptions(consolequickstartsResource, consolequickstartsKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleQuickStarts) List(ctx context.Context, opts metav1.ListOptio
 // Watch returns a watch.Interface that watches the requested consoleQuickStarts.
 func (c *FakeConsoleQuickStarts) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consolequickstartsResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consolequickstartsResource, opts))
 }
 
 // Create takes the representation of a consoleQuickStart and creates it.  Returns the server's representation of the consoleQuickStart, and an error, if there is any.
 func (c *FakeConsoleQuickStarts) Create(ctx context.Context, consoleQuickStart *v1.ConsoleQuickStart, opts metav1.CreateOptions) (result *v1.ConsoleQuickStart, err error) {
+	emptyResult := &v1.ConsoleQuickStart{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consolequickstartsResource, consoleQuickStart), &v1.ConsoleQuickStart{})
+		Invokes(testing.NewRootCreateActionWithOptions(consolequickstartsResource, consoleQuickStart, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleQuickStart), err
 }
 
 // Update takes the representation of a consoleQuickStart and updates it. Returns the server's representation of the consoleQuickStart, and an error, if there is any.
 func (c *FakeConsoleQuickStarts) Update(ctx context.Context, consoleQuickStart *v1.ConsoleQuickStart, opts metav1.UpdateOptions) (result *v1.ConsoleQuickStart, err error) {
+	emptyResult := &v1.ConsoleQuickStart{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consolequickstartsResource, consoleQuickStart), &v1.ConsoleQuickStart{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consolequickstartsResource, consoleQuickStart, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleQuickStart), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleQuickStarts) Delete(ctx context.Context, name string, opts m
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleQuickStarts) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consolequickstartsResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consolequickstartsResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleQuickStartList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleQuickStarts) DeleteCollection(ctx context.Context, opts meta
 
 // Patch applies the patch and returns the patched consoleQuickStart.
 func (c *FakeConsoleQuickStarts) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleQuickStart, err error) {
+	emptyResult := &v1.ConsoleQuickStart{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolequickstartsResource, name, pt, data, subresources...), &v1.ConsoleQuickStart{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolequickstartsResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleQuickStart), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleQuickStarts) Apply(ctx context.Context, consoleQuickStart *c
 	if name == nil {
 		return nil, fmt.Errorf("consoleQuickStart.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleQuickStart{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolequickstartsResource, *name, types.ApplyPatchType, data), &v1.ConsoleQuickStart{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolequickstartsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleQuickStart), err
 }

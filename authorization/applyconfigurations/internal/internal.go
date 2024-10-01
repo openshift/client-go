@@ -107,7 +107,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: attributeRestrictions
       type:
         namedType: __untyped_atomic_
-      default: {}
     - name: nonResourceURLs
       type:
         list:
@@ -375,7 +374,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: creationTimestamp
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
-      default: {}
     - name: deletionGracePeriodSeconds
       type:
         scalar: numeric

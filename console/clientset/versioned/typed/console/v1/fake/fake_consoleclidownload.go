@@ -27,20 +27,22 @@ var consoleclidownloadsKind = v1.SchemeGroupVersion.WithKind("ConsoleCLIDownload
 
 // Get takes name of the consoleCLIDownload, and returns the corresponding consoleCLIDownload object, and an error if there is any.
 func (c *FakeConsoleCLIDownloads) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleCLIDownload, err error) {
+	emptyResult := &v1.ConsoleCLIDownload{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consoleclidownloadsResource, name), &v1.ConsoleCLIDownload{})
+		Invokes(testing.NewRootGetActionWithOptions(consoleclidownloadsResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleCLIDownload), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleCLIDownloads that match those selectors.
 func (c *FakeConsoleCLIDownloads) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleCLIDownloadList, err error) {
+	emptyResult := &v1.ConsoleCLIDownloadList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consoleclidownloadsResource, consoleclidownloadsKind, opts), &v1.ConsoleCLIDownloadList{})
+		Invokes(testing.NewRootListActionWithOptions(consoleclidownloadsResource, consoleclidownloadsKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleCLIDownloads) List(ctx context.Context, opts metav1.ListOpti
 // Watch returns a watch.Interface that watches the requested consoleCLIDownloads.
 func (c *FakeConsoleCLIDownloads) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consoleclidownloadsResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consoleclidownloadsResource, opts))
 }
 
 // Create takes the representation of a consoleCLIDownload and creates it.  Returns the server's representation of the consoleCLIDownload, and an error, if there is any.
 func (c *FakeConsoleCLIDownloads) Create(ctx context.Context, consoleCLIDownload *v1.ConsoleCLIDownload, opts metav1.CreateOptions) (result *v1.ConsoleCLIDownload, err error) {
+	emptyResult := &v1.ConsoleCLIDownload{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consoleclidownloadsResource, consoleCLIDownload), &v1.ConsoleCLIDownload{})
+		Invokes(testing.NewRootCreateActionWithOptions(consoleclidownloadsResource, consoleCLIDownload, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleCLIDownload), err
 }
 
 // Update takes the representation of a consoleCLIDownload and updates it. Returns the server's representation of the consoleCLIDownload, and an error, if there is any.
 func (c *FakeConsoleCLIDownloads) Update(ctx context.Context, consoleCLIDownload *v1.ConsoleCLIDownload, opts metav1.UpdateOptions) (result *v1.ConsoleCLIDownload, err error) {
+	emptyResult := &v1.ConsoleCLIDownload{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consoleclidownloadsResource, consoleCLIDownload), &v1.ConsoleCLIDownload{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consoleclidownloadsResource, consoleCLIDownload, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleCLIDownload), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleCLIDownloads) Delete(ctx context.Context, name string, opts 
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleCLIDownloads) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consoleclidownloadsResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consoleclidownloadsResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleCLIDownloadList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleCLIDownloads) DeleteCollection(ctx context.Context, opts met
 
 // Patch applies the patch and returns the patched consoleCLIDownload.
 func (c *FakeConsoleCLIDownloads) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleCLIDownload, err error) {
+	emptyResult := &v1.ConsoleCLIDownload{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consoleclidownloadsResource, name, pt, data, subresources...), &v1.ConsoleCLIDownload{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleclidownloadsResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleCLIDownload), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleCLIDownloads) Apply(ctx context.Context, consoleCLIDownload 
 	if name == nil {
 		return nil, fmt.Errorf("consoleCLIDownload.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleCLIDownload{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consoleclidownloadsResource, *name, types.ApplyPatchType, data), &v1.ConsoleCLIDownload{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleclidownloadsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleCLIDownload), err
 }

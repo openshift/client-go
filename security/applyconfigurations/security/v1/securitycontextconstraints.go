@@ -12,7 +12,7 @@ import (
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// SecurityContextConstraintsApplyConfiguration represents an declarative configuration of the SecurityContextConstraints type for use
+// SecurityContextConstraintsApplyConfiguration represents a declarative configuration of the SecurityContextConstraints type for use
 // with apply.
 type SecurityContextConstraintsApplyConfiguration struct {
 	v1.TypeMetaApplyConfiguration    `json:",inline"`
@@ -44,7 +44,7 @@ type SecurityContextConstraintsApplyConfiguration struct {
 	ForbiddenSysctls                 []string                                             `json:"forbiddenSysctls,omitempty"`
 }
 
-// SecurityContextConstraints constructs an declarative configuration of the SecurityContextConstraints type for use with
+// SecurityContextConstraints constructs a declarative configuration of the SecurityContextConstraints type for use with
 // apply.
 func SecurityContextConstraints(name string) *SecurityContextConstraintsApplyConfiguration {
 	b := &SecurityContextConstraintsApplyConfiguration{}
@@ -468,4 +468,10 @@ func (b *SecurityContextConstraintsApplyConfiguration) WithForbiddenSysctls(valu
 		b.ForbiddenSysctls = append(b.ForbiddenSysctls, values[i])
 	}
 	return b
+}
+
+// GetName retrieves the value of the Name field in the declarative configuration.
+func (b *SecurityContextConstraintsApplyConfiguration) GetName() *string {
+	b.ensureObjectMetaApplyConfigurationExists()
+	return b.Name
 }

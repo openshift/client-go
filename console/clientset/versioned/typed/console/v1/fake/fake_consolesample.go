@@ -27,20 +27,22 @@ var consolesamplesKind = v1.SchemeGroupVersion.WithKind("ConsoleSample")
 
 // Get takes name of the consoleSample, and returns the corresponding consoleSample object, and an error if there is any.
 func (c *FakeConsoleSamples) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleSample, err error) {
+	emptyResult := &v1.ConsoleSample{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(consolesamplesResource, name), &v1.ConsoleSample{})
+		Invokes(testing.NewRootGetActionWithOptions(consolesamplesResource, name, options), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleSample), err
 }
 
 // List takes label and field selectors, and returns the list of ConsoleSamples that match those selectors.
 func (c *FakeConsoleSamples) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleSampleList, err error) {
+	emptyResult := &v1.ConsoleSampleList{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(consolesamplesResource, consolesamplesKind, opts), &v1.ConsoleSampleList{})
+		Invokes(testing.NewRootListActionWithOptions(consolesamplesResource, consolesamplesKind, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -59,25 +61,27 @@ func (c *FakeConsoleSamples) List(ctx context.Context, opts metav1.ListOptions) 
 // Watch returns a watch.Interface that watches the requested consoleSamples.
 func (c *FakeConsoleSamples) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(consolesamplesResource, opts))
+		InvokesWatch(testing.NewRootWatchActionWithOptions(consolesamplesResource, opts))
 }
 
 // Create takes the representation of a consoleSample and creates it.  Returns the server's representation of the consoleSample, and an error, if there is any.
 func (c *FakeConsoleSamples) Create(ctx context.Context, consoleSample *v1.ConsoleSample, opts metav1.CreateOptions) (result *v1.ConsoleSample, err error) {
+	emptyResult := &v1.ConsoleSample{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(consolesamplesResource, consoleSample), &v1.ConsoleSample{})
+		Invokes(testing.NewRootCreateActionWithOptions(consolesamplesResource, consoleSample, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleSample), err
 }
 
 // Update takes the representation of a consoleSample and updates it. Returns the server's representation of the consoleSample, and an error, if there is any.
 func (c *FakeConsoleSamples) Update(ctx context.Context, consoleSample *v1.ConsoleSample, opts metav1.UpdateOptions) (result *v1.ConsoleSample, err error) {
+	emptyResult := &v1.ConsoleSample{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(consolesamplesResource, consoleSample), &v1.ConsoleSample{})
+		Invokes(testing.NewRootUpdateActionWithOptions(consolesamplesResource, consoleSample, opts), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleSample), err
 }
@@ -91,7 +95,7 @@ func (c *FakeConsoleSamples) Delete(ctx context.Context, name string, opts metav
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeConsoleSamples) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(consolesamplesResource, listOpts)
+	action := testing.NewRootDeleteCollectionActionWithOptions(consolesamplesResource, opts, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1.ConsoleSampleList{})
 	return err
@@ -99,10 +103,11 @@ func (c *FakeConsoleSamples) DeleteCollection(ctx context.Context, opts metav1.D
 
 // Patch applies the patch and returns the patched consoleSample.
 func (c *FakeConsoleSamples) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleSample, err error) {
+	emptyResult := &v1.ConsoleSample{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolesamplesResource, name, pt, data, subresources...), &v1.ConsoleSample{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolesamplesResource, name, pt, data, opts, subresources...), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleSample), err
 }
@@ -120,10 +125,11 @@ func (c *FakeConsoleSamples) Apply(ctx context.Context, consoleSample *consolev1
 	if name == nil {
 		return nil, fmt.Errorf("consoleSample.Name must be provided to Apply")
 	}
+	emptyResult := &v1.ConsoleSample{}
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(consolesamplesResource, *name, types.ApplyPatchType, data), &v1.ConsoleSample{})
+		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolesamplesResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
 	if obj == nil {
-		return nil, err
+		return emptyResult, err
 	}
 	return obj.(*v1.ConsoleSample), err
 }
