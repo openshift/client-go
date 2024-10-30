@@ -3111,7 +3111,7 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.OpenStackLoadBalancerParameters
   map:
     fields:
-    - name: loadBalancerIP
+    - name: floatingIP
       type:
         scalar: string
 - name: com.github.openshift.api.operator.v1.OperatorCondition
