@@ -68,3 +68,9 @@ retract v3.9.0+incompatible
 // To make go aware of the retraction, we need to tag a new version that can be
 // retracted by itself.
 retract v0.0.1
+
+replace github.com/openshift/api => github.com/jcpowermac/api v0.0.0-20241030123604-ca48ada0adc2
+
+replace github.com/openshift/client-go => github.com/jcpowermac/client-go v0.0.0-20241025131701-73020f5b7d88
+
+replace github.com/openshift/library-go => github.com/jcpowermac/library-go v0.0.0-20241025125326-e6593037aea6
