@@ -13,11 +13,11 @@ type FakeQuotaV1 struct {
 }
 
 func (c *FakeQuotaV1) AppliedClusterResourceQuotas(namespace string) v1.AppliedClusterResourceQuotaInterface {
-	return &FakeAppliedClusterResourceQuotas{c, namespace}
+	return newFakeAppliedClusterResourceQuotas(c, namespace)
 }
 
 func (c *FakeQuotaV1) ClusterResourceQuotas() v1.ClusterResourceQuotaInterface {
-	return &FakeClusterResourceQuotas{c}
+	return newFakeClusterResourceQuotas(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

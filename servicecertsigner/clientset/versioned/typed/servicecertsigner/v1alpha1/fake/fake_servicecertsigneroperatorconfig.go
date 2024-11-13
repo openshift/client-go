@@ -3,168 +3,37 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
 	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedservicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/clientset/versioned/typed/servicecertsigner/v1alpha1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeServiceCertSignerOperatorConfigs implements ServiceCertSignerOperatorConfigInterface
-type FakeServiceCertSignerOperatorConfigs struct {
+// fakeServiceCertSignerOperatorConfigs implements ServiceCertSignerOperatorConfigInterface
+type fakeServiceCertSignerOperatorConfigs struct {
+	*gentype.FakeClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration]
 	Fake *FakeServicecertsignerV1alpha1
 }
 
-var servicecertsigneroperatorconfigsResource = v1alpha1.SchemeGroupVersion.WithResource("servicecertsigneroperatorconfigs")
-
-var servicecertsigneroperatorconfigsKind = v1alpha1.SchemeGroupVersion.WithKind("ServiceCertSignerOperatorConfig")
-
-// Get takes name of the serviceCertSignerOperatorConfig, and returns the corresponding serviceCertSignerOperatorConfig object, and an error if there is any.
-func (c *FakeServiceCertSignerOperatorConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(servicecertsigneroperatorconfigsResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeServiceCertSignerOperatorConfigs(fake *FakeServicecertsignerV1alpha1) typedservicecertsignerv1alpha1.ServiceCertSignerOperatorConfigInterface {
+	return &fakeServiceCertSignerOperatorConfigs{
+		gentype.NewFakeClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("servicecertsigneroperatorconfigs"),
+			v1alpha1.SchemeGroupVersion.WithKind("ServiceCertSignerOperatorConfig"),
+			func() *v1alpha1.ServiceCertSignerOperatorConfig { return &v1alpha1.ServiceCertSignerOperatorConfig{} },
+			func() *v1alpha1.ServiceCertSignerOperatorConfigList {
+				return &v1alpha1.ServiceCertSignerOperatorConfigList{}
+			},
+			func(dst, src *v1alpha1.ServiceCertSignerOperatorConfigList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ServiceCertSignerOperatorConfigList) []*v1alpha1.ServiceCertSignerOperatorConfig {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ServiceCertSignerOperatorConfigList, items []*v1alpha1.ServiceCertSignerOperatorConfig) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// List takes label and field selectors, and returns the list of ServiceCertSignerOperatorConfigs that match those selectors.
-func (c *FakeServiceCertSignerOperatorConfigs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ServiceCertSignerOperatorConfigList, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfigList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(servicecertsigneroperatorconfigsResource, servicecertsigneroperatorconfigsKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ServiceCertSignerOperatorConfigList{ListMeta: obj.(*v1alpha1.ServiceCertSignerOperatorConfigList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ServiceCertSignerOperatorConfigList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested serviceCertSignerOperatorConfigs.
-func (c *FakeServiceCertSignerOperatorConfigs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(servicecertsigneroperatorconfigsResource, opts))
-}
-
-// Create takes the representation of a serviceCertSignerOperatorConfig and creates it.  Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
-func (c *FakeServiceCertSignerOperatorConfigs) Create(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// Update takes the representation of a serviceCertSignerOperatorConfig and updates it. Returns the server's representation of the serviceCertSignerOperatorConfig, and an error, if there is any.
-func (c *FakeServiceCertSignerOperatorConfigs) Update(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(servicecertsigneroperatorconfigsResource, serviceCertSignerOperatorConfig, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeServiceCertSignerOperatorConfigs) UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, "status", serviceCertSignerOperatorConfig, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// Delete takes name of the serviceCertSignerOperatorConfig and deletes it. Returns an error if one occurs.
-func (c *FakeServiceCertSignerOperatorConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(servicecertsigneroperatorconfigsResource, name, opts), &v1alpha1.ServiceCertSignerOperatorConfig{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeServiceCertSignerOperatorConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(servicecertsigneroperatorconfigsResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ServiceCertSignerOperatorConfigList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched serviceCertSignerOperatorConfig.
-func (c *FakeServiceCertSignerOperatorConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied serviceCertSignerOperatorConfig.
-func (c *FakeServiceCertSignerOperatorConfigs) Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	if serviceCertSignerOperatorConfig == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(serviceCertSignerOperatorConfig)
-	if err != nil {
-		return nil, err
-	}
-	name := serviceCertSignerOperatorConfig.Name
-	if name == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeServiceCertSignerOperatorConfigs) ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error) {
-	if serviceCertSignerOperatorConfig == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(serviceCertSignerOperatorConfig)
-	if err != nil {
-		return nil, err
-	}
-	name := serviceCertSignerOperatorConfig.Name
-	if name == nil {
-		return nil, fmt.Errorf("serviceCertSignerOperatorConfig.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.ServiceCertSignerOperatorConfig{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(servicecertsigneroperatorconfigsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.ServiceCertSignerOperatorConfig), err
 }

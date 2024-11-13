@@ -3,13 +3,13 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	sharedresourcev1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
+	apisharedresourcev1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
 	versioned "github.com/openshift/client-go/sharedresource/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/sharedresource/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/openshift/client-go/sharedresource/listers/sharedresource/v1alpha1"
+	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/listers/sharedresource/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // SharedConfigMaps.
 type SharedConfigMapInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.SharedConfigMapLister
+	Lister() sharedresourcev1alpha1.SharedConfigMapLister
 }
 
 type sharedConfigMapInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredSharedConfigMapInformer(client versioned.Interface, resyncPeriod
 				return client.SharedresourceV1alpha1().SharedConfigMaps().Watch(context.TODO(), options)
 			},
 		},
-		&sharedresourcev1alpha1.SharedConfigMap{},
+		&apisharedresourcev1alpha1.SharedConfigMap{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *sharedConfigMapInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *sharedConfigMapInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&sharedresourcev1alpha1.SharedConfigMap{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisharedresourcev1alpha1.SharedConfigMap{}, f.defaultInformer)
 }
 
-func (f *sharedConfigMapInformer) Lister() v1alpha1.SharedConfigMapLister {
-	return v1alpha1.NewSharedConfigMapLister(f.Informer().GetIndexer())
+func (f *sharedConfigMapInformer) Lister() sharedresourcev1alpha1.SharedConfigMapLister {
+	return sharedresourcev1alpha1.NewSharedConfigMapLister(f.Informer().GetIndexer())
 }

@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleCLIDownloads.
 type ConsoleCLIDownloadInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleCLIDownloadLister
+	Lister() consolev1.ConsoleCLIDownloadLister
 }
 
 type consoleCLIDownloadInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleCLIDownloadInformer(client versioned.Interface, resyncPer
 				return client.ConsoleV1().ConsoleCLIDownloads().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleCLIDownload{},
+		&apiconsolev1.ConsoleCLIDownload{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleCLIDownloadInformer) defaultInformer(client versioned.Interface,
 }
 
 func (f *consoleCLIDownloadInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleCLIDownload{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleCLIDownload{}, f.defaultInformer)
 }
 
-func (f *consoleCLIDownloadInformer) Lister() v1.ConsoleCLIDownloadLister {
-	return v1.NewConsoleCLIDownloadLister(f.Informer().GetIndexer())
+func (f *consoleCLIDownloadInformer) Lister() consolev1.ConsoleCLIDownloadLister {
+	return consolev1.NewConsoleCLIDownloadLister(f.Informer().GetIndexer())
 }

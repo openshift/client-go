@@ -3,10 +3,10 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
-	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
+	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	applyconfigurationsinsightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
 	scheme "github.com/openshift/client-go/insights/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,36 +22,37 @@ type DataGathersGetter interface {
 
 // DataGatherInterface has methods to work with DataGather resources.
 type DataGatherInterface interface {
-	Create(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.CreateOptions) (*v1alpha1.DataGather, error)
-	Update(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (*v1alpha1.DataGather, error)
+	Create(ctx context.Context, dataGather *insightsv1alpha1.DataGather, opts v1.CreateOptions) (*insightsv1alpha1.DataGather, error)
+	Update(ctx context.Context, dataGather *insightsv1alpha1.DataGather, opts v1.UpdateOptions) (*insightsv1alpha1.DataGather, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, dataGather *v1alpha1.DataGather, opts v1.UpdateOptions) (*v1alpha1.DataGather, error)
+	UpdateStatus(ctx context.Context, dataGather *insightsv1alpha1.DataGather, opts v1.UpdateOptions) (*insightsv1alpha1.DataGather, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.DataGather, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.DataGatherList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*insightsv1alpha1.DataGather, error)
+	List(ctx context.Context, opts v1.ListOptions) (*insightsv1alpha1.DataGatherList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DataGather, err error)
-	Apply(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *insightsv1alpha1.DataGather, err error)
+	Apply(ctx context.Context, dataGather *applyconfigurationsinsightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *insightsv1alpha1.DataGather, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, dataGather *insightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.DataGather, err error)
+	ApplyStatus(ctx context.Context, dataGather *applyconfigurationsinsightsv1alpha1.DataGatherApplyConfiguration, opts v1.ApplyOptions) (result *insightsv1alpha1.DataGather, err error)
 	DataGatherExpansion
 }
 
 // dataGathers implements DataGatherInterface
 type dataGathers struct {
-	*gentype.ClientWithListAndApply[*v1alpha1.DataGather, *v1alpha1.DataGatherList, *insightsv1alpha1.DataGatherApplyConfiguration]
+	*gentype.ClientWithListAndApply[*insightsv1alpha1.DataGather, *insightsv1alpha1.DataGatherList, *applyconfigurationsinsightsv1alpha1.DataGatherApplyConfiguration]
 }
 
 // newDataGathers returns a DataGathers
 func newDataGathers(c *InsightsV1alpha1Client) *dataGathers {
 	return &dataGathers{
-		gentype.NewClientWithListAndApply[*v1alpha1.DataGather, *v1alpha1.DataGatherList, *insightsv1alpha1.DataGatherApplyConfiguration](
+		gentype.NewClientWithListAndApply[*insightsv1alpha1.DataGather, *insightsv1alpha1.DataGatherList, *applyconfigurationsinsightsv1alpha1.DataGatherApplyConfiguration](
 			"datagathers",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			"",
-			func() *v1alpha1.DataGather { return &v1alpha1.DataGather{} },
-			func() *v1alpha1.DataGatherList { return &v1alpha1.DataGatherList{} }),
+			func() *insightsv1alpha1.DataGather { return &insightsv1alpha1.DataGather{} },
+			func() *insightsv1alpha1.DataGatherList { return &insightsv1alpha1.DataGatherList{} },
+		),
 	}
 }

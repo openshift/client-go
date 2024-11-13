@@ -3,10 +3,10 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
-	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
+	sharedresourcev1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
+	applyconfigurationssharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
 	scheme "github.com/openshift/client-go/sharedresource/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,36 +22,39 @@ type SharedConfigMapsGetter interface {
 
 // SharedConfigMapInterface has methods to work with SharedConfigMap resources.
 type SharedConfigMapInterface interface {
-	Create(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.CreateOptions) (*v1alpha1.SharedConfigMap, error)
-	Update(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.UpdateOptions) (*v1alpha1.SharedConfigMap, error)
+	Create(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, opts v1.CreateOptions) (*sharedresourcev1alpha1.SharedConfigMap, error)
+	Update(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, opts v1.UpdateOptions) (*sharedresourcev1alpha1.SharedConfigMap, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.UpdateOptions) (*v1alpha1.SharedConfigMap, error)
+	UpdateStatus(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, opts v1.UpdateOptions) (*sharedresourcev1alpha1.SharedConfigMap, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.SharedConfigMap, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.SharedConfigMapList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*sharedresourcev1alpha1.SharedConfigMap, error)
+	List(ctx context.Context, opts v1.ListOptions) (*sharedresourcev1alpha1.SharedConfigMapList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedConfigMap, err error)
-	Apply(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *sharedresourcev1alpha1.SharedConfigMap, err error)
+	Apply(ctx context.Context, sharedConfigMap *applyconfigurationssharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *sharedresourcev1alpha1.SharedConfigMap, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error)
+	ApplyStatus(ctx context.Context, sharedConfigMap *applyconfigurationssharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *sharedresourcev1alpha1.SharedConfigMap, err error)
 	SharedConfigMapExpansion
 }
 
 // sharedConfigMaps implements SharedConfigMapInterface
 type sharedConfigMaps struct {
-	*gentype.ClientWithListAndApply[*v1alpha1.SharedConfigMap, *v1alpha1.SharedConfigMapList, *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration]
+	*gentype.ClientWithListAndApply[*sharedresourcev1alpha1.SharedConfigMap, *sharedresourcev1alpha1.SharedConfigMapList, *applyconfigurationssharedresourcev1alpha1.SharedConfigMapApplyConfiguration]
 }
 
 // newSharedConfigMaps returns a SharedConfigMaps
 func newSharedConfigMaps(c *SharedresourceV1alpha1Client) *sharedConfigMaps {
 	return &sharedConfigMaps{
-		gentype.NewClientWithListAndApply[*v1alpha1.SharedConfigMap, *v1alpha1.SharedConfigMapList, *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration](
+		gentype.NewClientWithListAndApply[*sharedresourcev1alpha1.SharedConfigMap, *sharedresourcev1alpha1.SharedConfigMapList, *applyconfigurationssharedresourcev1alpha1.SharedConfigMapApplyConfiguration](
 			"sharedconfigmaps",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			"",
-			func() *v1alpha1.SharedConfigMap { return &v1alpha1.SharedConfigMap{} },
-			func() *v1alpha1.SharedConfigMapList { return &v1alpha1.SharedConfigMapList{} }),
+			func() *sharedresourcev1alpha1.SharedConfigMap { return &sharedresourcev1alpha1.SharedConfigMap{} },
+			func() *sharedresourcev1alpha1.SharedConfigMapList {
+				return &sharedresourcev1alpha1.SharedConfigMapList{}
+			},
+		),
 	}
 }

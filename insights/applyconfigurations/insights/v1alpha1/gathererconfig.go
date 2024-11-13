@@ -3,14 +3,14 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 )
 
 // GathererConfigApplyConfiguration represents a declarative configuration of the GathererConfig type for use
 // with apply.
 type GathererConfigApplyConfiguration struct {
-	Name  *string                 `json:"name,omitempty"`
-	State *v1alpha1.GathererState `json:"state,omitempty"`
+	Name  *string                         `json:"name,omitempty"`
+	State *insightsv1alpha1.GathererState `json:"state,omitempty"`
 }
 
 // GathererConfigApplyConfiguration constructs a declarative configuration of the GathererConfig type for use with
@@ -30,7 +30,7 @@ func (b *GathererConfigApplyConfiguration) WithName(value string) *GathererConfi
 // WithState sets the State field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the State field is set to the value of the last call.
-func (b *GathererConfigApplyConfiguration) WithState(value v1alpha1.GathererState) *GathererConfigApplyConfiguration {
+func (b *GathererConfigApplyConfiguration) WithState(value insightsv1alpha1.GathererState) *GathererConfigApplyConfiguration {
 	b.State = &value
 	return b
 }
