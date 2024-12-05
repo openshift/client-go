@@ -128,7 +128,8 @@ func NewRESTClient(baseURL *url.URL, versionedAPIPath string, config ClientConte
 }
 
 func scrubCBORContentConfigIfDisabled(content ClientContentConfig) ClientContentConfig {
-	if clientfeatures.TestOnlyFeatureGates.Enabled(clientfeatures.TestOnlyClientAllowsCBOR) {
+	if clientfeatures.FeatureGates().Enabled(clientfeatures.ClientsAllowCBOR) {
+		content.Negotiator = clientNegotiatorWithCBORSequenceStreamDecoder{content.Negotiator}
 		return content
 	}
 
@@ -237,7 +238,8 @@ func (c *RESTClient) Delete() *Request {
 
 // APIVersion returns the APIVersion this RESTClient is expected to use.
 func (c *RESTClient) APIVersion() schema.GroupVersion {
-	return c.content.GetClientContentConfig().GroupVersion
+	config, _ := c.content.GetClientContentConfig()
+	return config.GroupVersion
 }
 
 // requestClientContentConfigProvider observes HTTP 415 (Unsupported Media Type) responses to detect
@@ -256,31 +258,41 @@ type requestClientContentConfigProvider struct {
 }
 
 // GetClientContentConfig returns the ClientContentConfig that should be used for new requests by
-// this client.
-func (p *requestClientContentConfigProvider) GetClientContentConfig() ClientContentConfig {
-	if !clientfeatures.TestOnlyFeatureGates.Enabled(clientfeatures.TestOnlyClientAllowsCBOR) {
-		return p.base
+// this client and true if the request ContentType was selected by default.
+func (p *requestClientContentConfigProvider) GetClientContentConfig() (ClientContentConfig, bool) {
+	config := p.base
+
+	defaulted := config.ContentType == ""
+	if defaulted {
+		config.ContentType = "application/json"
+	}
+
+	if !clientfeatures.FeatureGates().Enabled(clientfeatures.ClientsAllowCBOR) {
+		return config, defaulted
+	}
+
+	if defaulted && clientfeatures.FeatureGates().Enabled(clientfeatures.ClientsPreferCBOR) {
+		config.ContentType = "application/cbor"
 	}
 
 	if sawUnsupportedMediaTypeForCBOR := p.sawUnsupportedMediaTypeForCBOR.Load(); !sawUnsupportedMediaTypeForCBOR {
-		return p.base
+		return config, defaulted
 	}
 
-	if mediaType, _, _ := mime.ParseMediaType(p.base.ContentType); mediaType != runtime.ContentTypeCBOR {
-		return p.base
+	if mediaType, _, _ := mime.ParseMediaType(config.ContentType); mediaType != runtime.ContentTypeCBOR {
+		return config, defaulted
 	}
 
-	config := p.base
-	// The default ClientContentConfig sets ContentType to CBOR and the client has previously
-	// received an HTTP 415 in response to a CBOR request. Override ContentType to JSON.
+	// The effective ContentType is CBOR and the client has previously received an HTTP 415 in
+	// response to a CBOR request. Override ContentType to JSON.
 	config.ContentType = runtime.ContentTypeJSON
-	return config
+	return config, defaulted
 }
 
 // UnsupportedMediaType reports that the server has responded to a request with HTTP 415 Unsupported
 // Media Type.
 func (p *requestClientContentConfigProvider) UnsupportedMediaType(requestContentType string) {
-	if !clientfeatures.TestOnlyFeatureGates.Enabled(clientfeatures.TestOnlyClientAllowsCBOR) {
+	if !clientfeatures.FeatureGates().Enabled(clientfeatures.ClientsAllowCBOR) {
 		return
 	}
 
@@ -293,4 +305,39 @@ func (p *requestClientContentConfigProvider) UnsupportedMediaType(requestContent
 	case runtime.ContentTypeCBOR, string(types.ApplyCBORPatchType):
 		p.sawUnsupportedMediaTypeForCBOR.Store(true)
 	}
+}
+
+// clientNegotiatorWithCBORSequenceStreamDecoder is a ClientNegotiator that delegates to another
+// ClientNegotiator to select the appropriate Encoder or Decoder for a given media type. As a
+// special case, it will resolve "application/cbor-seq" (a CBOR Sequence, the concatenation of zero
+// or more CBOR data items) as an alias for "application/cbor" (exactly one CBOR data item) when
+// selecting a stream decoder.
+type clientNegotiatorWithCBORSequenceStreamDecoder struct {
+	negotiator runtime.ClientNegotiator
+}
+
+func (n clientNegotiatorWithCBORSequenceStreamDecoder) Encoder(contentType string, params map[string]string) (runtime.Encoder, error) {
+	return n.negotiator.Encoder(contentType, params)
+}
+
+func (n clientNegotiatorWithCBORSequenceStreamDecoder) Decoder(contentType string, params map[string]string) (runtime.Decoder, error) {
+	return n.negotiator.Decoder(contentType, params)
+}
+
+func (n clientNegotiatorWithCBORSequenceStreamDecoder) StreamDecoder(contentType string, params map[string]string) (runtime.Decoder, runtime.Serializer, runtime.Framer, error) {
+	if !clientfeatures.FeatureGates().Enabled(clientfeatures.ClientsAllowCBOR) {
+		return n.negotiator.StreamDecoder(contentType, params)
+	}
+
+	switch contentType {
+	case runtime.ContentTypeCBORSequence:
+		return n.negotiator.StreamDecoder(runtime.ContentTypeCBOR, params)
+	case runtime.ContentTypeCBOR:
+		// This media type is only appropriate for exactly one data item, not the zero or
+		// more events of a watch stream.
+		return nil, nil, nil, runtime.NegotiateError{ContentType: contentType, Stream: true}
+	default:
+		return n.negotiator.StreamDecoder(contentType, params)
+	}
+
 }

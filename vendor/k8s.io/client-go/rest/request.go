@@ -156,14 +156,10 @@ func NewRequest(c *RESTClient) *Request {
 		timeout = c.Client.Timeout
 	}
 
-	contentConfig := c.content.GetClientContentConfig()
-	contentTypeNotSet := len(contentConfig.ContentType) == 0
-	if contentTypeNotSet {
-		contentConfig.ContentType = "application/json"
-		if clientfeatures.TestOnlyFeatureGates.Enabled(clientfeatures.TestOnlyClientAllowsCBOR) && clientfeatures.TestOnlyFeatureGates.Enabled(clientfeatures.TestOnlyClientPrefersCBOR) {
-			contentConfig.ContentType = "application/cbor"
-		}
-	}
+	// A request needs to know whether the content type was explicitly configured or selected by
+	// default in order to support the per-request Protobuf override used by clients generated
+	// with --prefers-protobuf.
+	contentConfig, contentTypeDefaulted := c.content.GetClientContentConfig()
 
 	r := &Request{
 		c:              c,
@@ -176,7 +172,7 @@ func NewRequest(c *RESTClient) *Request {
 		warningHandler: c.warningHandler,
 
 		contentConfig:     contentConfig,
-		contentTypeNotSet: contentTypeNotSet,
+		contentTypeNotSet: contentTypeDefaulted,
 	}
 
 	r.setAcceptHeader()
