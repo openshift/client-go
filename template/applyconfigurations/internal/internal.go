@@ -222,7 +222,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
-      default: ""
     elementRelationship: atomic
 - name: io.k8s.api.core.v1.ObjectReference
   map:

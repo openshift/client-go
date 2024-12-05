@@ -627,42 +627,12 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: atomic
-- name: io.k8s.api.authorization.v1.FieldSelectorAttributes
-  map:
-    fields:
-    - name: rawSelector
-      type:
-        scalar: string
-    - name: requirements
-      type:
-        list:
-          elementType:
-            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.FieldSelectorRequirement
-          elementRelationship: atomic
-- name: io.k8s.api.authorization.v1.LabelSelectorAttributes
-  map:
-    fields:
-    - name: rawSelector
-      type:
-        scalar: string
-    - name: requirements
-      type:
-        list:
-          elementType:
-            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
-          elementRelationship: atomic
 - name: io.k8s.api.authorization.v1.ResourceAttributes
   map:
     fields:
-    - name: fieldSelector
-      type:
-        namedType: io.k8s.api.authorization.v1.FieldSelectorAttributes
     - name: group
       type:
         scalar: string
-    - name: labelSelector
-      type:
-        namedType: io.k8s.api.authorization.v1.LabelSelectorAttributes
     - name: name
       type:
         scalar: string
@@ -681,23 +651,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: version
       type:
         scalar: string
-- name: io.k8s.apimachinery.pkg.apis.meta.v1.FieldSelectorRequirement
-  map:
-    fields:
-    - name: key
-      type:
-        scalar: string
-      default: ""
-    - name: operator
-      type:
-        scalar: string
-      default: ""
-    - name: values
-      type:
-        list:
-          elementType:
-            scalar: string
-          elementRelationship: atomic
 - name: io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1
   map:
     elementType:
