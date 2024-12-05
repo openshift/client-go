@@ -13,7 +13,7 @@ type FakeControlplaneV1alpha1 struct {
 }
 
 func (c *FakeControlplaneV1alpha1) PodNetworkConnectivityChecks(namespace string) v1alpha1.PodNetworkConnectivityCheckInterface {
-	return &FakePodNetworkConnectivityChecks{c, namespace}
+	return newFakePodNetworkConnectivityChecks(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

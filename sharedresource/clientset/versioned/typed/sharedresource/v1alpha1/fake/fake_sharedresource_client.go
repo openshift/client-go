@@ -13,11 +13,11 @@ type FakeSharedresourceV1alpha1 struct {
 }
 
 func (c *FakeSharedresourceV1alpha1) SharedConfigMaps() v1alpha1.SharedConfigMapInterface {
-	return &FakeSharedConfigMaps{c}
+	return newFakeSharedConfigMaps(c)
 }
 
 func (c *FakeSharedresourceV1alpha1) SharedSecrets() v1alpha1.SharedSecretInterface {
-	return &FakeSharedSecrets{c}
+	return newFakeSharedSecrets(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

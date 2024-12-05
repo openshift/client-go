@@ -3,7 +3,7 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
@@ -12,7 +12,7 @@ import (
 // with apply.
 type DataGatherStatusApplyConfiguration struct {
 	Conditions        []v1.ConditionApplyConfiguration    `json:"conditions,omitempty"`
-	State             *v1alpha1.DataGatherState           `json:"dataGatherState,omitempty"`
+	State             *insightsv1alpha1.DataGatherState   `json:"dataGatherState,omitempty"`
 	Gatherers         []GathererStatusApplyConfiguration  `json:"gatherers,omitempty"`
 	StartTime         *metav1.Time                        `json:"startTime,omitempty"`
 	FinishTime        *metav1.Time                        `json:"finishTime,omitempty"`
@@ -43,7 +43,7 @@ func (b *DataGatherStatusApplyConfiguration) WithConditions(values ...*v1.Condit
 // WithState sets the State field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the State field is set to the value of the last call.
-func (b *DataGatherStatusApplyConfiguration) WithState(value v1alpha1.DataGatherState) *DataGatherStatusApplyConfiguration {
+func (b *DataGatherStatusApplyConfiguration) WithState(value insightsv1alpha1.DataGatherState) *DataGatherStatusApplyConfiguration {
 	b.State = &value
 	return b
 }

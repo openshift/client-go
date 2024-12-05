@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	consolev1 "github.com/openshift/api/console/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ConsoleCLIDownloadLister helps list ConsoleCLIDownloads.
@@ -14,19 +14,19 @@ import (
 type ConsoleCLIDownloadLister interface {
 	// List lists all ConsoleCLIDownloads in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.ConsoleCLIDownload, err error)
+	List(selector labels.Selector) (ret []*consolev1.ConsoleCLIDownload, err error)
 	// Get retrieves the ConsoleCLIDownload from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.ConsoleCLIDownload, error)
+	Get(name string) (*consolev1.ConsoleCLIDownload, error)
 	ConsoleCLIDownloadListerExpansion
 }
 
 // consoleCLIDownloadLister implements the ConsoleCLIDownloadLister interface.
 type consoleCLIDownloadLister struct {
-	listers.ResourceIndexer[*v1.ConsoleCLIDownload]
+	listers.ResourceIndexer[*consolev1.ConsoleCLIDownload]
 }
 
 // NewConsoleCLIDownloadLister returns a new ConsoleCLIDownloadLister.
 func NewConsoleCLIDownloadLister(indexer cache.Indexer) ConsoleCLIDownloadLister {
-	return &consoleCLIDownloadLister{listers.New[*v1.ConsoleCLIDownload](indexer, v1.Resource("consoleclidownload"))}
+	return &consoleCLIDownloadLister{listers.New[*consolev1.ConsoleCLIDownload](indexer, consolev1.Resource("consoleclidownload"))}
 }
