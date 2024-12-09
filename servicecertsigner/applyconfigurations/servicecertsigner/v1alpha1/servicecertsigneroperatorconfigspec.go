@@ -24,7 +24,7 @@ func ServiceCertSignerOperatorConfigSpec() *ServiceCertSignerOperatorConfigSpecA
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the ManagementState field is set to the value of the last call.
 func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithManagementState(value operatorv1.ManagementState) *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
-	b.ManagementState = &value
+	b.OperatorSpecApplyConfiguration.ManagementState = &value
 	return b
 }
 
@@ -32,7 +32,7 @@ func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithManagementSt
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the LogLevel field is set to the value of the last call.
 func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithLogLevel(value operatorv1.LogLevel) *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
-	b.LogLevel = &value
+	b.OperatorSpecApplyConfiguration.LogLevel = &value
 	return b
 }
 
@@ -40,7 +40,7 @@ func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithLogLevel(val
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the OperatorLogLevel field is set to the value of the last call.
 func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithOperatorLogLevel(value operatorv1.LogLevel) *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
-	b.OperatorLogLevel = &value
+	b.OperatorSpecApplyConfiguration.OperatorLogLevel = &value
 	return b
 }
 
@@ -48,7 +48,7 @@ func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithOperatorLogL
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the UnsupportedConfigOverrides field is set to the value of the last call.
 func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithUnsupportedConfigOverrides(value runtime.RawExtension) *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
-	b.UnsupportedConfigOverrides = &value
+	b.OperatorSpecApplyConfiguration.UnsupportedConfigOverrides = &value
 	return b
 }
 
@@ -56,6 +56,6 @@ func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithUnsupportedC
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the ObservedConfig field is set to the value of the last call.
 func (b *ServiceCertSignerOperatorConfigSpecApplyConfiguration) WithObservedConfig(value runtime.RawExtension) *ServiceCertSignerOperatorConfigSpecApplyConfiguration {
-	b.ObservedConfig = &value
+	b.OperatorSpecApplyConfiguration.ObservedConfig = &value
 	return b
 }

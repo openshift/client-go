@@ -3,10 +3,10 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
-	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
+	servicecertsignerv1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
+	applyconfigurationsservicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/applyconfigurations/servicecertsigner/v1alpha1"
 	scheme "github.com/openshift/client-go/servicecertsigner/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,38 +22,41 @@ type ServiceCertSignerOperatorConfigsGetter interface {
 
 // ServiceCertSignerOperatorConfigInterface has methods to work with ServiceCertSignerOperatorConfig resources.
 type ServiceCertSignerOperatorConfigInterface interface {
-	Create(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
-	Update(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
+	Create(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, opts v1.CreateOptions) (*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, error)
+	Update(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *v1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
+	UpdateStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, opts v1.UpdateOptions) (*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.ServiceCertSignerOperatorConfig, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.ServiceCertSignerOperatorConfigList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, error)
+	List(ctx context.Context, opts v1.ListOptions) (*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
-	Apply(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, err error)
+	Apply(ctx context.Context, serviceCertSignerOperatorConfig *applyconfigurationsservicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.ServiceCertSignerOperatorConfig, err error)
+	ApplyStatus(ctx context.Context, serviceCertSignerOperatorConfig *applyconfigurationsservicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration, opts v1.ApplyOptions) (result *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, err error)
 	ServiceCertSignerOperatorConfigExpansion
 }
 
 // serviceCertSignerOperatorConfigs implements ServiceCertSignerOperatorConfigInterface
 type serviceCertSignerOperatorConfigs struct {
-	*gentype.ClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration]
+	*gentype.ClientWithListAndApply[*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList, *applyconfigurationsservicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration]
 }
 
 // newServiceCertSignerOperatorConfigs returns a ServiceCertSignerOperatorConfigs
 func newServiceCertSignerOperatorConfigs(c *ServicecertsignerV1alpha1Client) *serviceCertSignerOperatorConfigs {
 	return &serviceCertSignerOperatorConfigs{
-		gentype.NewClientWithListAndApply[*v1alpha1.ServiceCertSignerOperatorConfig, *v1alpha1.ServiceCertSignerOperatorConfigList, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration](
+		gentype.NewClientWithListAndApply[*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList, *applyconfigurationsservicecertsignerv1alpha1.ServiceCertSignerOperatorConfigApplyConfiguration](
 			"servicecertsigneroperatorconfigs",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			"",
-			func() *v1alpha1.ServiceCertSignerOperatorConfig { return &v1alpha1.ServiceCertSignerOperatorConfig{} },
-			func() *v1alpha1.ServiceCertSignerOperatorConfigList {
-				return &v1alpha1.ServiceCertSignerOperatorConfigList{}
-			}),
+			func() *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig {
+				return &servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{}
+			},
+			func() *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList {
+				return &servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList{}
+			},
+		),
 	}
 }

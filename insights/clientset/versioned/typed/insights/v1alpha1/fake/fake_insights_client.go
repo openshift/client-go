@@ -13,7 +13,7 @@ type FakeInsightsV1alpha1 struct {
 }
 
 func (c *FakeInsightsV1alpha1) DataGathers() v1alpha1.DataGatherInterface {
-	return &FakeDataGathers{c}
+	return newFakeDataGathers(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

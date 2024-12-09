@@ -3,133 +3,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1 "github.com/openshift/api/console/v1"
 	consolev1 "github.com/openshift/client-go/console/applyconfigurations/console/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedconsolev1 "github.com/openshift/client-go/console/clientset/versioned/typed/console/v1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeConsoleYAMLSamples implements ConsoleYAMLSampleInterface
-type FakeConsoleYAMLSamples struct {
+// fakeConsoleYAMLSamples implements ConsoleYAMLSampleInterface
+type fakeConsoleYAMLSamples struct {
+	*gentype.FakeClientWithListAndApply[*v1.ConsoleYAMLSample, *v1.ConsoleYAMLSampleList, *consolev1.ConsoleYAMLSampleApplyConfiguration]
 	Fake *FakeConsoleV1
 }
 
-var consoleyamlsamplesResource = v1.SchemeGroupVersion.WithResource("consoleyamlsamples")
-
-var consoleyamlsamplesKind = v1.SchemeGroupVersion.WithKind("ConsoleYAMLSample")
-
-// Get takes name of the consoleYAMLSample, and returns the corresponding consoleYAMLSample object, and an error if there is any.
-func (c *FakeConsoleYAMLSamples) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsoleYAMLSample, err error) {
-	emptyResult := &v1.ConsoleYAMLSample{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(consoleyamlsamplesResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeConsoleYAMLSamples(fake *FakeConsoleV1) typedconsolev1.ConsoleYAMLSampleInterface {
+	return &fakeConsoleYAMLSamples{
+		gentype.NewFakeClientWithListAndApply[*v1.ConsoleYAMLSample, *v1.ConsoleYAMLSampleList, *consolev1.ConsoleYAMLSampleApplyConfiguration](
+			fake.Fake,
+			"",
+			v1.SchemeGroupVersion.WithResource("consoleyamlsamples"),
+			v1.SchemeGroupVersion.WithKind("ConsoleYAMLSample"),
+			func() *v1.ConsoleYAMLSample { return &v1.ConsoleYAMLSample{} },
+			func() *v1.ConsoleYAMLSampleList { return &v1.ConsoleYAMLSampleList{} },
+			func(dst, src *v1.ConsoleYAMLSampleList) { dst.ListMeta = src.ListMeta },
+			func(list *v1.ConsoleYAMLSampleList) []*v1.ConsoleYAMLSample {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1.ConsoleYAMLSampleList, items []*v1.ConsoleYAMLSample) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1.ConsoleYAMLSample), err
-}
-
-// List takes label and field selectors, and returns the list of ConsoleYAMLSamples that match those selectors.
-func (c *FakeConsoleYAMLSamples) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsoleYAMLSampleList, err error) {
-	emptyResult := &v1.ConsoleYAMLSampleList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(consoleyamlsamplesResource, consoleyamlsamplesKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1.ConsoleYAMLSampleList{ListMeta: obj.(*v1.ConsoleYAMLSampleList).ListMeta}
-	for _, item := range obj.(*v1.ConsoleYAMLSampleList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested consoleYAMLSamples.
-func (c *FakeConsoleYAMLSamples) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(consoleyamlsamplesResource, opts))
-}
-
-// Create takes the representation of a consoleYAMLSample and creates it.  Returns the server's representation of the consoleYAMLSample, and an error, if there is any.
-func (c *FakeConsoleYAMLSamples) Create(ctx context.Context, consoleYAMLSample *v1.ConsoleYAMLSample, opts metav1.CreateOptions) (result *v1.ConsoleYAMLSample, err error) {
-	emptyResult := &v1.ConsoleYAMLSample{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(consoleyamlsamplesResource, consoleYAMLSample, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsoleYAMLSample), err
-}
-
-// Update takes the representation of a consoleYAMLSample and updates it. Returns the server's representation of the consoleYAMLSample, and an error, if there is any.
-func (c *FakeConsoleYAMLSamples) Update(ctx context.Context, consoleYAMLSample *v1.ConsoleYAMLSample, opts metav1.UpdateOptions) (result *v1.ConsoleYAMLSample, err error) {
-	emptyResult := &v1.ConsoleYAMLSample{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(consoleyamlsamplesResource, consoleYAMLSample, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsoleYAMLSample), err
-}
-
-// Delete takes name of the consoleYAMLSample and deletes it. Returns an error if one occurs.
-func (c *FakeConsoleYAMLSamples) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(consoleyamlsamplesResource, name, opts), &v1.ConsoleYAMLSample{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeConsoleYAMLSamples) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(consoleyamlsamplesResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1.ConsoleYAMLSampleList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched consoleYAMLSample.
-func (c *FakeConsoleYAMLSamples) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsoleYAMLSample, err error) {
-	emptyResult := &v1.ConsoleYAMLSample{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleyamlsamplesResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsoleYAMLSample), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied consoleYAMLSample.
-func (c *FakeConsoleYAMLSamples) Apply(ctx context.Context, consoleYAMLSample *consolev1.ConsoleYAMLSampleApplyConfiguration, opts metav1.ApplyOptions) (result *v1.ConsoleYAMLSample, err error) {
-	if consoleYAMLSample == nil {
-		return nil, fmt.Errorf("consoleYAMLSample provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(consoleYAMLSample)
-	if err != nil {
-		return nil, err
-	}
-	name := consoleYAMLSample.Name
-	if name == nil {
-		return nil, fmt.Errorf("consoleYAMLSample.Name must be provided to Apply")
-	}
-	emptyResult := &v1.ConsoleYAMLSample{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consoleyamlsamplesResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsoleYAMLSample), err
 }

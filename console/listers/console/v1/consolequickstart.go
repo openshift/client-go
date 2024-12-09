@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	consolev1 "github.com/openshift/api/console/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ConsoleQuickStartLister helps list ConsoleQuickStarts.
@@ -14,19 +14,19 @@ import (
 type ConsoleQuickStartLister interface {
 	// List lists all ConsoleQuickStarts in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.ConsoleQuickStart, err error)
+	List(selector labels.Selector) (ret []*consolev1.ConsoleQuickStart, err error)
 	// Get retrieves the ConsoleQuickStart from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.ConsoleQuickStart, error)
+	Get(name string) (*consolev1.ConsoleQuickStart, error)
 	ConsoleQuickStartListerExpansion
 }
 
 // consoleQuickStartLister implements the ConsoleQuickStartLister interface.
 type consoleQuickStartLister struct {
-	listers.ResourceIndexer[*v1.ConsoleQuickStart]
+	listers.ResourceIndexer[*consolev1.ConsoleQuickStart]
 }
 
 // NewConsoleQuickStartLister returns a new ConsoleQuickStartLister.
 func NewConsoleQuickStartLister(indexer cache.Indexer) ConsoleQuickStartLister {
-	return &consoleQuickStartLister{listers.New[*v1.ConsoleQuickStart](indexer, v1.Resource("consolequickstart"))}
+	return &consoleQuickStartLister{listers.New[*consolev1.ConsoleQuickStart](indexer, consolev1.Resource("consolequickstart"))}
 }

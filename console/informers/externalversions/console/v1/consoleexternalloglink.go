@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleExternalLogLinks.
 type ConsoleExternalLogLinkInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleExternalLogLinkLister
+	Lister() consolev1.ConsoleExternalLogLinkLister
 }
 
 type consoleExternalLogLinkInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleExternalLogLinkInformer(client versioned.Interface, resyn
 				return client.ConsoleV1().ConsoleExternalLogLinks().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleExternalLogLink{},
+		&apiconsolev1.ConsoleExternalLogLink{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleExternalLogLinkInformer) defaultInformer(client versioned.Interf
 }
 
 func (f *consoleExternalLogLinkInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleExternalLogLink{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleExternalLogLink{}, f.defaultInformer)
 }
 
-func (f *consoleExternalLogLinkInformer) Lister() v1.ConsoleExternalLogLinkLister {
-	return v1.NewConsoleExternalLogLinkLister(f.Informer().GetIndexer())
+func (f *consoleExternalLogLinkInformer) Lister() consolev1.ConsoleExternalLogLinkLister {
+	return consolev1.NewConsoleExternalLogLinkLister(f.Informer().GetIndexer())
 }
