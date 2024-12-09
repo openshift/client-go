@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleQuickStarts.
 type ConsoleQuickStartInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleQuickStartLister
+	Lister() consolev1.ConsoleQuickStartLister
 }
 
 type consoleQuickStartInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleQuickStartInformer(client versioned.Interface, resyncPeri
 				return client.ConsoleV1().ConsoleQuickStarts().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleQuickStart{},
+		&apiconsolev1.ConsoleQuickStart{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleQuickStartInformer) defaultInformer(client versioned.Interface, 
 }
 
 func (f *consoleQuickStartInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleQuickStart{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleQuickStart{}, f.defaultInformer)
 }
 
-func (f *consoleQuickStartInformer) Lister() v1.ConsoleQuickStartLister {
-	return v1.NewConsoleQuickStartLister(f.Informer().GetIndexer())
+func (f *consoleQuickStartInformer) Lister() consolev1.ConsoleQuickStartLister {
+	return consolev1.NewConsoleQuickStartLister(f.Informer().GetIndexer())
 }

@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	monitoringv1 "github.com/openshift/api/monitoring/v1"
+	apimonitoringv1 "github.com/openshift/api/monitoring/v1"
 	versioned "github.com/openshift/client-go/monitoring/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/monitoring/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/monitoring/listers/monitoring/v1"
+	monitoringv1 "github.com/openshift/client-go/monitoring/listers/monitoring/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // AlertingRules.
 type AlertingRuleInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.AlertingRuleLister
+	Lister() monitoringv1.AlertingRuleLister
 }
 
 type alertingRuleInformer struct {
@@ -55,7 +55,7 @@ func NewFilteredAlertingRuleInformer(client versioned.Interface, namespace strin
 				return client.MonitoringV1().AlertingRules(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&monitoringv1.AlertingRule{},
+		&apimonitoringv1.AlertingRule{},
 		resyncPeriod,
 		indexers,
 	)
@@ -66,9 +66,9 @@ func (f *alertingRuleInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *alertingRuleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&monitoringv1.AlertingRule{}, f.defaultInformer)
+	return f.factory.InformerFor(&apimonitoringv1.AlertingRule{}, f.defaultInformer)
 }
 
-func (f *alertingRuleInformer) Lister() v1.AlertingRuleLister {
-	return v1.NewAlertingRuleLister(f.Informer().GetIndexer())
+func (f *alertingRuleInformer) Lister() monitoringv1.AlertingRuleLister {
+	return monitoringv1.NewAlertingRuleLister(f.Informer().GetIndexer())
 }

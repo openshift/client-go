@@ -71,7 +71,7 @@ func extractProjectHelmChartRepository(projectHelmChartRepository *helmv1beta1.P
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Kind field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithKind(value string) *ProjectHelmChartRepositoryApplyConfiguration {
-	b.Kind = &value
+	b.TypeMetaApplyConfiguration.Kind = &value
 	return b
 }
 
@@ -79,7 +79,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithKind(value string) *P
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the APIVersion field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithAPIVersion(value string) *ProjectHelmChartRepositoryApplyConfiguration {
-	b.APIVersion = &value
+	b.TypeMetaApplyConfiguration.APIVersion = &value
 	return b
 }
 
@@ -88,7 +88,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithAPIVersion(value stri
 // If called multiple times, the Name field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithName(value string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Name = &value
+	b.ObjectMetaApplyConfiguration.Name = &value
 	return b
 }
 
@@ -97,7 +97,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithName(value string) *P
 // If called multiple times, the GenerateName field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithGenerateName(value string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.GenerateName = &value
+	b.ObjectMetaApplyConfiguration.GenerateName = &value
 	return b
 }
 
@@ -106,7 +106,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithGenerateName(value st
 // If called multiple times, the Namespace field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithNamespace(value string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Namespace = &value
+	b.ObjectMetaApplyConfiguration.Namespace = &value
 	return b
 }
 
@@ -115,7 +115,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithNamespace(value strin
 // If called multiple times, the UID field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithUID(value types.UID) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.UID = &value
+	b.ObjectMetaApplyConfiguration.UID = &value
 	return b
 }
 
@@ -124,7 +124,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithUID(value types.UID) 
 // If called multiple times, the ResourceVersion field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithResourceVersion(value string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.ResourceVersion = &value
+	b.ObjectMetaApplyConfiguration.ResourceVersion = &value
 	return b
 }
 
@@ -133,7 +133,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithResourceVersion(value
 // If called multiple times, the Generation field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithGeneration(value int64) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.Generation = &value
+	b.ObjectMetaApplyConfiguration.Generation = &value
 	return b
 }
 
@@ -142,7 +142,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithGeneration(value int6
 // If called multiple times, the CreationTimestamp field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithCreationTimestamp(value metav1.Time) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.CreationTimestamp = &value
+	b.ObjectMetaApplyConfiguration.CreationTimestamp = &value
 	return b
 }
 
@@ -151,7 +151,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithCreationTimestamp(val
 // If called multiple times, the DeletionTimestamp field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.DeletionTimestamp = &value
+	b.ObjectMetaApplyConfiguration.DeletionTimestamp = &value
 	return b
 }
 
@@ -160,7 +160,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithDeletionTimestamp(val
 // If called multiple times, the DeletionGracePeriodSeconds field is set to the value of the last call.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	b.DeletionGracePeriodSeconds = &value
+	b.ObjectMetaApplyConfiguration.DeletionGracePeriodSeconds = &value
 	return b
 }
 
@@ -170,11 +170,11 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithDeletionGracePeriodSe
 // overwriting an existing map entries in Labels field with the same key.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithLabels(entries map[string]string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	if b.Labels == nil && len(entries) > 0 {
-		b.Labels = make(map[string]string, len(entries))
+	if b.ObjectMetaApplyConfiguration.Labels == nil && len(entries) > 0 {
+		b.ObjectMetaApplyConfiguration.Labels = make(map[string]string, len(entries))
 	}
 	for k, v := range entries {
-		b.Labels[k] = v
+		b.ObjectMetaApplyConfiguration.Labels[k] = v
 	}
 	return b
 }
@@ -185,11 +185,11 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithLabels(entries map[st
 // overwriting an existing map entries in Annotations field with the same key.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithAnnotations(entries map[string]string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
-	if b.Annotations == nil && len(entries) > 0 {
-		b.Annotations = make(map[string]string, len(entries))
+	if b.ObjectMetaApplyConfiguration.Annotations == nil && len(entries) > 0 {
+		b.ObjectMetaApplyConfiguration.Annotations = make(map[string]string, len(entries))
 	}
 	for k, v := range entries {
-		b.Annotations[k] = v
+		b.ObjectMetaApplyConfiguration.Annotations[k] = v
 	}
 	return b
 }
@@ -203,7 +203,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithOwnerReferences(value
 		if values[i] == nil {
 			panic("nil value passed to WithOwnerReferences")
 		}
-		b.OwnerReferences = append(b.OwnerReferences, *values[i])
+		b.ObjectMetaApplyConfiguration.OwnerReferences = append(b.ObjectMetaApplyConfiguration.OwnerReferences, *values[i])
 	}
 	return b
 }
@@ -214,7 +214,7 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithOwnerReferences(value
 func (b *ProjectHelmChartRepositoryApplyConfiguration) WithFinalizers(values ...string) *ProjectHelmChartRepositoryApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
-		b.Finalizers = append(b.Finalizers, values[i])
+		b.ObjectMetaApplyConfiguration.Finalizers = append(b.ObjectMetaApplyConfiguration.Finalizers, values[i])
 	}
 	return b
 }
@@ -244,5 +244,5 @@ func (b *ProjectHelmChartRepositoryApplyConfiguration) WithStatus(value *HelmCha
 // GetName retrieves the value of the Name field in the declarative configuration.
 func (b *ProjectHelmChartRepositoryApplyConfiguration) GetName() *string {
 	b.ensureObjectMetaApplyConfigurationExists()
-	return b.Name
+	return b.ObjectMetaApplyConfiguration.Name
 }

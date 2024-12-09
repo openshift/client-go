@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	consolev1 "github.com/openshift/api/console/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ConsoleSampleLister helps list ConsoleSamples.
@@ -14,19 +14,19 @@ import (
 type ConsoleSampleLister interface {
 	// List lists all ConsoleSamples in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.ConsoleSample, err error)
+	List(selector labels.Selector) (ret []*consolev1.ConsoleSample, err error)
 	// Get retrieves the ConsoleSample from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.ConsoleSample, error)
+	Get(name string) (*consolev1.ConsoleSample, error)
 	ConsoleSampleListerExpansion
 }
 
 // consoleSampleLister implements the ConsoleSampleLister interface.
 type consoleSampleLister struct {
-	listers.ResourceIndexer[*v1.ConsoleSample]
+	listers.ResourceIndexer[*consolev1.ConsoleSample]
 }
 
 // NewConsoleSampleLister returns a new ConsoleSampleLister.
 func NewConsoleSampleLister(indexer cache.Indexer) ConsoleSampleLister {
-	return &consoleSampleLister{listers.New[*v1.ConsoleSample](indexer, v1.Resource("consolesample"))}
+	return &consoleSampleLister{listers.New[*consolev1.ConsoleSample](indexer, consolev1.Resource("consolesample"))}
 }

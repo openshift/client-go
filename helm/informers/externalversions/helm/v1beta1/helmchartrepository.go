@@ -3,13 +3,13 @@
 package v1beta1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	helmv1beta1 "github.com/openshift/api/helm/v1beta1"
+	apihelmv1beta1 "github.com/openshift/api/helm/v1beta1"
 	versioned "github.com/openshift/client-go/helm/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/helm/informers/externalversions/internalinterfaces"
-	v1beta1 "github.com/openshift/client-go/helm/listers/helm/v1beta1"
+	helmv1beta1 "github.com/openshift/client-go/helm/listers/helm/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // HelmChartRepositories.
 type HelmChartRepositoryInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1beta1.HelmChartRepositoryLister
+	Lister() helmv1beta1.HelmChartRepositoryLister
 }
 
 type helmChartRepositoryInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPe
 				return client.HelmV1beta1().HelmChartRepositories().Watch(context.TODO(), options)
 			},
 		},
-		&helmv1beta1.HelmChartRepository{},
+		&apihelmv1beta1.HelmChartRepository{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *helmChartRepositoryInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *helmChartRepositoryInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&helmv1beta1.HelmChartRepository{}, f.defaultInformer)
+	return f.factory.InformerFor(&apihelmv1beta1.HelmChartRepository{}, f.defaultInformer)
 }
 
-func (f *helmChartRepositoryInformer) Lister() v1beta1.HelmChartRepositoryLister {
-	return v1beta1.NewHelmChartRepositoryLister(f.Informer().GetIndexer())
+func (f *helmChartRepositoryInformer) Lister() helmv1beta1.HelmChartRepositoryLister {
+	return helmv1beta1.NewHelmChartRepositoryLister(f.Informer().GetIndexer())
 }
