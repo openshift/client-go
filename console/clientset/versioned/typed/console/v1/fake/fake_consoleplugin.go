@@ -3,133 +3,33 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1 "github.com/openshift/api/console/v1"
 	consolev1 "github.com/openshift/client-go/console/applyconfigurations/console/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedconsolev1 "github.com/openshift/client-go/console/clientset/versioned/typed/console/v1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeConsolePlugins implements ConsolePluginInterface
-type FakeConsolePlugins struct {
+// fakeConsolePlugins implements ConsolePluginInterface
+type fakeConsolePlugins struct {
+	*gentype.FakeClientWithListAndApply[*v1.ConsolePlugin, *v1.ConsolePluginList, *consolev1.ConsolePluginApplyConfiguration]
 	Fake *FakeConsoleV1
 }
 
-var consolepluginsResource = v1.SchemeGroupVersion.WithResource("consoleplugins")
-
-var consolepluginsKind = v1.SchemeGroupVersion.WithKind("ConsolePlugin")
-
-// Get takes name of the consolePlugin, and returns the corresponding consolePlugin object, and an error if there is any.
-func (c *FakeConsolePlugins) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConsolePlugin, err error) {
-	emptyResult := &v1.ConsolePlugin{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(consolepluginsResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeConsolePlugins(fake *FakeConsoleV1) typedconsolev1.ConsolePluginInterface {
+	return &fakeConsolePlugins{
+		gentype.NewFakeClientWithListAndApply[*v1.ConsolePlugin, *v1.ConsolePluginList, *consolev1.ConsolePluginApplyConfiguration](
+			fake.Fake,
+			"",
+			v1.SchemeGroupVersion.WithResource("consoleplugins"),
+			v1.SchemeGroupVersion.WithKind("ConsolePlugin"),
+			func() *v1.ConsolePlugin { return &v1.ConsolePlugin{} },
+			func() *v1.ConsolePluginList { return &v1.ConsolePluginList{} },
+			func(dst, src *v1.ConsolePluginList) { dst.ListMeta = src.ListMeta },
+			func(list *v1.ConsolePluginList) []*v1.ConsolePlugin { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1.ConsolePluginList, items []*v1.ConsolePlugin) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1.ConsolePlugin), err
-}
-
-// List takes label and field selectors, and returns the list of ConsolePlugins that match those selectors.
-func (c *FakeConsolePlugins) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConsolePluginList, err error) {
-	emptyResult := &v1.ConsolePluginList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(consolepluginsResource, consolepluginsKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1.ConsolePluginList{ListMeta: obj.(*v1.ConsolePluginList).ListMeta}
-	for _, item := range obj.(*v1.ConsolePluginList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested consolePlugins.
-func (c *FakeConsolePlugins) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(consolepluginsResource, opts))
-}
-
-// Create takes the representation of a consolePlugin and creates it.  Returns the server's representation of the consolePlugin, and an error, if there is any.
-func (c *FakeConsolePlugins) Create(ctx context.Context, consolePlugin *v1.ConsolePlugin, opts metav1.CreateOptions) (result *v1.ConsolePlugin, err error) {
-	emptyResult := &v1.ConsolePlugin{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(consolepluginsResource, consolePlugin, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsolePlugin), err
-}
-
-// Update takes the representation of a consolePlugin and updates it. Returns the server's representation of the consolePlugin, and an error, if there is any.
-func (c *FakeConsolePlugins) Update(ctx context.Context, consolePlugin *v1.ConsolePlugin, opts metav1.UpdateOptions) (result *v1.ConsolePlugin, err error) {
-	emptyResult := &v1.ConsolePlugin{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(consolepluginsResource, consolePlugin, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsolePlugin), err
-}
-
-// Delete takes name of the consolePlugin and deletes it. Returns an error if one occurs.
-func (c *FakeConsolePlugins) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(consolepluginsResource, name, opts), &v1.ConsolePlugin{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeConsolePlugins) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(consolepluginsResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1.ConsolePluginList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched consolePlugin.
-func (c *FakeConsolePlugins) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConsolePlugin, err error) {
-	emptyResult := &v1.ConsolePlugin{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolepluginsResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsolePlugin), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied consolePlugin.
-func (c *FakeConsolePlugins) Apply(ctx context.Context, consolePlugin *consolev1.ConsolePluginApplyConfiguration, opts metav1.ApplyOptions) (result *v1.ConsolePlugin, err error) {
-	if consolePlugin == nil {
-		return nil, fmt.Errorf("consolePlugin provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(consolePlugin)
-	if err != nil {
-		return nil, err
-	}
-	name := consolePlugin.Name
-	if name == nil {
-		return nil, fmt.Errorf("consolePlugin.Name must be provided to Apply")
-	}
-	emptyResult := &v1.ConsolePlugin{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(consolepluginsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1.ConsolePlugin), err
 }

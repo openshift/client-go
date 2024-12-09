@@ -3,13 +3,13 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 )
 
 // DataGatherSpecApplyConfiguration represents a declarative configuration of the DataGatherSpec type for use
 // with apply.
 type DataGatherSpecApplyConfiguration struct {
-	DataPolicy *v1alpha1.DataPolicy               `json:"dataPolicy,omitempty"`
+	DataPolicy *insightsv1alpha1.DataPolicy       `json:"dataPolicy,omitempty"`
 	Gatherers  []GathererConfigApplyConfiguration `json:"gatherers,omitempty"`
 }
 
@@ -22,7 +22,7 @@ func DataGatherSpec() *DataGatherSpecApplyConfiguration {
 // WithDataPolicy sets the DataPolicy field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the DataPolicy field is set to the value of the last call.
-func (b *DataGatherSpecApplyConfiguration) WithDataPolicy(value v1alpha1.DataPolicy) *DataGatherSpecApplyConfiguration {
+func (b *DataGatherSpecApplyConfiguration) WithDataPolicy(value insightsv1alpha1.DataPolicy) *DataGatherSpecApplyConfiguration {
 	b.DataPolicy = &value
 	return b
 }

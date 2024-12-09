@@ -13,11 +13,11 @@ type FakeHelmV1beta1 struct {
 }
 
 func (c *FakeHelmV1beta1) HelmChartRepositories() v1beta1.HelmChartRepositoryInterface {
-	return &FakeHelmChartRepositories{c}
+	return newFakeHelmChartRepositories(c)
 }
 
 func (c *FakeHelmV1beta1) ProjectHelmChartRepositories(namespace string) v1beta1.ProjectHelmChartRepositoryInterface {
-	return &FakeProjectHelmChartRepositories{c, namespace}
+	return newFakeProjectHelmChartRepositories(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

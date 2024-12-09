@@ -3,19 +3,19 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/operator/v1"
+	operatorv1 "github.com/openshift/api/operator/v1"
 	samplesv1 "github.com/openshift/api/samples/v1"
 )
 
 // ConfigSpecApplyConfiguration represents a declarative configuration of the ConfigSpec type for use
 // with apply.
 type ConfigSpecApplyConfiguration struct {
-	ManagementState     *v1.ManagementState       `json:"managementState,omitempty"`
-	SamplesRegistry     *string                   `json:"samplesRegistry,omitempty"`
-	Architectures       []string                  `json:"architectures,omitempty"`
-	SkippedImagestreams []string                  `json:"skippedImagestreams,omitempty"`
-	SkippedTemplates    []string                  `json:"skippedTemplates,omitempty"`
-	SkippedHelmCharts   []samplesv1.HelmChartName `json:"skippedHelmCharts,omitempty"`
+	ManagementState     *operatorv1.ManagementState `json:"managementState,omitempty"`
+	SamplesRegistry     *string                     `json:"samplesRegistry,omitempty"`
+	Architectures       []string                    `json:"architectures,omitempty"`
+	SkippedImagestreams []string                    `json:"skippedImagestreams,omitempty"`
+	SkippedTemplates    []string                    `json:"skippedTemplates,omitempty"`
+	SkippedHelmCharts   []samplesv1.HelmChartName   `json:"skippedHelmCharts,omitempty"`
 }
 
 // ConfigSpecApplyConfiguration constructs a declarative configuration of the ConfigSpec type for use with
@@ -27,7 +27,7 @@ func ConfigSpec() *ConfigSpecApplyConfiguration {
 // WithManagementState sets the ManagementState field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the ManagementState field is set to the value of the last call.
-func (b *ConfigSpecApplyConfiguration) WithManagementState(value v1.ManagementState) *ConfigSpecApplyConfiguration {
+func (b *ConfigSpecApplyConfiguration) WithManagementState(value operatorv1.ManagementState) *ConfigSpecApplyConfiguration {
 	b.ManagementState = &value
 	return b
 }

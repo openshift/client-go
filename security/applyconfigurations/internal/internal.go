@@ -3,8 +3,8 @@
 package internal
 
 import (
-	"fmt"
-	"sync"
+	fmt "fmt"
+	sync "sync"
 
 	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
 )
@@ -209,6 +209,10 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.security.v1.SupplementalGroupsStrategyOptions
       default: {}
+    - name: userNamespaceLevel
+      type:
+        scalar: string
+      default: AllowHostLevel
     - name: users
       type:
         list:

@@ -3,8 +3,8 @@
 package internal
 
 import (
-	"fmt"
-	"sync"
+	fmt "fmt"
+	sync "sync"
 
 	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
 )
@@ -222,6 +222,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
+      default: ""
     elementRelationship: atomic
 - name: io.k8s.api.core.v1.ObjectReference
   map:

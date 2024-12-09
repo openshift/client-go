@@ -3,8 +3,8 @@
 package internal
 
 import (
-	"fmt"
-	"sync"
+	fmt "fmt"
+	sync "sync"
 
 	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
 )
@@ -453,7 +453,9 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.machine.v1beta1.Condition
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - type
     - name: currentHealthy
       type:
         scalar: numeric
@@ -488,6 +490,10 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.machine.v1beta1.MachineSetSpec
   map:
     fields:
+    - name: authoritativeAPI
+      type:
+        scalar: string
+      default: MachineAPI
     - name: deletePolicy
       type:
         scalar: string
@@ -508,9 +514,20 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.machine.v1beta1.MachineSetStatus
   map:
     fields:
+    - name: authoritativeAPI
+      type:
+        scalar: string
     - name: availableReplicas
       type:
         scalar: numeric
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machine.v1beta1.Condition
+          elementRelationship: associative
+          keys:
+          - type
     - name: errorMessage
       type:
         scalar: string
@@ -530,9 +547,16 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: numeric
       default: 0
+    - name: synchronizedGeneration
+      type:
+        scalar: numeric
 - name: com.github.openshift.api.machine.v1beta1.MachineSpec
   map:
     fields:
+    - name: authoritativeAPI
+      type:
+        scalar: string
+      default: MachineAPI
     - name: lifecycleHooks
       type:
         namedType: com.github.openshift.api.machine.v1beta1.LifecycleHooks
@@ -563,12 +587,17 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: io.k8s.api.core.v1.NodeAddress
           elementRelationship: atomic
+    - name: authoritativeAPI
+      type:
+        scalar: string
     - name: conditions
       type:
         list:
           elementType:
             namedType: com.github.openshift.api.machine.v1beta1.Condition
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - type
     - name: errorMessage
       type:
         scalar: string
@@ -590,6 +619,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: providerStatus
       type:
         namedType: __untyped_atomic_
+    - name: synchronizedGeneration
+      type:
+        scalar: numeric
 - name: com.github.openshift.api.machine.v1beta1.MachineTemplateSpec
   map:
     fields:

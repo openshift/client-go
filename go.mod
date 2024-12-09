@@ -4,16 +4,16 @@ go 1.23.0
 
 toolchain go1.23.3
 
-replace github.com/openshift/api => github.com/dusk125/api v0.0.0-20241205200409-a6b16c49a570
+replace github.com/openshift/api => github.com/dusk125/api v0.0.0-20241209155505-523f1022cf43
 
 require (
 	github.com/openshift/api v0.0.0-20241129195214-14a6da22da50
 	github.com/openshift/build-machinery-go v0.0.0-20240613134303-8359781da660
 	github.com/spf13/pflag v1.0.5
-	k8s.io/api v0.32.0-rc.1
-	k8s.io/apimachinery v0.32.0-rc.1
-	k8s.io/client-go v0.32.0-rc.1
-	k8s.io/code-generator v0.32.0-rc.1
+	k8s.io/api v0.32.0-rc.2
+	k8s.io/apimachinery v0.32.0-rc.2
+	k8s.io/client-go v0.32.0-rc.2
+	k8s.io/code-generator v0.32.0-rc.2
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.2
 )
 

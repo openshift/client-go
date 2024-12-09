@@ -3,8 +3,8 @@
 package internal
 
 import (
-	"fmt"
-	"sync"
+	fmt "fmt"
+	sync "sync"
 
 	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
 )
@@ -855,6 +855,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
+      default: ""
     - name: optional
       type:
         scalar: boolean
@@ -874,6 +875,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
+      default: ""
     - name: optional
       type:
         scalar: boolean
@@ -925,6 +927,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
+      default: ""
     elementRelationship: atomic
 - name: io.k8s.api.core.v1.ObjectFieldSelector
   map:
@@ -969,6 +972,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: request
+      type:
+        scalar: string
 - name: io.k8s.api.core.v1.ResourceFieldSelector
   map:
     fields:
@@ -1014,6 +1020,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
+      default: ""
     - name: optional
       type:
         scalar: boolean
