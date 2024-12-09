@@ -3,13 +3,13 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	servicecertsignerv1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
+	apiservicecertsignerv1alpha1 "github.com/openshift/api/servicecertsigner/v1alpha1"
 	versioned "github.com/openshift/client-go/servicecertsigner/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/servicecertsigner/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/openshift/client-go/servicecertsigner/listers/servicecertsigner/v1alpha1"
+	servicecertsignerv1alpha1 "github.com/openshift/client-go/servicecertsigner/listers/servicecertsigner/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ServiceCertSignerOperatorConfigs.
 type ServiceCertSignerOperatorConfigInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ServiceCertSignerOperatorConfigLister
+	Lister() servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigLister
 }
 
 type serviceCertSignerOperatorConfigInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interfa
 				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().Watch(context.TODO(), options)
 			},
 		},
-		&servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{},
+		&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *serviceCertSignerOperatorConfigInformer) defaultInformer(client version
 }
 
 func (f *serviceCertSignerOperatorConfigInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{}, f.defaultInformer)
 }
 
-func (f *serviceCertSignerOperatorConfigInformer) Lister() v1alpha1.ServiceCertSignerOperatorConfigLister {
-	return v1alpha1.NewServiceCertSignerOperatorConfigLister(f.Informer().GetIndexer())
+func (f *serviceCertSignerOperatorConfigInformer) Lister() servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigLister {
+	return servicecertsignerv1alpha1.NewServiceCertSignerOperatorConfigLister(f.Informer().GetIndexer())
 }

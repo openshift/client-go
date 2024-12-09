@@ -3,13 +3,13 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	operatorcontrolplanev1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
+	apioperatorcontrolplanev1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
 	versioned "github.com/openshift/client-go/operatorcontrolplane/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/operatorcontrolplane/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/openshift/client-go/operatorcontrolplane/listers/operatorcontrolplane/v1alpha1"
+	operatorcontrolplanev1alpha1 "github.com/openshift/client-go/operatorcontrolplane/listers/operatorcontrolplane/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // PodNetworkConnectivityChecks.
 type PodNetworkConnectivityCheckInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PodNetworkConnectivityCheckLister
+	Lister() operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckLister
 }
 
 type podNetworkConnectivityCheckInformer struct {
@@ -55,7 +55,7 @@ func NewFilteredPodNetworkConnectivityCheckInformer(client versioned.Interface, 
 				return client.ControlplaneV1alpha1().PodNetworkConnectivityChecks(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{},
+		&apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{},
 		resyncPeriod,
 		indexers,
 	)
@@ -66,9 +66,9 @@ func (f *podNetworkConnectivityCheckInformer) defaultInformer(client versioned.I
 }
 
 func (f *podNetworkConnectivityCheckInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{}, f.defaultInformer)
+	return f.factory.InformerFor(&apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{}, f.defaultInformer)
 }
 
-func (f *podNetworkConnectivityCheckInformer) Lister() v1alpha1.PodNetworkConnectivityCheckLister {
-	return v1alpha1.NewPodNetworkConnectivityCheckLister(f.Informer().GetIndexer())
+func (f *podNetworkConnectivityCheckInformer) Lister() operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckLister {
+	return operatorcontrolplanev1alpha1.NewPodNetworkConnectivityCheckLister(f.Informer().GetIndexer())
 }

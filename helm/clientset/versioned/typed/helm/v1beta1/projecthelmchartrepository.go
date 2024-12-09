@@ -3,10 +3,10 @@
 package v1beta1
 
 import (
-	"context"
+	context "context"
 
-	v1beta1 "github.com/openshift/api/helm/v1beta1"
-	helmv1beta1 "github.com/openshift/client-go/helm/applyconfigurations/helm/v1beta1"
+	helmv1beta1 "github.com/openshift/api/helm/v1beta1"
+	applyconfigurationshelmv1beta1 "github.com/openshift/client-go/helm/applyconfigurations/helm/v1beta1"
 	scheme "github.com/openshift/client-go/helm/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,36 +22,39 @@ type ProjectHelmChartRepositoriesGetter interface {
 
 // ProjectHelmChartRepositoryInterface has methods to work with ProjectHelmChartRepository resources.
 type ProjectHelmChartRepositoryInterface interface {
-	Create(ctx context.Context, projectHelmChartRepository *v1beta1.ProjectHelmChartRepository, opts v1.CreateOptions) (*v1beta1.ProjectHelmChartRepository, error)
-	Update(ctx context.Context, projectHelmChartRepository *v1beta1.ProjectHelmChartRepository, opts v1.UpdateOptions) (*v1beta1.ProjectHelmChartRepository, error)
+	Create(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepository, opts v1.CreateOptions) (*helmv1beta1.ProjectHelmChartRepository, error)
+	Update(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepository, opts v1.UpdateOptions) (*helmv1beta1.ProjectHelmChartRepository, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, projectHelmChartRepository *v1beta1.ProjectHelmChartRepository, opts v1.UpdateOptions) (*v1beta1.ProjectHelmChartRepository, error)
+	UpdateStatus(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepository, opts v1.UpdateOptions) (*helmv1beta1.ProjectHelmChartRepository, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1beta1.ProjectHelmChartRepository, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1beta1.ProjectHelmChartRepositoryList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*helmv1beta1.ProjectHelmChartRepository, error)
+	List(ctx context.Context, opts v1.ListOptions) (*helmv1beta1.ProjectHelmChartRepositoryList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.ProjectHelmChartRepository, err error)
-	Apply(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.ProjectHelmChartRepository, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *helmv1beta1.ProjectHelmChartRepository, err error)
+	Apply(ctx context.Context, projectHelmChartRepository *applyconfigurationshelmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *helmv1beta1.ProjectHelmChartRepository, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, projectHelmChartRepository *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.ProjectHelmChartRepository, err error)
+	ApplyStatus(ctx context.Context, projectHelmChartRepository *applyconfigurationshelmv1beta1.ProjectHelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *helmv1beta1.ProjectHelmChartRepository, err error)
 	ProjectHelmChartRepositoryExpansion
 }
 
 // projectHelmChartRepositories implements ProjectHelmChartRepositoryInterface
 type projectHelmChartRepositories struct {
-	*gentype.ClientWithListAndApply[*v1beta1.ProjectHelmChartRepository, *v1beta1.ProjectHelmChartRepositoryList, *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration]
+	*gentype.ClientWithListAndApply[*helmv1beta1.ProjectHelmChartRepository, *helmv1beta1.ProjectHelmChartRepositoryList, *applyconfigurationshelmv1beta1.ProjectHelmChartRepositoryApplyConfiguration]
 }
 
 // newProjectHelmChartRepositories returns a ProjectHelmChartRepositories
 func newProjectHelmChartRepositories(c *HelmV1beta1Client, namespace string) *projectHelmChartRepositories {
 	return &projectHelmChartRepositories{
-		gentype.NewClientWithListAndApply[*v1beta1.ProjectHelmChartRepository, *v1beta1.ProjectHelmChartRepositoryList, *helmv1beta1.ProjectHelmChartRepositoryApplyConfiguration](
+		gentype.NewClientWithListAndApply[*helmv1beta1.ProjectHelmChartRepository, *helmv1beta1.ProjectHelmChartRepositoryList, *applyconfigurationshelmv1beta1.ProjectHelmChartRepositoryApplyConfiguration](
 			"projecthelmchartrepositories",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			namespace,
-			func() *v1beta1.ProjectHelmChartRepository { return &v1beta1.ProjectHelmChartRepository{} },
-			func() *v1beta1.ProjectHelmChartRepositoryList { return &v1beta1.ProjectHelmChartRepositoryList{} }),
+			func() *helmv1beta1.ProjectHelmChartRepository { return &helmv1beta1.ProjectHelmChartRepository{} },
+			func() *helmv1beta1.ProjectHelmChartRepositoryList {
+				return &helmv1beta1.ProjectHelmChartRepositoryList{}
+			},
+		),
 	}
 }

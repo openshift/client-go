@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/cloudnetwork/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	cloudnetworkv1 "github.com/openshift/api/cloudnetwork/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // CloudPrivateIPConfigLister helps list CloudPrivateIPConfigs.
@@ -14,19 +14,19 @@ import (
 type CloudPrivateIPConfigLister interface {
 	// List lists all CloudPrivateIPConfigs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.CloudPrivateIPConfig, err error)
+	List(selector labels.Selector) (ret []*cloudnetworkv1.CloudPrivateIPConfig, err error)
 	// Get retrieves the CloudPrivateIPConfig from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.CloudPrivateIPConfig, error)
+	Get(name string) (*cloudnetworkv1.CloudPrivateIPConfig, error)
 	CloudPrivateIPConfigListerExpansion
 }
 
 // cloudPrivateIPConfigLister implements the CloudPrivateIPConfigLister interface.
 type cloudPrivateIPConfigLister struct {
-	listers.ResourceIndexer[*v1.CloudPrivateIPConfig]
+	listers.ResourceIndexer[*cloudnetworkv1.CloudPrivateIPConfig]
 }
 
 // NewCloudPrivateIPConfigLister returns a new CloudPrivateIPConfigLister.
 func NewCloudPrivateIPConfigLister(indexer cache.Indexer) CloudPrivateIPConfigLister {
-	return &cloudPrivateIPConfigLister{listers.New[*v1.CloudPrivateIPConfig](indexer, v1.Resource("cloudprivateipconfig"))}
+	return &cloudPrivateIPConfigLister{listers.New[*cloudnetworkv1.CloudPrivateIPConfig](indexer, cloudnetworkv1.Resource("cloudprivateipconfig"))}
 }

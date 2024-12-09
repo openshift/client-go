@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	imageregistryv1 "github.com/openshift/api/imageregistry/v1"
+	apiimageregistryv1 "github.com/openshift/api/imageregistry/v1"
 	versioned "github.com/openshift/client-go/imageregistry/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/imageregistry/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/imageregistry/listers/imageregistry/v1"
+	imageregistryv1 "github.com/openshift/client-go/imageregistry/listers/imageregistry/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ImagePruners.
 type ImagePrunerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ImagePrunerLister
+	Lister() imageregistryv1.ImagePrunerLister
 }
 
 type imagePrunerInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredImagePrunerInformer(client versioned.Interface, resyncPeriod tim
 				return client.ImageregistryV1().ImagePruners().Watch(context.TODO(), options)
 			},
 		},
-		&imageregistryv1.ImagePruner{},
+		&apiimageregistryv1.ImagePruner{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *imagePrunerInformer) defaultInformer(client versioned.Interface, resync
 }
 
 func (f *imagePrunerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&imageregistryv1.ImagePruner{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiimageregistryv1.ImagePruner{}, f.defaultInformer)
 }
 
-func (f *imagePrunerInformer) Lister() v1.ImagePrunerLister {
-	return v1.NewImagePrunerLister(f.Informer().GetIndexer())
+func (f *imagePrunerInformer) Lister() imageregistryv1.ImagePrunerLister {
+	return imageregistryv1.NewImagePrunerLister(f.Informer().GetIndexer())
 }
