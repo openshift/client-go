@@ -287,7 +287,7 @@ type AlertRelabelConfigList struct {
 	// items is a list of AlertRelabelConfigs.
 	// +kubebuilder:validation:MinItems:=1
 	// +kubebuilder:validation:Required
-	Items []*AlertRelabelConfig `json:"items"`
+	Items []AlertRelabelConfig `json:"items"`
 }
 
 // LabelName is a valid Prometheus label name which may only contain ASCII

@@ -4,7 +4,7 @@ go 1.23.0
 
 toolchain go1.23.3
 
-replace github.com/openshift/api => github.com/dusk125/api v0.0.0-20241209155505-523f1022cf43
+replace github.com/openshift/api => github.com/dusk125/api v0.0.0-20241210152934-12237ff30d13
 
 require (
 	github.com/openshift/api v0.0.0-20241129195214-14a6da22da50
