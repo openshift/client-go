@@ -3,168 +3,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1beta1 "github.com/openshift/api/helm/v1beta1"
 	helmv1beta1 "github.com/openshift/client-go/helm/applyconfigurations/helm/v1beta1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedhelmv1beta1 "github.com/openshift/client-go/helm/clientset/versioned/typed/helm/v1beta1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHelmChartRepositories implements HelmChartRepositoryInterface
-type FakeHelmChartRepositories struct {
+// fakeHelmChartRepositories implements HelmChartRepositoryInterface
+type fakeHelmChartRepositories struct {
+	*gentype.FakeClientWithListAndApply[*v1beta1.HelmChartRepository, *v1beta1.HelmChartRepositoryList, *helmv1beta1.HelmChartRepositoryApplyConfiguration]
 	Fake *FakeHelmV1beta1
 }
 
-var helmchartrepositoriesResource = v1beta1.SchemeGroupVersion.WithResource("helmchartrepositories")
-
-var helmchartrepositoriesKind = v1beta1.SchemeGroupVersion.WithKind("HelmChartRepository")
-
-// Get takes name of the helmChartRepository, and returns the corresponding helmChartRepository object, and an error if there is any.
-func (c *FakeHelmChartRepositories) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.HelmChartRepository, err error) {
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(helmchartrepositoriesResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeHelmChartRepositories(fake *FakeHelmV1beta1) typedhelmv1beta1.HelmChartRepositoryInterface {
+	return &fakeHelmChartRepositories{
+		gentype.NewFakeClientWithListAndApply[*v1beta1.HelmChartRepository, *v1beta1.HelmChartRepositoryList, *helmv1beta1.HelmChartRepositoryApplyConfiguration](
+			fake.Fake,
+			"",
+			v1beta1.SchemeGroupVersion.WithResource("helmchartrepositories"),
+			v1beta1.SchemeGroupVersion.WithKind("HelmChartRepository"),
+			func() *v1beta1.HelmChartRepository { return &v1beta1.HelmChartRepository{} },
+			func() *v1beta1.HelmChartRepositoryList { return &v1beta1.HelmChartRepositoryList{} },
+			func(dst, src *v1beta1.HelmChartRepositoryList) { dst.ListMeta = src.ListMeta },
+			func(list *v1beta1.HelmChartRepositoryList) []*v1beta1.HelmChartRepository {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1beta1.HelmChartRepositoryList, items []*v1beta1.HelmChartRepository) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// List takes label and field selectors, and returns the list of HelmChartRepositories that match those selectors.
-func (c *FakeHelmChartRepositories) List(ctx context.Context, opts v1.ListOptions) (result *v1beta1.HelmChartRepositoryList, err error) {
-	emptyResult := &v1beta1.HelmChartRepositoryList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(helmchartrepositoriesResource, helmchartrepositoriesKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1beta1.HelmChartRepositoryList{ListMeta: obj.(*v1beta1.HelmChartRepositoryList).ListMeta}
-	for _, item := range obj.(*v1beta1.HelmChartRepositoryList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested helmChartRepositories.
-func (c *FakeHelmChartRepositories) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(helmchartrepositoriesResource, opts))
-}
-
-// Create takes the representation of a helmChartRepository and creates it.  Returns the server's representation of the helmChartRepository, and an error, if there is any.
-func (c *FakeHelmChartRepositories) Create(ctx context.Context, helmChartRepository *v1beta1.HelmChartRepository, opts v1.CreateOptions) (result *v1beta1.HelmChartRepository, err error) {
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(helmchartrepositoriesResource, helmChartRepository, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// Update takes the representation of a helmChartRepository and updates it. Returns the server's representation of the helmChartRepository, and an error, if there is any.
-func (c *FakeHelmChartRepositories) Update(ctx context.Context, helmChartRepository *v1beta1.HelmChartRepository, opts v1.UpdateOptions) (result *v1beta1.HelmChartRepository, err error) {
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(helmchartrepositoriesResource, helmChartRepository, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHelmChartRepositories) UpdateStatus(ctx context.Context, helmChartRepository *v1beta1.HelmChartRepository, opts v1.UpdateOptions) (result *v1beta1.HelmChartRepository, err error) {
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(helmchartrepositoriesResource, "status", helmChartRepository, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// Delete takes name of the helmChartRepository and deletes it. Returns an error if one occurs.
-func (c *FakeHelmChartRepositories) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(helmchartrepositoriesResource, name, opts), &v1beta1.HelmChartRepository{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHelmChartRepositories) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(helmchartrepositoriesResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1beta1.HelmChartRepositoryList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched helmChartRepository.
-func (c *FakeHelmChartRepositories) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.HelmChartRepository, err error) {
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(helmchartrepositoriesResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied helmChartRepository.
-func (c *FakeHelmChartRepositories) Apply(ctx context.Context, helmChartRepository *helmv1beta1.HelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.HelmChartRepository, err error) {
-	if helmChartRepository == nil {
-		return nil, fmt.Errorf("helmChartRepository provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(helmChartRepository)
-	if err != nil {
-		return nil, err
-	}
-	name := helmChartRepository.Name
-	if name == nil {
-		return nil, fmt.Errorf("helmChartRepository.Name must be provided to Apply")
-	}
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(helmchartrepositoriesResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeHelmChartRepositories) ApplyStatus(ctx context.Context, helmChartRepository *helmv1beta1.HelmChartRepositoryApplyConfiguration, opts v1.ApplyOptions) (result *v1beta1.HelmChartRepository, err error) {
-	if helmChartRepository == nil {
-		return nil, fmt.Errorf("helmChartRepository provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(helmChartRepository)
-	if err != nil {
-		return nil, err
-	}
-	name := helmChartRepository.Name
-	if name == nil {
-		return nil, fmt.Errorf("helmChartRepository.Name must be provided to Apply")
-	}
-	emptyResult := &v1beta1.HelmChartRepository{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(helmchartrepositoriesResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1beta1.HelmChartRepository), err
 }

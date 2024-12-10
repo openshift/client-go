@@ -3,18 +3,18 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
+	operatorcontrolplanev1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // PodNetworkConnectivityCheckConditionApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckCondition type for use
 // with apply.
 type PodNetworkConnectivityCheckConditionApplyConfiguration struct {
-	Type               *v1alpha1.PodNetworkConnectivityCheckConditionType `json:"type,omitempty"`
-	Status             *v1.ConditionStatus                                `json:"status,omitempty"`
-	Reason             *string                                            `json:"reason,omitempty"`
-	Message            *string                                            `json:"message,omitempty"`
-	LastTransitionTime *v1.Time                                           `json:"lastTransitionTime,omitempty"`
+	Type               *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckConditionType `json:"type,omitempty"`
+	Status             *v1.ConditionStatus                                                    `json:"status,omitempty"`
+	Reason             *string                                                                `json:"reason,omitempty"`
+	Message            *string                                                                `json:"message,omitempty"`
+	LastTransitionTime *v1.Time                                                               `json:"lastTransitionTime,omitempty"`
 }
 
 // PodNetworkConnectivityCheckConditionApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckCondition type for use with
@@ -26,7 +26,7 @@ func PodNetworkConnectivityCheckCondition() *PodNetworkConnectivityCheckConditio
 // WithType sets the Type field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Type field is set to the value of the last call.
-func (b *PodNetworkConnectivityCheckConditionApplyConfiguration) WithType(value v1alpha1.PodNetworkConnectivityCheckConditionType) *PodNetworkConnectivityCheckConditionApplyConfiguration {
+func (b *PodNetworkConnectivityCheckConditionApplyConfiguration) WithType(value operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckConditionType) *PodNetworkConnectivityCheckConditionApplyConfiguration {
 	b.Type = &value
 	return b
 }

@@ -3,168 +3,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
 	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedsharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/clientset/versioned/typed/sharedresource/v1alpha1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSharedConfigMaps implements SharedConfigMapInterface
-type FakeSharedConfigMaps struct {
+// fakeSharedConfigMaps implements SharedConfigMapInterface
+type fakeSharedConfigMaps struct {
+	*gentype.FakeClientWithListAndApply[*v1alpha1.SharedConfigMap, *v1alpha1.SharedConfigMapList, *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration]
 	Fake *FakeSharedresourceV1alpha1
 }
 
-var sharedconfigmapsResource = v1alpha1.SchemeGroupVersion.WithResource("sharedconfigmaps")
-
-var sharedconfigmapsKind = v1alpha1.SchemeGroupVersion.WithKind("SharedConfigMap")
-
-// Get takes name of the sharedConfigMap, and returns the corresponding sharedConfigMap object, and an error if there is any.
-func (c *FakeSharedConfigMaps) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(sharedconfigmapsResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeSharedConfigMaps(fake *FakeSharedresourceV1alpha1) typedsharedresourcev1alpha1.SharedConfigMapInterface {
+	return &fakeSharedConfigMaps{
+		gentype.NewFakeClientWithListAndApply[*v1alpha1.SharedConfigMap, *v1alpha1.SharedConfigMapList, *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("sharedconfigmaps"),
+			v1alpha1.SchemeGroupVersion.WithKind("SharedConfigMap"),
+			func() *v1alpha1.SharedConfigMap { return &v1alpha1.SharedConfigMap{} },
+			func() *v1alpha1.SharedConfigMapList { return &v1alpha1.SharedConfigMapList{} },
+			func(dst, src *v1alpha1.SharedConfigMapList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SharedConfigMapList) []*v1alpha1.SharedConfigMap {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SharedConfigMapList, items []*v1alpha1.SharedConfigMap) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// List takes label and field selectors, and returns the list of SharedConfigMaps that match those selectors.
-func (c *FakeSharedConfigMaps) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SharedConfigMapList, err error) {
-	emptyResult := &v1alpha1.SharedConfigMapList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(sharedconfigmapsResource, sharedconfigmapsKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SharedConfigMapList{ListMeta: obj.(*v1alpha1.SharedConfigMapList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SharedConfigMapList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested sharedConfigMaps.
-func (c *FakeSharedConfigMaps) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(sharedconfigmapsResource, opts))
-}
-
-// Create takes the representation of a sharedConfigMap and creates it.  Returns the server's representation of the sharedConfigMap, and an error, if there is any.
-func (c *FakeSharedConfigMaps) Create(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.CreateOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(sharedconfigmapsResource, sharedConfigMap, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// Update takes the representation of a sharedConfigMap and updates it. Returns the server's representation of the sharedConfigMap, and an error, if there is any.
-func (c *FakeSharedConfigMaps) Update(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.UpdateOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(sharedconfigmapsResource, sharedConfigMap, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSharedConfigMaps) UpdateStatus(ctx context.Context, sharedConfigMap *v1alpha1.SharedConfigMap, opts v1.UpdateOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(sharedconfigmapsResource, "status", sharedConfigMap, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// Delete takes name of the sharedConfigMap and deletes it. Returns an error if one occurs.
-func (c *FakeSharedConfigMaps) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(sharedconfigmapsResource, name, opts), &v1alpha1.SharedConfigMap{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSharedConfigMaps) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(sharedconfigmapsResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SharedConfigMapList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched sharedConfigMap.
-func (c *FakeSharedConfigMaps) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedConfigMap, err error) {
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedconfigmapsResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied sharedConfigMap.
-func (c *FakeSharedConfigMaps) Apply(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	if sharedConfigMap == nil {
-		return nil, fmt.Errorf("sharedConfigMap provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(sharedConfigMap)
-	if err != nil {
-		return nil, err
-	}
-	name := sharedConfigMap.Name
-	if name == nil {
-		return nil, fmt.Errorf("sharedConfigMap.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedconfigmapsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeSharedConfigMaps) ApplyStatus(ctx context.Context, sharedConfigMap *sharedresourcev1alpha1.SharedConfigMapApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedConfigMap, err error) {
-	if sharedConfigMap == nil {
-		return nil, fmt.Errorf("sharedConfigMap provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(sharedConfigMap)
-	if err != nil {
-		return nil, err
-	}
-	name := sharedConfigMap.Name
-	if name == nil {
-		return nil, fmt.Errorf("sharedConfigMap.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.SharedConfigMap{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedconfigmapsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedConfigMap), err
 }

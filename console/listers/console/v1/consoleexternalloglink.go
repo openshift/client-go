@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/console/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	consolev1 "github.com/openshift/api/console/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ConsoleExternalLogLinkLister helps list ConsoleExternalLogLinks.
@@ -14,19 +14,19 @@ import (
 type ConsoleExternalLogLinkLister interface {
 	// List lists all ConsoleExternalLogLinks in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.ConsoleExternalLogLink, err error)
+	List(selector labels.Selector) (ret []*consolev1.ConsoleExternalLogLink, err error)
 	// Get retrieves the ConsoleExternalLogLink from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.ConsoleExternalLogLink, error)
+	Get(name string) (*consolev1.ConsoleExternalLogLink, error)
 	ConsoleExternalLogLinkListerExpansion
 }
 
 // consoleExternalLogLinkLister implements the ConsoleExternalLogLinkLister interface.
 type consoleExternalLogLinkLister struct {
-	listers.ResourceIndexer[*v1.ConsoleExternalLogLink]
+	listers.ResourceIndexer[*consolev1.ConsoleExternalLogLink]
 }
 
 // NewConsoleExternalLogLinkLister returns a new ConsoleExternalLogLinkLister.
 func NewConsoleExternalLogLinkLister(indexer cache.Indexer) ConsoleExternalLogLinkLister {
-	return &consoleExternalLogLinkLister{listers.New[*v1.ConsoleExternalLogLink](indexer, v1.Resource("consoleexternalloglink"))}
+	return &consoleExternalLogLinkLister{listers.New[*consolev1.ConsoleExternalLogLink](indexer, consolev1.Resource("consoleexternalloglink"))}
 }
