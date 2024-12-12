@@ -13,11 +13,11 @@ type FakeMonitoringV1 struct {
 }
 
 func (c *FakeMonitoringV1) AlertRelabelConfigs(namespace string) v1.AlertRelabelConfigInterface {
-	return &FakeAlertRelabelConfigs{c, namespace}
+	return newFakeAlertRelabelConfigs(c, namespace)
 }
 
 func (c *FakeMonitoringV1) AlertingRules(namespace string) v1.AlertingRuleInterface {
-	return &FakeAlertingRules{c, namespace}
+	return newFakeAlertingRules(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/apiserver/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	apiserverv1 "github.com/openshift/api/apiserver/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // APIRequestCountLister helps list APIRequestCounts.
@@ -14,19 +14,19 @@ import (
 type APIRequestCountLister interface {
 	// List lists all APIRequestCounts in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.APIRequestCount, err error)
+	List(selector labels.Selector) (ret []*apiserverv1.APIRequestCount, err error)
 	// Get retrieves the APIRequestCount from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.APIRequestCount, error)
+	Get(name string) (*apiserverv1.APIRequestCount, error)
 	APIRequestCountListerExpansion
 }
 
 // aPIRequestCountLister implements the APIRequestCountLister interface.
 type aPIRequestCountLister struct {
-	listers.ResourceIndexer[*v1.APIRequestCount]
+	listers.ResourceIndexer[*apiserverv1.APIRequestCount]
 }
 
 // NewAPIRequestCountLister returns a new APIRequestCountLister.
 func NewAPIRequestCountLister(indexer cache.Indexer) APIRequestCountLister {
-	return &aPIRequestCountLister{listers.New[*v1.APIRequestCount](indexer, v1.Resource("apirequestcount"))}
+	return &aPIRequestCountLister{listers.New[*apiserverv1.APIRequestCount](indexer, apiserverv1.Resource("apirequestcount"))}
 }

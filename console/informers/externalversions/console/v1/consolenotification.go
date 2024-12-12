@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleNotifications.
 type ConsoleNotificationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleNotificationLister
+	Lister() consolev1.ConsoleNotificationLister
 }
 
 type consoleNotificationInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleNotificationInformer(client versioned.Interface, resyncPe
 				return client.ConsoleV1().ConsoleNotifications().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleNotification{},
+		&apiconsolev1.ConsoleNotification{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleNotificationInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *consoleNotificationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleNotification{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleNotification{}, f.defaultInformer)
 }
 
-func (f *consoleNotificationInformer) Lister() v1.ConsoleNotificationLister {
-	return v1.NewConsoleNotificationLister(f.Informer().GetIndexer())
+func (f *consoleNotificationInformer) Lister() consolev1.ConsoleNotificationLister {
+	return consolev1.NewConsoleNotificationLister(f.Informer().GetIndexer())
 }

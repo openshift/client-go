@@ -3,10 +3,10 @@
 package v1beta1
 
 import (
-	v1beta1 "github.com/openshift/api/helm/v1beta1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	helmv1beta1 "github.com/openshift/api/helm/v1beta1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HelmChartRepositoryLister helps list HelmChartRepositories.
@@ -14,19 +14,19 @@ import (
 type HelmChartRepositoryLister interface {
 	// List lists all HelmChartRepositories in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1beta1.HelmChartRepository, err error)
+	List(selector labels.Selector) (ret []*helmv1beta1.HelmChartRepository, err error)
 	// Get retrieves the HelmChartRepository from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1beta1.HelmChartRepository, error)
+	Get(name string) (*helmv1beta1.HelmChartRepository, error)
 	HelmChartRepositoryListerExpansion
 }
 
 // helmChartRepositoryLister implements the HelmChartRepositoryLister interface.
 type helmChartRepositoryLister struct {
-	listers.ResourceIndexer[*v1beta1.HelmChartRepository]
+	listers.ResourceIndexer[*helmv1beta1.HelmChartRepository]
 }
 
 // NewHelmChartRepositoryLister returns a new HelmChartRepositoryLister.
 func NewHelmChartRepositoryLister(indexer cache.Indexer) HelmChartRepositoryLister {
-	return &helmChartRepositoryLister{listers.New[*v1beta1.HelmChartRepository](indexer, v1beta1.Resource("helmchartrepository"))}
+	return &helmChartRepositoryLister{listers.New[*helmv1beta1.HelmChartRepository](indexer, helmv1beta1.Resource("helmchartrepository"))}
 }
