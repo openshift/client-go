@@ -5084,6 +5084,83 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ClusterMonitoring": {
+      "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object metadata.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user configuration for the Cluster Monitoring Operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoringSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoringStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterMonitoringList": {
+      "description": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ClusterMonitoring",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoring"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list metadata.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterMonitoringSpec": {
+      "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+      "type": "object",
+      "required": [
+        "userDefined"
+      ],
+      "properties": {
+        "userDefined": {
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.UserDefinedMonitoring"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterMonitoringStatus": {
+      "description": "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
+      "type": "object"
+    },
     "com.github.openshift.api.config.v1.ClusterNetworkEntry": {
       "description": "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
       "type": "object",
@@ -10524,6 +10601,24 @@
           "description": "version is a semantic version identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.UserDefinedMonitoring": {
+      "description": "UserDefinedMonitoring config for user-defined projects.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.\n\nPossible enum values:\n - `\"Disabled\"` disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.\n - `\"NamespaceIsolated\"` enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Disabled",
+            "NamespaceIsolated"
+          ]
         }
       }
     },
@@ -28122,8 +28217,30 @@
     "com.github.openshift.api.operator.v1.IPsecConfig": {
       "type": "object",
       "properties": {
+        "full": {
+          "description": "full defines configuration parameters for the IPsec `Full` mode. This is permitted only when mode is configured with `Full`, and forbidden otherwise.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPsecFullModeConfig"
+        },
         "mode": {
           "description": "mode defines the behaviour of the ipsec configuration within the platform. Valid values are `Disabled`, `External` and `Full`. When 'Disabled', ipsec will not be enabled at the node level. When 'External', ipsec is enabled on the node level but requires the user to configure the secure communication parameters. This mode is for external secure communications and the configuration can be done using the k8s-nmstate operator. When 'Full', ipsec is configured on the node level and inter-pod secure communication within the cluster is configured. Note with `Full`, if ipsec is desired for communication with external (to the cluster) entities (such as storage arrays), this is left to the user to configure.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "full": "Full"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.IPsecFullModeConfig": {
+      "description": "IPsecFullModeConfig defines configuration parameters for the IPsec `Full` mode.",
+      "type": "object",
+      "properties": {
+        "encapsulation": {
+          "description": "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Never, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Disable means never enable UDP encapsulation even if NAT is present. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
           "type": "string"
         }
       }
@@ -28545,6 +28662,11 @@
         "httpHeaders": {
           "description": "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeaders"
+        },
+        "idleConnectionTerminationPolicy": {
+          "description": "idleConnectionTerminationPolicy maps directly to HAProxy's idle-close-on-response option and controls whether HAProxy keeps idle frontend connections open during a soft stop (router reload).\n\nAllowed values for this field are \"Immediate\" and \"Deferred\". The default value is \"Immediate\".\n\nWhen set to \"Immediate\", idle connections are closed immediately during router reloads. This ensures immediate propagation of route changes but may impact clients sensitive to connection resets.\n\nWhen set to \"Deferred\", HAProxy will maintain idle connections during a soft reload instead of closing them immediately. These connections remain open until any of the following occurs:\n\n  - A new request is received on the connection, in which\n    case HAProxy handles it in the old process and closes\n    the connection after sending the response.\n\n  - HAProxy's `timeout http-keep-alive` duration expires\n    (300 seconds in OpenShift's configuration, not\n    configurable).\n\n  - The client's keep-alive timeout expires, causing the\n    client to close the connection.\n\nSetting Deferred can help prevent errors in clients or load balancers that do not properly handle connection resets. Additionally, this option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift versions < 4.14), maintaining idle connections during a soft reload was the default behaviour, but starting with HAProxy 2.4, the default changed to closing idle connections immediately.\n\nImportant Consideration:\n\n  - Using Deferred will result in temporary inconsistencies\n    for the first request on each persistent connection\n    after a route update and router reload. This request\n    will be processed by the old HAProxy process using its\n    old configuration. Subsequent requests will use the\n    updated configuration.\n\nOperational Considerations:\n\n  - Keeping idle connections open during reloads may lead\n    to an accumulation of old HAProxy processes if\n    connections remain idle for extended periods,\n    especially in environments where frequent reloads\n    occur.\n\n  - Consider monitoring the number of HAProxy processes in\n    the router pods when Deferred is set.\n\n  - You may need to enable or adjust the\n    `ingress.operator.openshift.io/hard-stop-after`\n    duration (configured via an annotation on the\n    IngressController resource) in environments with\n    frequent reloads to prevent resource exhaustion.",
+          "type": "string",
+          "default": "Immediate"
         },
         "logging": {
           "description": "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
