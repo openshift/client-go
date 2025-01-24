@@ -13,7 +13,7 @@ type FakeServicecertsignerV1alpha1 struct {
 }
 
 func (c *FakeServicecertsignerV1alpha1) ServiceCertSignerOperatorConfigs() v1alpha1.ServiceCertSignerOperatorConfigInterface {
-	return &FakeServiceCertSignerOperatorConfigs{c}
+	return newFakeServiceCertSignerOperatorConfigs(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

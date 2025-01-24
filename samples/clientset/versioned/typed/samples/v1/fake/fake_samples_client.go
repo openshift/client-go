@@ -13,7 +13,7 @@ type FakeSamplesV1 struct {
 }
 
 func (c *FakeSamplesV1) Configs() v1.ConfigInterface {
-	return &FakeConfigs{c}
+	return newFakeConfigs(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

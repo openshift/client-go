@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	apiserverv1 "github.com/openshift/api/apiserver/v1"
+	apiapiserverv1 "github.com/openshift/api/apiserver/v1"
 	versioned "github.com/openshift/client-go/apiserver/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/apiserver/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/apiserver/listers/apiserver/v1"
+	apiserverv1 "github.com/openshift/client-go/apiserver/listers/apiserver/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // APIRequestCounts.
 type APIRequestCountInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.APIRequestCountLister
+	Lister() apiserverv1.APIRequestCountLister
 }
 
 type aPIRequestCountInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredAPIRequestCountInformer(client versioned.Interface, resyncPeriod
 				return client.ApiserverV1().APIRequestCounts().Watch(context.TODO(), options)
 			},
 		},
-		&apiserverv1.APIRequestCount{},
+		&apiapiserverv1.APIRequestCount{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *aPIRequestCountInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *aPIRequestCountInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiserverv1.APIRequestCount{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiapiserverv1.APIRequestCount{}, f.defaultInformer)
 }
 
-func (f *aPIRequestCountInformer) Lister() v1.APIRequestCountLister {
-	return v1.NewAPIRequestCountLister(f.Informer().GetIndexer())
+func (f *aPIRequestCountInformer) Lister() apiserverv1.APIRequestCountLister {
+	return apiserverv1.NewAPIRequestCountLister(f.Informer().GetIndexer())
 }

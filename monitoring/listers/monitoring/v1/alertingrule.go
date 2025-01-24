@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/monitoring/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	monitoringv1 "github.com/openshift/api/monitoring/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // AlertingRuleLister helps list AlertingRules.
@@ -14,7 +14,7 @@ import (
 type AlertingRuleLister interface {
 	// List lists all AlertingRules in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.AlertingRule, err error)
+	List(selector labels.Selector) (ret []*monitoringv1.AlertingRule, err error)
 	// AlertingRules returns an object that can list and get AlertingRules.
 	AlertingRules(namespace string) AlertingRuleNamespaceLister
 	AlertingRuleListerExpansion
@@ -22,17 +22,17 @@ type AlertingRuleLister interface {
 
 // alertingRuleLister implements the AlertingRuleLister interface.
 type alertingRuleLister struct {
-	listers.ResourceIndexer[*v1.AlertingRule]
+	listers.ResourceIndexer[*monitoringv1.AlertingRule]
 }
 
 // NewAlertingRuleLister returns a new AlertingRuleLister.
 func NewAlertingRuleLister(indexer cache.Indexer) AlertingRuleLister {
-	return &alertingRuleLister{listers.New[*v1.AlertingRule](indexer, v1.Resource("alertingrule"))}
+	return &alertingRuleLister{listers.New[*monitoringv1.AlertingRule](indexer, monitoringv1.Resource("alertingrule"))}
 }
 
 // AlertingRules returns an object that can list and get AlertingRules.
 func (s *alertingRuleLister) AlertingRules(namespace string) AlertingRuleNamespaceLister {
-	return alertingRuleNamespaceLister{listers.NewNamespaced[*v1.AlertingRule](s.ResourceIndexer, namespace)}
+	return alertingRuleNamespaceLister{listers.NewNamespaced[*monitoringv1.AlertingRule](s.ResourceIndexer, namespace)}
 }
 
 // AlertingRuleNamespaceLister helps list and get AlertingRules.
@@ -40,15 +40,15 @@ func (s *alertingRuleLister) AlertingRules(namespace string) AlertingRuleNamespa
 type AlertingRuleNamespaceLister interface {
 	// List lists all AlertingRules in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.AlertingRule, err error)
+	List(selector labels.Selector) (ret []*monitoringv1.AlertingRule, err error)
 	// Get retrieves the AlertingRule from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.AlertingRule, error)
+	Get(name string) (*monitoringv1.AlertingRule, error)
 	AlertingRuleNamespaceListerExpansion
 }
 
 // alertingRuleNamespaceLister implements the AlertingRuleNamespaceLister
 // interface.
 type alertingRuleNamespaceLister struct {
-	listers.ResourceIndexer[*v1.AlertingRule]
+	listers.ResourceIndexer[*monitoringv1.AlertingRule]
 }

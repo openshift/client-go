@@ -3,10 +3,10 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
-	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
+	sharedresourcev1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
+	applyconfigurationssharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
 	scheme "github.com/openshift/client-go/sharedresource/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,36 +22,37 @@ type SharedSecretsGetter interface {
 
 // SharedSecretInterface has methods to work with SharedSecret resources.
 type SharedSecretInterface interface {
-	Create(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.CreateOptions) (*v1alpha1.SharedSecret, error)
-	Update(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.UpdateOptions) (*v1alpha1.SharedSecret, error)
+	Create(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecret, opts v1.CreateOptions) (*sharedresourcev1alpha1.SharedSecret, error)
+	Update(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecret, opts v1.UpdateOptions) (*sharedresourcev1alpha1.SharedSecret, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.UpdateOptions) (*v1alpha1.SharedSecret, error)
+	UpdateStatus(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecret, opts v1.UpdateOptions) (*sharedresourcev1alpha1.SharedSecret, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.SharedSecret, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.SharedSecretList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*sharedresourcev1alpha1.SharedSecret, error)
+	List(ctx context.Context, opts v1.ListOptions) (*sharedresourcev1alpha1.SharedSecretList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedSecret, err error)
-	Apply(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *sharedresourcev1alpha1.SharedSecret, err error)
+	Apply(ctx context.Context, sharedSecret *applyconfigurationssharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *sharedresourcev1alpha1.SharedSecret, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error)
+	ApplyStatus(ctx context.Context, sharedSecret *applyconfigurationssharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *sharedresourcev1alpha1.SharedSecret, err error)
 	SharedSecretExpansion
 }
 
 // sharedSecrets implements SharedSecretInterface
 type sharedSecrets struct {
-	*gentype.ClientWithListAndApply[*v1alpha1.SharedSecret, *v1alpha1.SharedSecretList, *sharedresourcev1alpha1.SharedSecretApplyConfiguration]
+	*gentype.ClientWithListAndApply[*sharedresourcev1alpha1.SharedSecret, *sharedresourcev1alpha1.SharedSecretList, *applyconfigurationssharedresourcev1alpha1.SharedSecretApplyConfiguration]
 }
 
 // newSharedSecrets returns a SharedSecrets
 func newSharedSecrets(c *SharedresourceV1alpha1Client) *sharedSecrets {
 	return &sharedSecrets{
-		gentype.NewClientWithListAndApply[*v1alpha1.SharedSecret, *v1alpha1.SharedSecretList, *sharedresourcev1alpha1.SharedSecretApplyConfiguration](
+		gentype.NewClientWithListAndApply[*sharedresourcev1alpha1.SharedSecret, *sharedresourcev1alpha1.SharedSecretList, *applyconfigurationssharedresourcev1alpha1.SharedSecretApplyConfiguration](
 			"sharedsecrets",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			"",
-			func() *v1alpha1.SharedSecret { return &v1alpha1.SharedSecret{} },
-			func() *v1alpha1.SharedSecretList { return &v1alpha1.SharedSecretList{} }),
+			func() *sharedresourcev1alpha1.SharedSecret { return &sharedresourcev1alpha1.SharedSecret{} },
+			func() *sharedresourcev1alpha1.SharedSecretList { return &sharedresourcev1alpha1.SharedSecretList{} },
+		),
 	}
 }

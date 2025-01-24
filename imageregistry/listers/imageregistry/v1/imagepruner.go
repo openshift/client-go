@@ -3,10 +3,10 @@
 package v1
 
 import (
-	v1 "github.com/openshift/api/imageregistry/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/listers"
-	"k8s.io/client-go/tools/cache"
+	imageregistryv1 "github.com/openshift/api/imageregistry/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ImagePrunerLister helps list ImagePruners.
@@ -14,19 +14,19 @@ import (
 type ImagePrunerLister interface {
 	// List lists all ImagePruners in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.ImagePruner, err error)
+	List(selector labels.Selector) (ret []*imageregistryv1.ImagePruner, err error)
 	// Get retrieves the ImagePruner from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.ImagePruner, error)
+	Get(name string) (*imageregistryv1.ImagePruner, error)
 	ImagePrunerListerExpansion
 }
 
 // imagePrunerLister implements the ImagePrunerLister interface.
 type imagePrunerLister struct {
-	listers.ResourceIndexer[*v1.ImagePruner]
+	listers.ResourceIndexer[*imageregistryv1.ImagePruner]
 }
 
 // NewImagePrunerLister returns a new ImagePrunerLister.
 func NewImagePrunerLister(indexer cache.Indexer) ImagePrunerLister {
-	return &imagePrunerLister{listers.New[*v1.ImagePruner](indexer, v1.Resource("imagepruner"))}
+	return &imagePrunerLister{listers.New[*imageregistryv1.ImagePruner](indexer, imageregistryv1.Resource("imagepruner"))}
 }

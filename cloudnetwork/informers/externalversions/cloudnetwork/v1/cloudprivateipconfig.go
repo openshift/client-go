@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	cloudnetworkv1 "github.com/openshift/api/cloudnetwork/v1"
+	apicloudnetworkv1 "github.com/openshift/api/cloudnetwork/v1"
 	versioned "github.com/openshift/client-go/cloudnetwork/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/cloudnetwork/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/cloudnetwork/listers/cloudnetwork/v1"
+	cloudnetworkv1 "github.com/openshift/client-go/cloudnetwork/listers/cloudnetwork/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // CloudPrivateIPConfigs.
 type CloudPrivateIPConfigInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.CloudPrivateIPConfigLister
+	Lister() cloudnetworkv1.CloudPrivateIPConfigLister
 }
 
 type cloudPrivateIPConfigInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredCloudPrivateIPConfigInformer(client versioned.Interface, resyncP
 				return client.CloudV1().CloudPrivateIPConfigs().Watch(context.TODO(), options)
 			},
 		},
-		&cloudnetworkv1.CloudPrivateIPConfig{},
+		&apicloudnetworkv1.CloudPrivateIPConfig{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *cloudPrivateIPConfigInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *cloudPrivateIPConfigInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&cloudnetworkv1.CloudPrivateIPConfig{}, f.defaultInformer)
+	return f.factory.InformerFor(&apicloudnetworkv1.CloudPrivateIPConfig{}, f.defaultInformer)
 }
 
-func (f *cloudPrivateIPConfigInformer) Lister() v1.CloudPrivateIPConfigLister {
-	return v1.NewCloudPrivateIPConfigLister(f.Informer().GetIndexer())
+func (f *cloudPrivateIPConfigInformer) Lister() cloudnetworkv1.CloudPrivateIPConfigLister {
+	return cloudnetworkv1.NewCloudPrivateIPConfigLister(f.Informer().GetIndexer())
 }

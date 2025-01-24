@@ -3,10 +3,10 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 
-	v1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
-	operatorcontrolplanev1alpha1 "github.com/openshift/client-go/operatorcontrolplane/applyconfigurations/operatorcontrolplane/v1alpha1"
+	operatorcontrolplanev1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
+	applyconfigurationsoperatorcontrolplanev1alpha1 "github.com/openshift/client-go/operatorcontrolplane/applyconfigurations/operatorcontrolplane/v1alpha1"
 	scheme "github.com/openshift/client-go/operatorcontrolplane/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -22,36 +22,41 @@ type PodNetworkConnectivityChecksGetter interface {
 
 // PodNetworkConnectivityCheckInterface has methods to work with PodNetworkConnectivityCheck resources.
 type PodNetworkConnectivityCheckInterface interface {
-	Create(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.CreateOptions) (*v1alpha1.PodNetworkConnectivityCheck, error)
-	Update(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (*v1alpha1.PodNetworkConnectivityCheck, error)
+	Create(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, opts v1.CreateOptions) (*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, error)
+	Update(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, error)
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-	UpdateStatus(ctx context.Context, podNetworkConnectivityCheck *v1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (*v1alpha1.PodNetworkConnectivityCheck, error)
+	UpdateStatus(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, opts v1.UpdateOptions) (*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.PodNetworkConnectivityCheck, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.PodNetworkConnectivityCheckList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, error)
+	List(ctx context.Context, opts v1.ListOptions) (*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PodNetworkConnectivityCheck, err error)
-	Apply(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, err error)
+	Apply(ctx context.Context, podNetworkConnectivityCheck *applyconfigurationsoperatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, err error)
 	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.PodNetworkConnectivityCheck, err error)
+	ApplyStatus(ctx context.Context, podNetworkConnectivityCheck *applyconfigurationsoperatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration, opts v1.ApplyOptions) (result *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, err error)
 	PodNetworkConnectivityCheckExpansion
 }
 
 // podNetworkConnectivityChecks implements PodNetworkConnectivityCheckInterface
 type podNetworkConnectivityChecks struct {
-	*gentype.ClientWithListAndApply[*v1alpha1.PodNetworkConnectivityCheck, *v1alpha1.PodNetworkConnectivityCheckList, *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration]
+	*gentype.ClientWithListAndApply[*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList, *applyconfigurationsoperatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration]
 }
 
 // newPodNetworkConnectivityChecks returns a PodNetworkConnectivityChecks
 func newPodNetworkConnectivityChecks(c *ControlplaneV1alpha1Client, namespace string) *podNetworkConnectivityChecks {
 	return &podNetworkConnectivityChecks{
-		gentype.NewClientWithListAndApply[*v1alpha1.PodNetworkConnectivityCheck, *v1alpha1.PodNetworkConnectivityCheckList, *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration](
+		gentype.NewClientWithListAndApply[*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList, *applyconfigurationsoperatorcontrolplanev1alpha1.PodNetworkConnectivityCheckApplyConfiguration](
 			"podnetworkconnectivitychecks",
 			c.RESTClient(),
 			scheme.ParameterCodec,
 			namespace,
-			func() *v1alpha1.PodNetworkConnectivityCheck { return &v1alpha1.PodNetworkConnectivityCheck{} },
-			func() *v1alpha1.PodNetworkConnectivityCheckList { return &v1alpha1.PodNetworkConnectivityCheckList{} }),
+			func() *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck {
+				return &operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{}
+			},
+			func() *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList {
+				return &operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList{}
+			},
+		),
 	}
 }

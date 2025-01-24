@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleSamples.
 type ConsoleSampleInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleSampleLister
+	Lister() consolev1.ConsoleSampleLister
 }
 
 type consoleSampleInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleSampleInformer(client versioned.Interface, resyncPeriod t
 				return client.ConsoleV1().ConsoleSamples().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleSample{},
+		&apiconsolev1.ConsoleSample{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleSampleInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *consoleSampleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleSample{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleSample{}, f.defaultInformer)
 }
 
-func (f *consoleSampleInformer) Lister() v1.ConsoleSampleLister {
-	return v1.NewConsoleSampleLister(f.Informer().GetIndexer())
+func (f *consoleSampleInformer) Lister() consolev1.ConsoleSampleLister {
+	return consolev1.NewConsoleSampleLister(f.Informer().GetIndexer())
 }

@@ -3,168 +3,35 @@
 package fake
 
 import (
-	"context"
-	json "encoding/json"
-	"fmt"
-
 	v1alpha1 "github.com/openshift/api/sharedresource/v1alpha1"
 	sharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/applyconfigurations/sharedresource/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	typedsharedresourcev1alpha1 "github.com/openshift/client-go/sharedresource/clientset/versioned/typed/sharedresource/v1alpha1"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSharedSecrets implements SharedSecretInterface
-type FakeSharedSecrets struct {
+// fakeSharedSecrets implements SharedSecretInterface
+type fakeSharedSecrets struct {
+	*gentype.FakeClientWithListAndApply[*v1alpha1.SharedSecret, *v1alpha1.SharedSecretList, *sharedresourcev1alpha1.SharedSecretApplyConfiguration]
 	Fake *FakeSharedresourceV1alpha1
 }
 
-var sharedsecretsResource = v1alpha1.SchemeGroupVersion.WithResource("sharedsecrets")
-
-var sharedsecretsKind = v1alpha1.SchemeGroupVersion.WithKind("SharedSecret")
-
-// Get takes name of the sharedSecret, and returns the corresponding sharedSecret object, and an error if there is any.
-func (c *FakeSharedSecrets) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SharedSecret, err error) {
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetActionWithOptions(sharedsecretsResource, name, options), emptyResult)
-	if obj == nil {
-		return emptyResult, err
+func newFakeSharedSecrets(fake *FakeSharedresourceV1alpha1) typedsharedresourcev1alpha1.SharedSecretInterface {
+	return &fakeSharedSecrets{
+		gentype.NewFakeClientWithListAndApply[*v1alpha1.SharedSecret, *v1alpha1.SharedSecretList, *sharedresourcev1alpha1.SharedSecretApplyConfiguration](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("sharedsecrets"),
+			v1alpha1.SchemeGroupVersion.WithKind("SharedSecret"),
+			func() *v1alpha1.SharedSecret { return &v1alpha1.SharedSecret{} },
+			func() *v1alpha1.SharedSecretList { return &v1alpha1.SharedSecretList{} },
+			func(dst, src *v1alpha1.SharedSecretList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SharedSecretList) []*v1alpha1.SharedSecret {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SharedSecretList, items []*v1alpha1.SharedSecret) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// List takes label and field selectors, and returns the list of SharedSecrets that match those selectors.
-func (c *FakeSharedSecrets) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SharedSecretList, err error) {
-	emptyResult := &v1alpha1.SharedSecretList{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListActionWithOptions(sharedsecretsResource, sharedsecretsKind, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SharedSecretList{ListMeta: obj.(*v1alpha1.SharedSecretList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SharedSecretList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested sharedSecrets.
-func (c *FakeSharedSecrets) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchActionWithOptions(sharedsecretsResource, opts))
-}
-
-// Create takes the representation of a sharedSecret and creates it.  Returns the server's representation of the sharedSecret, and an error, if there is any.
-func (c *FakeSharedSecrets) Create(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.CreateOptions) (result *v1alpha1.SharedSecret, err error) {
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateActionWithOptions(sharedsecretsResource, sharedSecret, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// Update takes the representation of a sharedSecret and updates it. Returns the server's representation of the sharedSecret, and an error, if there is any.
-func (c *FakeSharedSecrets) Update(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.UpdateOptions) (result *v1alpha1.SharedSecret, err error) {
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateActionWithOptions(sharedsecretsResource, sharedSecret, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSharedSecrets) UpdateStatus(ctx context.Context, sharedSecret *v1alpha1.SharedSecret, opts v1.UpdateOptions) (result *v1alpha1.SharedSecret, err error) {
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateSubresourceActionWithOptions(sharedsecretsResource, "status", sharedSecret, opts), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// Delete takes name of the sharedSecret and deletes it. Returns an error if one occurs.
-func (c *FakeSharedSecrets) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(sharedsecretsResource, name, opts), &v1alpha1.SharedSecret{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSharedSecrets) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionActionWithOptions(sharedsecretsResource, opts, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SharedSecretList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched sharedSecret.
-func (c *FakeSharedSecrets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SharedSecret, err error) {
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedsecretsResource, name, pt, data, opts, subresources...), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// Apply takes the given apply declarative configuration, applies it and returns the applied sharedSecret.
-func (c *FakeSharedSecrets) Apply(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error) {
-	if sharedSecret == nil {
-		return nil, fmt.Errorf("sharedSecret provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(sharedSecret)
-	if err != nil {
-		return nil, err
-	}
-	name := sharedSecret.Name
-	if name == nil {
-		return nil, fmt.Errorf("sharedSecret.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedsecretsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions()), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
-}
-
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-func (c *FakeSharedSecrets) ApplyStatus(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecretApplyConfiguration, opts v1.ApplyOptions) (result *v1alpha1.SharedSecret, err error) {
-	if sharedSecret == nil {
-		return nil, fmt.Errorf("sharedSecret provided to Apply must not be nil")
-	}
-	data, err := json.Marshal(sharedSecret)
-	if err != nil {
-		return nil, err
-	}
-	name := sharedSecret.Name
-	if name == nil {
-		return nil, fmt.Errorf("sharedSecret.Name must be provided to Apply")
-	}
-	emptyResult := &v1alpha1.SharedSecret{}
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceActionWithOptions(sharedsecretsResource, *name, types.ApplyPatchType, data, opts.ToPatchOptions(), "status"), emptyResult)
-	if obj == nil {
-		return emptyResult, err
-	}
-	return obj.(*v1alpha1.SharedSecret), err
 }

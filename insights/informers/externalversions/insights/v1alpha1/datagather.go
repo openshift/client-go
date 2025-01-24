@@ -3,13 +3,13 @@
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	apiinsightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	versioned "github.com/openshift/client-go/insights/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/insights/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/openshift/client-go/insights/listers/insights/v1alpha1"
+	insightsv1alpha1 "github.com/openshift/client-go/insights/listers/insights/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // DataGathers.
 type DataGatherInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DataGatherLister
+	Lister() insightsv1alpha1.DataGatherLister
 }
 
 type dataGatherInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredDataGatherInformer(client versioned.Interface, resyncPeriod time
 				return client.InsightsV1alpha1().DataGathers().Watch(context.TODO(), options)
 			},
 		},
-		&insightsv1alpha1.DataGather{},
+		&apiinsightsv1alpha1.DataGather{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *dataGatherInformer) defaultInformer(client versioned.Interface, resyncP
 }
 
 func (f *dataGatherInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&insightsv1alpha1.DataGather{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiinsightsv1alpha1.DataGather{}, f.defaultInformer)
 }
 
-func (f *dataGatherInformer) Lister() v1alpha1.DataGatherLister {
-	return v1alpha1.NewDataGatherLister(f.Informer().GetIndexer())
+func (f *dataGatherInformer) Lister() insightsv1alpha1.DataGatherLister {
+	return insightsv1alpha1.NewDataGatherLister(f.Informer().GetIndexer())
 }

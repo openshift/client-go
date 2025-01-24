@@ -3,7 +3,7 @@
 package externalversions
 
 import (
-	"fmt"
+	fmt "fmt"
 
 	v1alpha1 "github.com/openshift/api/operatorcontrolplane/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

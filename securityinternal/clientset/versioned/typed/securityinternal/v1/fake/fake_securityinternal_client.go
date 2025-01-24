@@ -13,7 +13,7 @@ type FakeSecurityV1 struct {
 }
 
 func (c *FakeSecurityV1) RangeAllocations() v1.RangeAllocationInterface {
-	return &FakeRangeAllocations{c}
+	return newFakeRangeAllocations(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
