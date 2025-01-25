@@ -3,13 +3,13 @@
 package v1beta1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	helmv1beta1 "github.com/openshift/api/helm/v1beta1"
+	apihelmv1beta1 "github.com/openshift/api/helm/v1beta1"
 	versioned "github.com/openshift/client-go/helm/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/helm/informers/externalversions/internalinterfaces"
-	v1beta1 "github.com/openshift/client-go/helm/listers/helm/v1beta1"
+	helmv1beta1 "github.com/openshift/client-go/helm/listers/helm/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ProjectHelmChartRepositories.
 type ProjectHelmChartRepositoryInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1beta1.ProjectHelmChartRepositoryLister
+	Lister() helmv1beta1.ProjectHelmChartRepositoryLister
 }
 
 type projectHelmChartRepositoryInformer struct {
@@ -55,7 +55,7 @@ func NewFilteredProjectHelmChartRepositoryInformer(client versioned.Interface, n
 				return client.HelmV1beta1().ProjectHelmChartRepositories(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&helmv1beta1.ProjectHelmChartRepository{},
+		&apihelmv1beta1.ProjectHelmChartRepository{},
 		resyncPeriod,
 		indexers,
 	)
@@ -66,9 +66,9 @@ func (f *projectHelmChartRepositoryInformer) defaultInformer(client versioned.In
 }
 
 func (f *projectHelmChartRepositoryInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&helmv1beta1.ProjectHelmChartRepository{}, f.defaultInformer)
+	return f.factory.InformerFor(&apihelmv1beta1.ProjectHelmChartRepository{}, f.defaultInformer)
 }
 
-func (f *projectHelmChartRepositoryInformer) Lister() v1beta1.ProjectHelmChartRepositoryLister {
-	return v1beta1.NewProjectHelmChartRepositoryLister(f.Informer().GetIndexer())
+func (f *projectHelmChartRepositoryInformer) Lister() helmv1beta1.ProjectHelmChartRepositoryLister {
+	return helmv1beta1.NewProjectHelmChartRepositoryLister(f.Informer().GetIndexer())
 }

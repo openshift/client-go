@@ -13,35 +13,35 @@ type FakeConsoleV1 struct {
 }
 
 func (c *FakeConsoleV1) ConsoleCLIDownloads() v1.ConsoleCLIDownloadInterface {
-	return &FakeConsoleCLIDownloads{c}
+	return newFakeConsoleCLIDownloads(c)
 }
 
 func (c *FakeConsoleV1) ConsoleExternalLogLinks() v1.ConsoleExternalLogLinkInterface {
-	return &FakeConsoleExternalLogLinks{c}
+	return newFakeConsoleExternalLogLinks(c)
 }
 
 func (c *FakeConsoleV1) ConsoleLinks() v1.ConsoleLinkInterface {
-	return &FakeConsoleLinks{c}
+	return newFakeConsoleLinks(c)
 }
 
 func (c *FakeConsoleV1) ConsoleNotifications() v1.ConsoleNotificationInterface {
-	return &FakeConsoleNotifications{c}
+	return newFakeConsoleNotifications(c)
 }
 
 func (c *FakeConsoleV1) ConsolePlugins() v1.ConsolePluginInterface {
-	return &FakeConsolePlugins{c}
+	return newFakeConsolePlugins(c)
 }
 
 func (c *FakeConsoleV1) ConsoleQuickStarts() v1.ConsoleQuickStartInterface {
-	return &FakeConsoleQuickStarts{c}
+	return newFakeConsoleQuickStarts(c)
 }
 
 func (c *FakeConsoleV1) ConsoleSamples() v1.ConsoleSampleInterface {
-	return &FakeConsoleSamples{c}
+	return newFakeConsoleSamples(c)
 }
 
 func (c *FakeConsoleV1) ConsoleYAMLSamples() v1.ConsoleYAMLSampleInterface {
-	return &FakeConsoleYAMLSamples{c}
+	return newFakeConsoleYAMLSamples(c)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

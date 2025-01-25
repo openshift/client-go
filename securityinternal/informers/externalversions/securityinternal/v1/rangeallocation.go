@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	securityinternalv1 "github.com/openshift/api/securityinternal/v1"
+	apisecurityinternalv1 "github.com/openshift/api/securityinternal/v1"
 	versioned "github.com/openshift/client-go/securityinternal/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/securityinternal/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/securityinternal/listers/securityinternal/v1"
+	securityinternalv1 "github.com/openshift/client-go/securityinternal/listers/securityinternal/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // RangeAllocations.
 type RangeAllocationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.RangeAllocationLister
+	Lister() securityinternalv1.RangeAllocationLister
 }
 
 type rangeAllocationInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredRangeAllocationInformer(client versioned.Interface, resyncPeriod
 				return client.SecurityV1().RangeAllocations().Watch(context.TODO(), options)
 			},
 		},
-		&securityinternalv1.RangeAllocation{},
+		&apisecurityinternalv1.RangeAllocation{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *rangeAllocationInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *rangeAllocationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&securityinternalv1.RangeAllocation{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisecurityinternalv1.RangeAllocation{}, f.defaultInformer)
 }
 
-func (f *rangeAllocationInformer) Lister() v1.RangeAllocationLister {
-	return v1.NewRangeAllocationLister(f.Informer().GetIndexer())
+func (f *rangeAllocationInformer) Lister() securityinternalv1.RangeAllocationLister {
+	return securityinternalv1.NewRangeAllocationLister(f.Informer().GetIndexer())
 }

@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	consolev1 "github.com/openshift/api/console/v1"
+	apiconsolev1 "github.com/openshift/api/console/v1"
 	versioned "github.com/openshift/client-go/console/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/console/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/console/listers/console/v1"
+	consolev1 "github.com/openshift/client-go/console/listers/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // ConsoleYAMLSamples.
 type ConsoleYAMLSampleInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ConsoleYAMLSampleLister
+	Lister() consolev1.ConsoleYAMLSampleLister
 }
 
 type consoleYAMLSampleInformer struct {
@@ -54,7 +54,7 @@ func NewFilteredConsoleYAMLSampleInformer(client versioned.Interface, resyncPeri
 				return client.ConsoleV1().ConsoleYAMLSamples().Watch(context.TODO(), options)
 			},
 		},
-		&consolev1.ConsoleYAMLSample{},
+		&apiconsolev1.ConsoleYAMLSample{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,9 +65,9 @@ func (f *consoleYAMLSampleInformer) defaultInformer(client versioned.Interface, 
 }
 
 func (f *consoleYAMLSampleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&consolev1.ConsoleYAMLSample{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiconsolev1.ConsoleYAMLSample{}, f.defaultInformer)
 }
 
-func (f *consoleYAMLSampleInformer) Lister() v1.ConsoleYAMLSampleLister {
-	return v1.NewConsoleYAMLSampleLister(f.Informer().GetIndexer())
+func (f *consoleYAMLSampleInformer) Lister() consolev1.ConsoleYAMLSampleLister {
+	return consolev1.NewConsoleYAMLSampleLister(f.Informer().GetIndexer())
 }

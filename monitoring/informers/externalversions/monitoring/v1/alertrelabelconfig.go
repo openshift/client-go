@@ -3,13 +3,13 @@
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	monitoringv1 "github.com/openshift/api/monitoring/v1"
+	apimonitoringv1 "github.com/openshift/api/monitoring/v1"
 	versioned "github.com/openshift/client-go/monitoring/clientset/versioned"
 	internalinterfaces "github.com/openshift/client-go/monitoring/informers/externalversions/internalinterfaces"
-	v1 "github.com/openshift/client-go/monitoring/listers/monitoring/v1"
+	monitoringv1 "github.com/openshift/client-go/monitoring/listers/monitoring/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -20,7 +20,7 @@ import (
 // AlertRelabelConfigs.
 type AlertRelabelConfigInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.AlertRelabelConfigLister
+	Lister() monitoringv1.AlertRelabelConfigLister
 }
 
 type alertRelabelConfigInformer struct {
@@ -55,7 +55,7 @@ func NewFilteredAlertRelabelConfigInformer(client versioned.Interface, namespace
 				return client.MonitoringV1().AlertRelabelConfigs(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&monitoringv1.AlertRelabelConfig{},
+		&apimonitoringv1.AlertRelabelConfig{},
 		resyncPeriod,
 		indexers,
 	)
@@ -66,9 +66,9 @@ func (f *alertRelabelConfigInformer) defaultInformer(client versioned.Interface,
 }
 
 func (f *alertRelabelConfigInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&monitoringv1.AlertRelabelConfig{}, f.defaultInformer)
+	return f.factory.InformerFor(&apimonitoringv1.AlertRelabelConfig{}, f.defaultInformer)
 }
 
-func (f *alertRelabelConfigInformer) Lister() v1.AlertRelabelConfigLister {
-	return v1.NewAlertRelabelConfigLister(f.Informer().GetIndexer())
+func (f *alertRelabelConfigInformer) Lister() monitoringv1.AlertRelabelConfigLister {
+	return monitoringv1.NewAlertRelabelConfigLister(f.Informer().GetIndexer())
 }
