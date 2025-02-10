@@ -114,6 +114,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ConfigMapFileReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConfigMapNameReference"):
 		return &configv1.ConfigMapNameReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConfigPod"):
+		return &configv1.ConfigPodApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Console"):
 		return &configv1.ConsoleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleAuthentication"):

@@ -8,11 +8,13 @@ import (
 
 
 // +genclient
-// +genclient:namespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 //
 // Docs
-type ConfigPod = corev1.Pod
+type ConfigPod corev1.Pod
+
+type ConfigPodList corev1.PodList
+
 
 
 // ConfigMapFileReference references a config map in a specific namespace.

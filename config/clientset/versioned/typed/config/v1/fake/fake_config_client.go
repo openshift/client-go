@@ -32,6 +32,10 @@ func (c *FakeConfigV1) ClusterVersions() v1.ClusterVersionInterface {
 	return newFakeClusterVersions(c)
 }
 
+func (c *FakeConfigV1) ConfigPods(namespace string) v1.ConfigPodInterface {
+	return newFakeConfigPods(c, namespace)
+}
+
 func (c *FakeConfigV1) Consoles() v1.ConsoleInterface {
 	return newFakeConsoles(c)
 }

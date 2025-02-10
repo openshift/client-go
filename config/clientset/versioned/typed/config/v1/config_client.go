@@ -17,6 +17,7 @@ type ConfigV1Interface interface {
 	BuildsGetter
 	ClusterOperatorsGetter
 	ClusterVersionsGetter
+	ConfigPodsGetter
 	ConsolesGetter
 	DNSesGetter
 	FeatureGatesGetter
@@ -58,6 +59,10 @@ func (c *ConfigV1Client) ClusterOperators() ClusterOperatorInterface {
 
 func (c *ConfigV1Client) ClusterVersions() ClusterVersionInterface {
 	return newClusterVersions(c)
+}
+
+func (c *ConfigV1Client) ConfigPods(namespace string) ConfigPodInterface {
+	return newConfigPods(c, namespace)
 }
 
 func (c *ConfigV1Client) Consoles() ConsoleInterface {
