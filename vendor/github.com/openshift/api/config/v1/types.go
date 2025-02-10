@@ -3,7 +3,17 @@ package v1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	corev1 "k8s.io/api/core/v1"
 )
+
+
+// +genclient
+// +genclient:namespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+//
+// Docs
+type ConfigPod = corev1.Pod
+
 
 // ConfigMapFileReference references a config map in a specific namespace.
 // The namespace must be specified at the point of use.
