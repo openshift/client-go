@@ -2496,10 +2496,6 @@ var schemaYAML = typed.YAMLObject(`types:
           elementRelationship: associative
           keys:
           - type
-    - name: managedBootImagesStatus
-      type:
-        namedType: com.github.openshift.api.operator.v1.ManagedBootImages
-      default: {}
     - name: nodeDisruptionPolicyStatus
       type:
         namedType: com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus
