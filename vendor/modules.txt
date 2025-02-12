@@ -111,6 +111,8 @@ github.com/openshift/api/securityinternal/v1
 github.com/openshift/api/servicecertsigner/v1alpha1
 github.com/openshift/api/sharedresource/v1alpha1
 github.com/openshift/api/template/v1
+github.com/openshift/api/update
+github.com/openshift/api/update/v1alpha1
 github.com/openshift/api/user/v1
 # github.com/openshift/build-machinery-go v0.0.0-20240613134303-8359781da660
 ## explicit; go 1.22.0
