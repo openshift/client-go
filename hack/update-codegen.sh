@@ -9,7 +9,7 @@ CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-ge
 
 source "${CODEGEN_PKG}/kube_codegen.sh"
 
-for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane project quota route samples security securityinternal servicecertsigner sharedresource template user; do
+for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane project quota route samples security securityinternal servicecertsigner sharedresource template update user; do
   echo "# Processing ${group} ..."
   kube::codegen::gen_client \
       --with-watch \
