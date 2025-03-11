@@ -51,6 +51,7 @@ func newRoleBindingRestrictions(c *AuthorizationV1Client, namespace string) *rol
 			func() *authorizationv1.RoleBindingRestrictionList {
 				return &authorizationv1.RoleBindingRestrictionList{}
 			},
+			gentype.PrefersProtobuf[*authorizationv1.RoleBindingRestriction](),
 		),
 	}
 }

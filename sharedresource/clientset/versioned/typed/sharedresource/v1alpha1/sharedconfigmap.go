@@ -55,6 +55,7 @@ func newSharedConfigMaps(c *SharedresourceV1alpha1Client) *sharedConfigMaps {
 			func() *sharedresourcev1alpha1.SharedConfigMapList {
 				return &sharedresourcev1alpha1.SharedConfigMapList{}
 			},
+			gentype.PrefersProtobuf[*sharedresourcev1alpha1.SharedConfigMap](),
 		),
 	}
 }

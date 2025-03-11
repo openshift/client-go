@@ -49,6 +49,7 @@ func newConsoleLinks(c *ConsoleV1Client) *consoleLinks {
 			"",
 			func() *consolev1.ConsoleLink { return &consolev1.ConsoleLink{} },
 			func() *consolev1.ConsoleLinkList { return &consolev1.ConsoleLinkList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleLink](),
 		),
 	}
 }

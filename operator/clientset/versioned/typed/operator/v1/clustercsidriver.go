@@ -53,6 +53,7 @@ func newClusterCSIDrivers(c *OperatorV1Client) *clusterCSIDrivers {
 			"",
 			func() *operatorv1.ClusterCSIDriver { return &operatorv1.ClusterCSIDriver{} },
 			func() *operatorv1.ClusterCSIDriverList { return &operatorv1.ClusterCSIDriverList{} },
+			gentype.PrefersProtobuf[*operatorv1.ClusterCSIDriver](),
 		),
 	}
 }

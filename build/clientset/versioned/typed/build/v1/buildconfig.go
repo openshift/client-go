@@ -55,6 +55,7 @@ func newBuildConfigs(c *BuildV1Client, namespace string) *buildConfigs {
 			namespace,
 			func() *buildv1.BuildConfig { return &buildv1.BuildConfig{} },
 			func() *buildv1.BuildConfigList { return &buildv1.BuildConfigList{} },
+			gentype.PrefersProtobuf[*buildv1.BuildConfig](),
 		),
 	}
 }
@@ -63,6 +64,7 @@ func newBuildConfigs(c *BuildV1Client, namespace string) *buildConfigs {
 func (c *buildConfigs) Instantiate(ctx context.Context, buildConfigName string, buildRequest *buildv1.BuildRequest, opts metav1.CreateOptions) (result *buildv1.Build, err error) {
 	result = &buildv1.Build{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("buildconfigs").
 		Name(buildConfigName).

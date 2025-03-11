@@ -53,6 +53,7 @@ func newServiceCAs(c *OperatorV1Client) *serviceCAs {
 			"",
 			func() *operatorv1.ServiceCA { return &operatorv1.ServiceCA{} },
 			func() *operatorv1.ServiceCAList { return &operatorv1.ServiceCAList{} },
+			gentype.PrefersProtobuf[*operatorv1.ServiceCA](),
 		),
 	}
 }

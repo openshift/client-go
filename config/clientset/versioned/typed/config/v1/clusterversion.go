@@ -53,6 +53,7 @@ func newClusterVersions(c *ConfigV1Client) *clusterVersions {
 			"",
 			func() *configv1.ClusterVersion { return &configv1.ClusterVersion{} },
 			func() *configv1.ClusterVersionList { return &configv1.ClusterVersionList{} },
+			gentype.PrefersProtobuf[*configv1.ClusterVersion](),
 		),
 	}
 }

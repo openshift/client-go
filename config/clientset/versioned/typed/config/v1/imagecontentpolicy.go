@@ -49,6 +49,7 @@ func newImageContentPolicies(c *ConfigV1Client) *imageContentPolicies {
 			"",
 			func() *configv1.ImageContentPolicy { return &configv1.ImageContentPolicy{} },
 			func() *configv1.ImageContentPolicyList { return &configv1.ImageContentPolicyList{} },
+			gentype.PrefersProtobuf[*configv1.ImageContentPolicy](),
 		),
 	}
 }

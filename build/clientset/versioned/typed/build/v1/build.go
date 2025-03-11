@@ -56,6 +56,7 @@ func newBuilds(c *BuildV1Client, namespace string) *builds {
 			namespace,
 			func() *buildv1.Build { return &buildv1.Build{} },
 			func() *buildv1.BuildList { return &buildv1.BuildList{} },
+			gentype.PrefersProtobuf[*buildv1.Build](),
 		),
 	}
 }
@@ -64,6 +65,7 @@ func newBuilds(c *BuildV1Client, namespace string) *builds {
 func (c *builds) UpdateDetails(ctx context.Context, buildName string, build *buildv1.Build, opts metav1.UpdateOptions) (result *buildv1.Build, err error) {
 	result = &buildv1.Build{}
 	err = c.GetClient().Put().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("builds").
 		Name(buildName).
@@ -79,6 +81,7 @@ func (c *builds) UpdateDetails(ctx context.Context, buildName string, build *bui
 func (c *builds) Clone(ctx context.Context, buildName string, buildRequest *buildv1.BuildRequest, opts metav1.CreateOptions) (result *buildv1.Build, err error) {
 	result = &buildv1.Build{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("builds").
 		Name(buildName).

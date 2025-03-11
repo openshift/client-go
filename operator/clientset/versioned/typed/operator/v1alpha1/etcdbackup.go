@@ -53,6 +53,7 @@ func newEtcdBackups(c *OperatorV1alpha1Client) *etcdBackups {
 			"",
 			func() *operatorv1alpha1.EtcdBackup { return &operatorv1alpha1.EtcdBackup{} },
 			func() *operatorv1alpha1.EtcdBackupList { return &operatorv1alpha1.EtcdBackupList{} },
+			gentype.PrefersProtobuf[*operatorv1alpha1.EtcdBackup](),
 		),
 	}
 }

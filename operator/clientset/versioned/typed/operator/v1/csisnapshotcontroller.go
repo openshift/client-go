@@ -53,6 +53,7 @@ func newCSISnapshotControllers(c *OperatorV1Client) *cSISnapshotControllers {
 			"",
 			func() *operatorv1.CSISnapshotController { return &operatorv1.CSISnapshotController{} },
 			func() *operatorv1.CSISnapshotControllerList { return &operatorv1.CSISnapshotControllerList{} },
+			gentype.PrefersProtobuf[*operatorv1.CSISnapshotController](),
 		),
 	}
 }

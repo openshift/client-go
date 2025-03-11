@@ -57,6 +57,7 @@ func newServiceCatalogControllerManagers(c *OperatorV1Client) *serviceCatalogCon
 			func() *operatorv1.ServiceCatalogControllerManagerList {
 				return &operatorv1.ServiceCatalogControllerManagerList{}
 			},
+			gentype.PrefersProtobuf[*operatorv1.ServiceCatalogControllerManager](),
 		),
 	}
 }

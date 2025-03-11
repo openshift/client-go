@@ -53,6 +53,7 @@ func newAPIServers(c *ConfigV1Client) *aPIServers {
 			"",
 			func() *configv1.APIServer { return &configv1.APIServer{} },
 			func() *configv1.APIServerList { return &configv1.APIServerList{} },
+			gentype.PrefersProtobuf[*configv1.APIServer](),
 		),
 	}
 }

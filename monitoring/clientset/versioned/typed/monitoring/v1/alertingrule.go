@@ -53,6 +53,7 @@ func newAlertingRules(c *MonitoringV1Client, namespace string) *alertingRules {
 			namespace,
 			func() *monitoringv1.AlertingRule { return &monitoringv1.AlertingRule{} },
 			func() *monitoringv1.AlertingRuleList { return &monitoringv1.AlertingRuleList{} },
+			gentype.PrefersProtobuf[*monitoringv1.AlertingRule](),
 		),
 	}
 }

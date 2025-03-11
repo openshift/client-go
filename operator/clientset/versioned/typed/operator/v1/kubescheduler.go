@@ -53,6 +53,7 @@ func newKubeSchedulers(c *OperatorV1Client) *kubeSchedulers {
 			"",
 			func() *operatorv1.KubeScheduler { return &operatorv1.KubeScheduler{} },
 			func() *operatorv1.KubeSchedulerList { return &operatorv1.KubeSchedulerList{} },
+			gentype.PrefersProtobuf[*operatorv1.KubeScheduler](),
 		),
 	}
 }

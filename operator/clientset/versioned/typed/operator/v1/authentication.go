@@ -53,6 +53,7 @@ func newAuthentications(c *OperatorV1Client) *authentications {
 			"",
 			func() *operatorv1.Authentication { return &operatorv1.Authentication{} },
 			func() *operatorv1.AuthenticationList { return &operatorv1.AuthenticationList{} },
+			gentype.PrefersProtobuf[*operatorv1.Authentication](),
 		),
 	}
 }

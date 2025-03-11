@@ -49,6 +49,7 @@ func newImages(c *ImageV1Client) *images {
 			"",
 			func() *imagev1.Image { return &imagev1.Image{} },
 			func() *imagev1.ImageList { return &imagev1.ImageList{} },
+			gentype.PrefersProtobuf[*imagev1.Image](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newProxies(c *ConfigV1Client) *proxies {
 			"",
 			func() *configv1.Proxy { return &configv1.Proxy{} },
 			func() *configv1.ProxyList { return &configv1.ProxyList{} },
+			gentype.PrefersProtobuf[*configv1.Proxy](),
 		),
 	}
 }

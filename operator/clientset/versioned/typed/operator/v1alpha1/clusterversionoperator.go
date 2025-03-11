@@ -55,6 +55,7 @@ func newClusterVersionOperators(c *OperatorV1alpha1Client) *clusterVersionOperat
 			func() *operatorv1alpha1.ClusterVersionOperatorList {
 				return &operatorv1alpha1.ClusterVersionOperatorList{}
 			},
+			gentype.PrefersProtobuf[*operatorv1alpha1.ClusterVersionOperator](),
 		),
 	}
 }

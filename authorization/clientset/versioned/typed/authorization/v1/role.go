@@ -49,6 +49,7 @@ func newRoles(c *AuthorizationV1Client, namespace string) *roles {
 			namespace,
 			func() *authorizationv1.Role { return &authorizationv1.Role{} },
 			func() *authorizationv1.RoleList { return &authorizationv1.RoleList{} },
+			gentype.PrefersProtobuf[*authorizationv1.Role](),
 		),
 	}
 }

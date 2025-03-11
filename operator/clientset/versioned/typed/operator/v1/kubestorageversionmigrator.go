@@ -53,6 +53,7 @@ func newKubeStorageVersionMigrators(c *OperatorV1Client) *kubeStorageVersionMigr
 			"",
 			func() *operatorv1.KubeStorageVersionMigrator { return &operatorv1.KubeStorageVersionMigrator{} },
 			func() *operatorv1.KubeStorageVersionMigratorList { return &operatorv1.KubeStorageVersionMigratorList{} },
+			gentype.PrefersProtobuf[*operatorv1.KubeStorageVersionMigrator](),
 		),
 	}
 }

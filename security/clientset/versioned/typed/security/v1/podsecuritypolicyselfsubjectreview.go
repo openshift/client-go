@@ -39,6 +39,7 @@ func newPodSecurityPolicySelfSubjectReviews(c *SecurityV1Client, namespace strin
 			func() *securityv1.PodSecurityPolicySelfSubjectReview {
 				return &securityv1.PodSecurityPolicySelfSubjectReview{}
 			},
+			gentype.PrefersProtobuf[*securityv1.PodSecurityPolicySelfSubjectReview](),
 		),
 	}
 }

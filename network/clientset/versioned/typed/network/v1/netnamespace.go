@@ -49,6 +49,7 @@ func newNetNamespaces(c *NetworkV1Client) *netNamespaces {
 			"",
 			func() *networkv1.NetNamespace { return &networkv1.NetNamespace{} },
 			func() *networkv1.NetNamespaceList { return &networkv1.NetNamespaceList{} },
+			gentype.PrefersProtobuf[*networkv1.NetNamespace](),
 		),
 	}
 }

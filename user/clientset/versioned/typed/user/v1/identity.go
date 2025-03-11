@@ -49,6 +49,7 @@ func newIdentities(c *UserV1Client) *identities {
 			"",
 			func() *userv1.Identity { return &userv1.Identity{} },
 			func() *userv1.IdentityList { return &userv1.IdentityList{} },
+			gentype.PrefersProtobuf[*userv1.Identity](),
 		),
 	}
 }

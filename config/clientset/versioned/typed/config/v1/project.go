@@ -53,6 +53,7 @@ func newProjects(c *ConfigV1Client) *projects {
 			"",
 			func() *configv1.Project { return &configv1.Project{} },
 			func() *configv1.ProjectList { return &configv1.ProjectList{} },
+			gentype.PrefersProtobuf[*configv1.Project](),
 		),
 	}
 }

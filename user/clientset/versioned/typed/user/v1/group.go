@@ -49,6 +49,7 @@ func newGroups(c *UserV1Client) *groups {
 			"",
 			func() *userv1.Group { return &userv1.Group{} },
 			func() *userv1.GroupList { return &userv1.GroupList{} },
+			gentype.PrefersProtobuf[*userv1.Group](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newControlPlaneMachineSets(c *MachineV1Client, namespace string) *controlPl
 			namespace,
 			func() *machinev1.ControlPlaneMachineSet { return &machinev1.ControlPlaneMachineSet{} },
 			func() *machinev1.ControlPlaneMachineSetList { return &machinev1.ControlPlaneMachineSetList{} },
+			gentype.PrefersProtobuf[*machinev1.ControlPlaneMachineSet](),
 		),
 	}
 }

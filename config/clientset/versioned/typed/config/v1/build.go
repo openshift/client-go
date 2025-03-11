@@ -49,6 +49,7 @@ func newBuilds(c *ConfigV1Client) *builds {
 			"",
 			func() *configv1.Build { return &configv1.Build{} },
 			func() *configv1.BuildList { return &configv1.BuildList{} },
+			gentype.PrefersProtobuf[*configv1.Build](),
 		),
 	}
 }

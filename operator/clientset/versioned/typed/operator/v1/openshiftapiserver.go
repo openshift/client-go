@@ -53,6 +53,7 @@ func newOpenShiftAPIServers(c *OperatorV1Client) *openShiftAPIServers {
 			"",
 			func() *operatorv1.OpenShiftAPIServer { return &operatorv1.OpenShiftAPIServer{} },
 			func() *operatorv1.OpenShiftAPIServerList { return &operatorv1.OpenShiftAPIServerList{} },
+			gentype.PrefersProtobuf[*operatorv1.OpenShiftAPIServer](),
 		),
 	}
 }

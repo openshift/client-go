@@ -53,6 +53,7 @@ func newNodes(c *ConfigV1Client) *nodes {
 			"",
 			func() *configv1.Node { return &configv1.Node{} },
 			func() *configv1.NodeList { return &configv1.NodeList{} },
+			gentype.PrefersProtobuf[*configv1.Node](),
 		),
 	}
 }

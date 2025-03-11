@@ -53,6 +53,7 @@ func newNetworks(c *OperatorV1Client) *networks {
 			"",
 			func() *operatorv1.Network { return &operatorv1.Network{} },
 			func() *operatorv1.NetworkList { return &operatorv1.NetworkList{} },
+			gentype.PrefersProtobuf[*operatorv1.Network](),
 		),
 	}
 }

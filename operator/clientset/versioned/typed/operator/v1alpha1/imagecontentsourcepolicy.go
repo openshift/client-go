@@ -51,6 +51,7 @@ func newImageContentSourcePolicies(c *OperatorV1alpha1Client) *imageContentSourc
 			func() *operatorv1alpha1.ImageContentSourcePolicyList {
 				return &operatorv1alpha1.ImageContentSourcePolicyList{}
 			},
+			gentype.PrefersProtobuf[*operatorv1alpha1.ImageContentSourcePolicy](),
 		),
 	}
 }

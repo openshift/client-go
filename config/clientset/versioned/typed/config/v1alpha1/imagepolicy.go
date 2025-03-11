@@ -53,6 +53,7 @@ func newImagePolicies(c *ConfigV1alpha1Client, namespace string) *imagePolicies 
 			namespace,
 			func() *configv1alpha1.ImagePolicy { return &configv1alpha1.ImagePolicy{} },
 			func() *configv1alpha1.ImagePolicyList { return &configv1alpha1.ImagePolicyList{} },
+			gentype.PrefersProtobuf[*configv1alpha1.ImagePolicy](),
 		),
 	}
 }

@@ -49,6 +49,7 @@ func newConsoleCLIDownloads(c *ConsoleV1Client) *consoleCLIDownloads {
 			"",
 			func() *consolev1.ConsoleCLIDownload { return &consolev1.ConsoleCLIDownload{} },
 			func() *consolev1.ConsoleCLIDownloadList { return &consolev1.ConsoleCLIDownloadList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleCLIDownload](),
 		),
 	}
 }

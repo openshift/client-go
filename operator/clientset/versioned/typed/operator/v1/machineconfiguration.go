@@ -53,6 +53,7 @@ func newMachineConfigurations(c *OperatorV1Client) *machineConfigurations {
 			"",
 			func() *operatorv1.MachineConfiguration { return &operatorv1.MachineConfiguration{} },
 			func() *operatorv1.MachineConfigurationList { return &operatorv1.MachineConfigurationList{} },
+			gentype.PrefersProtobuf[*operatorv1.MachineConfiguration](),
 		),
 	}
 }

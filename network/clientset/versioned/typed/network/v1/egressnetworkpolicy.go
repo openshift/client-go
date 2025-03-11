@@ -49,6 +49,7 @@ func newEgressNetworkPolicies(c *NetworkV1Client, namespace string) *egressNetwo
 			namespace,
 			func() *networkv1.EgressNetworkPolicy { return &networkv1.EgressNetworkPolicy{} },
 			func() *networkv1.EgressNetworkPolicyList { return &networkv1.EgressNetworkPolicyList{} },
+			gentype.PrefersProtobuf[*networkv1.EgressNetworkPolicy](),
 		),
 	}
 }

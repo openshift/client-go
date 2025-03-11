@@ -49,6 +49,7 @@ func newConsoleSamples(c *ConsoleV1Client) *consoleSamples {
 			"",
 			func() *consolev1.ConsoleSample { return &consolev1.ConsoleSample{} },
 			func() *consolev1.ConsoleSampleList { return &consolev1.ConsoleSampleList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleSample](),
 		),
 	}
 }

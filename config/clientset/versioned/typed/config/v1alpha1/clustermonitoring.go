@@ -53,6 +53,7 @@ func newClusterMonitorings(c *ConfigV1alpha1Client) *clusterMonitorings {
 			"",
 			func() *configv1alpha1.ClusterMonitoring { return &configv1alpha1.ClusterMonitoring{} },
 			func() *configv1alpha1.ClusterMonitoringList { return &configv1alpha1.ClusterMonitoringList{} },
+			gentype.PrefersProtobuf[*configv1alpha1.ClusterMonitoring](),
 		),
 	}
 }

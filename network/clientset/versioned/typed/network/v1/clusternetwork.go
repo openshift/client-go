@@ -49,6 +49,7 @@ func newClusterNetworks(c *NetworkV1Client) *clusterNetworks {
 			"",
 			func() *networkv1.ClusterNetwork { return &networkv1.ClusterNetwork{} },
 			func() *networkv1.ClusterNetworkList { return &networkv1.ClusterNetworkList{} },
+			gentype.PrefersProtobuf[*networkv1.ClusterNetwork](),
 		),
 	}
 }

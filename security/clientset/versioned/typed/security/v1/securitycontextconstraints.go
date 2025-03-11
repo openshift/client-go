@@ -49,6 +49,7 @@ func newSecurityContextConstraints(c *SecurityV1Client) *securityContextConstrai
 			"",
 			func() *securityv1.SecurityContextConstraints { return &securityv1.SecurityContextConstraints{} },
 			func() *securityv1.SecurityContextConstraintsList { return &securityv1.SecurityContextConstraintsList{} },
+			gentype.PrefersProtobuf[*securityv1.SecurityContextConstraints](),
 		),
 	}
 }

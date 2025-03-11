@@ -49,6 +49,7 @@ func newHostSubnets(c *NetworkV1Client) *hostSubnets {
 			"",
 			func() *networkv1.HostSubnet { return &networkv1.HostSubnet{} },
 			func() *networkv1.HostSubnetList { return &networkv1.HostSubnetList{} },
+			gentype.PrefersProtobuf[*networkv1.HostSubnet](),
 		),
 	}
 }

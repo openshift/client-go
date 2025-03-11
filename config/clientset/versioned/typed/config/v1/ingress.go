@@ -53,6 +53,7 @@ func newIngresses(c *ConfigV1Client) *ingresses {
 			"",
 			func() *configv1.Ingress { return &configv1.Ingress{} },
 			func() *configv1.IngressList { return &configv1.IngressList{} },
+			gentype.PrefersProtobuf[*configv1.Ingress](),
 		),
 	}
 }

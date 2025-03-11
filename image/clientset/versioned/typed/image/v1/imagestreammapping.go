@@ -40,6 +40,7 @@ func newImageStreamMappings(c *ImageV1Client, namespace string) *imageStreamMapp
 			scheme.ParameterCodec,
 			namespace,
 			func() *apiimagev1.ImageStreamMapping { return &apiimagev1.ImageStreamMapping{} },
+			gentype.PrefersProtobuf[*apiimagev1.ImageStreamMapping](),
 		),
 	}
 }
@@ -48,6 +49,7 @@ func newImageStreamMappings(c *ImageV1Client, namespace string) *imageStreamMapp
 func (c *imageStreamMappings) Create(ctx context.Context, imageStreamMapping *apiimagev1.ImageStreamMapping, opts metav1.CreateOptions) (result *metav1.Status, err error) {
 	result = &metav1.Status{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("imagestreammappings").
 		VersionedParams(&opts, scheme.ParameterCodec).

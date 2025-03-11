@@ -53,6 +53,7 @@ func newMachineSets(c *MachineV1beta1Client, namespace string) *machineSets {
 			namespace,
 			func() *machinev1beta1.MachineSet { return &machinev1beta1.MachineSet{} },
 			func() *machinev1beta1.MachineSetList { return &machinev1beta1.MachineSetList{} },
+			gentype.PrefersProtobuf[*machinev1beta1.MachineSet](),
 		),
 	}
 }

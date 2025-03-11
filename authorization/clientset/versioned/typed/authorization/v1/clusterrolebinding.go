@@ -49,6 +49,7 @@ func newClusterRoleBindings(c *AuthorizationV1Client) *clusterRoleBindings {
 			"",
 			func() *authorizationv1.ClusterRoleBinding { return &authorizationv1.ClusterRoleBinding{} },
 			func() *authorizationv1.ClusterRoleBindingList { return &authorizationv1.ClusterRoleBindingList{} },
+			gentype.PrefersProtobuf[*authorizationv1.ClusterRoleBinding](),
 		),
 	}
 }

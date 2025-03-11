@@ -49,6 +49,7 @@ func newConsolePlugins(c *ConsoleV1Client) *consolePlugins {
 			"",
 			func() *consolev1.ConsolePlugin { return &consolev1.ConsolePlugin{} },
 			func() *consolev1.ConsolePluginList { return &consolev1.ConsolePluginList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsolePlugin](),
 		),
 	}
 }

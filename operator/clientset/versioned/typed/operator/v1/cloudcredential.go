@@ -53,6 +53,7 @@ func newCloudCredentials(c *OperatorV1Client) *cloudCredentials {
 			"",
 			func() *operatorv1.CloudCredential { return &operatorv1.CloudCredential{} },
 			func() *operatorv1.CloudCredentialList { return &operatorv1.CloudCredentialList{} },
+			gentype.PrefersProtobuf[*operatorv1.CloudCredential](),
 		),
 	}
 }

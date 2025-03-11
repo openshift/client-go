@@ -53,6 +53,7 @@ func newMachineHealthChecks(c *MachineV1beta1Client, namespace string) *machineH
 			namespace,
 			func() *machinev1beta1.MachineHealthCheck { return &machinev1beta1.MachineHealthCheck{} },
 			func() *machinev1beta1.MachineHealthCheckList { return &machinev1beta1.MachineHealthCheckList{} },
+			gentype.PrefersProtobuf[*machinev1beta1.MachineHealthCheck](),
 		),
 	}
 }

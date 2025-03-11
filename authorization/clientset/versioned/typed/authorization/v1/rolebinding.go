@@ -49,6 +49,7 @@ func newRoleBindings(c *AuthorizationV1Client, namespace string) *roleBindings {
 			namespace,
 			func() *authorizationv1.RoleBinding { return &authorizationv1.RoleBinding{} },
 			func() *authorizationv1.RoleBindingList { return &authorizationv1.RoleBindingList{} },
+			gentype.PrefersProtobuf[*authorizationv1.RoleBinding](),
 		),
 	}
 }

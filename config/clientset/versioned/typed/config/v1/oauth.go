@@ -53,6 +53,7 @@ func newOAuths(c *ConfigV1Client) *oAuths {
 			"",
 			func() *configv1.OAuth { return &configv1.OAuth{} },
 			func() *configv1.OAuthList { return &configv1.OAuthList{} },
+			gentype.PrefersProtobuf[*configv1.OAuth](),
 		),
 	}
 }

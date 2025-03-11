@@ -49,6 +49,7 @@ func newConsoleExternalLogLinks(c *ConsoleV1Client) *consoleExternalLogLinks {
 			"",
 			func() *consolev1.ConsoleExternalLogLink { return &consolev1.ConsoleExternalLogLink{} },
 			func() *consolev1.ConsoleExternalLogLinkList { return &consolev1.ConsoleExternalLogLinkList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleExternalLogLink](),
 		),
 	}
 }

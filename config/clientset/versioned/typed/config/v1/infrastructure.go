@@ -53,6 +53,7 @@ func newInfrastructures(c *ConfigV1Client) *infrastructures {
 			"",
 			func() *configv1.Infrastructure { return &configv1.Infrastructure{} },
 			func() *configv1.InfrastructureList { return &configv1.InfrastructureList{} },
+			gentype.PrefersProtobuf[*configv1.Infrastructure](),
 		),
 	}
 }

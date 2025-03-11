@@ -49,6 +49,7 @@ func newConsoleQuickStarts(c *ConsoleV1Client) *consoleQuickStarts {
 			"",
 			func() *consolev1.ConsoleQuickStart { return &consolev1.ConsoleQuickStart{} },
 			func() *consolev1.ConsoleQuickStartList { return &consolev1.ConsoleQuickStartList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleQuickStart](),
 		),
 	}
 }

@@ -42,6 +42,7 @@ func newImageStreamTags(c *ImageV1Client, namespace string) *imageStreamTags {
 			namespace,
 			func() *imagev1.ImageStreamTag { return &imagev1.ImageStreamTag{} },
 			func() *imagev1.ImageStreamTagList { return &imagev1.ImageStreamTagList{} },
+			gentype.PrefersProtobuf[*imagev1.ImageStreamTag](),
 		),
 	}
 }

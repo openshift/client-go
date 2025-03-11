@@ -49,6 +49,7 @@ func newConsoleYAMLSamples(c *ConsoleV1Client) *consoleYAMLSamples {
 			"",
 			func() *consolev1.ConsoleYAMLSample { return &consolev1.ConsoleYAMLSample{} },
 			func() *consolev1.ConsoleYAMLSampleList { return &consolev1.ConsoleYAMLSampleList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleYAMLSample](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newEtcds(c *OperatorV1Client) *etcds {
 			"",
 			func() *operatorv1.Etcd { return &operatorv1.Etcd{} },
 			func() *operatorv1.EtcdList { return &operatorv1.EtcdList{} },
+			gentype.PrefersProtobuf[*operatorv1.Etcd](),
 		),
 	}
 }

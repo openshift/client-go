@@ -53,6 +53,7 @@ func newClusterImagePolicies(c *ConfigV1alpha1Client) *clusterImagePolicies {
 			"",
 			func() *configv1alpha1.ClusterImagePolicy { return &configv1alpha1.ClusterImagePolicy{} },
 			func() *configv1alpha1.ClusterImagePolicyList { return &configv1alpha1.ClusterImagePolicyList{} },
+			gentype.PrefersProtobuf[*configv1alpha1.ClusterImagePolicy](),
 		),
 	}
 }

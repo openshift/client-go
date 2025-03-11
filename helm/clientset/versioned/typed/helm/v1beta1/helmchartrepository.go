@@ -53,6 +53,7 @@ func newHelmChartRepositories(c *HelmV1beta1Client) *helmChartRepositories {
 			"",
 			func() *helmv1beta1.HelmChartRepository { return &helmv1beta1.HelmChartRepository{} },
 			func() *helmv1beta1.HelmChartRepositoryList { return &helmv1beta1.HelmChartRepositoryList{} },
+			gentype.PrefersProtobuf[*helmv1beta1.HelmChartRepository](),
 		),
 	}
 }

@@ -49,6 +49,7 @@ func newOAuthClientAuthorizations(c *OauthV1Client) *oAuthClientAuthorizations {
 			"",
 			func() *oauthv1.OAuthClientAuthorization { return &oauthv1.OAuthClientAuthorization{} },
 			func() *oauthv1.OAuthClientAuthorizationList { return &oauthv1.OAuthClientAuthorizationList{} },
+			gentype.PrefersProtobuf[*oauthv1.OAuthClientAuthorization](),
 		),
 	}
 }
