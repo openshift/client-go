@@ -11,6 +11,7 @@ import (
 type DataGatherSpecApplyConfiguration struct {
 	DataPolicy *insightsv1alpha1.DataPolicy       `json:"dataPolicy,omitempty"`
 	Gatherers  []GathererConfigApplyConfiguration `json:"gatherers,omitempty"`
+	Storage    *StorageApplyConfiguration         `json:"storage,omitempty"`
 }
 
 // DataGatherSpecApplyConfiguration constructs a declarative configuration of the DataGatherSpec type for use with
@@ -37,5 +38,13 @@ func (b *DataGatherSpecApplyConfiguration) WithGatherers(values ...*GathererConf
 		}
 		b.Gatherers = append(b.Gatherers, *values[i])
 	}
+	return b
+}
+
+// WithStorage sets the Storage field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the Storage field is set to the value of the last call.
+func (b *DataGatherSpecApplyConfiguration) WithStorage(value *StorageApplyConfiguration) *DataGatherSpecApplyConfiguration {
+	b.Storage = value
 	return b
 }
