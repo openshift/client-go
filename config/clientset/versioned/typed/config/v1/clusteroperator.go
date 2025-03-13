@@ -53,6 +53,7 @@ func newClusterOperators(c *ConfigV1Client) *clusterOperators {
 			"",
 			func() *configv1.ClusterOperator { return &configv1.ClusterOperator{} },
 			func() *configv1.ClusterOperatorList { return &configv1.ClusterOperatorList{} },
+			gentype.PrefersProtobuf[*configv1.ClusterOperator](),
 		),
 	}
 }

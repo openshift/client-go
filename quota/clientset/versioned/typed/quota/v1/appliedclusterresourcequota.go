@@ -39,6 +39,7 @@ func newAppliedClusterResourceQuotas(c *QuotaV1Client, namespace string) *applie
 			namespace,
 			func() *quotav1.AppliedClusterResourceQuota { return &quotav1.AppliedClusterResourceQuota{} },
 			func() *quotav1.AppliedClusterResourceQuotaList { return &quotav1.AppliedClusterResourceQuotaList{} },
+			gentype.PrefersProtobuf[*quotav1.AppliedClusterResourceQuota](),
 		),
 	}
 }

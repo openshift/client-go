@@ -55,6 +55,7 @@ func newProjectHelmChartRepositories(c *HelmV1beta1Client, namespace string) *pr
 			func() *helmv1beta1.ProjectHelmChartRepositoryList {
 				return &helmv1beta1.ProjectHelmChartRepositoryList{}
 			},
+			gentype.PrefersProtobuf[*helmv1beta1.ProjectHelmChartRepository](),
 		),
 	}
 }

@@ -49,6 +49,7 @@ func newUsers(c *UserV1Client) *users {
 			"",
 			func() *userv1.User { return &userv1.User{} },
 			func() *userv1.UserList { return &userv1.UserList{} },
+			gentype.PrefersProtobuf[*userv1.User](),
 		),
 	}
 }

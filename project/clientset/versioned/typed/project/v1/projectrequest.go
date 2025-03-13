@@ -40,6 +40,7 @@ func newProjectRequests(c *ProjectV1Client) *projectRequests {
 			scheme.ParameterCodec,
 			"",
 			func() *apiprojectv1.ProjectRequest { return &apiprojectv1.ProjectRequest{} },
+			gentype.PrefersProtobuf[*apiprojectv1.ProjectRequest](),
 		),
 	}
 }
@@ -48,6 +49,7 @@ func newProjectRequests(c *ProjectV1Client) *projectRequests {
 func (c *projectRequests) Create(ctx context.Context, projectRequest *apiprojectv1.ProjectRequest, opts metav1.CreateOptions) (result *apiprojectv1.Project, err error) {
 	result = &apiprojectv1.Project{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Resource("projectrequests").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(projectRequest).

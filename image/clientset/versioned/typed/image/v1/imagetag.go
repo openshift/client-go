@@ -42,6 +42,7 @@ func newImageTags(c *ImageV1Client, namespace string) *imageTags {
 			namespace,
 			func() *imagev1.ImageTag { return &imagev1.ImageTag{} },
 			func() *imagev1.ImageTagList { return &imagev1.ImageTagList{} },
+			gentype.PrefersProtobuf[*imagev1.ImageTag](),
 		),
 	}
 }

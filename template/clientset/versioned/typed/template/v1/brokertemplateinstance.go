@@ -49,6 +49,7 @@ func newBrokerTemplateInstances(c *TemplateV1Client) *brokerTemplateInstances {
 			"",
 			func() *templatev1.BrokerTemplateInstance { return &templatev1.BrokerTemplateInstance{} },
 			func() *templatev1.BrokerTemplateInstanceList { return &templatev1.BrokerTemplateInstanceList{} },
+			gentype.PrefersProtobuf[*templatev1.BrokerTemplateInstance](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newClusterResourceQuotas(c *QuotaV1Client) *clusterResourceQuotas {
 			"",
 			func() *quotav1.ClusterResourceQuota { return &quotav1.ClusterResourceQuota{} },
 			func() *quotav1.ClusterResourceQuotaList { return &quotav1.ClusterResourceQuotaList{} },
+			gentype.PrefersProtobuf[*quotav1.ClusterResourceQuota](),
 		),
 	}
 }

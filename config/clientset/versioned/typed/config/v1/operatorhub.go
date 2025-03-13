@@ -53,6 +53,7 @@ func newOperatorHubs(c *ConfigV1Client) *operatorHubs {
 			"",
 			func() *configv1.OperatorHub { return &configv1.OperatorHub{} },
 			func() *configv1.OperatorHubList { return &configv1.OperatorHubList{} },
+			gentype.PrefersProtobuf[*configv1.OperatorHub](),
 		),
 	}
 }

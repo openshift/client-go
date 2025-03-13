@@ -53,6 +53,7 @@ func newAlertRelabelConfigs(c *MonitoringV1Client, namespace string) *alertRelab
 			namespace,
 			func() *monitoringv1.AlertRelabelConfig { return &monitoringv1.AlertRelabelConfig{} },
 			func() *monitoringv1.AlertRelabelConfigList { return &monitoringv1.AlertRelabelConfigList{} },
+			gentype.PrefersProtobuf[*monitoringv1.AlertRelabelConfig](),
 		),
 	}
 }

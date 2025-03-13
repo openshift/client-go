@@ -40,6 +40,7 @@ func newUserIdentityMappings(c *UserV1Client) *userIdentityMappings {
 			scheme.ParameterCodec,
 			"",
 			func() *userv1.UserIdentityMapping { return &userv1.UserIdentityMapping{} },
+			gentype.PrefersProtobuf[*userv1.UserIdentityMapping](),
 		),
 	}
 }

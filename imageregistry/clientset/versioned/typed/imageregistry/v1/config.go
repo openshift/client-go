@@ -53,6 +53,7 @@ func newConfigs(c *ImageregistryV1Client) *configs {
 			"",
 			func() *imageregistryv1.Config { return &imageregistryv1.Config{} },
 			func() *imageregistryv1.ConfigList { return &imageregistryv1.ConfigList{} },
+			gentype.PrefersProtobuf[*imageregistryv1.Config](),
 		),
 	}
 }

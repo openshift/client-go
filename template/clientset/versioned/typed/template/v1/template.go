@@ -49,6 +49,7 @@ func newTemplates(c *TemplateV1Client, namespace string) *templates {
 			namespace,
 			func() *templatev1.Template { return &templatev1.Template{} },
 			func() *templatev1.TemplateList { return &templatev1.TemplateList{} },
+			gentype.PrefersProtobuf[*templatev1.Template](),
 		),
 	}
 }

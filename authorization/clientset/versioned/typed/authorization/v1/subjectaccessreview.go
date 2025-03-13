@@ -38,6 +38,7 @@ func newSubjectAccessReviews(c *AuthorizationV1Client) *subjectAccessReviews {
 			scheme.ParameterCodec,
 			"",
 			func() *authorizationv1.SubjectAccessReview { return &authorizationv1.SubjectAccessReview{} },
+			gentype.PrefersProtobuf[*authorizationv1.SubjectAccessReview](),
 		),
 	}
 }
@@ -46,6 +47,7 @@ func newSubjectAccessReviews(c *AuthorizationV1Client) *subjectAccessReviews {
 func (c *subjectAccessReviews) Create(ctx context.Context, subjectAccessReview *authorizationv1.SubjectAccessReview, opts metav1.CreateOptions) (result *authorizationv1.SubjectAccessReviewResponse, err error) {
 	result = &authorizationv1.SubjectAccessReviewResponse{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Resource("subjectaccessreviews").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(subjectAccessReview).

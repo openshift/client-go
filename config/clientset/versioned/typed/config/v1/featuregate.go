@@ -53,6 +53,7 @@ func newFeatureGates(c *ConfigV1Client) *featureGates {
 			"",
 			func() *configv1.FeatureGate { return &configv1.FeatureGate{} },
 			func() *configv1.FeatureGateList { return &configv1.FeatureGateList{} },
+			gentype.PrefersProtobuf[*configv1.FeatureGate](),
 		),
 	}
 }

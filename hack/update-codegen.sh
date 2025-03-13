@@ -22,6 +22,7 @@ for group in apiserver apps authorization build cloudnetwork config console helm
       --output-dir "${SCRIPT_ROOT}/${group}" \
       --plural-exceptions "DNS:DNSes,DNSList:DNSList,SecurityContextConstraints:SecurityContextConstraints" \
       --boilerplate "${SCRIPT_ROOT}/hack/boilerplate.txt" \
+      --prefers-protobuf \
       "${SCRIPT_ROOT}/vendor/github.com/openshift/api"
 done
 

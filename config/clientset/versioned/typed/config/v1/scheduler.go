@@ -53,6 +53,7 @@ func newSchedulers(c *ConfigV1Client) *schedulers {
 			"",
 			func() *configv1.Scheduler { return &configv1.Scheduler{} },
 			func() *configv1.SchedulerList { return &configv1.SchedulerList{} },
+			gentype.PrefersProtobuf[*configv1.Scheduler](),
 		),
 	}
 }

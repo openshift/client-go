@@ -53,6 +53,7 @@ func newImageTagMirrorSets(c *ConfigV1Client) *imageTagMirrorSets {
 			"",
 			func() *configv1.ImageTagMirrorSet { return &configv1.ImageTagMirrorSet{} },
 			func() *configv1.ImageTagMirrorSetList { return &configv1.ImageTagMirrorSetList{} },
+			gentype.PrefersProtobuf[*configv1.ImageTagMirrorSet](),
 		),
 	}
 }

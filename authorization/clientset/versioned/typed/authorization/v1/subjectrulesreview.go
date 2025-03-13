@@ -37,6 +37,7 @@ func newSubjectRulesReviews(c *AuthorizationV1Client, namespace string) *subject
 			scheme.ParameterCodec,
 			namespace,
 			func() *authorizationv1.SubjectRulesReview { return &authorizationv1.SubjectRulesReview{} },
+			gentype.PrefersProtobuf[*authorizationv1.SubjectRulesReview](),
 		),
 	}
 }

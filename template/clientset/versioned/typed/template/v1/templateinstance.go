@@ -53,6 +53,7 @@ func newTemplateInstances(c *TemplateV1Client, namespace string) *templateInstan
 			namespace,
 			func() *templatev1.TemplateInstance { return &templatev1.TemplateInstance{} },
 			func() *templatev1.TemplateInstanceList { return &templatev1.TemplateInstanceList{} },
+			gentype.PrefersProtobuf[*templatev1.TemplateInstance](),
 		),
 	}
 }

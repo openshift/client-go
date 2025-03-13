@@ -37,6 +37,7 @@ func newImageStreamImages(c *ImageV1Client, namespace string) *imageStreamImages
 			scheme.ParameterCodec,
 			namespace,
 			func() *imagev1.ImageStreamImage { return &imagev1.ImageStreamImage{} },
+			gentype.PrefersProtobuf[*imagev1.ImageStreamImage](),
 		),
 	}
 }

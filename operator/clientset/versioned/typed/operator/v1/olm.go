@@ -53,6 +53,7 @@ func newOLMs(c *OperatorV1Client) *oLMs {
 			"",
 			func() *operatorv1.OLM { return &operatorv1.OLM{} },
 			func() *operatorv1.OLMList { return &operatorv1.OLMList{} },
+			gentype.PrefersProtobuf[*operatorv1.OLM](),
 		),
 	}
 }

@@ -38,6 +38,7 @@ func newImageSignatures(c *ImageV1Client) *imageSignatures {
 			scheme.ParameterCodec,
 			"",
 			func() *imagev1.ImageSignature { return &imagev1.ImageSignature{} },
+			gentype.PrefersProtobuf[*imagev1.ImageSignature](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newInsightsOperators(c *OperatorV1Client) *insightsOperators {
 			"",
 			func() *operatorv1.InsightsOperator { return &operatorv1.InsightsOperator{} },
 			func() *operatorv1.InsightsOperatorList { return &operatorv1.InsightsOperatorList{} },
+			gentype.PrefersProtobuf[*operatorv1.InsightsOperator](),
 		),
 	}
 }

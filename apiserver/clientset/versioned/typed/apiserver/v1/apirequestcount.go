@@ -53,6 +53,7 @@ func newAPIRequestCounts(c *ApiserverV1Client) *aPIRequestCounts {
 			"",
 			func() *apiserverv1.APIRequestCount { return &apiserverv1.APIRequestCount{} },
 			func() *apiserverv1.APIRequestCountList { return &apiserverv1.APIRequestCountList{} },
+			gentype.PrefersProtobuf[*apiserverv1.APIRequestCount](),
 		),
 	}
 }

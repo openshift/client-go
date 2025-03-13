@@ -49,6 +49,7 @@ func newConsoleNotifications(c *ConsoleV1Client) *consoleNotifications {
 			"",
 			func() *consolev1.ConsoleNotification { return &consolev1.ConsoleNotification{} },
 			func() *consolev1.ConsoleNotificationList { return &consolev1.ConsoleNotificationList{} },
+			gentype.PrefersProtobuf[*consolev1.ConsoleNotification](),
 		),
 	}
 }

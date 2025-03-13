@@ -38,6 +38,7 @@ func newResourceAccessReviews(c *AuthorizationV1Client) *resourceAccessReviews {
 			scheme.ParameterCodec,
 			"",
 			func() *authorizationv1.ResourceAccessReview { return &authorizationv1.ResourceAccessReview{} },
+			gentype.PrefersProtobuf[*authorizationv1.ResourceAccessReview](),
 		),
 	}
 }
@@ -46,6 +47,7 @@ func newResourceAccessReviews(c *AuthorizationV1Client) *resourceAccessReviews {
 func (c *resourceAccessReviews) Create(ctx context.Context, resourceAccessReview *authorizationv1.ResourceAccessReview, opts metav1.CreateOptions) (result *authorizationv1.ResourceAccessReviewResponse, err error) {
 	result = &authorizationv1.ResourceAccessReviewResponse{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Resource("resourceaccessreviews").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(resourceAccessReview).

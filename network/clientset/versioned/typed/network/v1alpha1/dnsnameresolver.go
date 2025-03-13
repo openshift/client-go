@@ -53,6 +53,7 @@ func newDNSNameResolvers(c *NetworkV1alpha1Client, namespace string) *dNSNameRes
 			namespace,
 			func() *networkv1alpha1.DNSNameResolver { return &networkv1alpha1.DNSNameResolver{} },
 			func() *networkv1alpha1.DNSNameResolverList { return &networkv1alpha1.DNSNameResolverList{} },
+			gentype.PrefersProtobuf[*networkv1alpha1.DNSNameResolver](),
 		),
 	}
 }

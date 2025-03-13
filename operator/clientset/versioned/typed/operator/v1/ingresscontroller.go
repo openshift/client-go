@@ -53,6 +53,7 @@ func newIngressControllers(c *OperatorV1Client, namespace string) *ingressContro
 			namespace,
 			func() *operatorv1.IngressController { return &operatorv1.IngressController{} },
 			func() *operatorv1.IngressControllerList { return &operatorv1.IngressControllerList{} },
+			gentype.PrefersProtobuf[*operatorv1.IngressController](),
 		),
 	}
 }

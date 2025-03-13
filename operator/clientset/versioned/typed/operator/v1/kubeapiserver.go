@@ -53,6 +53,7 @@ func newKubeAPIServers(c *OperatorV1Client) *kubeAPIServers {
 			"",
 			func() *operatorv1.KubeAPIServer { return &operatorv1.KubeAPIServer{} },
 			func() *operatorv1.KubeAPIServerList { return &operatorv1.KubeAPIServerList{} },
+			gentype.PrefersProtobuf[*operatorv1.KubeAPIServer](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newKubeControllerManagers(c *OperatorV1Client) *kubeControllerManagers {
 			"",
 			func() *operatorv1.KubeControllerManager { return &operatorv1.KubeControllerManager{} },
 			func() *operatorv1.KubeControllerManagerList { return &operatorv1.KubeControllerManagerList{} },
+			gentype.PrefersProtobuf[*operatorv1.KubeControllerManager](),
 		),
 	}
 }

@@ -53,6 +53,7 @@ func newImageDigestMirrorSets(c *ConfigV1Client) *imageDigestMirrorSets {
 			"",
 			func() *configv1.ImageDigestMirrorSet { return &configv1.ImageDigestMirrorSet{} },
 			func() *configv1.ImageDigestMirrorSetList { return &configv1.ImageDigestMirrorSetList{} },
+			gentype.PrefersProtobuf[*configv1.ImageDigestMirrorSet](),
 		),
 	}
 }

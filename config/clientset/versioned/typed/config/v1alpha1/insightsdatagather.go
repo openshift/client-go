@@ -53,6 +53,7 @@ func newInsightsDataGathers(c *ConfigV1alpha1Client) *insightsDataGathers {
 			"",
 			func() *configv1alpha1.InsightsDataGather { return &configv1alpha1.InsightsDataGather{} },
 			func() *configv1alpha1.InsightsDataGatherList { return &configv1alpha1.InsightsDataGatherList{} },
+			gentype.PrefersProtobuf[*configv1alpha1.InsightsDataGather](),
 		),
 	}
 }

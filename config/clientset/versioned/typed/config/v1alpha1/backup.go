@@ -53,6 +53,7 @@ func newBackups(c *ConfigV1alpha1Client) *backups {
 			"",
 			func() *configv1alpha1.Backup { return &configv1alpha1.Backup{} },
 			func() *configv1alpha1.BackupList { return &configv1alpha1.BackupList{} },
+			gentype.PrefersProtobuf[*configv1alpha1.Backup](),
 		),
 	}
 }

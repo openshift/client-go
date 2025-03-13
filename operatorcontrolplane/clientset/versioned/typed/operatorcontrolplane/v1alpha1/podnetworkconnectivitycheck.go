@@ -57,6 +57,7 @@ func newPodNetworkConnectivityChecks(c *ControlplaneV1alpha1Client, namespace st
 			func() *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList {
 				return &operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckList{}
 			},
+			gentype.PrefersProtobuf[*operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck](),
 		),
 	}
 }

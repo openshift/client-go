@@ -49,6 +49,7 @@ func newUserOAuthAccessTokens(c *OauthV1Client) *userOAuthAccessTokens {
 			"",
 			func() *oauthv1.UserOAuthAccessToken { return &oauthv1.UserOAuthAccessToken{} },
 			func() *oauthv1.UserOAuthAccessTokenList { return &oauthv1.UserOAuthAccessTokenList{} },
+			gentype.PrefersProtobuf[*oauthv1.UserOAuthAccessToken](),
 		),
 	}
 }

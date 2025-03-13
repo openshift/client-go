@@ -53,6 +53,7 @@ func newConfigs(c *OperatorV1Client) *configs {
 			"",
 			func() *operatorv1.Config { return &operatorv1.Config{} },
 			func() *operatorv1.ConfigList { return &operatorv1.ConfigList{} },
+			gentype.PrefersProtobuf[*operatorv1.Config](),
 		),
 	}
 }

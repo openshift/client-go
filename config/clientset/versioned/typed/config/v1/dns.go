@@ -53,6 +53,7 @@ func newDNSes(c *ConfigV1Client) *dNSes {
 			"",
 			func() *configv1.DNS { return &configv1.DNS{} },
 			func() *configv1.DNSList { return &configv1.DNSList{} },
+			gentype.PrefersProtobuf[*configv1.DNS](),
 		),
 	}
 }

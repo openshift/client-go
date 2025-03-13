@@ -53,6 +53,7 @@ func newCloudPrivateIPConfigs(c *CloudV1Client) *cloudPrivateIPConfigs {
 			"",
 			func() *cloudnetworkv1.CloudPrivateIPConfig { return &cloudnetworkv1.CloudPrivateIPConfig{} },
 			func() *cloudnetworkv1.CloudPrivateIPConfigList { return &cloudnetworkv1.CloudPrivateIPConfigList{} },
+			gentype.PrefersProtobuf[*cloudnetworkv1.CloudPrivateIPConfig](),
 		),
 	}
 }

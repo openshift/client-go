@@ -57,6 +57,7 @@ func newServiceCertSignerOperatorConfigs(c *ServicecertsignerV1alpha1Client) *se
 			func() *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList {
 				return &servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigList{}
 			},
+			gentype.PrefersProtobuf[*servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig](),
 		),
 	}
 }

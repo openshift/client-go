@@ -53,6 +53,7 @@ func newImagePruners(c *ImageregistryV1Client) *imagePruners {
 			"",
 			func() *imageregistryv1.ImagePruner { return &imageregistryv1.ImagePruner{} },
 			func() *imageregistryv1.ImagePrunerList { return &imageregistryv1.ImagePrunerList{} },
+			gentype.PrefersProtobuf[*imageregistryv1.ImagePruner](),
 		),
 	}
 }

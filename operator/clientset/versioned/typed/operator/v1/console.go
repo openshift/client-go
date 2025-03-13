@@ -53,6 +53,7 @@ func newConsoles(c *OperatorV1Client) *consoles {
 			"",
 			func() *operatorv1.Console { return &operatorv1.Console{} },
 			func() *operatorv1.ConsoleList { return &operatorv1.ConsoleList{} },
+			gentype.PrefersProtobuf[*operatorv1.Console](),
 		),
 	}
 }

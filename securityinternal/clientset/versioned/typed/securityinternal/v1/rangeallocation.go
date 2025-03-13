@@ -49,6 +49,7 @@ func newRangeAllocations(c *SecurityV1Client) *rangeAllocations {
 			"",
 			func() *securityinternalv1.RangeAllocation { return &securityinternalv1.RangeAllocation{} },
 			func() *securityinternalv1.RangeAllocationList { return &securityinternalv1.RangeAllocationList{} },
+			gentype.PrefersProtobuf[*securityinternalv1.RangeAllocation](),
 		),
 	}
 }

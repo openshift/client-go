@@ -59,6 +59,7 @@ func newDeploymentConfigs(c *AppsV1Client, namespace string) *deploymentConfigs 
 			namespace,
 			func() *appsv1.DeploymentConfig { return &appsv1.DeploymentConfig{} },
 			func() *appsv1.DeploymentConfigList { return &appsv1.DeploymentConfigList{} },
+			gentype.PrefersProtobuf[*appsv1.DeploymentConfig](),
 		),
 	}
 }
@@ -67,6 +68,7 @@ func newDeploymentConfigs(c *AppsV1Client, namespace string) *deploymentConfigs 
 func (c *deploymentConfigs) Instantiate(ctx context.Context, deploymentConfigName string, deploymentRequest *appsv1.DeploymentRequest, opts metav1.CreateOptions) (result *appsv1.DeploymentConfig, err error) {
 	result = &appsv1.DeploymentConfig{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("deploymentconfigs").
 		Name(deploymentConfigName).
@@ -82,6 +84,7 @@ func (c *deploymentConfigs) Instantiate(ctx context.Context, deploymentConfigNam
 func (c *deploymentConfigs) Rollback(ctx context.Context, deploymentConfigName string, deploymentConfigRollback *appsv1.DeploymentConfigRollback, opts metav1.CreateOptions) (result *appsv1.DeploymentConfig, err error) {
 	result = &appsv1.DeploymentConfig{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("deploymentconfigs").
 		Name(deploymentConfigName).
@@ -97,6 +100,7 @@ func (c *deploymentConfigs) Rollback(ctx context.Context, deploymentConfigName s
 func (c *deploymentConfigs) GetScale(ctx context.Context, deploymentConfigName string, options metav1.GetOptions) (result *v1beta1.Scale, err error) {
 	result = &v1beta1.Scale{}
 	err = c.GetClient().Get().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("deploymentconfigs").
 		Name(deploymentConfigName).
@@ -111,6 +115,7 @@ func (c *deploymentConfigs) GetScale(ctx context.Context, deploymentConfigName s
 func (c *deploymentConfigs) UpdateScale(ctx context.Context, deploymentConfigName string, scale *v1beta1.Scale, opts metav1.UpdateOptions) (result *v1beta1.Scale, err error) {
 	result = &v1beta1.Scale{}
 	err = c.GetClient().Put().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("deploymentconfigs").
 		Name(deploymentConfigName).

@@ -53,6 +53,7 @@ func newServiceCatalogAPIServers(c *OperatorV1Client) *serviceCatalogAPIServers 
 			"",
 			func() *operatorv1.ServiceCatalogAPIServer { return &operatorv1.ServiceCatalogAPIServer{} },
 			func() *operatorv1.ServiceCatalogAPIServerList { return &operatorv1.ServiceCatalogAPIServerList{} },
+			gentype.PrefersProtobuf[*operatorv1.ServiceCatalogAPIServer](),
 		),
 	}
 }

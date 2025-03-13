@@ -37,6 +37,7 @@ func newPodSecurityPolicyReviews(c *SecurityV1Client, namespace string) *podSecu
 			scheme.ParameterCodec,
 			namespace,
 			func() *securityv1.PodSecurityPolicyReview { return &securityv1.PodSecurityPolicyReview{} },
+			gentype.PrefersProtobuf[*securityv1.PodSecurityPolicyReview](),
 		),
 	}
 }

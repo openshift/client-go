@@ -53,6 +53,7 @@ func newSharedSecrets(c *SharedresourceV1alpha1Client) *sharedSecrets {
 			"",
 			func() *sharedresourcev1alpha1.SharedSecret { return &sharedresourcev1alpha1.SharedSecret{} },
 			func() *sharedresourcev1alpha1.SharedSecretList { return &sharedresourcev1alpha1.SharedSecretList{} },
+			gentype.PrefersProtobuf[*sharedresourcev1alpha1.SharedSecret](),
 		),
 	}
 }

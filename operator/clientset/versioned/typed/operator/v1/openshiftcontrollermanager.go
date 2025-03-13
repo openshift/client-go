@@ -53,6 +53,7 @@ func newOpenShiftControllerManagers(c *OperatorV1Client) *openShiftControllerMan
 			"",
 			func() *operatorv1.OpenShiftControllerManager { return &operatorv1.OpenShiftControllerManager{} },
 			func() *operatorv1.OpenShiftControllerManagerList { return &operatorv1.OpenShiftControllerManagerList{} },
+			gentype.PrefersProtobuf[*operatorv1.OpenShiftControllerManager](),
 		),
 	}
 }

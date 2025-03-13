@@ -53,6 +53,7 @@ func newRoutes(c *RouteV1Client, namespace string) *routes {
 			namespace,
 			func() *routev1.Route { return &routev1.Route{} },
 			func() *routev1.RouteList { return &routev1.RouteList{} },
+			gentype.PrefersProtobuf[*routev1.Route](),
 		),
 	}
 }

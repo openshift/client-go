@@ -53,6 +53,7 @@ func newStorages(c *OperatorV1Client) *storages {
 			"",
 			func() *operatorv1.Storage { return &operatorv1.Storage{} },
 			func() *operatorv1.StorageList { return &operatorv1.StorageList{} },
+			gentype.PrefersProtobuf[*operatorv1.Storage](),
 		),
 	}
 }

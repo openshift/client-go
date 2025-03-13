@@ -56,6 +56,7 @@ func newImageStreams(c *ImageV1Client, namespace string) *imageStreams {
 			namespace,
 			func() *imagev1.ImageStream { return &imagev1.ImageStream{} },
 			func() *imagev1.ImageStreamList { return &imagev1.ImageStreamList{} },
+			gentype.PrefersProtobuf[*imagev1.ImageStream](),
 		),
 	}
 }
@@ -64,6 +65,7 @@ func newImageStreams(c *ImageV1Client, namespace string) *imageStreams {
 func (c *imageStreams) Secrets(ctx context.Context, imageStreamName string, options metav1.GetOptions) (result *imagev1.SecretList, err error) {
 	result = &imagev1.SecretList{}
 	err = c.GetClient().Get().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("imagestreams").
 		Name(imageStreamName).
@@ -78,6 +80,7 @@ func (c *imageStreams) Secrets(ctx context.Context, imageStreamName string, opti
 func (c *imageStreams) Layers(ctx context.Context, imageStreamName string, options metav1.GetOptions) (result *imagev1.ImageStreamLayers, err error) {
 	result = &imagev1.ImageStreamLayers{}
 	err = c.GetClient().Get().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("imagestreams").
 		Name(imageStreamName).

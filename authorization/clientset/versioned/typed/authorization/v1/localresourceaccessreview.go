@@ -38,6 +38,7 @@ func newLocalResourceAccessReviews(c *AuthorizationV1Client, namespace string) *
 			scheme.ParameterCodec,
 			namespace,
 			func() *authorizationv1.LocalResourceAccessReview { return &authorizationv1.LocalResourceAccessReview{} },
+			gentype.PrefersProtobuf[*authorizationv1.LocalResourceAccessReview](),
 		),
 	}
 }
@@ -46,6 +47,7 @@ func newLocalResourceAccessReviews(c *AuthorizationV1Client, namespace string) *
 func (c *localResourceAccessReviews) Create(ctx context.Context, localResourceAccessReview *authorizationv1.LocalResourceAccessReview, opts metav1.CreateOptions) (result *authorizationv1.ResourceAccessReviewResponse, err error) {
 	result = &authorizationv1.ResourceAccessReviewResponse{}
 	err = c.GetClient().Post().
+		UseProtobufAsDefault().
 		Namespace(c.GetNamespace()).
 		Resource("localresourceaccessreviews").
 		VersionedParams(&opts, scheme.ParameterCodec).
