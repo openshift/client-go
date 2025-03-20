@@ -3890,6 +3890,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: granularMaxSnapshotsPerBlockVolumeInVVOL
       type:
         scalar: numeric
+    - name: maxAllowedBlockVolumesPerNode
+      type:
+        scalar: numeric
     - name: topologyCategories
       type:
         list:
