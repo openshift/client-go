@@ -45,13 +45,25 @@ func NewFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interfa
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().List(context.TODO(), options)
+				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().Watch(context.TODO(), options)
+				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().Watch(ctx, options)
 			},
 		},
 		&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{},
