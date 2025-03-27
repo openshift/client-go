@@ -270,12 +270,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: lastFailedGeneration
       type:
         scalar: numeric
-    - name: lastFailedGenerationErrors
+    - name: lastFailedGenerationError
       type:
-        list:
-          elementType:
-            scalar: string
-          elementRelationship: atomic
+        scalar: string
     - name: name
       type:
         scalar: string
