@@ -4033,13 +4033,26 @@
       }
     },
     "com.github.openshift.api.config.v1.APIServerEncryption": {
+      "description": "APIServerEncryption is used to encrypt sensitive resources on the cluster.",
       "type": "object",
       "properties": {
+        "kms": {
+          "description": "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSConfig"
+        },
         "type": {
           "description": "type defines what encryption type should be used to encrypt resources at the datastore layer. When this field is unset (i.e. when it is set to the empty string), identity is implied. The behavior of unset can and will change over time.  Even if encryption is enabled by default, the meaning of unset may change to a different encryption type based on changes in best practices.\n\nWhen encryption is enabled, all sensitive resources shipped with the platform are encrypted. This list of sensitive resources can and will change over time.  The current authoritative list is:\n\n  1. secrets\n  2. configmaps\n  3. routes.route.openshift.io\n  4. oauthaccesstokens.oauth.openshift.io\n  5. oauthauthorizetokens.oauth.openshift.io",
           "type": "string"
         }
-      }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "kms": "KMS"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.APIServerList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -4084,7 +4097,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "servingCertificate": {
           "description": "servingCertificate references a kubernetes.io/tls type secret containing the TLS cert info for serving secure traffic. The secret must exist in the openshift-config namespace and contain the following required fields: - Secret.Data[\"tls.key\"] - TLS private key. - Secret.Data[\"tls.crt\"] - TLS certificate.",
@@ -4102,7 +4116,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.APIServerNamedServingCert"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -4115,7 +4130,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "audit": {
           "description": "audit specifies the settings for audit configuration to be applied to all OpenShift-provided API servers in the cluster.",
@@ -4175,6 +4191,26 @@
           "fields-to-discriminateBy": {}
         }
       ]
+    },
+    "com.github.openshift.api.config.v1.AWSKMSConfig": {
+      "description": "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
+      "type": "object",
+      "required": [
+        "keyARN",
+        "region"
+      ],
+      "properties": {
+        "keyARN": {
+          "description": "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
+          "type": "string",
+          "default": ""
+        },
+        "region": {
+          "description": "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
+          "type": "string",
+          "default": ""
+        }
+      }
     },
     "com.github.openshift.api.config.v1.AWSPlatformSpec": {
       "description": "AWSPlatformSpec holds the desired state of the Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
@@ -7738,6 +7774,32 @@
     "com.github.openshift.api.config.v1.IntermediateTLSProfile": {
       "description": "IntermediateTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1.KMSConfig": {
+      "description": "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "aws": {
+          "description": "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSKMSConfig"
+        },
+        "type": {
+          "description": "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "aws": "AWS"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.KeystoneIdentityProvider": {
       "description": "KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials",
@@ -11840,6 +11902,217 @@
             "Disabled",
             "NamespaceIsolated"
           ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.Custom": {
+      "description": "custom provides the custom configuration of gatherers",
+      "type": "object",
+      "required": [
+        "configs"
+      ],
+      "properties": {
+        "configs": {
+          "description": "configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.GathererConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.GatherConfig": {
+      "description": "gatherConfig provides data gathering configuration options.",
+      "type": "object",
+      "required": [
+        "gatherers"
+      ],
+      "properties": {
+        "dataPolicy": {
+          "description": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "gatherers": {
+          "description": "gatherers is a required field that specifies the configuration of the gatherers.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.Gatherers"
+        },
+        "storage": {
+          "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.Storage"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.GathererConfig": {
+      "description": "gathererConfig allows to configure specific gatherers",
+      "type": "object",
+      "required": [
+        "name",
+        "state"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.Gatherers": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "custom": {
+          "description": "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.Custom"
+        },
+        "mode": {
+          "description": "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGather": {
+      "description": "InsightsDataGather provides data gather configuration options for the the Insights Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGatherSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGatherStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherList": {
+      "description": "InsightsDataGatherList is a collection of items Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is the required list of InsightsDataGather objects it may not exceed 100 items",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGather"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the required standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherSpec": {
+      "type": "object",
+      "properties": {
+        "gatherConfig": {
+          "description": "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.GatherConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherStatus": {
+      "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha2.PersistentVolumeClaimReference": {
+      "description": "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.PersistentVolumeConfig": {
+      "description": "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+      "type": "object",
+      "required": [
+        "claim"
+      ],
+      "properties": {
+        "claim": {
+          "description": "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.PersistentVolumeClaimReference"
+        },
+        "mountPath": {
+          "description": "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.Storage": {
+      "description": "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "persistentVolume": {
+          "description": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.PersistentVolumeConfig"
+        },
+        "type": {
+          "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -23041,7 +23314,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the object name. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "name is the name of the object being referenced. For example, this can represent a machine config pool or node name. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
@@ -23063,6 +23336,7 @@
           "type": "string"
         },
         "metadata": {
+          "description": "metadata is the standard object metadata.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
@@ -23081,16 +23355,13 @@
     "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeList": {
       "description": "MachineConfigNodeList describes all of the MachinesStates on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
-      "required": [
-        "metadata",
-        "items"
-      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
         },
         "items": {
+          "description": "items contains a collection of MachineConfigNode resources.",
           "type": "array",
           "items": {
             "default": {},
@@ -23102,6 +23373,7 @@
           "type": "string"
         },
         "metadata": {
+          "description": "metadata is the standard list metadata.",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
         }
@@ -23117,7 +23389,7 @@
       ],
       "properties": {
         "configVersion": {
-          "description": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+          "description": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to and gets set before the machine config operator validates the new machine config against the current machine config.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecMachineConfigVersion"
         },
@@ -23127,7 +23399,7 @@
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
         },
         "pinnedImageSets": {
-          "description": "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
+          "description": "pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.",
           "type": "array",
           "items": {
             "default": {},
@@ -23146,27 +23418,28 @@
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecMachineConfigVersion": {
-      "description": "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired; the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+      "description": "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise, they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
       "type": "object",
       "required": [
         "desired"
       ],
       "properties": {
         "desired": {
-          "description": "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet": {
+      "description": "MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node should pin and pull.",
       "type": "object",
       "required": [
         "name"
       ],
       "properties": {
         "name": {
-          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
@@ -23176,7 +23449,6 @@
       "description": "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
       "type": "object",
       "required": [
-        "observedGeneration",
         "configVersion"
       ],
       "properties": {
@@ -23193,17 +23465,17 @@
           "x-kubernetes-list-type": "map"
         },
         "configVersion": {
-          "description": "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+          "description": "configVersion describes the current and desired machine config version for this node.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusMachineConfigVersion"
         },
         "observedGeneration": {
-          "description": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+          "description": "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
           "type": "integer",
           "format": "int64"
         },
         "pinnedImageSets": {
-          "description": "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+          "description": "pinnedImageSets describes the current and desired pinned image sets for this node.",
           "type": "array",
           "items": {
             "default": {},
@@ -23217,25 +23489,26 @@
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusMachineConfigVersion": {
-      "description": "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+      "description": "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions do not match, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
       "type": "object",
       "required": [
         "desired"
       ],
       "properties": {
         "current": {
-          "description": "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         },
         "desired": {
-          "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusPinnedImageSet": {
+      "description": "MachineConfigNodeStatusPinnedImageSet holds information about the current, desired, and failed pinned image sets for the observed machine config node.",
       "type": "object",
       "required": [
         "name"
@@ -23247,7 +23520,7 @@
           "format": "int32"
         },
         "desiredGeneration": {
-          "description": "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+          "description": "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
           "type": "integer",
           "format": "int32"
         },
@@ -23256,16 +23529,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "lastFailedGenerationErrors": {
-          "description": "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
+        "lastFailedGenerationError": {
+          "description": "lastFailedGenerationError is the error explaining why the desired images failed to be pulled and pinned. The error is an empty string if the image pull and pin is successful.",
+          "type": "string"
         },
         "name": {
-          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
@@ -27139,6 +27408,26 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConfigMapFileReference": {
+      "description": "ConfigMapFileReference references a specific file within a ConfigMap.",
+      "type": "object",
+      "required": [
+        "name",
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the logo key inside the referenced ConfigMap. Must consist only of alphanumeric characters, dashes (-), underscores (_), and periods (.). Must be at most 253 characters in length. Must end in a valid file extension. A valid file extension must consist of a period followed by 2 to 5 alpha characters.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name is the name of the ConfigMap. name is a required field. Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. Must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConfigSpec": {
       "type": "object",
       "required": [
@@ -27273,7 +27562,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.ConsoleCustomization": {
-      "description": "ConsoleCustomization defines a list of optional configuration for the console UI.",
+      "description": "ConsoleCustomization defines a list of optional configuration for the console UI. Ensure that Logos and CustomLogoFile cannot be set at the same time.",
       "type": "object",
       "properties": {
         "addPage": {
@@ -27298,7 +27587,7 @@
           "x-kubernetes-list-type": "map"
         },
         "customLogoFile": {
-          "description": "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+          "description": "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a Only one of customLogoFile or logos can be set at a time. ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. The recommended file format for the logo is SVG, but other file formats are allowed if supported by the browser. Deprecated: Use logos instead.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
         },
@@ -27314,6 +27603,18 @@
         "documentationBaseURL": {
           "description": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
           "type": "string"
+        },
+        "logos": {
+          "description": "logos is used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. logos is an optional field that allows a list of logos. Only one of logos or customLogoFile can be set at a time. If logos is set, customLogoFile must be unset. When specified, there must be at least one entry and no more than 2 entries. Each type must appear only once in the list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Logo"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "perspectives": {
           "description": "perspectives allows enabling/disabling of perspective(s) that user can see in the Perspective switcher dropdown.",
@@ -28143,6 +28444,27 @@
         "multicast": {
           "description": "multicast specified whether or not the multicast configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.FileReferenceSource": {
+      "description": "FileReferenceSource is used by the console to locate the specified file containing a custom logo.",
+      "type": "object",
+      "required": [
+        "from"
+      ],
+      "properties": {
+        "configMap": {
+          "description": "configMap specifies the ConfigMap sourcing details such as the name of the ConfigMap and the key for the file. The ConfigMap must exist in the openshift-config namespace. Required when from is \"ConfigMap\", and forbidden otherwise.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConfigMapFileReference"
+        },
+        "from": {
+          "description": "from is a required field to specify the source type of the file reference. Allowed values are ConfigMap. When set to ConfigMap, the file will be sourced from a ConfigMap in the openshift-config namespace. The configMap field must be set when from is set to ConfigMap.\n\nPossible enum values:\n - `\"ConfigMap\"` represents a ConfigMap source.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "ConfigMap"
+          ]
         }
       }
     },
@@ -30054,6 +30376,37 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.operator.v1.Logo": {
+      "description": "Logo defines a configuration based on theme modes for the console UI logo.",
+      "type": "object",
+      "required": [
+        "type",
+        "themes"
+      ],
+      "properties": {
+        "themes": {
+          "description": "themes specifies the themes for the console UI logo. themes is a required field that allows a list of themes. Each item in the themes list must have a unique mode and a source field. Each mode determines whether the logo is for the dark or light mode of the console UI. If a theme is not specified, the default OpenShift logo will be displayed for that theme. There must be at least one entry and no more than 2 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Theme"
+          },
+          "x-kubernetes-list-map-keys": [
+            "mode"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "type": {
+          "description": "type specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. type is a required field that allows values of Masthead and Favicon. When set to \"Masthead\", the logo will be used in the masthead and about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.\n\nPossible enum values:\n - `\"Favicon\"` Favicon represents the favicon logo.\n - `\"Masthead\"` Masthead represents the logo in the masthead.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Favicon",
+            "Masthead"
+          ]
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.MTUMigration": {
       "description": "MTUMigration contains infomation about MTU migration.",
@@ -32911,6 +33264,30 @@
           "type": "integer",
           "format": "int64",
           "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.Theme": {
+      "description": "Theme defines a theme mode for the console UI.",
+      "type": "object",
+      "required": [
+        "mode",
+        "source"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode is used to specify what theme mode a logo will apply to in the console UI. mode is a required field that allows values of Dark and Light. When set to Dark, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Dark mode. When set to Light, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Light mode.\n\nPossible enum values:\n - `\"Dark\"` represents the dark mode for a console theme.\n - `\"Light\"` represents the light mode for a console theme.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Dark",
+            "Light"
+          ]
+        },
+        "source": {
+          "description": "source is used by the console to locate the specified file containing a custom logo. source is a required field that references a ConfigMap name and key that contains the custom logo file in the openshift-config namespace. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file' The ConfigMap key must include the file extension so that the console serves the file with the correct MIME type. The recommended file format for the Masthead and Favicon logos is SVG, but other file formats are allowed if supported by the browser. The logo image size must be less than 1 MB due to constraints on the ConfigMap size. For more information, see the documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/web_console/customizing-web-console#customizing-web-console",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.FileReferenceSource"
         }
       }
     },
