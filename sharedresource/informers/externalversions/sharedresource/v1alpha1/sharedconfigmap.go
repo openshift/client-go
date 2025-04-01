@@ -45,13 +45,25 @@ func NewFilteredSharedConfigMapInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SharedresourceV1alpha1().SharedConfigMaps().List(context.TODO(), options)
+				return client.SharedresourceV1alpha1().SharedConfigMaps().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SharedresourceV1alpha1().SharedConfigMaps().Watch(context.TODO(), options)
+				return client.SharedresourceV1alpha1().SharedConfigMaps().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SharedresourceV1alpha1().SharedConfigMaps().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SharedresourceV1alpha1().SharedConfigMaps().Watch(ctx, options)
 			},
 		},
 		&apisharedresourcev1alpha1.SharedConfigMap{},
