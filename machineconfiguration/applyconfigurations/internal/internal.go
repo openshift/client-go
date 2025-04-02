@@ -195,14 +195,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference
       default: {}
-    - name: pinnedImageSets
-      type:
-        list:
-          elementType:
-            namedType: com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet
-          elementRelationship: associative
-          keys:
-          - name
     - name: pool
       type:
         namedType: com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference
@@ -211,13 +203,6 @@ var schemaYAML = typed.YAMLObject(`types:
   map:
     fields:
     - name: desired
-      type:
-        scalar: string
-      default: ""
-- name: com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet
-  map:
-    fields:
-    - name: name
       type:
         scalar: string
       default: ""
