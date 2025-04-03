@@ -29,7 +29,3 @@ type MachineOSBuildListerExpansion interface{}
 // MachineOSConfigListerExpansion allows custom methods to be added to
 // MachineOSConfigLister.
 type MachineOSConfigListerExpansion interface{}
-
-// PinnedImageSetListerExpansion allows custom methods to be added to
-// PinnedImageSetLister.
-type PinnedImageSetListerExpansion interface{}

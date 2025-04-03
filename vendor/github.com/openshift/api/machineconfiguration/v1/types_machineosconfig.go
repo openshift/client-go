@@ -98,11 +98,13 @@ type MachineOSConfigSpec struct {
 // MachineOSConfigStatus describes the status this config object and relates it to the builds associated with this MachineOSConfig
 type MachineOSConfigStatus struct {
 	// conditions are state related conditions for the object.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +optional
 	// TODO(jerzhang): add godoc after conditions are finalized. Also consider adding printer columns.
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// observedGeneration represents the generation of the MachineOSConfig object observed by the Machine Config Operator's build controller.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="observedGeneration must not move backwards"
 	// +kubebuilder:validation:Minimum=0

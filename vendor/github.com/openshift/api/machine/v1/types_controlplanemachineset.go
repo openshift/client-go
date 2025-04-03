@@ -428,10 +428,12 @@ type RootVolume struct {
 type ControlPlaneMachineSetStatus struct {
 	// conditions represents the observations of the ControlPlaneMachineSet's current state.
 	// Known .status.conditions.type are: Available, Degraded and Progressing.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// observedGeneration is the most recent generation observed for this
 	// ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation,

@@ -234,8 +234,6 @@ type AzureMachineProviderStatus struct {
 	// conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status.
 	// +optional
-	// +listType=map
-	// +listMapKey=type
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 

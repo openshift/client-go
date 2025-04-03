@@ -56,11 +56,7 @@ type CloudPrivateIPConfigStatus struct {
 	Node string `json:"node" protobuf:"bytes,1,opt,name=node"`
 	// condition is the assignment condition of the private IP and its status
 	// +required
-	// +listType=map
-	// +listMapKey=type
-	// +patchMergeKey=type
-	// +patchStrategy=merge
-	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
+	Conditions []metav1.Condition `json:"conditions" protobuf:"bytes,2,rep,name=conditions"`
 }
 
 // CloudPrivateIPConfigConditionType specifies the current condition type of the CloudPrivateIPConfig

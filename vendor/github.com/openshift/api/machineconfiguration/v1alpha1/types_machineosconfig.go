@@ -60,10 +60,12 @@ type MachineOSConfigSpec struct {
 // MachineOSConfigStatus describes the status this config object and relates it to the builds associated with this MachineOSConfig
 type MachineOSConfigStatus struct {
 	// conditions are state related conditions for the config.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// observedGeneration represents the generation observed by the controller.
 	// this field is updated when the user changes the configuration in BuildSettings or the MCP this object is associated with.
 	// +required

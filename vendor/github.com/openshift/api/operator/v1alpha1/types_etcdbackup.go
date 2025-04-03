@@ -44,10 +44,12 @@ type EtcdBackupSpec struct {
 // +kubebuilder:validation:Optional
 type EtcdBackupStatus struct {
 	// conditions provide details on the status of the etcd backup job.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// backupJob is the reference to the Job that executes the backup.
 	// Optional

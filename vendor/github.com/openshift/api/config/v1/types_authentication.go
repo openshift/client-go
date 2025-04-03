@@ -343,7 +343,6 @@ type OIDCClientStatus struct {
 	//
 	// +listType=map
 	// +listMapKey=type
-	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 

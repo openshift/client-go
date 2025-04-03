@@ -32,12 +32,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &insightsv1alpha1.InsightsReportApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ObjectReference"):
 		return &insightsv1alpha1.ObjectReferenceApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeClaimReference"):
-		return &insightsv1alpha1.PersistentVolumeClaimReferenceApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
-		return &insightsv1alpha1.PersistentVolumeConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("Storage"):
-		return &insightsv1alpha1.StorageApplyConfiguration{}
 
 	}
 	return nil

@@ -41,10 +41,8 @@ type MachineConfigurationSpec struct {
 	// managedBootImages allows configuration for the management of boot images for machine
 	// resources within the cluster. This configuration allows users to select resources that should
 	// be updated to the latest boot images during cluster upgrades, ensuring that new machines
-	// always boot with the current cluster version's boot image. When omitted, this means no opinion
-	// and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default for each machine manager mode is All for GCP and AWS platforms, and None for all
-	// other platforms.
+	// always boot with the current cluster version's boot image. When omitted, no boot images
+	// will be updated.
 	// +openshift:enable:FeatureGate=ManagedBootImages
 	// +optional
 	ManagedBootImages ManagedBootImages `json:"managedBootImages"`
@@ -64,10 +62,11 @@ type MachineConfigurationStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions is a list of conditions and their status
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
-	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// Previously there was a StaticPodOperatorStatus here for legacy reasons. Many of the fields within
 	// it are no longer relevant for the MachineConfiguration CRD's functions. The following remainder
@@ -97,12 +96,6 @@ type MachineConfigurationStatus struct {
 	// +openshift:enable:FeatureGate=NodeDisruptionPolicy
 	// +optional
 	NodeDisruptionPolicyStatus NodeDisruptionPolicyStatus `json:"nodeDisruptionPolicyStatus"`
-
-	// managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is
-	// and will be used by Machine Config Controller while performing boot image updates.
-	// +openshift:enable:FeatureGate=ManagedBootImages
-	// +optional
-	ManagedBootImagesStatus ManagedBootImages `json:"managedBootImagesStatus"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -129,7 +122,6 @@ type ManagedBootImages struct {
 	// +listType=map
 	// +listMapKey=resource
 	// +listMapKey=apiGroup
-	// +kubebuilder:validation:MaxItems=5
 	MachineManagers []MachineManager `json:"machineManagers"`
 }
 
@@ -160,7 +152,6 @@ type MachineManagerSelector struct {
 	// Valid values are All and Partial.
 	// All means that every resource matched by the machine manager will be updated.
 	// Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.
-	// None means that every resource matched by the machine manager will not be updated.
 	// +unionDiscriminator
 	// +required
 	Mode MachineManagerSelectorMode `json:"mode"`
@@ -179,7 +170,7 @@ type PartialSelector struct {
 }
 
 // MachineManagerSelectorMode is a string enum used in the MachineManagerSelector union discriminator.
-// +kubebuilder:validation:Enum:="All";"Partial";"None"
+// +kubebuilder:validation:Enum:="All";"Partial"
 type MachineManagerSelectorMode string
 
 const (
@@ -189,9 +180,6 @@ const (
 	// Partial represents a configuration mode that will register resources specified by the parent MachineManager only
 	// if they match with the label selector.
 	Partial MachineManagerSelectorMode = "Partial"
-
-	// None represents a configuration mode that excludes all resources specified by the parent MachineManager from boot image updates.
-	None MachineManagerSelectorMode = "None"
 )
 
 // MachineManagerManagedResourceType is a string enum used in the MachineManager type to describe the resource

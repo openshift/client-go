@@ -57,9 +57,6 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: com.github.openshift.api.insights.v1alpha1.GathererConfig
           elementRelationship: atomic
-    - name: storage
-      type:
-        namedType: com.github.openshift.api.insights.v1alpha1.Storage
 - name: com.github.openshift.api.insights.v1alpha1.DataGatherStatus
   map:
     fields:
@@ -179,33 +176,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
     - name: resource
-      type:
-        scalar: string
-      default: ""
-- name: com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference
-  map:
-    fields:
-    - name: name
-      type:
-        scalar: string
-      default: ""
-- name: com.github.openshift.api.insights.v1alpha1.PersistentVolumeConfig
-  map:
-    fields:
-    - name: claim
-      type:
-        namedType: com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference
-      default: {}
-    - name: mountPath
-      type:
-        scalar: string
-- name: com.github.openshift.api.insights.v1alpha1.Storage
-  map:
-    fields:
-    - name: persistentVolume
-      type:
-        namedType: com.github.openshift.api.insights.v1alpha1.PersistentVolumeConfig
-    - name: type
       type:
         scalar: string
       default: ""

@@ -94,14 +94,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.NetworkInfoApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ObjectReference"):
 		return &machineconfigurationv1.ObjectReferenceApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("PinnedImageRef"):
-		return &machineconfigurationv1.PinnedImageRefApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("PinnedImageSet"):
-		return &machineconfigurationv1.PinnedImageSetApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PinnedImageSetRef"):
 		return &machineconfigurationv1.PinnedImageSetRefApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("PinnedImageSetSpec"):
-		return &machineconfigurationv1.PinnedImageSetSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PoolSynchronizerStatus"):
 		return &machineconfigurationv1.PoolSynchronizerStatusApplyConfiguration{}
 
@@ -118,6 +112,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1alpha1.MachineConfigNodeSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpecMachineConfigVersion"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeSpecMachineConfigVersionApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeSpecPinnedImageSet"):
+		return &machineconfigurationv1alpha1.MachineConfigNodeSpecPinnedImageSetApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatus"):
 		return &machineconfigurationv1alpha1.MachineConfigNodeStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MachineConfigNodeStatusMachineConfigVersion"):

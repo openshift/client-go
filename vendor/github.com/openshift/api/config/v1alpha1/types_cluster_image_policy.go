@@ -59,7 +59,6 @@ type ClusterImagePolicyStatus struct {
 	// conditions provide details on the status of this API Resource.
 	// +listType=map
 	// +listMapKey=type
-	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 

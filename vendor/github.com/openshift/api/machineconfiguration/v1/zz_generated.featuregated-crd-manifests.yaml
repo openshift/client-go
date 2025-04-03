@@ -30,10 +30,7 @@ controllerconfigs.machineconfiguration.openshift.io:
   FeatureGates:
   - AWSClusterHostedDNS
   - BareMetalLoadBalancer
-  - DualReplica
-  - DyanmicServiceEndpointIBMCloud
   - GCPClusterHostedDNS
-  - GCPCustomAPIEndpoints
   - GCPLabelsTags
   - HighlyAvailableArbiter
   - NutanixMultiSubnets
@@ -238,29 +235,5 @@ machineosconfigs.machineconfiguration.openshift.io:
   ShortNames: null
   TopLevelFeatureGates:
   - OnClusterBuild
-  Version: v1
-
-pinnedimagesets.machineconfiguration.openshift.io:
-  Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/2198
-  CRDName: pinnedimagesets.machineconfiguration.openshift.io
-  Capability: ""
-  Category: ""
-  FeatureGates:
-  - PinnedImages
-  FilenameOperatorName: machine-config
-  FilenameOperatorOrdering: "01"
-  FilenameRunLevel: "0000_80"
-  GroupName: machineconfiguration.openshift.io
-  HasStatus: false
-  KindName: PinnedImageSet
-  Labels:
-    openshift.io/operator-managed: ""
-  PluralName: pinnedimagesets
-  PrinterColumns: []
-  Scope: Cluster
-  ShortNames: null
-  TopLevelFeatureGates:
-  - PinnedImages
   Version: v1
 

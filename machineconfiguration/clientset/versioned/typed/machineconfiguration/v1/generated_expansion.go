@@ -15,5 +15,3 @@ type MachineConfigPoolExpansion interface{}
 type MachineOSBuildExpansion interface{}
 
 type MachineOSConfigExpansion interface{}
-
-type PinnedImageSetExpansion interface{}
