@@ -36,8 +36,8 @@ controllerconfigs.machineconfiguration.openshift.io:
   - GCPCustomAPIEndpoints
   - GCPLabelsTags
   - HighlyAvailableArbiter
+  - HighlyAvailableArbiter+DualReplica
   - NutanixMultiSubnets
-  - VSphereControlPlaneMachineSet
   - VSphereMultiNetworks
   - VSphereMultiVCenters
   FilenameOperatorName: machine-config
