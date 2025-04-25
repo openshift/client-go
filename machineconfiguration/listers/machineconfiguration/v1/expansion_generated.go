@@ -18,10 +18,6 @@ type KubeletConfigListerExpansion interface{}
 // MachineConfigLister.
 type MachineConfigListerExpansion interface{}
 
-// MachineConfigNodeListerExpansion allows custom methods to be added to
-// MachineConfigNodeLister.
-type MachineConfigNodeListerExpansion interface{}
-
 // MachineConfigPoolListerExpansion allows custom methods to be added to
 // MachineConfigPoolLister.
 type MachineConfigPoolListerExpansion interface{}
