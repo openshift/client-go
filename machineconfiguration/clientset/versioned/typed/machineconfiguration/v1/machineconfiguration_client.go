@@ -16,7 +16,6 @@ type MachineconfigurationV1Interface interface {
 	ControllerConfigsGetter
 	KubeletConfigsGetter
 	MachineConfigsGetter
-	MachineConfigNodesGetter
 	MachineConfigPoolsGetter
 	MachineOSBuildsGetter
 	MachineOSConfigsGetter
@@ -42,10 +41,6 @@ func (c *MachineconfigurationV1Client) KubeletConfigs() KubeletConfigInterface {
 
 func (c *MachineconfigurationV1Client) MachineConfigs() MachineConfigInterface {
 	return newMachineConfigs(c)
-}
-
-func (c *MachineconfigurationV1Client) MachineConfigNodes() MachineConfigNodeInterface {
-	return newMachineConfigNodes(c)
 }
 
 func (c *MachineconfigurationV1Client) MachineConfigPools() MachineConfigPoolInterface {
