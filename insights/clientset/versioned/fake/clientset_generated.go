@@ -7,6 +7,8 @@ import (
 	clientset "github.com/openshift/client-go/insights/clientset/versioned"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha1"
 	fakeinsightsv1alpha1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha1/fake"
+	insightsv1alpha2 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha2"
+	fakeinsightsv1alpha2 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha2/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -103,4 +105,9 @@ var (
 // InsightsV1alpha1 retrieves the InsightsV1alpha1Client
 func (c *Clientset) InsightsV1alpha1() insightsv1alpha1.InsightsV1alpha1Interface {
 	return &fakeinsightsv1alpha1.FakeInsightsV1alpha1{Fake: &c.Fake}
+}
+
+// InsightsV1alpha2 retrieves the InsightsV1alpha2Client
+func (c *Clientset) InsightsV1alpha2() insightsv1alpha2.InsightsV1alpha2Interface {
+	return &fakeinsightsv1alpha2.FakeInsightsV1alpha2{Fake: &c.Fake}
 }
