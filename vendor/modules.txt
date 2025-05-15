@@ -89,6 +89,7 @@ github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
 github.com/openshift/api/imageregistry/v1
 github.com/openshift/api/insights/v1alpha1
+github.com/openshift/api/insights/v1alpha2
 github.com/openshift/api/machine/v1
 github.com/openshift/api/machine/v1beta1
 github.com/openshift/api/machineconfiguration/v1
