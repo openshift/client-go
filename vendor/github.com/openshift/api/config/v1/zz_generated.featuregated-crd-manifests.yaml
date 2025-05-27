@@ -117,6 +117,7 @@ clusterversions.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - CVORelatedObjects
   - ImageStreamImportMode
   - SignatureStores
   FilenameOperatorName: cluster-version-operator
@@ -314,7 +315,6 @@ infrastructures.config.openshift.io:
   Category: ""
   FeatureGates:
   - AWSClusterHostedDNS
-  - BareMetalLoadBalancer
   - DualReplica
   - DyanmicServiceEndpointIBMCloud
   - GCPClusterHostedDNS
