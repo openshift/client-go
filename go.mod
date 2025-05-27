@@ -15,6 +15,8 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.6.0
 )
 
+replace github.com/openshift/build-machinery-go => ../build-machinery-go/
+
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect

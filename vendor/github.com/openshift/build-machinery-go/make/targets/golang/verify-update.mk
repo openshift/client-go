@@ -2,12 +2,12 @@ include $(addprefix $(dir $(lastword $(MAKEFILE_LIST))), \
 	../../lib/golang.mk \
 )
 
-go_files_count :=$(words $(GO_FILES))
+go_packages_count :=$(words $(GO_FMT_PACKAGES))
 
 verify-gofmt:
-	$(info Running `$(GOFMT) $(GOFMT_FLAGS)` on $(go_files_count) file(s).)
+	$(info Running `$(GOFMT) $(GOFMT_FLAGS)` on $(go_packages_count) package(s).)
 	@TMP=$$( mktemp ); \
-	$(GOFMT) $(GOFMT_FLAGS) $(GO_FILES) | tee $${TMP}; \
+	$(GOFMT) $(GOFMT_FLAGS) $(GO_FMT_PACKAGES) | tee $${TMP}; \
 	if [ -s $${TMP} ]; then \
 		echo "$@ failed - please run \`make update-gofmt\`"; \
 		exit 1; \
@@ -15,8 +15,8 @@ verify-gofmt:
 .PHONY: verify-gofmt
 
 update-gofmt:
-	$(info Running `$(GOFMT) $(GOFMT_FLAGS) -w` on $(go_files_count) file(s).)
-	@$(GOFMT) $(GOFMT_FLAGS) -w $(GO_FILES)
+	$(info Running `$(GOFMT) $(GOFMT_FLAGS) -w` on $(go_packages_count) package(s).)
+	@$(GOFMT) $(GOFMT_FLAGS) -w $(GO_FMT_PACKAGES)
 .PHONY: update-gofmt
 
 

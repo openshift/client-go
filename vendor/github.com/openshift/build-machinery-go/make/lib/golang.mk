@@ -37,8 +37,7 @@ endif
 GO_PACKAGE ?=$(shell $(GO) list $(GO_MOD_FLAGS) -m -f '{{ .Path }}' || echo 'no_package_detected')
 GO_PACKAGES ?=./...
 GO_TEST_PACKAGES ?=$(GO_PACKAGES)
-GO_FILES ?=$(shell find . -name '*.go' -not -path '*/vendor/*' -not -path '*/_output/*' -print)
-
+GO_FMT_PACKAGES ?=$(shell $(GO) list $(GO_MOD_FLAGS) $(GO_PACKAGES) | grep -v '*/vendor/*' | grep -v '*/_output/*')
 
 GO_BUILD_PACKAGES ?=./cmd/...
 GO_BUILD_PACKAGES_EXPANDED ?=$(shell $(GO) list $(GO_MOD_FLAGS) $(GO_BUILD_PACKAGES))
