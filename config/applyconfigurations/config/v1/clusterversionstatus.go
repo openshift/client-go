@@ -13,6 +13,7 @@ type ClusterVersionStatusApplyConfiguration struct {
 	Conditions         []ClusterOperatorStatusConditionApplyConfiguration  `json:"conditions,omitempty"`
 	AvailableUpdates   []ReleaseApplyConfiguration                         `json:"availableUpdates,omitempty"`
 	ConditionalUpdates []ConditionalUpdateApplyConfiguration               `json:"conditionalUpdates,omitempty"`
+	RelatedObjects     []ObjectReferenceApplyConfiguration                 `json:"relatedObjects,omitempty"`
 }
 
 // ClusterVersionStatusApplyConfiguration constructs a declarative configuration of the ClusterVersionStatus type for use with
@@ -101,6 +102,19 @@ func (b *ClusterVersionStatusApplyConfiguration) WithConditionalUpdates(values .
 			panic("nil value passed to WithConditionalUpdates")
 		}
 		b.ConditionalUpdates = append(b.ConditionalUpdates, *values[i])
+	}
+	return b
+}
+
+// WithRelatedObjects adds the given value to the RelatedObjects field in the declarative configuration
+// and returns the receiver, so that objects can be build by chaining "With" function invocations.
+// If called multiple times, values provided by each call will be appended to the RelatedObjects field.
+func (b *ClusterVersionStatusApplyConfiguration) WithRelatedObjects(values ...*ObjectReferenceApplyConfiguration) *ClusterVersionStatusApplyConfiguration {
+	for i := range values {
+		if values[i] == nil {
+			panic("nil value passed to WithRelatedObjects")
+		}
+		b.RelatedObjects = append(b.RelatedObjects, *values[i])
 	}
 	return b
 }

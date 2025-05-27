@@ -813,6 +813,17 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: numeric
       default: 0
+    - name: relatedObjects
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.ObjectReference
+          elementRelationship: associative
+          keys:
+          - group
+          - resource
+          - namespace
+          - name
     - name: versionHash
       type:
         scalar: string
@@ -3468,6 +3479,11 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    unions:
+    - discriminator: prefixPolicy
+      fields:
+      - fieldName: prefix
+        discriminatorValue: Prefix
 - name: com.github.openshift.api.config.v1.UsernamePrefix
   map:
     fields:
