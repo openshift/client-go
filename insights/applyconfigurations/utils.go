@@ -4,7 +4,9 @@ package applyconfigurations
 
 import (
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	v1alpha2 "github.com/openshift/api/insights/v1alpha2"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
+	insightsv1alpha2 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha2"
 	internal "github.com/openshift/client-go/insights/applyconfigurations/internal"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -38,6 +40,34 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &insightsv1alpha1.PersistentVolumeConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Storage"):
 		return &insightsv1alpha1.StorageApplyConfiguration{}
+
+		// Group=insights.openshift.io, Version=v1alpha2
+	case v1alpha2.SchemeGroupVersion.WithKind("Custom"):
+		return &insightsv1alpha2.CustomApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("DataGather"):
+		return &insightsv1alpha2.DataGatherApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("DataGatherSpec"):
+		return &insightsv1alpha2.DataGatherSpecApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("DataGatherStatus"):
+		return &insightsv1alpha2.DataGatherStatusApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("GathererConfig"):
+		return &insightsv1alpha2.GathererConfigApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("Gatherers"):
+		return &insightsv1alpha2.GatherersApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("GathererStatus"):
+		return &insightsv1alpha2.GathererStatusApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("HealthCheck"):
+		return &insightsv1alpha2.HealthCheckApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("InsightsReport"):
+		return &insightsv1alpha2.InsightsReportApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("ObjectReference"):
+		return &insightsv1alpha2.ObjectReferenceApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("PersistentVolumeClaimReference"):
+		return &insightsv1alpha2.PersistentVolumeClaimReferenceApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
+		return &insightsv1alpha2.PersistentVolumeConfigApplyConfiguration{}
+	case v1alpha2.SchemeGroupVersion.WithKind("Storage"):
+		return &insightsv1alpha2.StorageApplyConfiguration{}
 
 	}
 	return nil

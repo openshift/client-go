@@ -6,6 +6,7 @@ import (
 	fmt "fmt"
 
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
+	v1alpha2 "github.com/openshift/api/insights/v1alpha2"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 )
@@ -39,6 +40,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=insights.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("datagathers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Insights().V1alpha1().DataGathers().Informer()}, nil
+
+		// Group=insights.openshift.io, Version=v1alpha2
+	case v1alpha2.SchemeGroupVersion.WithResource("datagathers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Insights().V1alpha2().DataGathers().Informer()}, nil
 
 	}
 
