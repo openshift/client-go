@@ -3471,6 +3471,8 @@ var schemaYAML = typed.YAMLObject(`types:
     unions:
     - discriminator: prefixPolicy
       fields:
+      - fieldName: claim
+        discriminatorValue: Claim
       - fieldName: prefix
         discriminatorValue: Prefix
 - name: com.github.openshift.api.config.v1.UsernamePrefix
