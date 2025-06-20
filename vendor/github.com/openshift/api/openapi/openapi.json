@@ -5127,6 +5127,110 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ClusterImagePolicy": {
+      "description": "ClusterImagePolicy holds cluster-wide configuration for image signature verification\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec contains the configuration for the cluster image policy.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterImagePolicySpec"
+        },
+        "status": {
+          "description": "status contains the observed state of the resource.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterImagePolicyStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterImagePolicyList": {
+      "description": "ClusterImagePolicyList is a list of ClusterImagePolicy resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ClusterImagePolices",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterImagePolicy"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterImagePolicySpec": {
+      "description": "CLusterImagePolicySpec is the specification of the ClusterImagePolicy custom resource.",
+      "type": "object",
+      "required": [
+        "scopes",
+        "policy"
+      ],
+      "properties": {
+        "policy": {
+          "description": "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.Policy"
+        },
+        "scopes": {
+          "description": "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterImagePolicyStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of this API Resource.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ClusterNetworkEntry": {
       "description": "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
       "type": "object",
@@ -5403,7 +5507,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesSpec"
         },
         "channel": {
-          "description": "channel is an identifier for explicitly requesting that a non-default set of updates be applied to this cluster. The default channel will be contain stable updates that are appropriate for production clusters.",
+          "description": "channel is an identifier for explicitly requesting a non-default set of updates to be applied to this cluster. The default channel will contain stable updates that are appropriate for production clusters.",
           "type": "string"
         },
         "clusterID": {
@@ -6449,6 +6553,32 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FulcioCAWithRekor": {
+      "description": "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+      "type": "object",
+      "required": [
+        "fulcioCAData",
+        "rekorKeyData",
+        "fulcioSubject"
+      ],
+      "properties": {
+        "fulcioCAData": {
+          "description": "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "fulcioSubject": {
+          "description": "fulcioSubject is a required field specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyFulcioSubject"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData is a required field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.GCPPlatformSpec": {
       "description": "GCPPlatformSpec holds the desired state of the Google Cloud Platform infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -7324,6 +7454,110 @@
           "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImagePolicy": {
+      "description": "ImagePolicy holds namespace-wide configuration for image signature verification\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicySpec"
+        },
+        "status": {
+          "description": "status contains the observed state of the resource.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicyStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImagePolicyList": {
+      "description": "ImagePolicyList is a list of ImagePolicy resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ImagePolicies",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicy"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImagePolicySpec": {
+      "description": "ImagePolicySpec is the specification of the ImagePolicy CRD.",
+      "type": "object",
+      "required": [
+        "scopes",
+        "policy"
+      ],
+      "properties": {
+        "policy": {
+          "description": "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.Policy"
+        },
+        "scopes": {
+          "description": "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImagePolicyStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of this API Resource. condition type 'Pending' indicates that the customer resource contains a policy that cannot take effect. It is either overwritten by a global policy or the image scope is not valid.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -8906,11 +9140,12 @@
       "type": "object",
       "required": [
         "name",
-        "issuer"
+        "issuer",
+        "claimMappings"
       ],
       "properties": {
         "claimMappings": {
-          "description": "claimMappings is an optional field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
+          "description": "claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimMappings"
         },
@@ -9368,6 +9603,45 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.PKI": {
+      "description": "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+      "type": "object",
+      "required": [
+        "caRootsData",
+        "pkiCertificateSubject"
+      ],
+      "properties": {
+        "caIntermediatesData": {
+          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+          "type": "string",
+          "format": "byte"
+        },
+        "caRootsData": {
+          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "pkiCertificateSubject": {
+          "description": "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PKICertificateSubject"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PKICertificateSubject": {
+      "description": "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "email specifies the expected email address imposed on the subject to which the certificate was issued, and must match the email address listed in the Subject Alternative Name (SAN) field of the certificate. The email must be a valid email address and at most 320 characters in length.",
+          "type": "string"
+        },
+        "hostname": {
+          "description": "hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate. The hostname must be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length. It must consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.PlatformSpec": {
       "description": "PlatformSpec holds the desired state specific to the underlying infrastructure provider of the current cluster. Since these are used at spec-level for the underlying cluster, it is supposed that only one of the spec structs is set.",
       "type": "object",
@@ -9507,6 +9781,143 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformStatus"
         }
       }
+    },
+    "com.github.openshift.api.config.v1.Policy": {
+      "description": "Policy defines the verification policy for the items in the scopes list.",
+      "type": "object",
+      "required": [
+        "rootOfTrust"
+      ],
+      "properties": {
+        "rootOfTrust": {
+          "description": "rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval. This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyRootOfTrust"
+        },
+        "signedIdentity": {
+          "description": "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyIdentity"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PolicyFulcioSubject": {
+      "description": "PolicyFulcioSubject defines the OIDC issuer and the email of the Fulcio authentication configuration.",
+      "type": "object",
+      "required": [
+        "oidcIssuer",
+        "signedEmail"
+      ],
+      "properties": {
+        "oidcIssuer": {
+          "description": "oidcIssuer is a required filed contains the expected OIDC issuer. The oidcIssuer must be a valid URL and at most 2048 characters in length. It will be verified that the Fulcio-issued certificate contains a (Fulcio-defined) certificate extension pointing at this OIDC issuer URL. When Fulcio issues certificates, it includes a value based on an URL inside the client-provided ID token. Example: \"https://expected.OIDC.issuer/\"",
+          "type": "string",
+          "default": ""
+        },
+        "signedEmail": {
+          "description": "signedEmail is a required field holds the email address that the Fulcio certificate is issued for. The signedEmail must be a valid email address and at most 320 characters in length. Example: \"expected-signing-user@example.com\"",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PolicyIdentity": {
+      "description": "PolicyIdentity defines image identity the signature claims about the image. When omitted, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+      "type": "object",
+      "required": [
+        "matchPolicy"
+      ],
+      "properties": {
+        "exactRepository": {
+          "description": "exactRepository specifies the repository that must be exactly matched by the identity in the signature. exactRepository is required if matchPolicy is set to \"ExactRepository\". It is used to verify that the signature claims an identity matching this exact repository, rather than the original image identity.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyMatchExactRepository"
+        },
+        "matchPolicy": {
+          "description": "matchPolicy is a required filed specifies matching strategy to verify the image identity in the signature against the image scope. Allowed values are \"MatchRepoDigestOrExact\", \"MatchRepository\", \"ExactRepository\", \"RemapIdentity\". When omitted, the default value is \"MatchRepoDigestOrExact\". When set to \"MatchRepoDigestOrExact\", the identity in the signature must be in the same repository as the image identity if the image identity is referenced by a digest. Otherwise, the identity in the signature must be the same as the image identity. When set to \"MatchRepository\", the identity in the signature must be in the same repository as the image identity. When set to \"ExactRepository\", the exactRepository must be specified. The identity in the signature must be in the same repository as a specific identity specified by \"repository\". When set to \"RemapIdentity\", the remapIdentity must be specified. The signature must be in the same as the remapped image identity. Remapped image identity is obtained by replacing the \"prefix\" with the specified “signedPrefix” if the the image identity matches the specified remapPrefix.",
+          "type": "string",
+          "default": ""
+        },
+        "remapIdentity": {
+          "description": "remapIdentity specifies the prefix remapping rule for verifying image identity. remapIdentity is required if matchPolicy is set to \"RemapIdentity\". It is used to verify that the signature claims a different registry/repository prefix than the original image.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyMatchRemapIdentity"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "matchPolicy",
+          "fields-to-discriminateBy": {
+            "exactRepository": "PolicyMatchExactRepository",
+            "remapIdentity": "PolicyMatchRemapIdentity"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1.PolicyMatchExactRepository": {
+      "type": "object",
+      "required": [
+        "repository"
+      ],
+      "properties": {
+        "repository": {
+          "description": "repository is the reference of the image identity to be matched. repository is required if matchPolicy is set to \"ExactRepository\". The value should be a repository name (by omitting the tag or digest) in a registry implementing the \"Docker Registry HTTP API V2\". For example, docker.io/library/busybox",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PolicyMatchRemapIdentity": {
+      "type": "object",
+      "required": [
+        "prefix",
+        "signedPrefix"
+      ],
+      "properties": {
+        "prefix": {
+          "description": "prefix is required if matchPolicy is set to \"RemapIdentity\". prefix is the prefix of the image identity to be matched. If the image identity matches the specified prefix, that prefix is replaced by the specified “signedPrefix” (otherwise it is used as unchanged and no remapping takes place). This is useful when verifying signatures for a mirror of some other repository namespace that preserves the vendor’s repository structure. The prefix and signedPrefix values can be either host[:port] values (matching exactly the same host[:port], string), repository namespaces, or repositories (i.e. they must not contain tags/digests), and match as prefixes of the fully expanded form. For example, docker.io/library/busybox (not busybox) to specify that single repository, or docker.io/library (not an empty string) to specify the parent namespace of docker.io/library/busybox.",
+          "type": "string",
+          "default": ""
+        },
+        "signedPrefix": {
+          "description": "signedPrefix is required if matchPolicy is set to \"RemapIdentity\". signedPrefix is the prefix of the image identity to be matched in the signature. The format is the same as \"prefix\". The values can be either host[:port] values (matching exactly the same host[:port], string), repository namespaces, or repositories (i.e. they must not contain tags/digests), and match as prefixes of the fully expanded form. For example, docker.io/library/busybox (not busybox) to specify that single repository, or docker.io/library (not an empty string) to specify the parent namespace of docker.io/library/busybox.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PolicyRootOfTrust": {
+      "description": "PolicyRootOfTrust defines the root of trust based on the selected policyType.",
+      "type": "object",
+      "required": [
+        "policyType"
+      ],
+      "properties": {
+        "fulcioCAWithRekor": {
+          "description": "fulcioCAWithRekor defines the root of trust configuration based on the Fulcio certificate and the Rekor public key. fulcioCAWithRekor is required when policyType is FulcioCAWithRekor, and forbidden otherwise For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.FulcioCAWithRekor"
+        },
+        "pki": {
+          "description": "pki defines the root of trust configuration based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates. pki is required when policyType is PKI, and forbidden otherwise.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PKI"
+        },
+        "policyType": {
+          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+          "type": "string",
+          "default": ""
+        },
+        "publicKey": {
+          "description": "publicKey defines the root of trust configuration based on a sigstore public key. Optionally include a Rekor public key for Rekor verification. publicKey is required when policyType is PublicKey, and forbidden otherwise.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PublicKey"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "policyType",
+          "fields-to-discriminateBy": {
+            "fulcioCAWithRekor": "FulcioCAWithRekor",
+            "pki": "PKI",
+            "publicKey": "PublicKey"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.PowerVSPlatformSpec": {
       "description": "PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider. This only includes fields that can be modified in the cluster.",
@@ -9824,6 +10235,25 @@
         "noProxy": {
           "description": "noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PublicKey": {
+      "description": "PublicKey defines the root of trust based on a sigstore public key.",
+      "type": "object",
+      "required": [
+        "keyData"
+      ],
+      "properties": {
+        "keyData": {
+          "description": "keyData is a required field contains inline base64-encoded data for the PEM format public key. keyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -10488,6 +10918,9 @@
     },
     "com.github.openshift.api.config.v1.TokenClaimMappings": {
       "type": "object",
+      "required": [
+        "username"
+      ],
       "properties": {
         "extra": {
           "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 64 extra attribute mappings may be provided.",
@@ -10511,7 +10944,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping"
         },
         "username": {
-          "description": "username is an optional field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
+          "description": "username is a required field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernameClaimMapping"
         }
@@ -10693,7 +11126,7 @@
       ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
           "type": "string",
           "default": ""
         },
@@ -10711,6 +11144,7 @@
         {
           "discriminator": "prefixPolicy",
           "fields-to-discriminateBy": {
+            "claim": "Claim",
             "prefix": "Prefix"
           }
         }
@@ -11822,7 +12256,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKI"
         },
         "policyType": {
-          "description": "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" is a DevPreview feature that indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+          "description": "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
           "type": "string",
           "default": ""
         },
@@ -22057,7 +22491,7 @@
       "type": "object",
       "properties": {
         "deleteOnTermination": {
-          "description": "Indicates whether the EBS volume is deleted on machine termination.",
+          "description": "Indicates whether the EBS volume is deleted on machine termination.\n\nDeprecated: setting this field has no effect.",
           "type": "boolean"
         },
         "encrypted": {
@@ -26475,7 +26909,6 @@
       "description": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
-        "kubeClientConfig",
         "servingInfo",
         "leaderElection",
         "controllers",
@@ -26535,10 +26968,6 @@
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
-        },
-        "kubeClientConfig": {
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.KubeClientConfig"
         },
         "leaderElection": {
           "description": "leaderElection defines the configuration for electing a controller instance to make changes to the cluster. If unspecified, the ControllerTTL value is checked to determine whether the legacy direct etcd election code will be used.",
@@ -35890,130 +36319,6 @@
         }
       }
     },
-    "com.github.openshift.api.platform.v1alpha1.ActiveBundleDeployment": {
-      "description": "ActiveBundleDeployment references a BundleDeployment resource.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the metadata.name of the referenced BundleDeployment object.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.platform.v1alpha1.Package": {
-      "description": "Package contains fields to configure which OLM package this PlatformOperator will install",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name contains the desired OLM-based Operator package name that is defined in an existing CatalogSource resource in the cluster.\n\nThis configured package will be managed with the cluster's lifecycle. In the current implementation, it will be retrieving this name from a list of supported operators out of the catalogs included with OpenShift.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.platform.v1alpha1.PlatformOperator": {
-      "description": "PlatformOperator is the Schema for the PlatformOperators API.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperatorSpec"
-        },
-        "status": {
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperatorStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorList": {
-      "description": "PlatformOperatorList contains a list of PlatformOperators\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "items"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.PlatformOperator"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorSpec": {
-      "description": "PlatformOperatorSpec defines the desired state of PlatformOperator.",
-      "type": "object",
-      "required": [
-        "package"
-      ],
-      "properties": {
-        "package": {
-          "description": "package contains the desired package and its configuration for this PlatformOperator.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.Package"
-        }
-      }
-    },
-    "com.github.openshift.api.platform.v1alpha1.PlatformOperatorStatus": {
-      "description": "PlatformOperatorStatus defines the observed state of PlatformOperator",
-      "type": "object",
-      "properties": {
-        "activeBundleDeployment": {
-          "description": "activeBundleDeployment is the reference to the BundleDeployment resource that's being managed by this PO resource. If this field is not populated in the status then it means the PlatformOperator has either not been installed yet or is failing to install.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.platform.v1alpha1.ActiveBundleDeployment"
-        },
-        "conditions": {
-          "description": "conditions represent the latest available observations of a platform operator's current state.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          },
-          "x-kubernetes-list-map-keys": [
-            "type"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
     "com.github.openshift.api.project.v1.Project": {
       "description": "Projects are the unit of isolation and collaboration in OpenShift. A project has one or more members, a quota on the resources that the project may consume, and the security controls on the resources in the project. Within a project, members may have different roles - project administrators can set membership, editors can create and manage the resources, and viewers can see but not access running containers. In a normal cluster project administrators are not able to alter their quotas - that is restricted to cluster administrators.\n\nListing or watching projects will return only projects the user has the reader role on.\n\nAn OpenShift project is an alternative representation of a Kubernetes namespace. Projects are exposed as editable to end users while namespaces are not. Direct creation of a project is typically restricted to administrators, while end users should use the requestproject resource.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -40295,6 +40600,77 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ContainerState"
         },
+        "stopSignal": {
+          "description": "StopSignal reports the effective stop signal for this container\n\nPossible enum values:\n - `\"SIGABRT\"`\n - `\"SIGALRM\"`\n - `\"SIGBUS\"`\n - `\"SIGCHLD\"`\n - `\"SIGCLD\"`\n - `\"SIGCONT\"`\n - `\"SIGFPE\"`\n - `\"SIGHUP\"`\n - `\"SIGILL\"`\n - `\"SIGINT\"`\n - `\"SIGIO\"`\n - `\"SIGIOT\"`\n - `\"SIGKILL\"`\n - `\"SIGPIPE\"`\n - `\"SIGPOLL\"`\n - `\"SIGPROF\"`\n - `\"SIGPWR\"`\n - `\"SIGQUIT\"`\n - `\"SIGRTMAX\"`\n - `\"SIGRTMAX-1\"`\n - `\"SIGRTMAX-10\"`\n - `\"SIGRTMAX-11\"`\n - `\"SIGRTMAX-12\"`\n - `\"SIGRTMAX-13\"`\n - `\"SIGRTMAX-14\"`\n - `\"SIGRTMAX-2\"`\n - `\"SIGRTMAX-3\"`\n - `\"SIGRTMAX-4\"`\n - `\"SIGRTMAX-5\"`\n - `\"SIGRTMAX-6\"`\n - `\"SIGRTMAX-7\"`\n - `\"SIGRTMAX-8\"`\n - `\"SIGRTMAX-9\"`\n - `\"SIGRTMIN\"`\n - `\"SIGRTMIN+1\"`\n - `\"SIGRTMIN+10\"`\n - `\"SIGRTMIN+11\"`\n - `\"SIGRTMIN+12\"`\n - `\"SIGRTMIN+13\"`\n - `\"SIGRTMIN+14\"`\n - `\"SIGRTMIN+15\"`\n - `\"SIGRTMIN+2\"`\n - `\"SIGRTMIN+3\"`\n - `\"SIGRTMIN+4\"`\n - `\"SIGRTMIN+5\"`\n - `\"SIGRTMIN+6\"`\n - `\"SIGRTMIN+7\"`\n - `\"SIGRTMIN+8\"`\n - `\"SIGRTMIN+9\"`\n - `\"SIGSEGV\"`\n - `\"SIGSTKFLT\"`\n - `\"SIGSTOP\"`\n - `\"SIGSYS\"`\n - `\"SIGTERM\"`\n - `\"SIGTRAP\"`\n - `\"SIGTSTP\"`\n - `\"SIGTTIN\"`\n - `\"SIGTTOU\"`\n - `\"SIGURG\"`\n - `\"SIGUSR1\"`\n - `\"SIGUSR2\"`\n - `\"SIGVTALRM\"`\n - `\"SIGWINCH\"`\n - `\"SIGXCPU\"`\n - `\"SIGXFSZ\"`",
+          "type": "string",
+          "enum": [
+            "SIGABRT",
+            "SIGALRM",
+            "SIGBUS",
+            "SIGCHLD",
+            "SIGCLD",
+            "SIGCONT",
+            "SIGFPE",
+            "SIGHUP",
+            "SIGILL",
+            "SIGINT",
+            "SIGIO",
+            "SIGIOT",
+            "SIGKILL",
+            "SIGPIPE",
+            "SIGPOLL",
+            "SIGPROF",
+            "SIGPWR",
+            "SIGQUIT",
+            "SIGRTMAX",
+            "SIGRTMAX-1",
+            "SIGRTMAX-10",
+            "SIGRTMAX-11",
+            "SIGRTMAX-12",
+            "SIGRTMAX-13",
+            "SIGRTMAX-14",
+            "SIGRTMAX-2",
+            "SIGRTMAX-3",
+            "SIGRTMAX-4",
+            "SIGRTMAX-5",
+            "SIGRTMAX-6",
+            "SIGRTMAX-7",
+            "SIGRTMAX-8",
+            "SIGRTMAX-9",
+            "SIGRTMIN",
+            "SIGRTMIN+1",
+            "SIGRTMIN+10",
+            "SIGRTMIN+11",
+            "SIGRTMIN+12",
+            "SIGRTMIN+13",
+            "SIGRTMIN+14",
+            "SIGRTMIN+15",
+            "SIGRTMIN+2",
+            "SIGRTMIN+3",
+            "SIGRTMIN+4",
+            "SIGRTMIN+5",
+            "SIGRTMIN+6",
+            "SIGRTMIN+7",
+            "SIGRTMIN+8",
+            "SIGRTMIN+9",
+            "SIGSEGV",
+            "SIGSTKFLT",
+            "SIGSTOP",
+            "SIGSYS",
+            "SIGTERM",
+            "SIGTRAP",
+            "SIGTSTP",
+            "SIGTTIN",
+            "SIGTTOU",
+            "SIGURG",
+            "SIGUSR1",
+            "SIGUSR2",
+            "SIGVTALRM",
+            "SIGWINCH",
+            "SIGXCPU",
+            "SIGXFSZ"
+          ]
+        },
         "user": {
           "description": "User represents user identity information initially attached to the first process of the container",
           "$ref": "#/definitions/io.k8s.api.core.v1.ContainerUser"
@@ -40417,7 +40793,7 @@
       }
     },
     "io.k8s.api.core.v1.EndpointAddress": {
-      "description": "EndpointAddress is a tuple that describes single IP address.",
+      "description": "EndpointAddress is a tuple that describes single IP address. Deprecated: This API is deprecated in v1.33+.",
       "type": "object",
       "required": [
         "ip"
@@ -40444,7 +40820,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "io.k8s.api.core.v1.EndpointPort": {
-      "description": "EndpointPort is a tuple that describes a single port.",
+      "description": "EndpointPort is a tuple that describes a single port. Deprecated: This API is deprecated in v1.33+.",
       "type": "object",
       "required": [
         "port"
@@ -40477,7 +40853,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "io.k8s.api.core.v1.EndpointSubset": {
-      "description": "EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:\n\n\t{\n\t  Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t  Ports:     [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t}\n\nThe resulting set of endpoints can be viewed as:\n\n\ta: [ 10.10.1.1:8675, 10.10.2.2:8675 ],\n\tb: [ 10.10.1.1:309, 10.10.2.2:309 ]",
+      "description": "EndpointSubset is a group of addresses with a common set of ports. The expanded set of endpoints is the Cartesian product of Addresses x Ports. For example, given:\n\n\t{\n\t  Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t  Ports:     [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t}\n\nThe resulting set of endpoints can be viewed as:\n\n\ta: [ 10.10.1.1:8675, 10.10.2.2:8675 ],\n\tb: [ 10.10.1.1:309, 10.10.2.2:309 ]\n\nDeprecated: This API is deprecated in v1.33+.",
       "type": "object",
       "properties": {
         "addresses": {
@@ -40510,7 +40886,7 @@
       }
     },
     "io.k8s.api.core.v1.Endpoints": {
-      "description": "Endpoints is a collection of endpoints that implement the actual service. Example:\n\n\t Name: \"mysvc\",\n\t Subsets: [\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t   },\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.3.3\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 93}, {\"name\": \"b\", \"port\": 76}]\n\t   },\n\t]",
+      "description": "Endpoints is a collection of endpoints that implement the actual service. Example:\n\n\t Name: \"mysvc\",\n\t Subsets: [\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.1.1\"}, {\"ip\": \"10.10.2.2\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 8675}, {\"name\": \"b\", \"port\": 309}]\n\t   },\n\t   {\n\t     Addresses: [{\"ip\": \"10.10.3.3\"}],\n\t     Ports: [{\"name\": \"a\", \"port\": 93}, {\"name\": \"b\", \"port\": 76}]\n\t   },\n\t]\n\nEndpoints is a legacy API and does not contain information about all Service features. Use discoveryv1.EndpointSlice for complete information about Service endpoints.\n\nDeprecated: This API is deprecated in v1.33+. Use discoveryv1.EndpointSlice.",
       "type": "object",
       "properties": {
         "apiVersion": {
@@ -40538,7 +40914,7 @@
       }
     },
     "io.k8s.api.core.v1.EndpointsList": {
-      "description": "EndpointsList is a list of endpoints.",
+      "description": "EndpointsList is a list of endpoints. Deprecated: This API is deprecated in v1.33+.",
       "type": "object",
       "required": [
         "items"
@@ -40568,7 +40944,7 @@
       }
     },
     "io.k8s.api.core.v1.EnvFromSource": {
-      "description": "EnvFromSource represents the source of a set of ConfigMaps",
+      "description": "EnvFromSource represents the source of a set of ConfigMaps or Secrets",
       "type": "object",
       "properties": {
         "configMapRef": {
@@ -40576,7 +40952,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapEnvSource"
         },
         "prefix": {
-          "description": "An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.",
+          "description": "Optional text to prepend to the name of each environment variable. Must be a C_IDENTIFIER.",
           "type": "string"
         },
         "secretRef": {
@@ -41703,6 +42079,77 @@
         "preStop": {
           "description": "PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks",
           "$ref": "#/definitions/io.k8s.api.core.v1.LifecycleHandler"
+        },
+        "stopSignal": {
+          "description": "StopSignal defines which signal will be sent to a container when it is being stopped. If not specified, the default is defined by the container runtime in use. StopSignal can only be set for Pods with a non-empty .spec.os.name\n\nPossible enum values:\n - `\"SIGABRT\"`\n - `\"SIGALRM\"`\n - `\"SIGBUS\"`\n - `\"SIGCHLD\"`\n - `\"SIGCLD\"`\n - `\"SIGCONT\"`\n - `\"SIGFPE\"`\n - `\"SIGHUP\"`\n - `\"SIGILL\"`\n - `\"SIGINT\"`\n - `\"SIGIO\"`\n - `\"SIGIOT\"`\n - `\"SIGKILL\"`\n - `\"SIGPIPE\"`\n - `\"SIGPOLL\"`\n - `\"SIGPROF\"`\n - `\"SIGPWR\"`\n - `\"SIGQUIT\"`\n - `\"SIGRTMAX\"`\n - `\"SIGRTMAX-1\"`\n - `\"SIGRTMAX-10\"`\n - `\"SIGRTMAX-11\"`\n - `\"SIGRTMAX-12\"`\n - `\"SIGRTMAX-13\"`\n - `\"SIGRTMAX-14\"`\n - `\"SIGRTMAX-2\"`\n - `\"SIGRTMAX-3\"`\n - `\"SIGRTMAX-4\"`\n - `\"SIGRTMAX-5\"`\n - `\"SIGRTMAX-6\"`\n - `\"SIGRTMAX-7\"`\n - `\"SIGRTMAX-8\"`\n - `\"SIGRTMAX-9\"`\n - `\"SIGRTMIN\"`\n - `\"SIGRTMIN+1\"`\n - `\"SIGRTMIN+10\"`\n - `\"SIGRTMIN+11\"`\n - `\"SIGRTMIN+12\"`\n - `\"SIGRTMIN+13\"`\n - `\"SIGRTMIN+14\"`\n - `\"SIGRTMIN+15\"`\n - `\"SIGRTMIN+2\"`\n - `\"SIGRTMIN+3\"`\n - `\"SIGRTMIN+4\"`\n - `\"SIGRTMIN+5\"`\n - `\"SIGRTMIN+6\"`\n - `\"SIGRTMIN+7\"`\n - `\"SIGRTMIN+8\"`\n - `\"SIGRTMIN+9\"`\n - `\"SIGSEGV\"`\n - `\"SIGSTKFLT\"`\n - `\"SIGSTOP\"`\n - `\"SIGSYS\"`\n - `\"SIGTERM\"`\n - `\"SIGTRAP\"`\n - `\"SIGTSTP\"`\n - `\"SIGTTIN\"`\n - `\"SIGTTOU\"`\n - `\"SIGURG\"`\n - `\"SIGUSR1\"`\n - `\"SIGUSR2\"`\n - `\"SIGVTALRM\"`\n - `\"SIGWINCH\"`\n - `\"SIGXCPU\"`\n - `\"SIGXFSZ\"`",
+          "type": "string",
+          "enum": [
+            "SIGABRT",
+            "SIGALRM",
+            "SIGBUS",
+            "SIGCHLD",
+            "SIGCLD",
+            "SIGCONT",
+            "SIGFPE",
+            "SIGHUP",
+            "SIGILL",
+            "SIGINT",
+            "SIGIO",
+            "SIGIOT",
+            "SIGKILL",
+            "SIGPIPE",
+            "SIGPOLL",
+            "SIGPROF",
+            "SIGPWR",
+            "SIGQUIT",
+            "SIGRTMAX",
+            "SIGRTMAX-1",
+            "SIGRTMAX-10",
+            "SIGRTMAX-11",
+            "SIGRTMAX-12",
+            "SIGRTMAX-13",
+            "SIGRTMAX-14",
+            "SIGRTMAX-2",
+            "SIGRTMAX-3",
+            "SIGRTMAX-4",
+            "SIGRTMAX-5",
+            "SIGRTMAX-6",
+            "SIGRTMAX-7",
+            "SIGRTMAX-8",
+            "SIGRTMAX-9",
+            "SIGRTMIN",
+            "SIGRTMIN+1",
+            "SIGRTMIN+10",
+            "SIGRTMIN+11",
+            "SIGRTMIN+12",
+            "SIGRTMIN+13",
+            "SIGRTMIN+14",
+            "SIGRTMIN+15",
+            "SIGRTMIN+2",
+            "SIGRTMIN+3",
+            "SIGRTMIN+4",
+            "SIGRTMIN+5",
+            "SIGRTMIN+6",
+            "SIGRTMIN+7",
+            "SIGRTMIN+8",
+            "SIGRTMIN+9",
+            "SIGSEGV",
+            "SIGSTKFLT",
+            "SIGSTOP",
+            "SIGSYS",
+            "SIGTERM",
+            "SIGTRAP",
+            "SIGTSTP",
+            "SIGTTIN",
+            "SIGTTOU",
+            "SIGURG",
+            "SIGUSR1",
+            "SIGUSR2",
+            "SIGVTALRM",
+            "SIGWINCH",
+            "SIGXCPU",
+            "SIGXFSZ"
+          ]
         }
       }
     },
@@ -42634,6 +43081,17 @@
         }
       }
     },
+    "io.k8s.api.core.v1.NodeSwapStatus": {
+      "description": "NodeSwapStatus represents swap memory information.",
+      "type": "object",
+      "properties": {
+        "capacity": {
+          "description": "Total amount of swap memory in bytes.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "io.k8s.api.core.v1.NodeSystemInfo": {
       "description": "NodeSystemInfo is a set of ids/uuids to uniquely identify the node.",
       "type": "object",
@@ -42694,6 +43152,10 @@
           "description": "OS Image reported by the node from /etc/os-release (e.g. Debian GNU/Linux 7 (wheezy)).",
           "type": "string",
           "default": ""
+        },
+        "swap": {
+          "description": "Swap Info reported by the node.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.NodeSwapStatus"
         },
         "systemUUID": {
           "description": "SystemUUID reported by the node. For unique machine identification MachineID is preferred. This field is specific to Red Hat hosts https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid",
@@ -43452,7 +43914,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "matchLabelKeys": {
-          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
+          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -43461,7 +43923,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "mismatchLabelKeys": {
-          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
+          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -43566,6 +44028,11 @@
         "message": {
           "description": "Human-readable message indicating details about last transition.",
           "type": "string"
+        },
+        "observedGeneration": {
+          "description": "If set, this represents the .metadata.generation that the pod condition was set based upon. This is an alpha field. Enable PodObservedGenerationTracking to be able to use this field.",
+          "type": "integer",
+          "format": "int64"
         },
         "reason": {
           "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
@@ -44106,7 +44573,7 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "initContainers": {
-          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
+          "description": "List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
           "type": "array",
           "items": {
             "default": {},
@@ -44355,6 +44822,11 @@
           "description": "nominatedNodeName is set only when this pod preempts other pods on the node, but it cannot be scheduled right away as preemption victims receive their graceful termination periods. This field does not guarantee that the pod will be scheduled on this node. Scheduler may decide to place the pod elsewhere if other nodes become available sooner. Scheduler may also decide to give the resources on this node to a higher priority pod that is created after preemption. As a result, this field may be different than PodSpec.nodeName when the pod is scheduled.",
           "type": "string"
         },
+        "observedGeneration": {
+          "description": "If set, this represents the .metadata.generation that the pod status was set based upon. This is an alpha field. Enable PodObservedGenerationTracking to be able to use this field.",
+          "type": "integer",
+          "format": "int64"
+        },
         "phase": {
           "description": "The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle. The conditions array, the reason and message fields, and the individual container status arrays contain more detail about the pod's status. There are five possible phase values:\n\nPending: The pod has been accepted by the Kubernetes system, but one or more of the container images has not been created. This includes time before being scheduled as well as time spent downloading images over the network, which could take a while. Running: The pod has been bound to a node, and all of the containers have been created. At least one container is still running, or is in the process of starting or restarting. Succeeded: All containers in the pod have terminated in success, and will not be restarted. Failed: All containers in the pod have terminated, and at least one container has terminated in failure. The container either exited with non-zero status or was terminated by the system. Unknown: For some reason the state of the pod could not be obtained, typically due to an error in communicating with the host of the pod.\n\nMore info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-phase\n\nPossible enum values:\n - `\"Failed\"` means that all containers in the pod have terminated, and at least one container has terminated in a failure (exited with a non-zero exit code or was stopped by the system).\n - `\"Pending\"` means the pod has been accepted by the system, but one or more of the containers has not been started. This includes time before being bound to a node, as well as time spent pulling images onto the host.\n - `\"Running\"` means the pod has been bound to a node and all of the containers have been started. At least one container is still running or is in the process of being restarted.\n - `\"Succeeded\"` means that all containers in the pod have voluntarily terminated with a container exit code of 0, and the system is not going to restart any of these containers.\n - `\"Unknown\"` means that for some reason the state of the pod could not be obtained, typically due to an error in communicating with the host of the pod. Deprecated: It isn't being set since 2015 (74da3b14b0c0f658b3bb8d2def5094686d0e9095)",
           "type": "string",
@@ -44398,7 +44870,7 @@
           "type": "string"
         },
         "resize": {
-          "description": "Status of resources resize desired for pod's containers. It is empty if no resources resize is pending. Any changes to container resources will automatically set this to \"Proposed\"",
+          "description": "Status of resources resize desired for pod's containers. It is empty if no resources resize is pending. Any changes to container resources will automatically set this to \"Proposed\" Deprecated: Resize status is moved to two pod conditions PodResizePending and PodResizeInProgress. PodResizePending will track states where the spec has been resized, but the Kubelet has not yet allocated the resources. PodResizeInProgress will track in-progress resizes, and should be present whenever allocated resources != acknowledged resources.",
           "type": "string"
         },
         "resourceClaimStatuses": {
@@ -44977,12 +45449,14 @@
         "minReadySeconds": {
           "description": "Minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available. Defaults to 0 (pod will be considered available as soon as it is ready)",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         },
         "replicas": {
           "description": "Replicas is the number of desired replicas. This is a pointer to distinguish between explicit zero and unspecified. Defaults to 1. More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#what-is-a-replicationcontroller",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 1
         },
         "selector": {
           "description": "Selector is a label query over pods that should match the Replicas count. If Selector is empty, it is defaulted to the labels present on the Pod template. Label keys and values that must match in order to be controlled by this replication controller, if empty defaulted to labels on Pod template. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
@@ -45193,7 +45667,8 @@
               "NotBestEffort",
               "NotTerminating",
               "PriorityClass",
-              "Terminating"
+              "Terminating",
+              "VolumeAttributesClass"
             ]
           },
           "x-kubernetes-list-type": "atomic"
@@ -45446,7 +45921,7 @@
           ]
         },
         "scopeName": {
-          "description": "The name of the scope that the selector applies to.\n\nPossible enum values:\n - `\"BestEffort\"` Match all pod objects that have best effort quality of service\n - `\"CrossNamespacePodAffinity\"` Match all pod objects that have cross-namespace pod (anti)affinity mentioned.\n - `\"NotBestEffort\"` Match all pod objects that do not have best effort quality of service\n - `\"NotTerminating\"` Match all pod objects where spec.activeDeadlineSeconds is nil\n - `\"PriorityClass\"` Match all pod objects that have priority class mentioned\n - `\"Terminating\"` Match all pod objects where spec.activeDeadlineSeconds >=0",
+          "description": "The name of the scope that the selector applies to.\n\nPossible enum values:\n - `\"BestEffort\"` Match all pod objects that have best effort quality of service\n - `\"CrossNamespacePodAffinity\"` Match all pod objects that have cross-namespace pod (anti)affinity mentioned.\n - `\"NotBestEffort\"` Match all pod objects that do not have best effort quality of service\n - `\"NotTerminating\"` Match all pod objects where spec.activeDeadlineSeconds is nil\n - `\"PriorityClass\"` Match all pod objects that have priority class mentioned\n - `\"Terminating\"` Match all pod objects where spec.activeDeadlineSeconds >=0\n - `\"VolumeAttributesClass\"` Match all pvc objects that have volume attributes class mentioned.",
           "type": "string",
           "default": "",
           "enum": [
@@ -45455,7 +45930,8 @@
             "NotBestEffort",
             "NotTerminating",
             "PriorityClass",
-            "Terminating"
+            "Terminating",
+            "VolumeAttributesClass"
           ]
         },
         "values": {
@@ -46112,7 +46588,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SessionAffinityConfig"
         },
         "trafficDistribution": {
-          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone). This is a beta field and requires enabling ServiceTrafficDistribution feature.",
+          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are in the same zone.",
           "type": "string"
         },
         "type": {
@@ -46409,7 +46885,7 @@
           "format": "int32"
         },
         "nodeAffinityPolicy": {
-          "description": "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.\n\nIf this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
+          "description": "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.\n\nIf this value is nil, the behavior is equivalent to the Honor policy.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
           "type": "string",
           "enum": [
             "Honor",
@@ -46417,7 +46893,7 @@
           ]
         },
         "nodeTaintsPolicy": {
-          "description": "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included.\n\nIf this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
+          "description": "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included.\n\nIf this value is nil, the behavior is equivalent to the Ignore policy.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
           "type": "string",
           "enum": [
             "Honor",
@@ -46569,7 +47045,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
         },
         "image": {
-          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33. The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
@@ -46849,7 +47325,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
         },
         "image": {
-          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33. The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
