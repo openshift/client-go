@@ -86,6 +86,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.CloudLoadBalancerIPsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCondition"):
 		return &configv1.ClusterConditionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterImagePolicy"):
+		return &configv1.ClusterImagePolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterImagePolicySpec"):
+		return &configv1.ClusterImagePolicySpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterImagePolicyStatus"):
+		return &configv1.ClusterImagePolicyStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterNetworkEntry"):
 		return &configv1.ClusterNetworkEntryApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterOperator"):
@@ -164,6 +170,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.FeatureGateSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateStatus"):
 		return &configv1.FeatureGateStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("FulcioCAWithRekor"):
+		return &configv1.FulcioCAWithRekorApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPPlatformStatus"):
 		return &configv1.GCPPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("GCPResourceLabel"):
@@ -208,6 +216,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ImageDigestMirrorSetSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageLabel"):
 		return &configv1.ImageLabelApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ImagePolicy"):
+		return &configv1.ImagePolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ImagePolicySpec"):
+		return &configv1.ImagePolicySpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ImagePolicyStatus"):
+		return &configv1.ImagePolicyStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageSpec"):
 		return &configv1.ImageSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageStatus"):
@@ -324,10 +338,26 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.OvirtPlatformLoadBalancerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OvirtPlatformStatus"):
 		return &configv1.OvirtPlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PKI"):
+		return &configv1.PKIApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PKICertificateSubject"):
+		return &configv1.PKICertificateSubjectApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PlatformSpec"):
 		return &configv1.PlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PlatformStatus"):
 		return &configv1.PlatformStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Policy"):
+		return &configv1.PolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PolicyFulcioSubject"):
+		return &configv1.PolicyFulcioSubjectApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PolicyIdentity"):
+		return &configv1.PolicyIdentityApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PolicyMatchExactRepository"):
+		return &configv1.PolicyMatchExactRepositoryApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PolicyMatchRemapIdentity"):
+		return &configv1.PolicyMatchRemapIdentityApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PolicyRootOfTrust"):
+		return &configv1.PolicyRootOfTrustApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PowerVSPlatformSpec"):
 		return &configv1.PowerVSPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PowerVSPlatformStatus"):
@@ -350,6 +380,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ProxySpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ProxyStatus"):
 		return &configv1.ProxyStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PublicKey"):
+		return &configv1.PublicKeyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RegistryLocation"):
 		return &configv1.RegistryLocationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("RegistrySources"):
