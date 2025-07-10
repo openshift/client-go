@@ -45,13 +45,25 @@ func NewFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPe
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.HelmV1beta1().HelmChartRepositories().List(context.TODO(), options)
+				return client.HelmV1beta1().HelmChartRepositories().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.HelmV1beta1().HelmChartRepositories().Watch(context.TODO(), options)
+				return client.HelmV1beta1().HelmChartRepositories().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.HelmV1beta1().HelmChartRepositories().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.HelmV1beta1().HelmChartRepositories().Watch(ctx, options)
 			},
 		},
 		&apihelmv1beta1.HelmChartRepository{},

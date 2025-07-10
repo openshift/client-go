@@ -45,13 +45,25 @@ func NewFilteredAPIRequestCountInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ApiserverV1().APIRequestCounts().List(context.TODO(), options)
+				return client.ApiserverV1().APIRequestCounts().List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ApiserverV1().APIRequestCounts().Watch(context.TODO(), options)
+				return client.ApiserverV1().APIRequestCounts().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ApiserverV1().APIRequestCounts().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ApiserverV1().APIRequestCounts().Watch(ctx, options)
 			},
 		},
 		&apiapiserverv1.APIRequestCount{},
