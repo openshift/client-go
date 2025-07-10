@@ -45,13 +45,25 @@ func NewFilteredConsoleSampleInformer(client versioned.Interface, resyncPeriod t
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ConsoleV1().ConsoleSamples().List(context.TODO(), options)
+				return client.ConsoleV1().ConsoleSamples().List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ConsoleV1().ConsoleSamples().Watch(context.TODO(), options)
+				return client.ConsoleV1().ConsoleSamples().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ConsoleV1().ConsoleSamples().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ConsoleV1().ConsoleSamples().Watch(ctx, options)
 			},
 		},
 		&apiconsolev1.ConsoleSample{},

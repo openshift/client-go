@@ -46,13 +46,25 @@ func NewFilteredAlertingRuleInformer(client versioned.Interface, namespace strin
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.MonitoringV1().AlertingRules(namespace).List(context.TODO(), options)
+				return client.MonitoringV1().AlertingRules(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.MonitoringV1().AlertingRules(namespace).Watch(context.TODO(), options)
+				return client.MonitoringV1().AlertingRules(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.MonitoringV1().AlertingRules(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.MonitoringV1().AlertingRules(namespace).Watch(ctx, options)
 			},
 		},
 		&apimonitoringv1.AlertingRule{},
