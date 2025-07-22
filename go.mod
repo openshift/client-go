@@ -67,4 +67,4 @@ retract v3.9.0+incompatible
 // retracted by itself.
 retract v0.0.1
 
-replace github.com/openshift/api => github.com/naseerahkani/api v0.0.0-20250709200454-c82e51f90bb8
+replace github.com/openshift/api => github.com/naseerahkani/api v0.0.0-20250715184238-584477d3b226
