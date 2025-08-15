@@ -1156,6 +1156,17 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.CloudControllerManagerStatus
       default: {}
+- name: com.github.openshift.api.config.v1.ExtraMapping
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: valueExpression
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.config.v1.FeatureGate
   map:
     fields:
@@ -2206,9 +2217,7 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.config.v1.NutanixResourceIdentifier
-          elementRelationship: associative
-          keys:
-          - type
+          elementRelationship: atomic
 - name: com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer
   map:
     fields:
@@ -3053,6 +3062,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.Release
   map:
     fields:
+    - name: architecture
+      type:
+        scalar: string
     - name: channels
       type:
         list:
@@ -3265,14 +3277,34 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.TokenClaimMappings
   map:
     fields:
+    - name: extra
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.ExtraMapping
+          elementRelationship: associative
+          keys:
+          - key
     - name: groups
       type:
         namedType: com.github.openshift.api.config.v1.PrefixedClaimMapping
       default: {}
+    - name: uid
+      type:
+        namedType: com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping
     - name: username
       type:
         namedType: com.github.openshift.api.config.v1.UsernameClaimMapping
       default: {}
+- name: com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping
+  map:
+    fields:
+    - name: claim
+      type:
+        scalar: string
+    - name: expression
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.TokenClaimValidationRule
   map:
     fields:
