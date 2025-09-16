@@ -12,7 +12,7 @@ import (
 	internal "github.com/openshift/client-go/config/applyconfigurations/internal"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	testing "k8s.io/client-go/testing"
+	managedfields "k8s.io/apimachinery/pkg/util/managedfields"
 )
 
 // ForKind returns an apply configuration type for the given GroupVersionKind, or nil if no
@@ -460,6 +460,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.AlertmanagerConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("AlertmanagerCustomConfig"):
 		return &configv1alpha1.AlertmanagerCustomConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("Audit"):
+		return &configv1alpha1.AuditApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Backup"):
 		return &configv1alpha1.BackupApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
@@ -492,6 +494,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
 		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MetricsServerConfig"):
+		return &configv1alpha1.MetricsServerConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeClaimReference"):
 		return &configv1alpha1.PersistentVolumeClaimReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
@@ -549,6 +553,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 	return nil
 }
 
-func NewTypeConverter(scheme *runtime.Scheme) *testing.TypeConverter {
-	return &testing.TypeConverter{Scheme: scheme, TypeResolver: internal.Parser()}
+func NewTypeConverter(scheme *runtime.Scheme) managedfields.TypeConverter {
+	return managedfields.NewSchemeTypeConverter(scheme, internal.Parser())
 }

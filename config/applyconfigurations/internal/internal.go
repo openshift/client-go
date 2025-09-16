@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
 )
 
 func Parser() *typed.Parser {
@@ -3945,17 +3945,16 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: customConfig
       type:
         namedType: com.github.openshift.api.config.v1alpha1.AlertmanagerCustomConfig
+      default: {}
     - name: deploymentMode
       type:
         scalar: string
-      default: ""
 - name: com.github.openshift.api.config.v1alpha1.AlertmanagerCustomConfig
   map:
     fields:
     - name: logLevel
       type:
         scalar: string
-      default: ""
     - name: nodeSelector
       type:
         map:
@@ -3993,6 +3992,12 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: volumeClaimTemplate
       type:
         namedType: io.k8s.api.core.v1.PersistentVolumeClaim
+- name: com.github.openshift.api.config.v1alpha1.Audit
+  map:
+    fields:
+    - name: profile
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1alpha1.Backup
   map:
     fields:
@@ -4105,9 +4110,15 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: alertmanagerConfig
       type:
         namedType: com.github.openshift.api.config.v1alpha1.AlertmanagerConfig
+      default: {}
+    - name: metricsServerConfig
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.MetricsServerConfig
+      default: {}
     - name: userDefined
       type:
         namedType: com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring
+      default: {}
 - name: com.github.openshift.api.config.v1alpha1.ClusterMonitoringStatus
   map:
     elementType:
@@ -4129,7 +4140,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
-      default: ""
     - name: request
       type:
         namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
@@ -4265,6 +4275,44 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
+- name: com.github.openshift.api.config.v1alpha1.MetricsServerConfig
+  map:
+    fields:
+    - name: audit
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.Audit
+      default: {}
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.ContainerResource
+          elementRelationship: associative
+          keys:
+          - name
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.Toleration
+          elementRelationship: atomic
+    - name: topologySpreadConstraints
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.TopologySpreadConstraint
+          elementRelationship: associative
+          keys:
+          - topologyKey
+          - whenUnsatisfiable
+    - name: verbosity
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1alpha1.PKI
   map:
     fields:
@@ -4601,12 +4649,35 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: fieldRef
       type:
         namedType: io.k8s.api.core.v1.ObjectFieldSelector
+    - name: fileKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.FileKeySelector
     - name: resourceFieldRef
       type:
         namedType: io.k8s.api.core.v1.ResourceFieldSelector
     - name: secretKeyRef
       type:
         namedType: io.k8s.api.core.v1.SecretKeySelector
+- name: io.k8s.api.core.v1.FileKeySelector
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: optional
+      type:
+        scalar: boolean
+      default: false
+    - name: path
+      type:
+        scalar: string
+      default: ""
+    - name: volumeName
+      type:
+        scalar: string
+      default: ""
+    elementRelationship: atomic
 - name: io.k8s.api.core.v1.ModifyVolumeStatus
   map:
     fields:
