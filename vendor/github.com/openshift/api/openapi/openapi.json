@@ -11538,12 +11538,12 @@
       "properties": {
         "customConfig": {
           "description": "customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerCustomConfig"
         },
         "deploymentMode": {
           "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -11553,8 +11553,7 @@
       "properties": {
         "logLevel": {
           "description": "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "nodeSelector": {
           "description": "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
@@ -11610,6 +11609,19 @@
         "volumeClaimTemplate": {
           "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. This field is optional.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.Audit": {
+      "description": "Audit profile configurations",
+      "type": "object",
+      "required": [
+        "profile"
+      ],
+      "properties": {
+        "profile": {
+          "description": "profile is a required field for configuring the audit log level of the Kubernetes Metrics Server. Allowed values are None, Metadata, Request, or RequestResponse. When set to None, audit logging is disabled and no audit events are recorded. When set to Metadata, only request metadata (such as requesting user, timestamp, resource, verb, etc.) is logged, but not the request or response body. When set to Request, event metadata and the request body are logged, but not the response body. When set to RequestResponse, event metadata, request body, and response body are all logged, providing the most detailed audit information.\n\nSee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+          "type": "string"
         }
       }
     },
@@ -11859,10 +11871,17 @@
       "properties": {
         "alertmanagerConfig": {
           "description": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
+        },
+        "metricsServerConfig": {
+          "description": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
         },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
       }
@@ -11884,8 +11903,7 @@
         },
         "name": {
           "description": "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "request": {
           "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit.",
@@ -12144,6 +12162,63 @@
     },
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.MetricsServerConfig": {
+      "description": "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
+      "type": "object",
+      "properties": {
+        "audit": {
+          "description": "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default sets audit.profile to Metadata",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Audit"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "verbosity": {
+          "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are Errors, Info, Trace, TraceAll and omitted. When set to Errors, only critical messages and errors are logged. When set to Info, only basic information messages are logged. When set to Trace, information useful for general debugging is logged. When set to TraceAll, detailed information about metric scraping is logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Errors`",
+          "type": "string"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.PKI": {
       "description": "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
@@ -27198,6 +27273,64 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.BootImageSkewEnforcementConfig": {
+      "description": "BootImageSkewEnforcementConfig is used to configure how boot image version skew is enforced on the cluster.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "manual": {
+          "description": "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This must include either the RHCOS version of the boot image or the OCP release version which shipped with that RHCOS boot image. Required when mode is set to \"Manual\" and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageManual"
+        },
+        "mode": {
+          "description": "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Manual and None. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "manual": "Manual"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.BootImageSkewEnforcementStatus": {
+      "description": "BootImageSkewEnforcementStatus is the type for the status object. It represents the cluster defaults when the boot image skew enforcement configuration is undefined and reflects the actual configuration when it is defined.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "automatic": {
+          "description": "automatic describes the current boot image of the cluster. This will be populated by the MCO when performing boot image updates. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Automatic\" and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageAutomatic"
+        },
+        "manual": {
+          "description": "manual describes the current boot image of the cluster. This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageManual"
+        },
+        "mode": {
+          "description": "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Automatic, Manual and None. Automatic means that the MCO will perform boot image updates and store the OCP & RHCOS version associated with the last boot image update in the automatic field. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "automatic": "Automatic",
+            "manual": "Manual"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1.CSIDriverConfigSpec": {
       "description": "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
       "type": "object",
@@ -27603,6 +27736,50 @@
           "type": "string"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.ClusterBootImageAutomatic": {
+      "description": "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
+      "type": "object",
+      "properties": {
+        "ocpVersion": {
+          "description": "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long.",
+          "type": "string"
+        },
+        "rhcosVersion": {
+          "description": "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ClusterBootImageManual": {
+      "description": "ClusterBootImageManual is used to describe the cluster boot image in Manual mode.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode is used to configure which boot image field is defined in Manual mode. Valid values are OCPVersion and RHCOSVersion. OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update in the OCPVersion field. RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update in the RHCOSVersion field. This field is required.",
+          "type": "string"
+        },
+        "ocpVersion": {
+          "description": "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long. Required when mode is set to \"OCPVersion\" and forbidden otherwise.",
+          "type": "string"
+        },
+        "rhcosVersion": {
+          "description": "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long. Required when mode is set to \"RHCOSVersion\" and forbidden otherwise.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "ocpVersion": "OCPVersion",
+            "rhcosVersion": "RHCOSVersion"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.ClusterCSIDriver": {
       "description": "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -30929,6 +31106,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "bootImageSkewEnforcement": {
+          "description": "bootImageSkewEnforcement allows an admin to configure how boot image version skew is enforced on the cluster. When omitted, this will default to Automatic for clusters that support automatic boot image updates. For clusters that do not support automatic boot image updates, cluster upgrades will be disabled until a skew enforcement mode has been specified. When version skew is being enforced, cluster upgrades will be disabled until the version skew is deemed acceptable for the current release payload.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.BootImageSkewEnforcementConfig"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -30985,6 +31167,11 @@
     "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
       "type": "object",
       "properties": {
+        "bootImageSkewEnforcementStatus": {
+          "description": "bootImageSkewEnforcementStatus reflects what the latest cluster-validated boot image skew enforcement configuration is and will be used by Machine Config Controller while performing boot image skew enforcement. When omitted, the MCO has no knowledge of how to enforce boot image skew. When the MCO does not know how boot image skew should be enforced, cluster upgrades will be blocked until it can either automatically determine skew enforcement or there is an explicit skew enforcement configuration provided in the spec.bootImageSkewEnforcement field.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.BootImageSkewEnforcementStatus"
+        },
         "conditions": {
           "description": "conditions is a list of conditions and their status",
           "type": "array",
