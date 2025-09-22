@@ -50,6 +50,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.AzureCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AzureDiskEncryptionSet"):
 		return &operatorv1.AzureDiskEncryptionSetApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("BootImageSkewEnforcementConfig"):
+		return &operatorv1.BootImageSkewEnforcementConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("BootImageSkewEnforcementStatus"):
+		return &operatorv1.BootImageSkewEnforcementStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Capability"):
 		return &operatorv1.CapabilityApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CapabilityVisibility"):
@@ -62,6 +66,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.CloudCredentialSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudCredentialStatus"):
 		return &operatorv1.CloudCredentialStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterBootImageAutomatic"):
+		return &operatorv1.ClusterBootImageAutomaticApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterBootImageManual"):
+		return &operatorv1.ClusterBootImageManualApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCSIDriver"):
 		return &operatorv1.ClusterCSIDriverApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCSIDriverSpec"):
