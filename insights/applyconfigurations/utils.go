@@ -3,6 +3,7 @@
 package applyconfigurations
 
 import (
+	v1 "github.com/openshift/api/insights/v1"
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	v1alpha2 "github.com/openshift/api/insights/v1alpha2"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
@@ -39,6 +40,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
 		return &insightsv1alpha1.PersistentVolumeConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Storage"):
+		return &insightsv1alpha1.PersistentVolumeConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Storage"):
 		return &insightsv1alpha1.StorageApplyConfiguration{}
 
 		// Group=insights.openshift.io, Version=v1alpha2

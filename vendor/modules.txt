@@ -62,7 +62,7 @@ github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 ## explicit
 github.com/munnerz/goautoneg
-# github.com/openshift/api v0.0.0-20250922161302-04f99ea228f5
+# github.com/openshift/api v0.0.0-20251009160459-595e66a09a84
 ## explicit; go 1.24.0
 github.com/openshift/api
 github.com/openshift/api/apiserver
@@ -89,6 +89,7 @@ github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
 github.com/openshift/api/imageregistry
 github.com/openshift/api/imageregistry/v1
+github.com/openshift/api/insights/v1
 github.com/openshift/api/insights/v1alpha1
 github.com/openshift/api/insights/v1alpha2
 github.com/openshift/api/kubecontrolplane
