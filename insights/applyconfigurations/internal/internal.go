@@ -23,6 +23,214 @@ func Parser() *typed.Parser {
 var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
+- name: com.github.openshift.api.insights.v1.Custom
+  map:
+    fields:
+    - name: configs
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.insights.v1.GathererConfig
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.insights.v1.DataGather
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.insights.v1.DataGatherSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.insights.v1.DataGatherStatus
+      default: {}
+- name: com.github.openshift.api.insights.v1.DataGatherSpec
+  map:
+    fields:
+    - name: dataPolicy
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: gatherers
+      type:
+        namedType: com.github.openshift.api.insights.v1.Gatherers
+      default: {}
+    - name: storage
+      type:
+        namedType: com.github.openshift.api.insights.v1.Storage
+      default: {}
+- name: com.github.openshift.api.insights.v1.DataGatherStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: finishTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: gatherers
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.insights.v1.GathererStatus
+          elementRelationship: associative
+          keys:
+          - name
+    - name: insightsReport
+      type:
+        namedType: com.github.openshift.api.insights.v1.InsightsReport
+      default: {}
+    - name: insightsRequestID
+      type:
+        scalar: string
+    - name: relatedObjects
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.insights.v1.ObjectReference
+          elementRelationship: associative
+          keys:
+          - name
+          - namespace
+    - name: startTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.openshift.api.insights.v1.GathererConfig
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: state
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.GathererStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: lastGatherSeconds
+      type:
+        scalar: numeric
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.Gatherers
+  map:
+    fields:
+    - name: custom
+      type:
+        namedType: com.github.openshift.api.insights.v1.Custom
+      default: {}
+    - name: mode
+      type:
+        scalar: string
+    unions:
+    - discriminator: mode
+      fields:
+      - fieldName: custom
+        discriminatorValue: Custom
+- name: com.github.openshift.api.insights.v1.HealthCheck
+  map:
+    fields:
+    - name: advisorURI
+      type:
+        scalar: string
+    - name: description
+      type:
+        scalar: string
+    - name: totalRisk
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.InsightsReport
+  map:
+    fields:
+    - name: downloadedTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: healthChecks
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.insights.v1.HealthCheck
+          elementRelationship: associative
+          keys:
+          - advisorURI
+          - totalRisk
+          - description
+    - name: uri
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.ObjectReference
+  map:
+    fields:
+    - name: group
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.PersistentVolumeClaimReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.PersistentVolumeConfig
+  map:
+    fields:
+    - name: claim
+      type:
+        namedType: com.github.openshift.api.insights.v1.PersistentVolumeClaimReference
+      default: {}
+    - name: mountPath
+      type:
+        scalar: string
+- name: com.github.openshift.api.insights.v1.Storage
+  map:
+    fields:
+    - name: persistentVolume
+      type:
+        namedType: com.github.openshift.api.insights.v1.PersistentVolumeConfig
+      default: {}
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: persistentVolume
+        discriminatorValue: PersistentVolume
 - name: com.github.openshift.api.insights.v1alpha1.DataGather
   map:
     fields:

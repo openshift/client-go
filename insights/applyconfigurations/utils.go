@@ -3,8 +3,10 @@
 package applyconfigurations
 
 import (
+	v1 "github.com/openshift/api/insights/v1"
 	v1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	v1alpha2 "github.com/openshift/api/insights/v1alpha2"
+	insightsv1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha1"
 	insightsv1alpha2 "github.com/openshift/client-go/insights/applyconfigurations/insights/v1alpha2"
 	internal "github.com/openshift/client-go/insights/applyconfigurations/internal"
@@ -17,7 +19,35 @@ import (
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=insights.openshift.io, Version=v1alpha1
+	// Group=insights.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("Custom"):
+		return &insightsv1.CustomApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("DataGather"):
+		return &insightsv1.DataGatherApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("DataGatherSpec"):
+		return &insightsv1.DataGatherSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("DataGatherStatus"):
+		return &insightsv1.DataGatherStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GathererConfig"):
+		return &insightsv1.GathererConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Gatherers"):
+		return &insightsv1.GatherersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("GathererStatus"):
+		return &insightsv1.GathererStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("HealthCheck"):
+		return &insightsv1.HealthCheckApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InsightsReport"):
+		return &insightsv1.InsightsReportApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ObjectReference"):
+		return &insightsv1.ObjectReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PersistentVolumeClaimReference"):
+		return &insightsv1.PersistentVolumeClaimReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
+		return &insightsv1.PersistentVolumeConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("Storage"):
+		return &insightsv1.StorageApplyConfiguration{}
+
+		// Group=insights.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("DataGather"):
 		return &insightsv1alpha1.DataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("DataGatherSpec"):
