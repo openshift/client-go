@@ -6,6 +6,7 @@ import (
 	fmt "fmt"
 	http "net/http"
 
+	insightsv1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha1"
 	insightsv1alpha2 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha2"
 	discovery "k8s.io/client-go/discovery"
@@ -15,6 +16,7 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
+	InsightsV1() insightsv1.InsightsV1Interface
 	InsightsV1alpha1() insightsv1alpha1.InsightsV1alpha1Interface
 	InsightsV1alpha2() insightsv1alpha2.InsightsV1alpha2Interface
 }
@@ -22,8 +24,14 @@ type Interface interface {
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
+	insightsV1       *insightsv1.InsightsV1Client
 	insightsV1alpha1 *insightsv1alpha1.InsightsV1alpha1Client
 	insightsV1alpha2 *insightsv1alpha2.InsightsV1alpha2Client
+}
+
+// InsightsV1 retrieves the InsightsV1Client
+func (c *Clientset) InsightsV1() insightsv1.InsightsV1Interface {
+	return c.insightsV1
 }
 
 // InsightsV1alpha1 retrieves the InsightsV1alpha1Client
@@ -80,6 +88,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
+	cs.insightsV1, err = insightsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.insightsV1alpha1, err = insightsv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -109,6 +121,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
+	cs.insightsV1 = insightsv1.New(c)
 	cs.insightsV1alpha1 = insightsv1alpha1.New(c)
 	cs.insightsV1alpha2 = insightsv1alpha2.New(c)
 
