@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v4/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
 )
 
 func Parser() *typed.Parser {
@@ -2123,6 +2123,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.KubeAPIServerSpec
   map:
     fields:
+    - name: eventTTLMinutes
+      type:
+        scalar: numeric
     - name: failedRevisionLimit
       type:
         scalar: numeric
