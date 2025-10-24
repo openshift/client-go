@@ -14,7 +14,7 @@ CODEGEN_PKG=$(go list -f '{{.Dir}}' k8s.io/code-generator)
 
 source "${CODEGEN_PKG}/kube_codegen.sh"
 
-for group in apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane operatoringress project quota route samples security securityinternal servicecertsigner sharedresource template user; do
+for group in apiextensions apiserver apps authorization build cloudnetwork config console helm image imageregistry insights machine monitoring network oauth operator operatorcontrolplane operatoringress project quota route samples security securityinternal servicecertsigner sharedresource template user; do
   echo "# Processing ${group} ..."
   kube::codegen::gen_client \
       --with-watch \
