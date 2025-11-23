@@ -4225,6 +4225,11 @@
           },
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
         },
+        "ipFamily": {
+          "description": "ipFamily specifies the IP protocol family that should be used for AWS network resources. This controls whether AWS resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
+          "type": "string",
+          "default": "IPv4"
+        },
         "region": {
           "description": "region holds the default AWS region for new AWS resources created by the cluster.",
           "type": "string",
@@ -4658,6 +4663,11 @@
           "description": "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
           "type": "string"
         },
+        "ipFamily": {
+          "description": "ipFamily specifies the IP protocol family that should be used for Azure network resources. This controls whether Azure resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
+          "type": "string",
+          "default": "IPv4"
+        },
         "networkResourceGroupName": {
           "description": "networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.",
           "type": "string"
@@ -4768,6 +4778,14 @@
             "default": ""
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "dnsRecordsType": {
+          "description": "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure and no additional user configuration is required for the cluster to function. When set to `External`, records are not provided by the internal infrastructure and must be configured by the user on a DNS server outside the cluster. Cluster nodes must use this external server for their upstream DNS requests. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.\n\nPossible enum values:\n - `\"External\"`\n - `\"Internal\"`",
+          "type": "string",
+          "enum": [
+            "External",
+            "Internal"
+          ]
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -5504,7 +5522,7 @@
           "default": ""
         },
         "desiredUpdate": {
-          "description": "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail.\n\nSome of the fields are inter-related with restrictions and meanings described here. 1. image is specified, version is specified, architecture is specified. API validation error. 2. image is specified, version is specified, architecture is not specified. The version extracted from the referenced image must match the specified version. 3. image is specified, version is not specified, architecture is specified. API validation error. 4. image is specified, version is not specified, architecture is not specified. image is used. 5. image is not specified, version is specified, architecture is specified. version and desired architecture are used to select an image. 6. image is not specified, version is specified, architecture is not specified. version and current architecture are used to select an image. 7. image is not specified, version is not specified, architecture is specified. API validation error. 8. image is not specified, version is not specified, architecture is not specified. API validation error.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted. Not all rollbacks will succeed.",
+          "description": "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail.\n\nSome of the fields are inter-related with restrictions and meanings described here. 1. image is specified, version is specified, architecture is specified. API validation error. 2. image is specified, version is specified, architecture is not specified. The version extracted from the referenced image must match the specified version. 3. image is specified, version is not specified, architecture is specified. API validation error. 4. image is specified, version is not specified, architecture is not specified. image is used. 5. image is not specified, version is specified, architecture is specified. version and desired architecture are used to select an image. 6. image is not specified, version is specified, architecture is not specified. version and current architecture are used to select an image. 7. image is not specified, version is not specified, architecture is specified. API validation error. 8. image is not specified, version is not specified, architecture is not specified. API validation error.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted if the previous version is within the current minor version. Not all rollbacks will succeed, and some may unrecoverably break the cluster.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Update"
         },
         "overrides": {
@@ -8914,6 +8932,14 @@
           },
           "x-kubernetes-list-type": "set"
         },
+        "dnsRecordsType": {
+          "description": "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure and no additional user configuration is required for the cluster to function. When set to `External`, records are not provided by the internal infrastructure and must be configured by the user on a DNS server outside the cluster. Cluster nodes must use this external server for their upstream DNS requests. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.\n\nPossible enum values:\n - `\"External\"`\n - `\"Internal\"`",
+          "type": "string",
+          "enum": [
+            "External",
+            "Internal"
+          ]
+        },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
           "type": "string"
@@ -9524,6 +9550,14 @@
           "description": "cloudName is the name of the desired OpenStack cloud in the client configuration file (`clouds.yaml`).",
           "type": "string"
         },
+        "dnsRecordsType": {
+          "description": "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure and no additional user configuration is required for the cluster to function. When set to `External`, records are not provided by the internal infrastructure and must be configured by the user on a DNS server outside the cluster. Cluster nodes must use this external server for their upstream DNS requests. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.\n\nPossible enum values:\n - `\"External\"`\n - `\"Internal\"`",
+          "type": "string",
+          "enum": [
+            "External",
+            "Internal"
+          ]
+        },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
           "type": "string"
@@ -9713,6 +9747,14 @@
             "default": ""
           },
           "x-kubernetes-list-type": "set"
+        },
+        "dnsRecordsType": {
+          "description": "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure and no additional user configuration is required for the cluster to function. When set to `External`, records are not provided by the internal infrastructure and must be configured by the user on a DNS server outside the cluster. Cluster nodes must use this external server for their upstream DNS requests. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.\n\nPossible enum values:\n - `\"External\"`\n - `\"Internal\"`",
+          "type": "string",
+          "enum": [
+            "External",
+            "Internal"
+          ]
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -11252,7 +11294,7 @@
           "default": ""
         },
         "force": {
-          "description": "force allows an administrator to update to an image that has failed verification or upgradeable checks. This option should only be used when the authenticity of the provided image has been verified out of band because the provided image will run with full administrative access to the cluster. Do not use this flag with images that comes from unknown or potentially malicious sources.",
+          "description": "force allows an administrator to update to an image that has failed verification or upgradeable checks that are designed to keep your cluster safe. Only use this if: * you are testing unsigned release images in short-lived test clusters or * you are working around a known bug in the cluster-version\n  operator and you have verified the authenticity of the provided\n  image yourself.\nThe provided image will run with full administrative access to the cluster. Do not use this flag with images that come from unknown or potentially malicious sources.",
           "type": "boolean",
           "default": false
         },
@@ -11624,6 +11666,14 @@
             "default": ""
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "dnsRecordsType": {
+          "description": "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure and no additional user configuration is required for the cluster to function. When set to `External`, records are not provided by the internal infrastructure and must be configured by the user on a DNS server outside the cluster. Cluster nodes must use this external server for their upstream DNS requests. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.\n\nPossible enum values:\n - `\"External\"`\n - `\"Internal\"`",
+          "type": "string",
+          "enum": [
+            "External",
+            "Internal"
+          ]
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -13253,7 +13303,7 @@
           "$ref": "#/definitions/com.github.openshift.api.console.v1.ApplicationMenuSpec"
         },
         "href": {
-          "description": "href is the absolute secure URL for the link (must use https)",
+          "description": "href is the absolute URL for the link. Must use https:// for web URLs or mailto: for email links.",
           "type": "string",
           "default": ""
         },
@@ -14185,7 +14235,7 @@
       ],
       "properties": {
         "href": {
-          "description": "href is the absolute secure URL for the link (must use https)",
+          "description": "href is the absolute URL for the link. Must use https:// for web URLs or mailto: for email links.",
           "type": "string",
           "default": ""
         },
@@ -14255,6 +14305,76 @@
           "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.FormatMarkerExamples": {
+      "description": "FormatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This struct provides a comprehensive reference for format marker validation. Each field uses a different format marker to validate its value.",
+      "type": "object",
+      "properties": {
+        "base64Data": {
+          "description": "base64Data must be valid base64-encoded data. Valid examples include aGVsbG8= (encodes \"hello\") or SGVsbG8gV29ybGQh (encodes \"Hello World!\").",
+          "type": "string"
+        },
+        "cidrNotation": {
+          "description": "cidrNotation must be a valid CIDR notation IP address range. Valid examples include IPv4 CIDR (10.0.0.0/8, 192.168.1.0/24) or IPv6 CIDR (fd00::/8, 2001:db8::/32).\n\nUse of Format=cidr is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isCIDR(self)` to validate CIDR notation. Additionally, use `isCIDR(self) && cidr(self).ip().family() == X` to validate IPvX specifically.",
+          "type": "string"
+        },
+        "dateField": {
+          "description": "dateField must be a valid date in RFC 3339 full-date format (YYYY-MM-DD). Valid examples include 2024-01-15 or 2023-12-31.",
+          "type": "string"
+        },
+        "dateTimeField": {
+          "description": "dateTimeField must be a valid RFC 3339 date-time. Valid examples include 2024-01-15T14:30:00Z, 2024-01-15T14:30:00+00:00, or 2024-01-15T14:30:00.123Z.",
+          "type": "string"
+        },
+        "durationField": {
+          "description": "durationField must be a valid duration string parseable by Go's time.ParseDuration. Valid time units are ns, us (or µs), ms, s, m, h. Valid examples include 30s, 5m, 1h30m, 100ms, or 1h.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "emailAddress must be a valid email address. Valid examples include user@example.com or firstname.lastname@company.co.uk.",
+          "type": "string"
+        },
+        "hostnameField": {
+          "description": "hostnameField must be a valid Internet hostname per RFC 1034. Valid examples include example.com, api.example.com, or my-service.",
+          "type": "string"
+        },
+        "ipv4Address": {
+          "description": "ipv4Address must be a valid IPv4 address in dotted-quad notation. Valid values range from 0.0.0.0 to 255.255.255.255 (e.g., 192.168.1.1).\n\nUse of Format=ipv4 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 4` to validate IPv4 addresses.",
+          "type": "string"
+        },
+        "ipv6Address": {
+          "description": "ipv6Address must be a valid IPv6 address. Valid examples include full form (2001:0db8:0000:0000:0000:0000:0000:0001) or compressed form (2001:db8::1 or ::1).\n\nUse of Format=ipv6 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 6` to validate IPv6 addresses.",
+          "type": "string"
+        },
+        "macAddress": {
+          "description": "macAddress must be a valid MAC address. Valid examples include 00:1A:2B:3C:4D:5E or 00-1A-2B-3C-4D-5E.",
+          "type": "string"
+        },
+        "passwordField": {
+          "description": "passwordField is a marker for sensitive data. Note that the password format marker does not perform any actual validation - it accepts any string value. This marker is primarily used to signal that the field contains sensitive information.",
+          "type": "string"
+        },
+        "uriField": {
+          "description": "uriField must be a valid URI following RFC 3986 syntax. Valid examples include https://example.com/path?query=value or /absolute-path.",
+          "type": "string"
+        },
+        "uuid3Field": {
+          "description": "uuid3Field must be a valid UUID version 3 (MD5 hash-based). Version 3 UUIDs are generated using MD5 hashing of a namespace and name. Valid example: a3bb189e-8bf9-3888-9912-ace4e6543002.",
+          "type": "string"
+        },
+        "uuid4Field": {
+          "description": "uuid4Field must be a valid UUID version 4 (random). Version 4 UUIDs are randomly generated. Valid example: 550e8400-e29b-41d4-a716-446655440000.",
+          "type": "string"
+        },
+        "uuid5Field": {
+          "description": "uuid5Field must be a valid UUID version 5 (SHA-1 hash-based). Version 5 UUIDs are generated using SHA-1 hashing of a namespace and name. Valid example: 74738ff5-5367-5958-9aee-98fffdcd1876.",
+          "type": "string"
+        },
+        "uuidField": {
+          "description": "uuidField must be a valid UUID (any version) in 8-4-4-4-12 format. Valid examples include 550e8400-e29b-41d4-a716-446655440000 or 123e4567-e89b-12d3-a456-426614174000.",
+          "type": "string"
         }
       }
     },
@@ -14346,6 +14466,10 @@
           "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.example.v1.EvolvingUnion"
+        },
+        "formatMarkerExamples": {
+          "description": "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.FormatMarkerExamples"
         },
         "immutableField": {
           "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
@@ -22655,6 +22779,10 @@
           "format": "int64",
           "default": 0
         },
+        "hostPlacement": {
+          "description": "hostPlacement configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.HostPlacement"
+        },
         "iamInstanceProfile": {
           "description": "iamInstanceProfile is a reference to an IAM role to assign to the instance",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.AWSResourceReference"
@@ -23242,6 +23370,19 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.DedicatedHost": {
+      "description": "DedicatedHost represents the configuration for the usage of dedicated host.",
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by 17 lowercase hexadecimal characters (0-9 and a-f). Must be exactly 19 characters in length.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.DiskEncryptionSetParameters": {
       "description": "DiskEncryptionSetParameters is the disk encryption set properties",
       "type": "object",
@@ -23284,13 +23425,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.AWSResourceReference"
         },
+        "throughputMib": {
+          "description": "throughputMib to provision in MiB/s supported for the volume type. Not applicable to all types.\n\nThis parameter is valid only for gp3 volumes. Valid Range: Minimum value of 125. Maximum value of 2000.\n\nWhen omitted, this means no opinion, and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 125.",
+          "type": "integer",
+          "format": "int32"
+        },
         "volumeSize": {
           "description": "The size of the volume, in GiB.\n\nConstraints: 1-16384 for General Purpose SSD (gp2), 4-16384 for Provisioned IOPS SSD (io1), 500-16384 for Throughput Optimized HDD (st1), 500-16384 for Cold HDD (sc1), and 1-1024 for Magnetic (standard) volumes. If you specify a snapshot, the volume size must be equal to or larger than the snapshot size.\n\nDefault: If you're creating the volume from a snapshot and don't specify a volume size, the default is the snapshot size.",
           "type": "integer",
           "format": "int64"
         },
         "volumeType": {
-          "description": "The volume type: gp2, io1, st1, sc1, or standard. Default: standard",
+          "description": "volumeType can be of type gp2, gp3, io1, st1, sc1, or standard. Default: standard",
           "type": "string"
         }
       }
@@ -23531,6 +23677,10 @@
           "description": "projectID is the project in which the GCP machine provider will create the VM.",
           "type": "string"
         },
+        "provisioningModel": {
+          "description": "provisioningModel is an optional field that determines the provisioning model for the GCP machine instance. Valid values are \"Spot\" and omitted. When set to Spot, the instance runs as a Google Cloud Spot instance which provides significant cost savings but may be preempted by Google Cloud Platform when resources are needed elsewhere. When omitted, the machine will be provisioned as a standard on-demand instance. This field cannot be used together with the preemptible field.",
+          "type": "string"
+        },
         "region": {
           "description": "region is the region in which the GCP machine provider will create the VM.",
           "type": "string",
@@ -23711,6 +23861,31 @@
           "type": "string"
         }
       }
+    },
+    "com.github.openshift.api.machine.v1beta1.HostPlacement": {
+      "description": "HostPlacement is the type that will be used to configure the placement of AWS instances.",
+      "type": "object",
+      "required": [
+        "affinity"
+      ],
+      "properties": {
+        "affinity": {
+          "description": "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host.",
+          "type": "string"
+        },
+        "dedicatedHost": {
+          "description": "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and forbidden otherwise.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DedicatedHost"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "affinity",
+          "fields-to-discriminateBy": {
+            "dedicatedHost": "DedicatedHost"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.machine.v1beta1.Image": {
       "description": "Image is a mirror of azure sdk compute.ImageReference",
@@ -25068,6 +25243,114 @@
           "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream": {
+      "description": "OSImageStream describes a set of streams and associated URLs available for the MachineConfigPools to be used as base OS images.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec contains the desired OSImageStream config configuration.",
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec"
+        },
+        "status": {
+          "description": "status describes the last observed state of this OSImageStream. Populated by the MachineConfigOperator after reading release metadata. When not present, the controller has not yet reconciled this resource.",
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamList": {
+      "description": "OSImageStreamList is a list of OSImageStream resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec": {
+      "description": "OSImageStreamSpec defines the desired state of a OSImageStream.",
+      "type": "object"
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus": {
+      "description": "OSImageStreamStatus describes the current state of a OSImageStream.",
+      "type": "object",
+      "properties": {
+        "availableStreams": {
+          "description": "availableStreams is a list of the available OS Image Streams available and their associated URLs for both OS and Extensions images.\n\nA maximum of 100 streams may be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "defaultStream": {
+          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool. Must reference the name of one of the streams in availableStreams. Must be set when availableStreams is not empty. When not set and availableStreams is empty, controllers should use the default one stated in the release image.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet": {
+      "type": "object",
+      "required": [
+        "name",
+        "osImageURL",
+        "osExtensionsImageURL"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the identifier of the stream.\n\nMust not be empty and must not exceed 70 characters in length. Must only contain alphanumeric characters, hyphens ('-'), or dots ('.').",
+          "type": "string"
+        },
+        "osExtensionsImageURL": {
+          "description": "osExtensionsImageURL is an OS Extensions Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string"
+        },
+        "osImageURL": {
+          "description": "osImageURL is an OS Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string"
         }
       }
     },
@@ -30464,7 +30747,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "domain": {
-          "description": "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.",
+          "description": "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.\n\nThe domain value must be a valid DNS name. It must consist of lowercase alphanumeric characters, '-' or '.', and each label must start and end with an alphanumeric character and not exceed 63 characters. Maximum length of a valid DNS domain is 253 characters.\n\nThe implementation may add a prefix such as \"router-default.\" to the domain when constructing the router canonical hostname. To ensure the resulting hostname does not exceed the DNS maximum length of 253 characters, the domain length is additionally validated at the IngressController object level. For the maximum length of the domain value itself, the shortest possible variant of the prefix and the ingress controller name was considered for example \"router-a.\"",
           "type": "string"
         },
         "endpointPublishingStrategy": {
@@ -30490,7 +30773,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressControllerHTTPHeaders"
         },
         "idleConnectionTerminationPolicy": {
-          "description": "idleConnectionTerminationPolicy maps directly to HAProxy's idle-close-on-response option and controls whether HAProxy keeps idle frontend connections open during a soft stop (router reload).\n\nAllowed values for this field are \"Immediate\" and \"Deferred\". The default value is \"Immediate\".\n\nWhen set to \"Immediate\", idle connections are closed immediately during router reloads. This ensures immediate propagation of route changes but may impact clients sensitive to connection resets.\n\nWhen set to \"Deferred\", HAProxy will maintain idle connections during a soft reload instead of closing them immediately. These connections remain open until any of the following occurs:\n\n  - A new request is received on the connection, in which\n    case HAProxy handles it in the old process and closes\n    the connection after sending the response.\n\n  - HAProxy's `timeout http-keep-alive` duration expires\n    (300 seconds in OpenShift's configuration, not\n    configurable).\n\n  - The client's keep-alive timeout expires, causing the\n    client to close the connection.\n\nSetting Deferred can help prevent errors in clients or load balancers that do not properly handle connection resets. Additionally, this option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift versions < 4.14), maintaining idle connections during a soft reload was the default behaviour, but starting with HAProxy 2.4, the default changed to closing idle connections immediately.\n\nImportant Consideration:\n\n  - Using Deferred will result in temporary inconsistencies\n    for the first request on each persistent connection\n    after a route update and router reload. This request\n    will be processed by the old HAProxy process using its\n    old configuration. Subsequent requests will use the\n    updated configuration.\n\nOperational Considerations:\n\n  - Keeping idle connections open during reloads may lead\n    to an accumulation of old HAProxy processes if\n    connections remain idle for extended periods,\n    especially in environments where frequent reloads\n    occur.\n\n  - Consider monitoring the number of HAProxy processes in\n    the router pods when Deferred is set.\n\n  - You may need to enable or adjust the\n    `ingress.operator.openshift.io/hard-stop-after`\n    duration (configured via an annotation on the\n    IngressController resource) in environments with\n    frequent reloads to prevent resource exhaustion.",
+          "description": "idleConnectionTerminationPolicy maps directly to HAProxy's idle-close-on-response option and controls whether HAProxy keeps idle frontend connections open during a soft stop (router reload).\n\nAllowed values for this field are \"Immediate\" and \"Deferred\". The default value is \"Immediate\".\n\nWhen set to \"Immediate\", idle connections are closed immediately during router reloads. This ensures immediate propagation of route changes but may impact clients sensitive to connection resets.\n\nWhen set to \"Deferred\", HAProxy will maintain idle connections during a soft reload instead of closing them immediately. These connections remain open until any of the following occurs:\n\n  - A new request is received on the connection, in which\n    case HAProxy handles it in the old process and closes\n    the connection after sending the response.\n\n  - HAProxy's `timeout http-keep-alive` duration expires.\n    By default this is 300 seconds, but it can be changed\n    using httpKeepAliveTimeout tuning option.\n\n  - The client's keep-alive timeout expires, causing the\n    client to close the connection.\n\nSetting Deferred can help prevent errors in clients or load balancers that do not properly handle connection resets. Additionally, this option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift versions < 4.14), maintaining idle connections during a soft reload was the default behaviour, but starting with HAProxy 2.4, the default changed to closing idle connections immediately.\n\nImportant Consideration:\n\n  - Using Deferred will result in temporary inconsistencies\n    for the first request on each persistent connection\n    after a route update and router reload. This request\n    will be processed by the old HAProxy process using its\n    old configuration. Subsequent requests will use the\n    updated configuration.\n\nOperational Considerations:\n\n  - Keeping idle connections open during reloads may lead\n    to an accumulation of old HAProxy processes if\n    connections remain idle for extended periods,\n    especially in environments where frequent reloads\n    occur.\n\n  - Consider monitoring the number of HAProxy processes in\n    the router pods when Deferred is set.\n\n  - You may need to enable or adjust the\n    `ingress.operator.openshift.io/hard-stop-after`\n    duration (configured via an annotation on the\n    IngressController resource) in environments with\n    frequent reloads to prevent resource exhaustion.",
           "type": "string",
           "default": "Immediate"
         },
@@ -30617,6 +30900,10 @@
         },
         "healthCheckInterval": {
           "description": "healthCheckInterval defines how long the router waits between two consecutive health checks on its configured backends.  This value is applied globally as a default for all routes, but may be overridden per-route by the route annotation \"router.openshift.io/haproxy.health.check.interval\".\n\nExpects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, eg \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nSetting this to less than 5s can cause excess traffic due to too frequent TCP health checks and accompanying SYN packet storms.  Alternatively, setting this too high can result in increased latency, due to backend servers that are no longer available, but haven't yet been detected as such.\n\nAn empty or zero healthCheckInterval means no opinion and IngressController chooses a default, which is subject to change over time. Currently the default healthCheckInterval value is 5s.\n\nCurrently the minimum allowed value is 1s and the maximum allowed value is 2147483647ms (24.85 days).  Both are subject to change over time.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "httpKeepAliveTimeout": {
+          "description": "httpKeepAliveTimeout defines the maximum allowed time to wait for a new HTTP request to appear on a connection from the client to the router.\n\nThis field expects an unsigned duration string of a decimal number, with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5s\" or \"2m45s\". Valid time units are \"ms\", \"s\", \"m\". The allowed range is from 1 millisecond to 15 minutes.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 300s.\n\nLow values (tens of milliseconds or less) can cause clients to close and reopen connections for each request, leading to reduced connection sharing. For HTTP/2, special care should be taken with low values. A few seconds is a reasonable starting point to avoid holding idle connections open while still allowing subsequent requests to reuse the connection.\n\nHigh values (minutes or more) favor connection reuse but may cause idle connections to linger longer.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "maxConnections": {
@@ -37403,7 +37690,7 @@
           "type": "string"
         },
         "termination": {
-          "description": "termination indicates termination type.\n\n* edge - TLS termination is done by the router and http is used to communicate with the backend (default) * passthrough - Traffic is sent straight to the destination without the router providing TLS termination * reencrypt - TLS termination is done by the router and https is used to communicate with the backend\n\nNote: passthrough termination is incompatible with httpHeader actions",
+          "description": "termination indicates the TLS termination type.\n\n* edge - TLS termination is done by the router and http is used to communicate with the backend (default)\n\n* passthrough - Traffic is sent straight to the destination without the router providing TLS termination\n\n* reencrypt - TLS termination is done by the router and https is used to communicate with the backend\n\nNote: passthrough termination is incompatible with httpHeader actions",
           "type": "string",
           "default": ""
         }
