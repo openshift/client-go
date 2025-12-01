@@ -171,14 +171,6 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.machineconfiguration.v1alpha1.InternalReleaseImageStatus
   map:
     fields:
-    - name: conditions
-      type:
-        list:
-          elementType:
-            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
-          elementRelationship: associative
-          keys:
-          - type
     - name: releases
       type:
         list:
