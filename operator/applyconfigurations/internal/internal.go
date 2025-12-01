@@ -389,6 +389,15 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.operator.v1.BGPManagedConfig
+  map:
+    fields:
+    - name: asNumber
+      type:
+        scalar: numeric
+    - name: bgpTopology
+      type:
+        scalar: string
 - name: com.github.openshift.api.operator.v1.BootImageSkewEnforcementConfig
   map:
     fields:
@@ -2837,6 +2846,15 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: version
       type:
         scalar: string
+- name: com.github.openshift.api.operator.v1.NoOverlayOptions
+  map:
+    fields:
+    - name: outboundSNAT
+      type:
+        scalar: string
+    - name: routing
+      type:
+        scalar: string
 - name: com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus
   map:
     fields:
@@ -3136,6 +3154,17 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1.OVNKubernetesConfig
   map:
     fields:
+    - name: bgpManagedConfig
+      type:
+        namedType: com.github.openshift.api.operator.v1.BGPManagedConfig
+      default: {}
+    - name: defaultNetworkNoOverlayOptions
+      type:
+        namedType: com.github.openshift.api.operator.v1.NoOverlayOptions
+      default: {}
+    - name: defaultNetworkTransport
+      type:
+        scalar: string
     - name: egressIPConfig
       type:
         namedType: com.github.openshift.api.operator.v1.EgressIPConfig
