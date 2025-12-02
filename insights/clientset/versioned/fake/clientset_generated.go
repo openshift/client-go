@@ -5,8 +5,6 @@ package fake
 import (
 	applyconfigurations "github.com/openshift/client-go/insights/applyconfigurations"
 	clientset "github.com/openshift/client-go/insights/clientset/versioned"
-	insightsv1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1"
-	fakeinsightsv1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1/fake"
 	insightsv1alpha1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha1"
 	fakeinsightsv1alpha1 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha1/fake"
 	insightsv1alpha2 "github.com/openshift/client-go/insights/clientset/versioned/typed/insights/v1alpha2"
@@ -112,11 +110,6 @@ var (
 	_ clientset.Interface = &Clientset{}
 	_ testing.FakeClient  = &Clientset{}
 )
-
-// InsightsV1 retrieves the InsightsV1Client
-func (c *Clientset) InsightsV1() insightsv1.InsightsV1Interface {
-	return &fakeinsightsv1.FakeInsightsV1{Fake: &c.Fake}
-}
 
 // InsightsV1alpha1 retrieves the InsightsV1alpha1Client
 func (c *Clientset) InsightsV1alpha1() insightsv1alpha1.InsightsV1alpha1Interface {
