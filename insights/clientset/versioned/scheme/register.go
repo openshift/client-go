@@ -3,7 +3,6 @@
 package scheme
 
 import (
-	insightsv1 "github.com/openshift/api/insights/v1"
 	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	insightsv1alpha2 "github.com/openshift/api/insights/v1alpha2"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,7 +16,6 @@ var Scheme = runtime.NewScheme()
 var Codecs = serializer.NewCodecFactory(Scheme)
 var ParameterCodec = runtime.NewParameterCodec(Scheme)
 var localSchemeBuilder = runtime.SchemeBuilder{
-	insightsv1.AddToScheme,
 	insightsv1alpha1.AddToScheme,
 	insightsv1alpha2.AddToScheme,
 }
