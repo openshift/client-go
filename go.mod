@@ -3,7 +3,7 @@ module github.com/openshift/client-go
 go 1.24.0
 
 require (
-	github.com/openshift/api v0.0.0-20251127005036-0e3c378fdedc
+	github.com/openshift/api v0.0.0-20251202143230-02f6733e651c
 	github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee
 	github.com/spf13/pflag v1.0.6
 	k8s.io/api v0.34.1
@@ -12,8 +12,6 @@ require (
 	k8s.io/code-generator v0.34.1
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0
 )
-
-replace github.com/openshift/api => github.com/opokornyy/api v0.0.0-20251202084134-2a692fb79e36
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
