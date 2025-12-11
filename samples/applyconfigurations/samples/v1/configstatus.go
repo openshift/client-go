@@ -8,14 +8,39 @@ import (
 
 // ConfigStatusApplyConfiguration represents a declarative configuration of the ConfigStatus type for use
 // with apply.
+//
+// ConfigStatus contains the actual configuration in effect, as well as various details
+// that describe the state of the Samples Operator.
 type ConfigStatusApplyConfiguration struct {
-	ManagementState     *operatorv1.ManagementState         `json:"managementState,omitempty"`
-	Conditions          []ConfigConditionApplyConfiguration `json:"conditions,omitempty"`
-	SamplesRegistry     *string                             `json:"samplesRegistry,omitempty"`
-	Architectures       []string                            `json:"architectures,omitempty"`
-	SkippedImagestreams []string                            `json:"skippedImagestreams,omitempty"`
-	SkippedTemplates    []string                            `json:"skippedTemplates,omitempty"`
-	Version             *string                             `json:"version,omitempty"`
+	// managementState reflects the current operational status of the on/off switch for
+	// the operator.  This operator compares the ManagementState as part of determining that we are turning
+	// the operator back on (i.e. "Managed") when it was previously "Unmanaged".
+	ManagementState *operatorv1.ManagementState `json:"managementState,omitempty"`
+	// conditions represents the available maintenance status of the sample
+	// imagestreams and templates.
+	Conditions []ConfigConditionApplyConfiguration `json:"conditions,omitempty"`
+	// samplesRegistry allows for the specification of which registry is accessed
+	// by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
+	// that are pulled into this github repository, but based on our pulling only ocp content it typically
+	// defaults to registry.redhat.io.
+	SamplesRegistry *string `json:"samplesRegistry,omitempty"`
+	// architectures determine which hardware architecture(s) to install, where x86_64 and ppc64le are the
+	// supported choices.
+	Architectures []string `json:"architectures,omitempty"`
+	// skippedImagestreams specifies names of image streams that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedImagestreams []string `json:"skippedImagestreams,omitempty"`
+	// skippedTemplates specifies names of templates that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedTemplates []string `json:"skippedTemplates,omitempty"`
+	// version is the value of the operator's payload based version indicator when it was last successfully processed
+	Version *string `json:"version,omitempty"`
 }
 
 // ConfigStatusApplyConfiguration constructs a declarative configuration of the ConfigStatus type for use with

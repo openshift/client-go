@@ -5,9 +5,13 @@ package v1alpha1
 // PodNetworkConnectivityCheckStatusApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckStatus type for use
 // with apply.
 type PodNetworkConnectivityCheckStatusApplyConfiguration struct {
-	Successes  []LogEntryApplyConfiguration                             `json:"successes,omitempty"`
-	Failures   []LogEntryApplyConfiguration                             `json:"failures,omitempty"`
-	Outages    []OutageEntryApplyConfiguration                          `json:"outages,omitempty"`
+	// successes contains logs successful check actions
+	Successes []LogEntryApplyConfiguration `json:"successes,omitempty"`
+	// failures contains logs of unsuccessful check actions
+	Failures []LogEntryApplyConfiguration `json:"failures,omitempty"`
+	// outages contains logs of time periods of outages
+	Outages []OutageEntryApplyConfiguration `json:"outages,omitempty"`
+	// conditions summarize the status of the check
 	Conditions []PodNetworkConnectivityCheckConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 

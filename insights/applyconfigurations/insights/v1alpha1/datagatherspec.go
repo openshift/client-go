@@ -8,10 +8,25 @@ import (
 
 // DataGatherSpecApplyConfiguration represents a declarative configuration of the DataGatherSpec type for use
 // with apply.
+//
+// DataGatherSpec contains the configuration for the DataGather.
 type DataGatherSpecApplyConfiguration struct {
-	DataPolicy *insightsv1alpha1.DataPolicy       `json:"dataPolicy,omitempty"`
-	Gatherers  []GathererConfigApplyConfiguration `json:"gatherers,omitempty"`
-	Storage    *StorageApplyConfiguration         `json:"storage,omitempty"`
+	// dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
+	// in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
+	// When set to ClearText the data is not obfuscated.
+	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The current default is ClearText.
+	DataPolicy *insightsv1alpha1.DataPolicy `json:"dataPolicy,omitempty"`
+	// gatherers is an optional list of gatherers configurations.
+	// The list must not exceed 100 items.
+	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
+	// Run the following command to get the names of last active gatherers:
+	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	Gatherers []GathererConfigApplyConfiguration `json:"gatherers,omitempty"`
+	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
+	// If omitted, the gathering job will use ephemeral storage.
+	Storage *StorageApplyConfiguration `json:"storage,omitempty"`
 }
 
 // DataGatherSpecApplyConfiguration constructs a declarative configuration of the DataGatherSpec type for use with

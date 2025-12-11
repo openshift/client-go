@@ -8,12 +8,21 @@ import (
 
 // OutageEntryApplyConfiguration represents a declarative configuration of the OutageEntry type for use
 // with apply.
+//
+// OutageEntry records time period of an outage
 type OutageEntryApplyConfiguration struct {
-	Start     *v1.Time                     `json:"start,omitempty"`
-	End       *v1.Time                     `json:"end,omitempty"`
+	// start of outage detected
+	Start *v1.Time `json:"start,omitempty"`
+	// end of outage detected
+	End *v1.Time `json:"end,omitempty"`
+	// startLogs contains log entries related to the start of this outage. Should contain
+	// the original failure, any entries where the failure mode changed.
 	StartLogs []LogEntryApplyConfiguration `json:"startLogs,omitempty"`
-	EndLogs   []LogEntryApplyConfiguration `json:"endLogs,omitempty"`
-	Message   *string                      `json:"message,omitempty"`
+	// endLogs contains log entries related to the end of this outage. Should contain the success
+	// entry that resolved the outage and possibly a few of the failure log entries that preceded it.
+	EndLogs []LogEntryApplyConfiguration `json:"endLogs,omitempty"`
+	// message summarizes outage details in a human readable format.
+	Message *string `json:"message,omitempty"`
 }
 
 // OutageEntryApplyConfiguration constructs a declarative configuration of the OutageEntry type for use with
