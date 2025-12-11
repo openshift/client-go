@@ -8,10 +8,22 @@ import (
 
 // DataGatherSpecApplyConfiguration represents a declarative configuration of the DataGatherSpec type for use
 // with apply.
+//
+// DataGatherSpec contains the configuration for the DataGather.
 type DataGatherSpecApplyConfiguration struct {
+	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
+	// It may not exceed 2 items and must not contain duplicates.
+	// Valid values are ObfuscateNetworking and WorkloadNames.
+	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
+	// When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
+	// When omitted no obfuscation is applied.
 	DataPolicy []insightsv1alpha2.DataPolicyOption `json:"dataPolicy,omitempty"`
-	Gatherers  *GatherersApplyConfiguration        `json:"gatherers,omitempty"`
-	Storage    *StorageApplyConfiguration          `json:"storage,omitempty"`
+	// gatherers is an optional field that specifies the configuration of the gatherers.
+	// If omitted, all gatherers will be run.
+	Gatherers *GatherersApplyConfiguration `json:"gatherers,omitempty"`
+	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
+	// If omitted, the gathering job will use ephemeral storage.
+	Storage *StorageApplyConfiguration `json:"storage,omitempty"`
 }
 
 // DataGatherSpecApplyConfiguration constructs a declarative configuration of the DataGatherSpec type for use with

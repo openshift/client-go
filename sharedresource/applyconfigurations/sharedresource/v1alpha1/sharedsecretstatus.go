@@ -8,7 +8,10 @@ import (
 
 // SharedSecretStatusApplyConfiguration represents a declarative configuration of the SharedSecretStatus type for use
 // with apply.
+//
+// SharedSecretStatus contains the observed status of the shared resource
 type SharedSecretStatusApplyConfiguration struct {
+	// conditions represents any observations made on this particular shared resource by the underlying CSI driver or Share controller.
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
