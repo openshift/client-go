@@ -66,3 +66,5 @@ retract v3.9.0+incompatible
 // To make go aware of the retraction, we need to tag a new version that can be
 // retracted by itself.
 retract v0.0.1
+
+replace github.com/openshift/api => github.com/sanchezl/api cluster-image-policy-rename
