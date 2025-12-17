@@ -67,4 +67,4 @@ retract v3.9.0+incompatible
 // retracted by itself.
 retract v0.0.1
 
-replace github.com/openshift/api => github.com/sanchezl/api cluster-image-policy-rename
+replace github.com/openshift/api => github.com/sanchezl/api v0.0.0-20251217211515-65b693c2242f
