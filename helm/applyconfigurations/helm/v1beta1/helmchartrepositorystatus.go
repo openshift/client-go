@@ -9,6 +9,7 @@ import (
 // HelmChartRepositoryStatusApplyConfiguration represents a declarative configuration of the HelmChartRepositoryStatus type for use
 // with apply.
 type HelmChartRepositoryStatusApplyConfiguration struct {
+	// conditions is a list of conditions and their statuses
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
