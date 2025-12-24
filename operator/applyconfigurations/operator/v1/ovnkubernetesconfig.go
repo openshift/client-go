@@ -9,18 +9,21 @@ import (
 // OVNKubernetesConfigApplyConfiguration represents a declarative configuration of the OVNKubernetesConfig type for use
 // with apply.
 type OVNKubernetesConfigApplyConfiguration struct {
-	MTU                 *uint32                                    `json:"mtu,omitempty"`
-	GenevePort          *uint32                                    `json:"genevePort,omitempty"`
-	HybridOverlayConfig *HybridOverlayConfigApplyConfiguration     `json:"hybridOverlayConfig,omitempty"`
-	IPsecConfig         *IPsecConfigApplyConfiguration             `json:"ipsecConfig,omitempty"`
-	PolicyAuditConfig   *PolicyAuditConfigApplyConfiguration       `json:"policyAuditConfig,omitempty"`
-	GatewayConfig       *GatewayConfigApplyConfiguration           `json:"gatewayConfig,omitempty"`
-	V4InternalSubnet    *string                                    `json:"v4InternalSubnet,omitempty"`
-	V6InternalSubnet    *string                                    `json:"v6InternalSubnet,omitempty"`
-	EgressIPConfig      *EgressIPConfigApplyConfiguration          `json:"egressIPConfig,omitempty"`
-	IPv4                *IPv4OVNKubernetesConfigApplyConfiguration `json:"ipv4,omitempty"`
-	IPv6                *IPv6OVNKubernetesConfigApplyConfiguration `json:"ipv6,omitempty"`
-	RouteAdvertisements *operatorv1.RouteAdvertisementsEnablement  `json:"routeAdvertisements,omitempty"`
+	MTU                            *uint32                                    `json:"mtu,omitempty"`
+	GenevePort                     *uint32                                    `json:"genevePort,omitempty"`
+	HybridOverlayConfig            *HybridOverlayConfigApplyConfiguration     `json:"hybridOverlayConfig,omitempty"`
+	IPsecConfig                    *IPsecConfigApplyConfiguration             `json:"ipsecConfig,omitempty"`
+	PolicyAuditConfig              *PolicyAuditConfigApplyConfiguration       `json:"policyAuditConfig,omitempty"`
+	GatewayConfig                  *GatewayConfigApplyConfiguration           `json:"gatewayConfig,omitempty"`
+	V4InternalSubnet               *string                                    `json:"v4InternalSubnet,omitempty"`
+	V6InternalSubnet               *string                                    `json:"v6InternalSubnet,omitempty"`
+	EgressIPConfig                 *EgressIPConfigApplyConfiguration          `json:"egressIPConfig,omitempty"`
+	IPv4                           *IPv4OVNKubernetesConfigApplyConfiguration `json:"ipv4,omitempty"`
+	IPv6                           *IPv6OVNKubernetesConfigApplyConfiguration `json:"ipv6,omitempty"`
+	RouteAdvertisements            *operatorv1.RouteAdvertisementsEnablement  `json:"routeAdvertisements,omitempty"`
+	DefaultNetworkTransport        *operatorv1.TransportOption                `json:"defaultNetworkTransport,omitempty"`
+	DefaultNetworkNoOverlayOptions *NoOverlayOptionsApplyConfiguration        `json:"defaultNetworkNoOverlayOptions,omitempty"`
+	BGPManagedConfig               *BGPManagedConfigApplyConfiguration        `json:"bgpManagedConfig,omitempty"`
 }
 
 // OVNKubernetesConfigApplyConfiguration constructs a declarative configuration of the OVNKubernetesConfig type for use with
@@ -122,5 +125,29 @@ func (b *OVNKubernetesConfigApplyConfiguration) WithIPv6(value *IPv6OVNKubernete
 // If called multiple times, the RouteAdvertisements field is set to the value of the last call.
 func (b *OVNKubernetesConfigApplyConfiguration) WithRouteAdvertisements(value operatorv1.RouteAdvertisementsEnablement) *OVNKubernetesConfigApplyConfiguration {
 	b.RouteAdvertisements = &value
+	return b
+}
+
+// WithDefaultNetworkTransport sets the DefaultNetworkTransport field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the DefaultNetworkTransport field is set to the value of the last call.
+func (b *OVNKubernetesConfigApplyConfiguration) WithDefaultNetworkTransport(value operatorv1.TransportOption) *OVNKubernetesConfigApplyConfiguration {
+	b.DefaultNetworkTransport = &value
+	return b
+}
+
+// WithDefaultNetworkNoOverlayOptions sets the DefaultNetworkNoOverlayOptions field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the DefaultNetworkNoOverlayOptions field is set to the value of the last call.
+func (b *OVNKubernetesConfigApplyConfiguration) WithDefaultNetworkNoOverlayOptions(value *NoOverlayOptionsApplyConfiguration) *OVNKubernetesConfigApplyConfiguration {
+	b.DefaultNetworkNoOverlayOptions = value
+	return b
+}
+
+// WithBGPManagedConfig sets the BGPManagedConfig field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the BGPManagedConfig field is set to the value of the last call.
+func (b *OVNKubernetesConfigApplyConfiguration) WithBGPManagedConfig(value *BGPManagedConfigApplyConfiguration) *OVNKubernetesConfigApplyConfiguration {
+	b.BGPManagedConfig = value
 	return b
 }
