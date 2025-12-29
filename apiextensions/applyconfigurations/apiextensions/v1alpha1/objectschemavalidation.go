@@ -10,11 +10,28 @@ import (
 
 // ObjectSchemaValidationApplyConfiguration represents a declarative configuration of the ObjectSchemaValidation type for use
 // with apply.
+//
+// ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.
 type ObjectSchemaValidationApplyConfiguration struct {
-	Action            *apiextensionsv1alpha1.CRDAdmitAction    `json:"action,omitempty"`
-	NamespaceSelector *v1.LabelSelectorApplyConfiguration      `json:"namespaceSelector,omitempty"`
-	ObjectSelector    *v1.LabelSelectorApplyConfiguration      `json:"objectSelector,omitempty"`
-	MatchConditions   []admissionregistrationv1.MatchCondition `json:"matchConditions,omitempty"`
+	// action determines whether violations are rejected (Deny) or admitted with an API warning (Warn).
+	// Valid options are Deny and Warn.
+	// When set to Deny, incompatible Objects will be rejected and not admitted to the cluster.
+	// When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response.
+	// This field is required.
+	Action *apiextensionsv1alpha1.CRDAdmitAction `json:"action,omitempty"`
+	// namespaceSelector defines a label selector for namespaces. If defined,
+	// only objects in a namespace with matching labels will be subject to
+	// validation. When not specified, objects for validation will not be
+	// filtered by namespace.
+	NamespaceSelector *v1.LabelSelectorApplyConfiguration `json:"namespaceSelector,omitempty"`
+	// objectSelector defines a label selector for objects. If defined, only
+	// objects with matching labels will be subject to validation. When not
+	// specified, objects for validation will not be filtered by label.
+	ObjectSelector *v1.LabelSelectorApplyConfiguration `json:"objectSelector,omitempty"`
+	// matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration.
+	// When present, must contain between 1 and 64 match conditions.
+	// When not specified, the webhook will match all requests according to its other selectors.
+	MatchConditions []admissionregistrationv1.MatchCondition `json:"matchConditions,omitempty"`
 }
 
 // ObjectSchemaValidationApplyConfiguration constructs a declarative configuration of the ObjectSchemaValidation type for use with

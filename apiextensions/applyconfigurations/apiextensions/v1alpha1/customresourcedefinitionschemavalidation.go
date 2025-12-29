@@ -8,7 +8,14 @@ import (
 
 // CustomResourceDefinitionSchemaValidationApplyConfiguration represents a declarative configuration of the CustomResourceDefinitionSchemaValidation type for use
 // with apply.
+//
+// CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.
 type CustomResourceDefinitionSchemaValidationApplyConfiguration struct {
+	// action determines whether violations are rejected (Deny) or admitted with an API warning (Warn).
+	// Valid options are Deny and Warn.
+	// When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster.
+	// When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response.
+	// This field is required.
 	Action *apiextensionsv1alpha1.CRDAdmitAction `json:"action,omitempty"`
 }
 

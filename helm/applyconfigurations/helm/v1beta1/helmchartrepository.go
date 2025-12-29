@@ -13,11 +13,19 @@ import (
 
 // HelmChartRepositoryApplyConfiguration represents a declarative configuration of the HelmChartRepository type for use
 // with apply.
+//
+// # HelmChartRepository holds cluster-wide configuration for proxied Helm chart repository
+//
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 type HelmChartRepositoryApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *HelmChartRepositorySpecApplyConfiguration   `json:"spec,omitempty"`
-	Status                           *HelmChartRepositoryStatusApplyConfiguration `json:"status,omitempty"`
+	// spec holds user settable values for configuration
+	Spec *HelmChartRepositorySpecApplyConfiguration `json:"spec,omitempty"`
+	// Observed status of the repository within the cluster..
+	Status *HelmChartRepositoryStatusApplyConfiguration `json:"status,omitempty"`
 }
 
 // HelmChartRepository constructs a declarative configuration of the HelmChartRepository type for use with
@@ -30,29 +38,14 @@ func HelmChartRepository(name string) *HelmChartRepositoryApplyConfiguration {
 	return b
 }
 
-// ExtractHelmChartRepository extracts the applied configuration owned by fieldManager from
-// helmChartRepository. If no managedFields are found in helmChartRepository for fieldManager, a
-// HelmChartRepositoryApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractHelmChartRepositoryFrom extracts the applied configuration owned by fieldManager from
+// helmChartRepository for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // helmChartRepository must be a unmodified HelmChartRepository API object that was retrieved from the Kubernetes API.
-// ExtractHelmChartRepository provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractHelmChartRepositoryFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractHelmChartRepository(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string) (*HelmChartRepositoryApplyConfiguration, error) {
-	return extractHelmChartRepository(helmChartRepository, fieldManager, "")
-}
-
-// ExtractHelmChartRepositoryStatus is the same as ExtractHelmChartRepository except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractHelmChartRepositoryStatus(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string) (*HelmChartRepositoryApplyConfiguration, error) {
-	return extractHelmChartRepository(helmChartRepository, fieldManager, "status")
-}
-
-func extractHelmChartRepository(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string, subresource string) (*HelmChartRepositoryApplyConfiguration, error) {
+func ExtractHelmChartRepositoryFrom(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string, subresource string) (*HelmChartRepositoryApplyConfiguration, error) {
 	b := &HelmChartRepositoryApplyConfiguration{}
 	err := managedfields.ExtractInto(helmChartRepository, internal.Parser().Type("com.github.openshift.api.helm.v1beta1.HelmChartRepository"), fieldManager, b, subresource)
 	if err != nil {
@@ -64,6 +57,27 @@ func extractHelmChartRepository(helmChartRepository *helmv1beta1.HelmChartReposi
 	b.WithAPIVersion("helm.openshift.io/v1beta1")
 	return b, nil
 }
+
+// ExtractHelmChartRepository extracts the applied configuration owned by fieldManager from
+// helmChartRepository. If no managedFields are found in helmChartRepository for fieldManager, a
+// HelmChartRepositoryApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// helmChartRepository must be a unmodified HelmChartRepository API object that was retrieved from the Kubernetes API.
+// ExtractHelmChartRepository provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractHelmChartRepository(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string) (*HelmChartRepositoryApplyConfiguration, error) {
+	return ExtractHelmChartRepositoryFrom(helmChartRepository, fieldManager, "")
+}
+
+// ExtractHelmChartRepositoryStatus extracts the applied configuration owned by fieldManager from
+// helmChartRepository for the status subresource.
+func ExtractHelmChartRepositoryStatus(helmChartRepository *helmv1beta1.HelmChartRepository, fieldManager string) (*HelmChartRepositoryApplyConfiguration, error) {
+	return ExtractHelmChartRepositoryFrom(helmChartRepository, fieldManager, "status")
+}
+
 func (b HelmChartRepositoryApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value
