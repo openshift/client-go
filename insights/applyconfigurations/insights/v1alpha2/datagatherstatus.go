@@ -9,14 +9,62 @@ import (
 
 // DataGatherStatusApplyConfiguration represents a declarative configuration of the DataGatherStatus type for use
 // with apply.
+//
+// DataGatherStatus contains information relating to the DataGather state.
 type DataGatherStatusApplyConfiguration struct {
-	Conditions        []v1.ConditionApplyConfiguration    `json:"conditions,omitempty"`
-	Gatherers         []GathererStatusApplyConfiguration  `json:"gatherers,omitempty"`
-	StartTime         *metav1.Time                        `json:"startTime,omitempty"`
-	FinishTime        *metav1.Time                        `json:"finishTime,omitempty"`
-	RelatedObjects    []ObjectReferenceApplyConfiguration `json:"relatedObjects,omitempty"`
-	InsightsRequestID *string                             `json:"insightsRequestID,omitempty"`
-	InsightsReport    *InsightsReportApplyConfiguration   `json:"insightsReport,omitempty"`
+	// conditions is an optional field that provides details on the status of the gatherer job.
+	// It may not exceed 100 items and must not contain duplicates.
+	//
+	// # The current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid
+	//
+	// The DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing.
+	// When it has a status of True and a reason of Succeeded, the archive was successfully uploaded.
+	// When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred, or there was no data to upload.
+	// When it has a status of False and a reason Failed, the upload failed. The accompanying message will include the specific error encountered.
+	//
+	// The DataRecorded condition is used to represent whether or not the archive was successfully recorded.
+	// When it has a status of True and a reason of Succeeded, the archive was recorded successfully.
+	// When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet.
+	// When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.
+	//
+	// The DataProcessed condition is used to represent whether or not the archive was processed by the processing service.
+	// When it has a status of True and a reason of Processed, the data was processed successfully.
+	// When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment.
+	// When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.
+	//
+	// The RemoteConfigurationAvailable condition is used to represent whether the remote configuration is available.
+	// When it has a status of Unknown and a reason of Unknown or RemoteConfigNotRequestedYet, the state of the remote configuration is unknown—typically at startup.
+	// When it has a status of True and a reason of Succeeded, the configuration is available.
+	// When it has a status of False and a reason of NoToken, the configuration was disabled by removing the cloud.openshift.com field from the pull secret.
+	// When it has a status of False and a reason of DisabledByConfiguration, the configuration was disabled in insightsdatagather.config.openshift.io.
+	//
+	// The RemoteConfigurationValid condition is used to represent whether the remote configuration is valid.
+	// When it has a status of Unknown and a reason of Unknown or NoValidationYet, the validity of the remote configuration is unknown—typically at startup.
+	// When it has a status of True and a reason of Succeeded, the configuration is valid.
+	// When it has a status of False and a reason of Invalid, the configuration is invalid.
+	//
+	// The Progressing condition is used to represent the phase of gathering
+	// When it has a status of False and the reason is DataGatherPending, the gathering has not started yet.
+	// When it has a status of True and reason is Gathering, the gathering is running.
+	// When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished.
+	// When it has a status of False and reason is GatheringFailed, the gathering failed.
+	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
+	// gatherers is a list of active gatherers (and their statuses) in the last gathering.
+	Gatherers []GathererStatusApplyConfiguration `json:"gatherers,omitempty"`
+	// startTime is the time when Insights data gathering started.
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+	// finishTime is the time when Insights data gathering finished.
+	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+	// relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod
+	// It may not exceed 100 items and must not contain duplicates.
+	RelatedObjects []ObjectReferenceApplyConfiguration `json:"relatedObjects,omitempty"`
+	// insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
+	// It may not exceed 256 characters and is immutable once set.
+	InsightsRequestID *string `json:"insightsRequestID,omitempty"`
+	// insightsReport provides general Insights analysis results.
+	// When omitted, this means no data gathering has taken place yet or the
+	// corresponding Insights analysis (identified by "insightsRequestID") is not available.
+	InsightsReport *InsightsReportApplyConfiguration `json:"insightsReport,omitempty"`
 }
 
 // DataGatherStatusApplyConfiguration constructs a declarative configuration of the DataGatherStatus type for use with

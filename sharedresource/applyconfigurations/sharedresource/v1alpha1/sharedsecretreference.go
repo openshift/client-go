@@ -4,8 +4,12 @@ package v1alpha1
 
 // SharedSecretReferenceApplyConfiguration represents a declarative configuration of the SharedSecretReference type for use
 // with apply.
+//
+// SharedSecretReference contains information about which Secret to share
 type SharedSecretReferenceApplyConfiguration struct {
-	Name      *string `json:"name,omitempty"`
+	// name represents the name of the Secret that is being referenced.
+	Name *string `json:"name,omitempty"`
+	// namespace represents the namespace where the referenced Secret is located.
 	Namespace *string `json:"namespace,omitempty"`
 }
 
