@@ -47,17 +47,11 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.APIServerEncryption
   map:
     fields:
-    - name: kms
-      type:
-        namedType: com.github.openshift.api.config.v1.KMSConfig
     - name: type
       type:
         scalar: string
     unions:
     - discriminator: type
-      fields:
-      - fieldName: kms
-        discriminatorValue: KMS
 - name: com.github.openshift.api.config.v1.APIServerNamedServingCert
   map:
     fields:
@@ -136,17 +130,6 @@ var schemaYAML = typed.YAMLObject(`types:
       default: ""
     unions:
     - discriminator: type
-- name: com.github.openshift.api.config.v1.AWSKMSConfig
-  map:
-    fields:
-    - name: keyARN
-      type:
-        scalar: string
-      default: ""
-    - name: region
-      type:
-        scalar: string
-      default: ""
 - name: com.github.openshift.api.config.v1.AWSPlatformSpec
   map:
     fields:
@@ -206,6 +189,12 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.config.v1.AcceptRisk
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec
   map:
     elementType:
@@ -848,6 +837,14 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.ClusterVersionCapabilitiesStatus
       default: {}
+    - name: conditionalUpdateRisks
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.ConditionalUpdateRisk
+          elementRelationship: associative
+          keys:
+          - name
     - name: conditionalUpdates
       type:
         list:
@@ -978,6 +975,12 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.Release
       default: {}
+    - name: riskNames
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
     - name: risks
       type:
         list:
@@ -989,6 +992,14 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.ConditionalUpdateRisk
   map:
     fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
     - name: matchingRules
       type:
         list:
@@ -2124,21 +2135,6 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
-- name: com.github.openshift.api.config.v1.KMSConfig
-  map:
-    fields:
-    - name: aws
-      type:
-        namedType: com.github.openshift.api.config.v1.AWSKMSConfig
-    - name: type
-      type:
-        scalar: string
-      default: ""
-    unions:
-    - discriminator: type
-      fields:
-      - fieldName: aws
-        discriminatorValue: AWS
 - name: com.github.openshift.api.config.v1.KeystoneIdentityProvider
   map:
     fields:
@@ -2751,6 +2747,14 @@ var schemaYAML = typed.YAMLObject(`types:
           keys:
           - componentNamespace
           - componentName
+    - name: userValidationRules
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.TokenUserValidationRule
+          elementRelationship: associative
+          keys:
+          - expression
 - name: com.github.openshift.api.config.v1.ObjectReference
   map:
     fields:
@@ -3689,9 +3693,22 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: expression
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1.TokenClaimValidationCELRule
+  map:
+    fields:
+    - name: expression
+      type:
+        scalar: string
+    - name: message
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.TokenClaimValidationRule
   map:
     fields:
+    - name: cel
+      type:
+        namedType: com.github.openshift.api.config.v1.TokenClaimValidationCELRule
+      default: {}
     - name: requiredClaim
       type:
         namedType: com.github.openshift.api.config.v1.TokenRequiredClaim
@@ -3720,6 +3737,9 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: associative
+    - name: discoveryURL
+      type:
+        scalar: string
     - name: issuerCertificateAuthority
       type:
         namedType: com.github.openshift.api.config.v1.ConfigMapNameReference
@@ -3739,9 +3759,26 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.config.v1.TokenUserValidationRule
+  map:
+    fields:
+    - name: expression
+      type:
+        scalar: string
+    - name: message
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.Update
   map:
     fields:
+    - name: acceptRisks
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AcceptRisk
+          elementRelationship: associative
+          keys:
+          - name
     - name: architecture
       type:
         scalar: string

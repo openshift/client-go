@@ -20,6 +20,8 @@ import (
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
 	// Group=config.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("AcceptRisk"):
+		return &configv1.AcceptRiskApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AlibabaCloudPlatformStatus"):
 		return &configv1.AlibabaCloudPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AlibabaCloudResourceTag"):
@@ -48,8 +50,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.AWSDNSSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSIngressSpec"):
 		return &configv1.AWSIngressSpecApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("AWSKMSConfig"):
-		return &configv1.AWSKMSConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSPlatformSpec"):
 		return &configv1.AWSPlatformSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("AWSPlatformStatus"):
@@ -264,8 +264,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.InsightsDataGatherSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KeystoneIdentityProvider"):
 		return &configv1.KeystoneIdentityProviderApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("KMSConfig"):
-		return &configv1.KMSConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubevirtPlatformStatus"):
 		return &configv1.KubevirtPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LDAPAttributeMapping"):
@@ -430,6 +428,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.TokenClaimMappingsApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TokenClaimOrExpressionMapping"):
 		return &configv1.TokenClaimOrExpressionMappingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenClaimValidationCELRule"):
+		return &configv1.TokenClaimValidationCELRuleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TokenClaimValidationRule"):
 		return &configv1.TokenClaimValidationRuleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TokenConfig"):
@@ -438,6 +438,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.TokenIssuerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("TokenRequiredClaim"):
 		return &configv1.TokenRequiredClaimApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("TokenUserValidationRule"):
+		return &configv1.TokenUserValidationRuleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Update"):
 		return &configv1.UpdateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("UpdateHistory"):
