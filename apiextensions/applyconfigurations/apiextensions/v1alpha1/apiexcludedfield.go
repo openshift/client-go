@@ -8,8 +8,26 @@ import (
 
 // APIExcludedFieldApplyConfiguration represents a declarative configuration of the APIExcludedField type for use
 // with apply.
+//
+// APIExcludedField describes a field in the schema which will not be validated by
+// crdSchemaValidation or objectSchemaValidation.
 type APIExcludedFieldApplyConfiguration struct {
-	Path     *string                                  `json:"path,omitempty"`
+	// path is the path to the field in the schema.
+	// Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
+	// If part of the path is a slice (e.g., "status.conditions") the remaining path is applied to all items in the slice
+	// (e.g., "status.conditions.lastTransitionTimestamp").
+	// Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
+	// letters, digits, and underscores, and be between 1 and 63 characters in length.
+	// A path may contain at most 16 fields.
+	Path *string `json:"path,omitempty"`
+	// versions are the API versions the field is excluded from.
+	// When not specified, the field is excluded from all versions.
+	//
+	// Each item must be at most 63 characters in length, and must must
+	// consist of only lowercase alphanumeric characters and hyphens, and must
+	// start with an alphabetic character and end with an alphanumeric
+	// character.
+	// At most 32 versions may be specified.
 	Versions []apiextensionsv1alpha1.APIVersionString `json:"versions,omitempty"`
 }
 

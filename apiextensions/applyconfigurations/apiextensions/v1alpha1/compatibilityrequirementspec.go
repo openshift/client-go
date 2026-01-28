@@ -4,10 +4,23 @@ package v1alpha1
 
 // CompatibilityRequirementSpecApplyConfiguration represents a declarative configuration of the CompatibilityRequirementSpec type for use
 // with apply.
+//
+// CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.
 type CompatibilityRequirementSpecApplyConfiguration struct {
-	CompatibilitySchema                      *CompatibilitySchemaApplyConfiguration                      `json:"compatibilitySchema,omitempty"`
+	// compatibilitySchema defines the schema used by
+	// customResourceDefinitionSchemaValidation and objectSchemaValidation.
+	// This field is required.
+	CompatibilitySchema *CompatibilitySchemaApplyConfiguration `json:"compatibilitySchema,omitempty"`
+	// customResourceDefinitionSchemaValidation ensures that updates to the
+	// installed CRD are compatible with this compatibility requirement. If not
+	// specified, admission of the target CRD will not be validated.
+	// This field is optional.
 	CustomResourceDefinitionSchemaValidation *CustomResourceDefinitionSchemaValidationApplyConfiguration `json:"customResourceDefinitionSchemaValidation,omitempty"`
-	ObjectSchemaValidation                   *ObjectSchemaValidationApplyConfiguration                   `json:"objectSchemaValidation,omitempty"`
+	// objectSchemaValidation ensures that matching resources conform to
+	// compatibilitySchema. If not specified, admission of matching resources
+	// will not be validated.
+	// This field is optional.
+	ObjectSchemaValidation *ObjectSchemaValidationApplyConfiguration `json:"objectSchemaValidation,omitempty"`
 }
 
 // CompatibilityRequirementSpecApplyConfiguration constructs a declarative configuration of the CompatibilityRequirementSpec type for use with

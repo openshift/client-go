@@ -41,7 +41,7 @@ func NewPodNetworkConnectivityCheckInformer(client versioned.Interface, namespac
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredPodNetworkConnectivityCheckInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -66,7 +66,7 @@ func NewFilteredPodNetworkConnectivityCheckInformer(client versioned.Interface, 
 				}
 				return client.ControlplaneV1alpha1().PodNetworkConnectivityChecks(namespace).Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{},
 		resyncPeriod,
 		indexers,

@@ -40,7 +40,7 @@ func NewServiceCertSignerOperatorConfigInformer(client versioned.Interface, resy
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -65,7 +65,7 @@ func NewFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interfa
 				}
 				return client.ServicecertsignerV1alpha1().ServiceCertSignerOperatorConfigs().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{},
 		resyncPeriod,
 		indexers,

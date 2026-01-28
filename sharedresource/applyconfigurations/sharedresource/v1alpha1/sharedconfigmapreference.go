@@ -4,8 +4,12 @@ package v1alpha1
 
 // SharedConfigMapReferenceApplyConfiguration represents a declarative configuration of the SharedConfigMapReference type for use
 // with apply.
+//
+// SharedConfigMapReference contains information about which ConfigMap to share
 type SharedConfigMapReferenceApplyConfiguration struct {
-	Name      *string `json:"name,omitempty"`
+	// name represents the name of the ConfigMap that is being referenced.
+	Name *string `json:"name,omitempty"`
+	// namespace represents the namespace where the referenced ConfigMap is located.
 	Namespace *string `json:"namespace,omitempty"`
 }
 

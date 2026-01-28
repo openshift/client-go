@@ -8,9 +8,17 @@ import (
 
 // CRDDataApplyConfiguration represents a declarative configuration of the CRDData type for use
 // with apply.
+//
+// CRDData contains the complete definition of a CRD.
 type CRDDataApplyConfiguration struct {
+	// type indicates the type of the CRD data. The only supported type is "YAML".
+	// This field is required.
 	Type *apiextensionsv1alpha1.CRDDataType `json:"type,omitempty"`
-	Data *string                            `json:"data,omitempty"`
+	// data contains the complete definition of the CRD. This field must be in
+	// the format specified by the type field. It may not be longer than 1572864
+	// characters.
+	// This field is required.
+	Data *string `json:"data,omitempty"`
 }
 
 // CRDDataApplyConfiguration constructs a declarative configuration of the CRDData type for use with

@@ -13,8 +13,14 @@ import (
 
 // ServiceCertSignerOperatorConfigApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfig type for use
 // with apply.
+//
+// # ServiceCertSignerOperatorConfig provides information to configure an operator to manage the service cert signing controllers
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 type ServiceCertSignerOperatorConfigApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *ServiceCertSignerOperatorConfigSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *ServiceCertSignerOperatorConfigStatusApplyConfiguration `json:"status,omitempty"`
@@ -30,29 +36,14 @@ func ServiceCertSignerOperatorConfig(name string) *ServiceCertSignerOperatorConf
 	return b
 }
 
-// ExtractServiceCertSignerOperatorConfig extracts the applied configuration owned by fieldManager from
-// serviceCertSignerOperatorConfig. If no managedFields are found in serviceCertSignerOperatorConfig for fieldManager, a
-// ServiceCertSignerOperatorConfigApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractServiceCertSignerOperatorConfigFrom extracts the applied configuration owned by fieldManager from
+// serviceCertSignerOperatorConfig for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // serviceCertSignerOperatorConfig must be a unmodified ServiceCertSignerOperatorConfig API object that was retrieved from the Kubernetes API.
-// ExtractServiceCertSignerOperatorConfig provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractServiceCertSignerOperatorConfigFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
-	return extractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig, fieldManager, "")
-}
-
-// ExtractServiceCertSignerOperatorConfigStatus is the same as ExtractServiceCertSignerOperatorConfig except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractServiceCertSignerOperatorConfigStatus(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
-	return extractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig, fieldManager, "status")
-}
-
-func extractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string, subresource string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
+func ExtractServiceCertSignerOperatorConfigFrom(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string, subresource string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
 	b := &ServiceCertSignerOperatorConfigApplyConfiguration{}
 	err := managedfields.ExtractInto(serviceCertSignerOperatorConfig, internal.Parser().Type("com.github.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfig"), fieldManager, b, subresource)
 	if err != nil {
@@ -64,6 +55,27 @@ func extractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig *ser
 	b.WithAPIVersion("servicecertsigner.config.openshift.io/v1alpha1")
 	return b, nil
 }
+
+// ExtractServiceCertSignerOperatorConfig extracts the applied configuration owned by fieldManager from
+// serviceCertSignerOperatorConfig. If no managedFields are found in serviceCertSignerOperatorConfig for fieldManager, a
+// ServiceCertSignerOperatorConfigApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// serviceCertSignerOperatorConfig must be a unmodified ServiceCertSignerOperatorConfig API object that was retrieved from the Kubernetes API.
+// ExtractServiceCertSignerOperatorConfig provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractServiceCertSignerOperatorConfig(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
+	return ExtractServiceCertSignerOperatorConfigFrom(serviceCertSignerOperatorConfig, fieldManager, "")
+}
+
+// ExtractServiceCertSignerOperatorConfigStatus extracts the applied configuration owned by fieldManager from
+// serviceCertSignerOperatorConfig for the status subresource.
+func ExtractServiceCertSignerOperatorConfigStatus(serviceCertSignerOperatorConfig *servicecertsignerv1alpha1.ServiceCertSignerOperatorConfig, fieldManager string) (*ServiceCertSignerOperatorConfigApplyConfiguration, error) {
+	return ExtractServiceCertSignerOperatorConfigFrom(serviceCertSignerOperatorConfig, fieldManager, "status")
+}
+
 func (b ServiceCertSignerOperatorConfigApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value

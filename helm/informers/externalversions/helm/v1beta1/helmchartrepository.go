@@ -40,7 +40,7 @@ func NewHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod tim
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -65,7 +65,7 @@ func NewFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPe
 				}
 				return client.HelmV1beta1().HelmChartRepositories().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apihelmv1beta1.HelmChartRepository{},
 		resyncPeriod,
 		indexers,

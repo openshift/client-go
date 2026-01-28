@@ -8,11 +8,18 @@ import (
 
 // LogEntryApplyConfiguration represents a declarative configuration of the LogEntry type for use
 // with apply.
+//
+// LogEntry records events
 type LogEntryApplyConfiguration struct {
-	Start   *v1.Time     `json:"time,omitempty"`
-	Success *bool        `json:"success,omitempty"`
-	Reason  *string      `json:"reason,omitempty"`
-	Message *string      `json:"message,omitempty"`
+	// Start time of check action.
+	Start *v1.Time `json:"time,omitempty"`
+	// success indicates if the log entry indicates a success or failure.
+	Success *bool `json:"success,omitempty"`
+	// reason for status in a machine readable format.
+	Reason *string `json:"reason,omitempty"`
+	// message explaining status in a human readable format.
+	Message *string `json:"message,omitempty"`
+	// latency records how long the action mentioned in the entry took.
 	Latency *v1.Duration `json:"latency,omitempty"`
 }
 

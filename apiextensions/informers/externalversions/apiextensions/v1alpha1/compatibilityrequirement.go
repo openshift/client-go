@@ -40,7 +40,7 @@ func NewCompatibilityRequirementInformer(client versioned.Interface, resyncPerio
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredCompatibilityRequirementInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -65,7 +65,7 @@ func NewFilteredCompatibilityRequirementInformer(client versioned.Interface, res
 				}
 				return client.ApiextensionsV1alpha1().CompatibilityRequirements().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apiapiextensionsv1alpha1.CompatibilityRequirement{},
 		resyncPeriod,
 		indexers,
