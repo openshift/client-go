@@ -4572,6 +4572,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.AcceptRisk": {
+      "description": "AcceptRisk represents a risk that is considered acceptable.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the acceptable risk. It must be a non-empty string and must not exceed 256 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.AdmissionConfig": {
       "type": "object",
       "properties": {
@@ -5859,6 +5872,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesStatus"
         },
+        "conditionalUpdateRisks": {
+          "description": "conditionalUpdateRisks contains the list of risks associated with conditionalUpdates. When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.acceptRisks field. If all risks for a conditional update are included in the spec.desiredUpdate.acceptRisks set, the conditional update can proceed, otherwise it is blocked. The risk names in the list must be unique. conditionalUpdateRisks must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ConditionalUpdateRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditionalUpdates": {
           "description": "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
           "type": "array",
@@ -6066,6 +6091,15 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Release"
         },
+        "riskNames": {
+          "description": "riskNames represents the set of the names of conditionalUpdateRisks that are relevant to this update for some clusters. The Applies condition of each conditionalUpdateRisks entry declares if that risk applies to this cluster. A conditional update is accepted only if each of its risks either does not apply to the cluster or is considered acceptable by the cluster administrator. The latter means that the risk names are included in value of the spec.desiredUpdate.acceptRisks field. Entries must be unique and must not exceed 256 characters. riskNames must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "risks": {
           "description": "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
           "type": "array",
@@ -6092,6 +6126,18 @@
         "matchingRules"
       ],
       "properties": {
+        "conditions": {
+          "description": "conditions represents the observations of the conditional update risk's current status. Known types are: * Applies, for whether the risk applies to the current cluster. The condition's types in the list must be unique. conditions must not contain more than one entry.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "matchingRules": {
           "description": "matchingRules is a slice of conditions for deciding which clusters match the risk and which do not. The slice is ordered by decreasing precedence. The cluster-version operator will walk the slice in order, and stop after the first it can successfully evaluate. If no condition can be successfully evaluated, the update will not be recommended.",
           "type": "array",
@@ -6302,7 +6348,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
-          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
           "default": ""
         }
@@ -6946,26 +6992,6 @@
         },
         "value": {
           "description": "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.GCPServiceEndpoint": {
-      "description": "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
-      "type": "object",
-      "required": [
-        "name",
-        "url"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
-          "type": "string",
-          "default": ""
-        },
-        "url": {
-          "description": "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
           "type": "string",
           "default": ""
         }
@@ -8508,7 +8534,7 @@
       }
     },
     "com.github.openshift.api.config.v1.IntermediateTLSProfile": {
-      "description": "IntermediateTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+      "description": "IntermediateTLSProfile is a TLS security profile based on the \"intermediate\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.KMSConfig": {
@@ -8786,7 +8812,7 @@
       }
     },
     "com.github.openshift.api.config.v1.ModernTLSProfile": {
-      "description": "ModernTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility",
+      "description": "ModernTLSProfile is a TLS security profile based on the \"modern\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.NamedCertificate": {
@@ -9507,7 +9533,7 @@
       }
     },
     "com.github.openshift.api.config.v1.OIDCClientConfig": {
-      "description": "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method",
+      "description": "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method.",
       "type": "object",
       "required": [
         "componentName",
@@ -9521,17 +9547,17 @@
           "default": ""
         },
         "clientSecret": {
-          "description": "clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.\n\nWhen not specified, no client secret will be used when making authentication requests to the identity provider.\n\nWhen specified, clientSecret references a Secret in the 'openshift-config' namespace that contains the client secret in the 'clientSecret' key of the '.data' field. The client secret will be used when making authentication requests to the identity provider.\n\nPublic clients do not require a client secret but private clients do require a client secret to work with the identity provider.",
+          "description": "clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.\n\nWhen not specified, no client secret will be used when making authentication requests to the identity provider.\n\nWhen specified, clientSecret references a Secret in the 'openshift-config' namespace that contains the client secret in the 'clientSecret' key of the '.data' field.\n\nThe client secret will be used when making authentication requests to the identity provider.\n\nPublic clients do not require a client secret but private clients do require a client secret to work with the identity provider.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
         },
         "componentName": {
-          "description": "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode. It is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
+          "description": "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode.\n\nIt is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
           "type": "string",
           "default": ""
         },
         "componentNamespace": {
-          "description": "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
+          "description": "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running.\n\nIt is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
           "type": "string",
           "default": ""
         },
@@ -9586,7 +9612,7 @@
           "default": ""
         },
         "componentNamespace": {
-          "description": "componentNamespace is a required field that specifies the namespace in which the platform component using the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
+          "description": "componentNamespace is a required field that specifies the namespace in which the platform component using the identity provider as an authentication mode is running.\n\nIt is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
           "type": "string",
           "default": ""
         },
@@ -9612,7 +9638,7 @@
           "x-kubernetes-list-type": "set"
         },
         "currentOIDCClients": {
-          "description": "currentOIDCClients is an optional list of clients that the component is currently using. Entries must have unique issuerURL/clientID pairs.",
+          "description": "currentOIDCClients is an optional list of clients that the component is currently using.\n\nEntries must have unique issuerURL/clientID pairs.",
           "type": "array",
           "items": {
             "default": {},
@@ -9670,6 +9696,18 @@
             "componentName"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "userValidationRules": {
+          "description": "userValidationRules is an optional field that configures the set of rules used to validate the cluster user identity that was constructed via mapping token claims to user identity attributes. Rules are CEL expressions that must evaluate to 'true' for authentication to succeed. If any rule in the chain of rules evaluates to 'false', authentication will fail. When specified, at least one rule must be specified and no more than 64 rules may be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenUserValidationRule"
+          },
+          "x-kubernetes-list-map-keys": [
+            "expression"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -9704,7 +9742,7 @@
       }
     },
     "com.github.openshift.api.config.v1.OldTLSProfile": {
-      "description": "OldTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility",
+      "description": "OldTLSProfile is a TLS security profile based on the \"old\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.OpenIDClaims": {
@@ -10214,7 +10252,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PowerVSPlatformSpec"
         },
         "type": {
-          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"IBMCloud\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\", \"External\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
           "type": "string",
           "default": ""
         },
@@ -10509,7 +10547,7 @@
           "default": ""
         },
         "prefix": {
-          "description": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+          "description": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
           "type": "string",
           "default": ""
         }
@@ -11282,7 +11320,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
-          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
           "default": ""
         }
@@ -11293,23 +11331,23 @@
       "type": "object",
       "properties": {
         "custom": {
-          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  ciphers:\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n  minTLSVersion: VersionTLS11",
+          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  minTLSVersion: VersionTLS11\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CustomTLSProfile"
         },
         "intermediate": {
-          "description": "intermediate is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28recommended.29\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n  minTLSVersion: VersionTLS12",
+          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"intermediate\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.IntermediateTLSProfile"
         },
         "modern": {
-          "description": "modern is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n  minTLSVersion: VersionTLS13",
+          "description": "modern is a TLS security profile for use with clients that support TLS 1.3 and do not need backward compatibility for older clients.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS13\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ModernTLSProfile"
         },
         "old": {
-          "description": "old is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n    - DHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-ECDSA-AES128-SHA256\n\n    - ECDHE-RSA-AES128-SHA256\n\n    - ECDHE-ECDSA-AES128-SHA\n\n    - ECDHE-RSA-AES128-SHA\n\n    - ECDHE-ECDSA-AES256-SHA384\n\n    - ECDHE-RSA-AES256-SHA384\n\n    - ECDHE-ECDSA-AES256-SHA\n\n    - ECDHE-RSA-AES256-SHA\n\n    - DHE-RSA-AES128-SHA256\n\n    - DHE-RSA-AES256-SHA256\n\n    - AES128-GCM-SHA256\n\n    - AES256-GCM-SHA384\n\n    - AES128-SHA256\n\n    - AES256-SHA256\n\n    - AES128-SHA\n\n    - AES256-SHA\n\n    - DES-CBC3-SHA\n\n  minTLSVersion: VersionTLS10",
+          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"old\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.OldTLSProfile"
         },
         "type": {
-          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters. Old, Intermediate and Modern are TLS security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be reduced.\n\nNote that the Modern profile is currently not supported because it is not yet well adopted by common software libraries.",
+          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe profiles are currently based on version 5.0 of the Mozilla Server Side TLS configuration guidelines (released 2019-06-28) with TLS 1.3 ciphers added for forward compatibility. See: https://ssl-config.mozilla.org/guidelines/5.0.json\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
           "type": "string",
           "default": ""
         }
@@ -11424,7 +11462,7 @@
       ],
       "properties": {
         "extra": {
-          "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 32 extra attribute mappings may be provided.",
+          "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity.\n\nkey values for extra mappings must be unique. A maximum of 32 extra attribute mappings may be provided.",
           "type": "array",
           "items": {
             "default": {},
@@ -11436,12 +11474,12 @@
           "x-kubernetes-list-type": "map"
         },
         "groups": {
-          "description": "groups is an optional field that configures how the groups of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider. When referencing a claim, if the claim is present in the JWT token, its value must be a list of groups separated by a comma (','). For example - '\"example\"' and '\"exampleOne\", \"exampleTwo\", \"exampleThree\"' are valid claim values.",
+          "description": "groups is an optional field that configures how the groups of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.\n\nWhen referencing a claim, if the claim is present in the JWT token, its value must be a list of groups separated by a comma (',').\n\nFor example - '\"example\"' and '\"exampleOne\", \"exampleTwo\", \"exampleThree\"' are valid claim values.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PrefixedClaimMapping"
         },
         "uid": {
-          "description": "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time. The current default is to use the 'sub' claim.",
+          "description": "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time.\n\nThe current default is to use the 'sub' claim.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping"
         },
         "username": {
@@ -11465,18 +11503,41 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TokenClaimValidationCELRule": {
+      "type": "object",
+      "required": [
+        "expression",
+        "message"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a CEL expression evaluated against token claims. expression is required, must be at least 1 character in length and must not exceed 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one.",
+          "type": "string"
+        },
+        "message": {
+          "description": "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.TokenClaimValidationRule": {
+      "description": "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If Type is CEL, CEL must be set and RequiredClaim must be omitted.",
       "type": "object",
       "required": [
         "type"
       ],
       "properties": {
+        "cel": {
+          "description": "cel holds the CEL expression and message for validation. Must be set when Type is \"CEL\", and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimValidationCELRule"
+        },
         "requiredClaim": {
-          "description": "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
+          "description": "requiredClaim allows configuring a required claim name and its expected value. This field is required when `type` is set to RequiredClaim, and must be omitted when `type` is set to any other value. The Kubernetes API server uses this field to validate if an incoming JWT is valid for this identity provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
         },
         "type": {
-          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are 'RequiredClaim' and omitted (not provided or an empty string).\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nDefaults to 'RequiredClaim'.",
+          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"CEL\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
           "type": "string",
           "default": ""
         }
@@ -11518,6 +11579,10 @@
           },
           "x-kubernetes-list-type": "set"
         },
+        "discoveryURL": {
+          "description": "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{issuerURL}/.well-known/openid-configuration\".\n\nThe discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `issuerURL` (ignoring trailing slashes). The discoveryURL value must be at least 1 character long and no longer than 2048 characters.",
+          "type": "string"
+        },
         "issuerCertificateAuthority": {
           "description": "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
           "default": {},
@@ -11549,10 +11614,40 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TokenUserValidationRule": {
+      "description": "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+      "type": "object",
+      "required": [
+        "expression",
+        "message"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a required CEL expression that performs a validation on cluster user identity attributes like username, groups, etc.\n\nThe expression must evaluate to a boolean value. When the expression evaluates to 'true', the cluster user identity is considered valid. When the expression evaluates to 'false', the cluster user identity is not considered valid. expression must be at least 1 character in length and must not exceed 1024 characters.",
+          "type": "string"
+        },
+        "message": {
+          "description": "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Update": {
       "description": "Update represents an administrator update request.",
       "type": "object",
       "properties": {
+        "acceptRisks": {
+          "description": "acceptRisks is an optional set of names of conditional update risks that are considered acceptable. A conditional update is performed only if all of its risks are acceptable. This list may contain entries that apply to current, previous or future updates. The entries therefore may not map directly to a risk in .status.conditionalUpdateRisks. acceptRisks must not contain more than 1000 entries. Entries in this list must be unique.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.AcceptRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "architecture": {
           "description": "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
           "type": "string",
@@ -11587,7 +11682,7 @@
       ],
       "properties": {
         "acceptedRisks": {
-          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
           "type": "string"
         },
         "completionTime": {
@@ -11636,7 +11731,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
         },
         "prefixPolicy": {
-          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'. As an example, consider the following scenario:\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
+          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim.\n\nThe prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
           "type": "string",
           "default": ""
         }
@@ -14326,9 +14421,13 @@
           "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSource"
         },
         "type": {
-          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"",
+          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"\n\nPossible enum values:\n - `\"ContainerImport\"` A sample that let the user import a container image.\n - `\"GitImport\"` A sample that let the user import code from a git repository.",
           "type": "string",
-          "default": ""
+          "default": "",
+          "enum": [
+            "ContainerImport",
+            "GitImport"
+          ]
         }
       },
       "x-kubernetes-unions": [
@@ -14526,6 +14625,250 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerCluster": {
+      "description": "PacemakerCluster represents the current state of the pacemaker cluster as reported by the pcs status command. PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is \"cluster\". This resource provides a view into the health and status of a pacemaker-managed cluster in Two Node OpenShift with Fencing deployments.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "status": {
+          "description": "status contains the actual pacemaker cluster status information collected from the cluster. The goal of this status is to be able to quickly identify if pacemaker is in a healthy state. In Two Node OpenShift with Fencing, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources. This field is optional on creation - the status collector populates it immediately after creating the resource via the status subresource.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterFencingAgentStatus": {
+      "description": "PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node. Fencing agents are STONITH (Shoot The Other Node In The Head) devices used to isolate failed nodes. Unlike regular pacemaker resources, fencing agents are mapped to their target node (the node they can fence), not the node where their monitoring operations are scheduled.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name",
+        "method"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the fencing agent's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the fencing agent. The \"InService\" condition tracks whether the fencing agent is in service (not in maintenance mode). The \"Managed\" condition tracks whether the fencing agent is managed by pacemaker. The \"Enabled\" condition tracks whether the fencing agent is enabled. The \"Operational\" condition tracks whether the fencing agent is operational (not failed). The \"Active\" condition tracks whether the fencing agent is active (available to be used). The \"Started\" condition tracks whether the fencing agent is started. The \"Schedulable\" condition tracks whether the fencing agent is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "method": {
+          "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
+          "type": "string",
+          "enum": [
+            "IPMI",
+            "Redfish"
+          ]
+        },
+        "name": {
+          "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterList": {
+      "description": "PacemakerClusterList contains a list of PacemakerCluster objects. PacemakerCluster is a cluster-scoped singleton resource; only one instance named \"cluster\" may exist. This list type exists only to satisfy Kubernetes API conventions.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of PacemakerCluster objects.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerCluster"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus": {
+      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "nodeName",
+        "addresses",
+        "resources",
+        "fencingAgents"
+      ],
+      "properties": {
+        "addresses": {
+          "description": "addresses is a list of IP addresses for the node. Pacemaker allows multiple IP addresses for Corosync communication between nodes. The first address in this list is used for IP-based peer URLs for etcd membership. Each address must be a valid global unicast IPv4 or IPv6 address in canonical form (e.g., \"192.168.1.1\" not \"192.168.001.001\", or \"2001:db8::1\" not \"2001:0db8::1\"). This excludes loopback, link-local, and multicast addresses.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerNodeAddress"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "conditions": {
+          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "fencingAgents": {
+          "description": "fencingAgents contains the status of fencing agents that can fence this node. Unlike resources (which are scheduled to run on this node), fencing agents are mapped to the node they can fence (their target), not the node where monitoring operations run. Each fencing agent entry includes a unique name, fencing type, target node, and health conditions. A node is considered fence-capable if at least one fencing agent is healthy. Expected to have 1 fencing agent per node, but up to 8 are supported for redundancy. Names must be unique within this array.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterFencingAgentStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "nodeName": {
+          "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "resources contains the status of pacemaker resources scheduled on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we track Kubelet and Etcd resources per node. Both resources are required to be present, so the array must contain at least 2 items. Valid resource names are \"Kubelet\" and \"Etcd\". Fencing agents are tracked separately in the fencingAgents field.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus": {
+      "description": "PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we track two resources per node:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd)\n  - Etcd (the distributed key-value store)\n\nFencing agents are tracked separately in the fencingAgents field because they are mapped to their target node (the node they can fence), not the node where monitoring operations are scheduled.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
+          "type": "string",
+          "enum": [
+            "Etcd",
+            "Kubelet"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus": {
+      "description": "PacemakerClusterStatus contains the actual pacemaker cluster status information. As part of validating the status object, we need to ensure that the lastUpdated timestamp may not be set to an earlier timestamp than the current value. The validation rule checks if oldSelf has lastUpdated before comparing, to handle the initial status creation case.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "lastUpdated",
+        "nodes"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "lastUpdated": {
+          "description": "lastUpdated is the timestamp when this status was last updated. This is useful for identifying stale status reports. It must be a valid timestamp in RFC3339 format. Once set, this field cannot be removed and cannot be set to an earlier timestamp than the current value.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "nodes": {
+          "description": "nodes provides detailed status for each control-plane node in the Pacemaker cluster. While Pacemaker supports up to 32 nodes, the limit is set to 5 (max OpenShift control-plane nodes). For Two Node OpenShift with Fencing, exactly 2 nodes are expected in a healthy cluster. An empty list indicates a catastrophic failure where Pacemaker reports no nodes.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerNodeAddress": {
+      "description": "PacemakerNodeAddress contains information for a node's address. This is similar to corev1.NodeAddress but adds validation for IP addresses.",
+      "type": "object",
+      "required": [
+        "type",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "description": "address is the node address. For InternalIP, this must be a valid global unicast IPv4 or IPv6 address in canonical form. Canonical form means the shortest standard representation (e.g., \"192.168.1.1\" not \"192.168.001.001\", or \"2001:db8::1\" not \"2001:0db8::1\"). Maximum length is 39 characters (full IPv6 address). Global unicast includes private/RFC1918 addresses but excludes loopback, link-local, and multicast.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the type of node address. Currently only \"InternalIP\" is supported.\n\nPossible enum values:\n - `\"InternalIP\"` is an internal IP address assigned to the node. This is typically the IP address used for intra-cluster communication.",
+          "type": "string",
+          "enum": [
+            "InternalIP"
+          ]
         }
       }
     },
@@ -23640,7 +23983,7 @@
       ],
       "properties": {
         "id": {
-          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by 17 lowercase hexadecimal characters (0-9 and a-f). Must be exactly 19 characters in length.",
+          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by either 8 or 17 lowercase hexadecimal characters (0-9 and a-f). The use of 8 lowercase hexadecimal characters is for older legacy hosts that may not have been migrated to newer format. Must be either 10 or 19 characters in length.",
           "type": "string"
         }
       }
@@ -24611,6 +24954,10 @@
           "format": "int32",
           "default": 0
         },
+        "synchronizedAPI": {
+          "description": "synchronizedAPI holds the last stable value of authoritativeAPI. It is used to detect migration cancellation requests and to restore the resource to its previous state. Valid values are \"MachineAPI\" and \"ClusterAPI\". When omitted, the resource has not yet been reconciled by the migration controller.",
+          "type": "string"
+        },
         "synchronizedGeneration": {
           "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
           "type": "integer",
@@ -24713,6 +25060,10 @@
         "providerStatus": {
           "description": "providerStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "synchronizedAPI": {
+          "description": "synchronizedAPI holds the last stable value of authoritativeAPI. It is used to detect migration cancellation requests and to restore the resource to its previous state. Valid values are \"MachineAPI\" and \"ClusterAPI\". When omitted, the resource has not yet been reconciled by the migration controller.",
+          "type": "string"
         },
         "synchronizedGeneration": {
           "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
@@ -28861,7 +29212,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton and GettingStartedBanner.",
+          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton, GettingStartedBanner, and GuidedTour.",
           "type": "string",
           "default": ""
         },
@@ -29510,7 +29861,7 @@
           "type": "string"
         },
         "capabilities": {
-          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
+          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton, GettingStartedBanner, and GuidedTour. Each of the available capabilities may appear only once in the list.",
           "type": "array",
           "items": {
             "default": {},
