@@ -4,10 +4,16 @@ package v1beta1
 
 // ProjectHelmChartRepositorySpecApplyConfiguration represents a declarative configuration of the ProjectHelmChartRepositorySpec type for use
 // with apply.
+//
+// Project Helm chart repository exposed within a namespace
 type ProjectHelmChartRepositorySpecApplyConfiguration struct {
-	Disabled                *bool                                              `json:"disabled,omitempty"`
-	DisplayName             *string                                            `json:"name,omitempty"`
-	Description             *string                                            `json:"description,omitempty"`
+	// If set to true, disable the repo usage in the namespace
+	Disabled *bool `json:"disabled,omitempty"`
+	// Optional associated human readable repository name, it can be used by UI for displaying purposes
+	DisplayName *string `json:"name,omitempty"`
+	// Optional human readable repository description, it can be used by UI for displaying purposes
+	Description *string `json:"description,omitempty"`
+	// Required configuration for connecting to the chart repo
 	ProjectConnectionConfig *ConnectionConfigNamespaceScopedApplyConfiguration `json:"connectionConfig,omitempty"`
 }
 

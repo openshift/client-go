@@ -4,9 +4,13 @@ package v1alpha1
 
 // SharedSecretSpecApplyConfiguration represents a declarative configuration of the SharedSecretSpec type for use
 // with apply.
+//
+// SharedSecretSpec defines the desired state of a SharedSecret
 type SharedSecretSpecApplyConfiguration struct {
-	SecretRef   *SharedSecretReferenceApplyConfiguration `json:"secretRef,omitempty"`
-	Description *string                                  `json:"description,omitempty"`
+	// secretRef is a reference to the Secret to share
+	SecretRef *SharedSecretReferenceApplyConfiguration `json:"secretRef,omitempty"`
+	// description is a user readable explanation of what the backing resource provides.
+	Description *string `json:"description,omitempty"`
 }
 
 // SharedSecretSpecApplyConfiguration constructs a declarative configuration of the SharedSecretSpec type for use with

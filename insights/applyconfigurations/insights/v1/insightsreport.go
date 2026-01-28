@@ -8,10 +8,19 @@ import (
 
 // InsightsReportApplyConfiguration represents a declarative configuration of the InsightsReport type for use
 // with apply.
+//
+// InsightsReport provides Insights health check report based on the most
+// recently sent Insights data.
 type InsightsReportApplyConfiguration struct {
-	DownloadedTime *metav1.Time                    `json:"downloadedTime,omitempty"`
-	HealthChecks   []HealthCheckApplyConfiguration `json:"healthChecks,omitempty"`
-	URI            *string                         `json:"uri,omitempty"`
+	// downloadedTime is a required field that specifies when the Insights report was last downloaded.
+	DownloadedTime *metav1.Time `json:"downloadedTime,omitempty"`
+	// healthChecks is an optional field that provides basic information about active Insights
+	// recommendations, which serve as proactive notifications for potential issues in the cluster.
+	// When omitted, it means that there are no active recommendations in the cluster.
+	HealthChecks []HealthCheckApplyConfiguration `json:"healthChecks,omitempty"`
+	// uri is a required field that provides the URL link from which the report was downloaded.
+	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
+	URI *string `json:"uri,omitempty"`
 }
 
 // InsightsReportApplyConfiguration constructs a declarative configuration of the InsightsReport type for use with

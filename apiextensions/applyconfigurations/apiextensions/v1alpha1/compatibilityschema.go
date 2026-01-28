@@ -4,10 +4,20 @@ package v1alpha1
 
 // CompatibilitySchemaApplyConfiguration represents a declarative configuration of the CompatibilitySchema type for use
 // with apply.
+//
+// CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
 type CompatibilitySchemaApplyConfiguration struct {
-	CustomResourceDefinition *CRDDataApplyConfiguration           `json:"customResourceDefinition,omitempty"`
-	RequiredVersions         *APIVersionsApplyConfiguration       `json:"requiredVersions,omitempty"`
-	ExcludedFields           []APIExcludedFieldApplyConfiguration `json:"excludedFields,omitempty"`
+	// customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes.
+	// This field is required.
+	CustomResourceDefinition *CRDDataApplyConfiguration `json:"customResourceDefinition,omitempty"`
+	// requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility.
+	// This field is required.
+	RequiredVersions *APIVersionsApplyConfiguration `json:"requiredVersions,omitempty"`
+	// excludedFields is a set of fields in the schema which will not be validated by
+	// crdSchemaValidation or objectSchemaValidation.
+	// The list may contain at most 64 fields.
+	// When not specified, all fields in the schema will be validated.
+	ExcludedFields []APIExcludedFieldApplyConfiguration `json:"excludedFields,omitempty"`
 }
 
 // CompatibilitySchemaApplyConfiguration constructs a declarative configuration of the CompatibilitySchema type for use with

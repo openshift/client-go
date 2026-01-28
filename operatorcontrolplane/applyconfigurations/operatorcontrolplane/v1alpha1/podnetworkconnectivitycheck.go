@@ -13,11 +13,19 @@ import (
 
 // PodNetworkConnectivityCheckApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheck type for use
 // with apply.
+//
+// # PodNetworkConnectivityCheck
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 type PodNetworkConnectivityCheckApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *PodNetworkConnectivityCheckSpecApplyConfiguration   `json:"spec,omitempty"`
-	Status                           *PodNetworkConnectivityCheckStatusApplyConfiguration `json:"status,omitempty"`
+	// spec defines the source and target of the connectivity check
+	Spec *PodNetworkConnectivityCheckSpecApplyConfiguration `json:"spec,omitempty"`
+	// status contains the observed status of the connectivity check
+	Status *PodNetworkConnectivityCheckStatusApplyConfiguration `json:"status,omitempty"`
 }
 
 // PodNetworkConnectivityCheck constructs a declarative configuration of the PodNetworkConnectivityCheck type for use with
@@ -31,29 +39,14 @@ func PodNetworkConnectivityCheck(name, namespace string) *PodNetworkConnectivity
 	return b
 }
 
-// ExtractPodNetworkConnectivityCheck extracts the applied configuration owned by fieldManager from
-// podNetworkConnectivityCheck. If no managedFields are found in podNetworkConnectivityCheck for fieldManager, a
-// PodNetworkConnectivityCheckApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractPodNetworkConnectivityCheckFrom extracts the applied configuration owned by fieldManager from
+// podNetworkConnectivityCheck for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // podNetworkConnectivityCheck must be a unmodified PodNetworkConnectivityCheck API object that was retrieved from the Kubernetes API.
-// ExtractPodNetworkConnectivityCheck provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractPodNetworkConnectivityCheckFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractPodNetworkConnectivityCheck(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
-	return extractPodNetworkConnectivityCheck(podNetworkConnectivityCheck, fieldManager, "")
-}
-
-// ExtractPodNetworkConnectivityCheckStatus is the same as ExtractPodNetworkConnectivityCheck except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractPodNetworkConnectivityCheckStatus(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
-	return extractPodNetworkConnectivityCheck(podNetworkConnectivityCheck, fieldManager, "status")
-}
-
-func extractPodNetworkConnectivityCheck(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string, subresource string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
+func ExtractPodNetworkConnectivityCheckFrom(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string, subresource string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
 	b := &PodNetworkConnectivityCheckApplyConfiguration{}
 	err := managedfields.ExtractInto(podNetworkConnectivityCheck, internal.Parser().Type("com.github.openshift.api.operatorcontrolplane.v1alpha1.PodNetworkConnectivityCheck"), fieldManager, b, subresource)
 	if err != nil {
@@ -66,6 +59,27 @@ func extractPodNetworkConnectivityCheck(podNetworkConnectivityCheck *operatorcon
 	b.WithAPIVersion("controlplane.operator.openshift.io/v1alpha1")
 	return b, nil
 }
+
+// ExtractPodNetworkConnectivityCheck extracts the applied configuration owned by fieldManager from
+// podNetworkConnectivityCheck. If no managedFields are found in podNetworkConnectivityCheck for fieldManager, a
+// PodNetworkConnectivityCheckApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// podNetworkConnectivityCheck must be a unmodified PodNetworkConnectivityCheck API object that was retrieved from the Kubernetes API.
+// ExtractPodNetworkConnectivityCheck provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractPodNetworkConnectivityCheck(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
+	return ExtractPodNetworkConnectivityCheckFrom(podNetworkConnectivityCheck, fieldManager, "")
+}
+
+// ExtractPodNetworkConnectivityCheckStatus extracts the applied configuration owned by fieldManager from
+// podNetworkConnectivityCheck for the status subresource.
+func ExtractPodNetworkConnectivityCheckStatus(podNetworkConnectivityCheck *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheck, fieldManager string) (*PodNetworkConnectivityCheckApplyConfiguration, error) {
+	return ExtractPodNetworkConnectivityCheckFrom(podNetworkConnectivityCheck, fieldManager, "status")
+}
+
 func (b PodNetworkConnectivityCheckApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value

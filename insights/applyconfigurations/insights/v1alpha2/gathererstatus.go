@@ -8,10 +8,26 @@ import (
 
 // GathererStatusApplyConfiguration represents a declarative configuration of the GathererStatus type for use
 // with apply.
+//
+// gathererStatus represents information about a particular
+// data gatherer.
 type GathererStatusApplyConfiguration struct {
-	Conditions        []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
-	Name              *string                          `json:"name,omitempty"`
-	LastGatherSeconds *int32                           `json:"lastGatherSeconds,omitempty"`
+	// conditions provide details on the status of each gatherer.
+	//
+	// # The current condition type is DataGathered
+	//
+	// The DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name.
+	// When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected.
+	// When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster.
+	// When it has a status of False and a reason of GatherError, an error occurred and no data was gathered.
+	// When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected.
+	// When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.
+	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
+	// name is the required name of the gatherer.
+	// It must contain at least 5 characters and may not exceed 256 characters.
+	Name *string `json:"name,omitempty"`
+	// lastGatherSeconds is required field that represents the time spent gathering in seconds
+	LastGatherSeconds *int32 `json:"lastGatherSeconds,omitempty"`
 }
 
 // GathererStatusApplyConfiguration constructs a declarative configuration of the GathererStatus type for use with

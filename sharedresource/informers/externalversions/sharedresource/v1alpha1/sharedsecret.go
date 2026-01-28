@@ -40,7 +40,7 @@ func NewSharedSecretInformer(client versioned.Interface, resyncPeriod time.Durat
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredSharedSecretInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -65,7 +65,7 @@ func NewFilteredSharedSecretInformer(client versioned.Interface, resyncPeriod ti
 				}
 				return client.SharedresourceV1alpha1().SharedSecrets().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apisharedresourcev1alpha1.SharedSecret{},
 		resyncPeriod,
 		indexers,

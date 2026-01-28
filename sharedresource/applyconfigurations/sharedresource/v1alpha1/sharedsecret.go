@@ -13,11 +13,40 @@ import (
 
 // SharedSecretApplyConfiguration represents a declarative configuration of the SharedSecret type for use
 // with apply.
+//
+// SharedSecret allows a Secret to be shared across namespaces.
+// Pods can mount the shared Secret by adding a CSI volume to the pod specification using the
+// "csi.sharedresource.openshift.io" CSI driver and a reference to the SharedSecret in the volume attributes:
+//
+// spec:
+//
+// volumes:
+// - name: shared-secret
+// csi:
+// driver: csi.sharedresource.openshift.io
+// volumeAttributes:
+// sharedSecret: my-share
+//
+// For the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedSecret object
+// within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating
+// such Role and RoleBinding objects.
+//
+// `oc create role shared-resource-my-share --verb=use --resource=sharedsecrets.sharedresource.openshift.io --resource-name=my-share`
+// `oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`
+//
+// Shared resource objects, in this case Secrets, have default permissions of list, get, and watch for system authenticated users.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+// These capabilities should not be used by applications needing long term support.
 type SharedSecretApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *SharedSecretSpecApplyConfiguration   `json:"spec,omitempty"`
-	Status                           *SharedSecretStatusApplyConfiguration `json:"status,omitempty"`
+	// spec is the specification of the desired shared secret
+	Spec *SharedSecretSpecApplyConfiguration `json:"spec,omitempty"`
+	// status is the observed status of the shared secret
+	Status *SharedSecretStatusApplyConfiguration `json:"status,omitempty"`
 }
 
 // SharedSecret constructs a declarative configuration of the SharedSecret type for use with
@@ -30,29 +59,14 @@ func SharedSecret(name string) *SharedSecretApplyConfiguration {
 	return b
 }
 
-// ExtractSharedSecret extracts the applied configuration owned by fieldManager from
-// sharedSecret. If no managedFields are found in sharedSecret for fieldManager, a
-// SharedSecretApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractSharedSecretFrom extracts the applied configuration owned by fieldManager from
+// sharedSecret for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // sharedSecret must be a unmodified SharedSecret API object that was retrieved from the Kubernetes API.
-// ExtractSharedSecret provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractSharedSecretFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractSharedSecret(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string) (*SharedSecretApplyConfiguration, error) {
-	return extractSharedSecret(sharedSecret, fieldManager, "")
-}
-
-// ExtractSharedSecretStatus is the same as ExtractSharedSecret except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractSharedSecretStatus(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string) (*SharedSecretApplyConfiguration, error) {
-	return extractSharedSecret(sharedSecret, fieldManager, "status")
-}
-
-func extractSharedSecret(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string, subresource string) (*SharedSecretApplyConfiguration, error) {
+func ExtractSharedSecretFrom(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string, subresource string) (*SharedSecretApplyConfiguration, error) {
 	b := &SharedSecretApplyConfiguration{}
 	err := managedfields.ExtractInto(sharedSecret, internal.Parser().Type("com.github.openshift.api.sharedresource.v1alpha1.SharedSecret"), fieldManager, b, subresource)
 	if err != nil {
@@ -64,6 +78,27 @@ func extractSharedSecret(sharedSecret *sharedresourcev1alpha1.SharedSecret, fiel
 	b.WithAPIVersion("sharedresource.openshift.io/v1alpha1")
 	return b, nil
 }
+
+// ExtractSharedSecret extracts the applied configuration owned by fieldManager from
+// sharedSecret. If no managedFields are found in sharedSecret for fieldManager, a
+// SharedSecretApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// sharedSecret must be a unmodified SharedSecret API object that was retrieved from the Kubernetes API.
+// ExtractSharedSecret provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractSharedSecret(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string) (*SharedSecretApplyConfiguration, error) {
+	return ExtractSharedSecretFrom(sharedSecret, fieldManager, "")
+}
+
+// ExtractSharedSecretStatus extracts the applied configuration owned by fieldManager from
+// sharedSecret for the status subresource.
+func ExtractSharedSecretStatus(sharedSecret *sharedresourcev1alpha1.SharedSecret, fieldManager string) (*SharedSecretApplyConfiguration, error) {
+	return ExtractSharedSecretFrom(sharedSecret, fieldManager, "status")
+}
+
 func (b SharedSecretApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value

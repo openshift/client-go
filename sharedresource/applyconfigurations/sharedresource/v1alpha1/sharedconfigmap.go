@@ -13,11 +13,40 @@ import (
 
 // SharedConfigMapApplyConfiguration represents a declarative configuration of the SharedConfigMap type for use
 // with apply.
+//
+// SharedConfigMap allows a ConfigMap to be shared across namespaces.
+// Pods can mount the shared ConfigMap by adding a CSI volume to the pod specification using the
+// "csi.sharedresource.openshift.io" CSI driver and a reference to the SharedConfigMap in the volume attributes:
+//
+// spec:
+//
+// volumes:
+// - name: shared-configmap
+// csi:
+// driver: csi.sharedresource.openshift.io
+// volumeAttributes:
+// sharedConfigMap: my-share
+//
+// For the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedConfigMap object
+// within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating
+// such Role and RoleBinding objects.
+//
+// `oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io --resource-name=my-share`
+// `oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`
+//
+// Shared resource objects, in this case ConfigMaps, have default permissions of list, get, and watch for system authenticated users.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+// These capabilities should not be used by applications needing long term support.
 type SharedConfigMapApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *SharedConfigMapSpecApplyConfiguration   `json:"spec,omitempty"`
-	Status                           *SharedConfigMapStatusApplyConfiguration `json:"status,omitempty"`
+	// spec is the specification of the desired shared configmap
+	Spec *SharedConfigMapSpecApplyConfiguration `json:"spec,omitempty"`
+	// status is the observed status of the shared configmap
+	Status *SharedConfigMapStatusApplyConfiguration `json:"status,omitempty"`
 }
 
 // SharedConfigMap constructs a declarative configuration of the SharedConfigMap type for use with
@@ -30,29 +59,14 @@ func SharedConfigMap(name string) *SharedConfigMapApplyConfiguration {
 	return b
 }
 
-// ExtractSharedConfigMap extracts the applied configuration owned by fieldManager from
-// sharedConfigMap. If no managedFields are found in sharedConfigMap for fieldManager, a
-// SharedConfigMapApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractSharedConfigMapFrom extracts the applied configuration owned by fieldManager from
+// sharedConfigMap for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // sharedConfigMap must be a unmodified SharedConfigMap API object that was retrieved from the Kubernetes API.
-// ExtractSharedConfigMap provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractSharedConfigMapFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractSharedConfigMap(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string) (*SharedConfigMapApplyConfiguration, error) {
-	return extractSharedConfigMap(sharedConfigMap, fieldManager, "")
-}
-
-// ExtractSharedConfigMapStatus is the same as ExtractSharedConfigMap except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractSharedConfigMapStatus(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string) (*SharedConfigMapApplyConfiguration, error) {
-	return extractSharedConfigMap(sharedConfigMap, fieldManager, "status")
-}
-
-func extractSharedConfigMap(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string, subresource string) (*SharedConfigMapApplyConfiguration, error) {
+func ExtractSharedConfigMapFrom(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string, subresource string) (*SharedConfigMapApplyConfiguration, error) {
 	b := &SharedConfigMapApplyConfiguration{}
 	err := managedfields.ExtractInto(sharedConfigMap, internal.Parser().Type("com.github.openshift.api.sharedresource.v1alpha1.SharedConfigMap"), fieldManager, b, subresource)
 	if err != nil {
@@ -64,6 +78,27 @@ func extractSharedConfigMap(sharedConfigMap *sharedresourcev1alpha1.SharedConfig
 	b.WithAPIVersion("sharedresource.openshift.io/v1alpha1")
 	return b, nil
 }
+
+// ExtractSharedConfigMap extracts the applied configuration owned by fieldManager from
+// sharedConfigMap. If no managedFields are found in sharedConfigMap for fieldManager, a
+// SharedConfigMapApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// sharedConfigMap must be a unmodified SharedConfigMap API object that was retrieved from the Kubernetes API.
+// ExtractSharedConfigMap provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractSharedConfigMap(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string) (*SharedConfigMapApplyConfiguration, error) {
+	return ExtractSharedConfigMapFrom(sharedConfigMap, fieldManager, "")
+}
+
+// ExtractSharedConfigMapStatus extracts the applied configuration owned by fieldManager from
+// sharedConfigMap for the status subresource.
+func ExtractSharedConfigMapStatus(sharedConfigMap *sharedresourcev1alpha1.SharedConfigMap, fieldManager string) (*SharedConfigMapApplyConfiguration, error) {
+	return ExtractSharedConfigMapFrom(sharedConfigMap, fieldManager, "status")
+}
+
 func (b SharedConfigMapApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value

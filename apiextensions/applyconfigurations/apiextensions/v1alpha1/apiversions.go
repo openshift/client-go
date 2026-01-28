@@ -8,9 +8,30 @@ import (
 
 // APIVersionsApplyConfiguration represents a declarative configuration of the APIVersions type for use
 // with apply.
+//
+// APIVersions specifies a set of API versions of a CRD.
 type APIVersionsApplyConfiguration struct {
-	DefaultSelection   *apiextensionsv1alpha1.APIVersionSelectionType `json:"defaultSelection,omitempty"`
-	AdditionalVersions []apiextensionsv1alpha1.APIVersionString       `json:"additionalVersions,omitempty"`
+	// defaultSelection specifies a method for automatically selecting a set of
+	// versions to require.
+	//
+	// Valid options are StorageOnly and AllServed.
+	// When set to StorageOnly, only the storage version is selected for
+	// compatibility assessment.
+	// When set to AllServed, all served versions are selected for compatibility
+	// assessment.
+	//
+	// This field is required.
+	DefaultSelection *apiextensionsv1alpha1.APIVersionSelectionType `json:"defaultSelection,omitempty"`
+	// additionalVersions specifies a set api versions to require in addition to
+	// the default selection. It is explicitly permitted to specify a version in
+	// additionalVersions which was also selected by the default selection. The
+	// selections will be merged and deduplicated.
+	//
+	// Each item must be at most 63 characters in length, and must must consist
+	// of only lowercase alphanumeric characters and hyphens, and must start
+	// with an alphabetic character and end with an alphanumeric character.// with an alphabetic character and end with an alphanumeric character.
+	// At most 32 additional versions may be specified.
+	AdditionalVersions []apiextensionsv1alpha1.APIVersionString `json:"additionalVersions,omitempty"`
 }
 
 // APIVersionsApplyConfiguration constructs a declarative configuration of the APIVersions type for use with

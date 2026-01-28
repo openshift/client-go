@@ -10,13 +10,22 @@ import (
 
 // ConfigConditionApplyConfiguration represents a declarative configuration of the ConfigCondition type for use
 // with apply.
+//
+// ConfigCondition captures various conditions of the Config
+// as entries are processed.
 type ConfigConditionApplyConfiguration struct {
-	Type               *samplesv1.ConfigConditionType `json:"type,omitempty"`
-	Status             *corev1.ConditionStatus        `json:"status,omitempty"`
-	LastUpdateTime     *metav1.Time                   `json:"lastUpdateTime,omitempty"`
-	LastTransitionTime *metav1.Time                   `json:"lastTransitionTime,omitempty"`
-	Reason             *string                        `json:"reason,omitempty"`
-	Message            *string                        `json:"message,omitempty"`
+	// type of condition.
+	Type *samplesv1.ConfigConditionType `json:"type,omitempty"`
+	// status of the condition, one of True, False, Unknown.
+	Status *corev1.ConditionStatus `json:"status,omitempty"`
+	// lastUpdateTime is the last time this condition was updated.
+	LastUpdateTime *metav1.Time `json:"lastUpdateTime,omitempty"`
+	// lastTransitionTime is the last time the condition transitioned from one status to another.
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+	// reason is what caused the condition's last transition.
+	Reason *string `json:"reason,omitempty"`
+	// message is a human readable message indicating details about the transition.
+	Message *string `json:"message,omitempty"`
 }
 
 // ConfigConditionApplyConfiguration constructs a declarative configuration of the ConfigCondition type for use with

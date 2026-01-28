@@ -9,9 +9,20 @@ import (
 // ConnectionConfigApplyConfiguration represents a declarative configuration of the ConnectionConfig type for use
 // with apply.
 type ConnectionConfigApplyConfiguration struct {
-	URL             *string                    `json:"url,omitempty"`
-	CA              *v1.ConfigMapNameReference `json:"ca,omitempty"`
-	TLSClientConfig *v1.SecretNameReference    `json:"tlsClientConfig,omitempty"`
+	// Chart repository URL
+	URL *string `json:"url,omitempty"`
+	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
+	// It is used as a trust anchor to validate the TLS certificate presented by the remote server.
+	// The key "ca-bundle.crt" is used to locate the data.
+	// If empty, the default system roots are used.
+	// The namespace for this config map is openshift-config.
+	CA *v1.ConfigMapNameReference `json:"ca,omitempty"`
+	// tlsClientConfig is an optional reference to a secret by name that contains the
+	// PEM-encoded TLS client certificate and private key to present when connecting to the server.
+	// The key "tls.crt" is used to locate the client certificate.
+	// The key "tls.key" is used to locate the private key.
+	// The namespace for this secret is openshift-config.
+	TLSClientConfig *v1.SecretNameReference `json:"tlsClientConfig,omitempty"`
 }
 
 // ConnectionConfigApplyConfiguration constructs a declarative configuration of the ConnectionConfig type for use with

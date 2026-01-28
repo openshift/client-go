@@ -9,12 +9,19 @@ import (
 
 // PodNetworkConnectivityCheckConditionApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckCondition type for use
 // with apply.
+//
+// PodNetworkConnectivityCheckCondition represents the overall status of the pod network connectivity.
 type PodNetworkConnectivityCheckConditionApplyConfiguration struct {
-	Type               *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckConditionType `json:"type,omitempty"`
-	Status             *v1.ConditionStatus                                                    `json:"status,omitempty"`
-	Reason             *string                                                                `json:"reason,omitempty"`
-	Message            *string                                                                `json:"message,omitempty"`
-	LastTransitionTime *v1.Time                                                               `json:"lastTransitionTime,omitempty"`
+	// type of the condition
+	Type *operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckConditionType `json:"type,omitempty"`
+	// status of the condition
+	Status *v1.ConditionStatus `json:"status,omitempty"`
+	// reason for the condition's last status transition in a machine readable format.
+	Reason *string `json:"reason,omitempty"`
+	// message indicating details about last transition in a human readable format.
+	Message *string `json:"message,omitempty"`
+	// Last time the condition transitioned from one status to another.
+	LastTransitionTime *v1.Time `json:"lastTransitionTime,omitempty"`
 }
 
 // PodNetworkConnectivityCheckConditionApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckCondition type for use with

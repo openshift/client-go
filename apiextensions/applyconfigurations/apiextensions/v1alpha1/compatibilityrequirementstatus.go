@@ -8,10 +8,31 @@ import (
 
 // CompatibilityRequirementStatusApplyConfiguration represents a declarative configuration of the CompatibilityRequirementStatus type for use
 // with apply.
+//
+// CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.
 type CompatibilityRequirementStatusApplyConfiguration struct {
-	Conditions  []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
-	ObservedCRD *ObservedCRDApplyConfiguration   `json:"observedCRD,omitempty"`
-	CRDName     *string                          `json:"crdName,omitempty"`
+	// conditions is a list of conditions and their status.
+	// Known condition types are Progressing, Admitted, and Compatible.
+	//
+	// The Progressing condition indicates if reconciliation of a CompatibilityRequirement is still
+	// progressing or has finished.
+	//
+	// The Admitted condition indicates if the validating webhook has been configured.
+	//
+	// The Compatible condition indicates if the observed CRD is compatible with the requirement.
+	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
+	// observedCRD documents the uid and generation of the CRD object when the current status was written.
+	// This field will be omitted if the target CRD does not exist or could not be retrieved.
+	ObservedCRD *ObservedCRDApplyConfiguration `json:"observedCRD,omitempty"`
+	// crdName is the name of the target CRD. The target CRD is not required to
+	// exist, as we may legitimately place requirements on it before it is
+	// created.  The observed CRD is given in status.observedCRD, which will be
+	// empty if no CRD is observed.
+	// When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format:
+	// lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.
+	// When not specified, the requirement applies to any CRD name discovered from the compatibility schema.
+	// This field is optional. Once set, the value cannot be changed and must always remain set.
+	CRDName *string `json:"crdName,omitempty"`
 }
 
 // CompatibilityRequirementStatusApplyConfiguration constructs a declarative configuration of the CompatibilityRequirementStatus type for use with

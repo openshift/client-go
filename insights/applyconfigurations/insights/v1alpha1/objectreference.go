@@ -4,10 +4,24 @@ package v1alpha1
 
 // ObjectReferenceApplyConfiguration represents a declarative configuration of the ObjectReference type for use
 // with apply.
+//
+// ObjectReference contains enough information to let you inspect or modify the referred object.
 type ObjectReferenceApplyConfiguration struct {
-	Group     *string `json:"group,omitempty"`
-	Resource  *string `json:"resource,omitempty"`
-	Name      *string `json:"name,omitempty"`
+	// group is the API Group of the Resource.
+	// Enter empty string for the core group.
+	// This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length.
+	// Example: "", "apps", "build.openshift.io", etc.
+	Group *string `json:"group,omitempty"`
+	// resource is required field of the type that is being referenced.
+	// It is normally the plural form of the resource kind in lowercase.
+	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// Example: "deployments", "deploymentconfigs", "pods", etc.
+	Resource *string `json:"resource,omitempty"`
+	// name of the referent that follows the DNS1123 subdomain format.
+	// It must be at most 256 characters in length.
+	Name *string `json:"name,omitempty"`
+	// namespace of the referent that follows the DNS1123 subdomain format.
+	// It must be at most 253 characters in length.
 	Namespace *string `json:"namespace,omitempty"`
 }
 

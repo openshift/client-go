@@ -9,9 +9,18 @@ import (
 // PodNetworkConnectivityCheckSpecApplyConfiguration represents a declarative configuration of the PodNetworkConnectivityCheckSpec type for use
 // with apply.
 type PodNetworkConnectivityCheckSpecApplyConfiguration struct {
-	SourcePod      *string                 `json:"sourcePod,omitempty"`
-	TargetEndpoint *string                 `json:"targetEndpoint,omitempty"`
-	TLSClientCert  *v1.SecretNameReference `json:"tlsClientCert,omitempty"`
+	// sourcePod names the pod from which the condition will be checked
+	SourcePod *string `json:"sourcePod,omitempty"`
+	// EndpointAddress to check. A TCP address of the form host:port. Note that
+	// if host is a DNS name, then the check would fail if the DNS name cannot
+	// be resolved. Specify an IP address for host to bypass DNS name lookup.
+	TargetEndpoint *string `json:"targetEndpoint,omitempty"`
+	// TLSClientCert, if specified, references a kubernetes.io/tls type secret with 'tls.crt' and
+	// 'tls.key' entries containing an optional TLS client certificate and key to be used when
+	// checking endpoints that require a client certificate in order to gracefully preform the
+	// scan without causing excessive logging in the endpoint process. The secret must exist in
+	// the same namespace as this resource.
+	TLSClientCert *v1.SecretNameReference `json:"tlsClientCert,omitempty"`
 }
 
 // PodNetworkConnectivityCheckSpecApplyConfiguration constructs a declarative configuration of the PodNetworkConnectivityCheckSpec type for use with

@@ -4,10 +4,25 @@ package v1
 
 // ObjectReferenceApplyConfiguration represents a declarative configuration of the ObjectReference type for use
 // with apply.
+//
+// ObjectReference contains enough information to let you inspect or modify the referred object.
 type ObjectReferenceApplyConfiguration struct {
-	Group     *string `json:"group,omitempty"`
-	Resource  *string `json:"resource,omitempty"`
-	Name      *string `json:"name,omitempty"`
+	// group is required field that specifies the API Group of the Resource.
+	// Enter empty string for the core group.
+	// This value is empty or it should follow the DNS1123 subdomain format.
+	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character.
+	// Example: "", "apps", "build.openshift.io", etc.
+	Group *string `json:"group,omitempty"`
+	// resource is required field of the type that is being referenced and follows the DNS1035 format.
+	// It is normally the plural form of the resource kind in lowercase.
+	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
+	// Example: "deployments", "deploymentconfigs", "pods", etc.
+	Resource *string `json:"resource,omitempty"`
+	// name is required field that specifies the referent that follows the DNS1123 subdomain format.
+	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..
+	Name *string `json:"name,omitempty"`
+	// namespace if required field of the referent that follows the DNS1123 labels format.
+	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
 	Namespace *string `json:"namespace,omitempty"`
 }
 
