@@ -33,6 +33,11 @@ type ClusterMonitoringSpecApplyConfiguration struct {
 	// between API versions.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	PrometheusOperatorAdmissionWebhookConfig *PrometheusOperatorAdmissionWebhookConfigApplyConfiguration `json:"prometheusOperatorAdmissionWebhookConfig,omitempty"`
+	// openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics
+	// agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics
+	// about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	OpenShiftStateMetricsConfig *OpenShiftStateMetricsConfigApplyConfiguration `json:"openShiftStateMetricsConfig,omitempty"`
 }
 
 // ClusterMonitoringSpecApplyConfiguration constructs a declarative configuration of the ClusterMonitoringSpec type for use with
@@ -78,5 +83,13 @@ func (b *ClusterMonitoringSpecApplyConfiguration) WithPrometheusOperatorConfig(v
 // If called multiple times, the PrometheusOperatorAdmissionWebhookConfig field is set to the value of the last call.
 func (b *ClusterMonitoringSpecApplyConfiguration) WithPrometheusOperatorAdmissionWebhookConfig(value *PrometheusOperatorAdmissionWebhookConfigApplyConfiguration) *ClusterMonitoringSpecApplyConfiguration {
 	b.PrometheusOperatorAdmissionWebhookConfig = value
+	return b
+}
+
+// WithOpenShiftStateMetricsConfig sets the OpenShiftStateMetricsConfig field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the OpenShiftStateMetricsConfig field is set to the value of the last call.
+func (b *ClusterMonitoringSpecApplyConfiguration) WithOpenShiftStateMetricsConfig(value *OpenShiftStateMetricsConfigApplyConfiguration) *ClusterMonitoringSpecApplyConfiguration {
+	b.OpenShiftStateMetricsConfig = value
 	return b
 }

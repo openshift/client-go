@@ -540,6 +540,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.KeyConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MetricsServerConfig"):
 		return &configv1alpha1.MetricsServerConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("OpenShiftStateMetricsConfig"):
+		return &configv1alpha1.OpenShiftStateMetricsConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeClaimReference"):
 		return &configv1alpha1.PersistentVolumeClaimReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PersistentVolumeConfig"):
