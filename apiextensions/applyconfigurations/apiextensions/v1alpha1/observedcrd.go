@@ -4,9 +4,16 @@ package v1alpha1
 
 // ObservedCRDApplyConfiguration represents a declarative configuration of the ObservedCRD type for use
 // with apply.
+//
+// ObservedCRD contains information about the observed target CRD.
 type ObservedCRDApplyConfiguration struct {
-	UID        *string `json:"uid,omitempty"`
-	Generation *int64  `json:"generation,omitempty"`
+	// uid is the uid of the observed CRD.
+	// Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format).
+	// Length must be between 1 and 36 characters.
+	UID *string `json:"uid,omitempty"`
+	// generation is the observed generation of the CRD.
+	// Must be a positive integer (minimum value of 1).
+	Generation *int64 `json:"generation,omitempty"`
 }
 
 // ObservedCRDApplyConfiguration constructs a declarative configuration of the ObservedCRD type for use with

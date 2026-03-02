@@ -13,11 +13,21 @@ import (
 
 // CompatibilityRequirementApplyConfiguration represents a declarative configuration of the CompatibilityRequirement type for use
 // with apply.
+//
+// CompatibilityRequirement expresses a set of requirements on a target CRD.
+// It is used to ensure compatibility between different actors using the same
+// CRD.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 type CompatibilityRequirementApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
-	Spec                             *CompatibilityRequirementSpecApplyConfiguration   `json:"spec,omitempty"`
-	Status                           *CompatibilityRequirementStatusApplyConfiguration `json:"status,omitempty"`
+	// spec is the specification of the desired behavior of the Compatibility Requirement.
+	Spec *CompatibilityRequirementSpecApplyConfiguration `json:"spec,omitempty"`
+	// status is the most recently observed status of the Compatibility Requirement.
+	Status *CompatibilityRequirementStatusApplyConfiguration `json:"status,omitempty"`
 }
 
 // CompatibilityRequirement constructs a declarative configuration of the CompatibilityRequirement type for use with
@@ -30,29 +40,14 @@ func CompatibilityRequirement(name string) *CompatibilityRequirementApplyConfigu
 	return b
 }
 
-// ExtractCompatibilityRequirement extracts the applied configuration owned by fieldManager from
-// compatibilityRequirement. If no managedFields are found in compatibilityRequirement for fieldManager, a
-// CompatibilityRequirementApplyConfiguration is returned with only the Name, Namespace (if applicable),
-// APIVersion and Kind populated. It is possible that no managed fields were found for because other
-// field managers have taken ownership of all the fields previously owned by fieldManager, or because
-// the fieldManager never owned fields any fields.
+// ExtractCompatibilityRequirementFrom extracts the applied configuration owned by fieldManager from
+// compatibilityRequirement for the specified subresource. Pass an empty string for subresource to extract
+// the main resource. Common subresources include "status", "scale", etc.
 // compatibilityRequirement must be a unmodified CompatibilityRequirement API object that was retrieved from the Kubernetes API.
-// ExtractCompatibilityRequirement provides a way to perform a extract/modify-in-place/apply workflow.
+// ExtractCompatibilityRequirementFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-// Experimental!
-func ExtractCompatibilityRequirement(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string) (*CompatibilityRequirementApplyConfiguration, error) {
-	return extractCompatibilityRequirement(compatibilityRequirement, fieldManager, "")
-}
-
-// ExtractCompatibilityRequirementStatus is the same as ExtractCompatibilityRequirement except
-// that it extracts the status subresource applied configuration.
-// Experimental!
-func ExtractCompatibilityRequirementStatus(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string) (*CompatibilityRequirementApplyConfiguration, error) {
-	return extractCompatibilityRequirement(compatibilityRequirement, fieldManager, "status")
-}
-
-func extractCompatibilityRequirement(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string, subresource string) (*CompatibilityRequirementApplyConfiguration, error) {
+func ExtractCompatibilityRequirementFrom(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string, subresource string) (*CompatibilityRequirementApplyConfiguration, error) {
 	b := &CompatibilityRequirementApplyConfiguration{}
 	err := managedfields.ExtractInto(compatibilityRequirement, internal.Parser().Type("com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirement"), fieldManager, b, subresource)
 	if err != nil {
@@ -64,6 +59,27 @@ func extractCompatibilityRequirement(compatibilityRequirement *apiextensionsv1al
 	b.WithAPIVersion("apiextensions.openshift.io/v1alpha1")
 	return b, nil
 }
+
+// ExtractCompatibilityRequirement extracts the applied configuration owned by fieldManager from
+// compatibilityRequirement. If no managedFields are found in compatibilityRequirement for fieldManager, a
+// CompatibilityRequirementApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// APIVersion and Kind populated. It is possible that no managed fields were found for because other
+// field managers have taken ownership of all the fields previously owned by fieldManager, or because
+// the fieldManager never owned fields any fields.
+// compatibilityRequirement must be a unmodified CompatibilityRequirement API object that was retrieved from the Kubernetes API.
+// ExtractCompatibilityRequirement provides a way to perform a extract/modify-in-place/apply workflow.
+// Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
+// applied if another fieldManager has updated or force applied any of the previously applied fields.
+func ExtractCompatibilityRequirement(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string) (*CompatibilityRequirementApplyConfiguration, error) {
+	return ExtractCompatibilityRequirementFrom(compatibilityRequirement, fieldManager, "")
+}
+
+// ExtractCompatibilityRequirementStatus extracts the applied configuration owned by fieldManager from
+// compatibilityRequirement for the status subresource.
+func ExtractCompatibilityRequirementStatus(compatibilityRequirement *apiextensionsv1alpha1.CompatibilityRequirement, fieldManager string) (*CompatibilityRequirementApplyConfiguration, error) {
+	return ExtractCompatibilityRequirementFrom(compatibilityRequirement, fieldManager, "status")
+}
+
 func (b CompatibilityRequirementApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value
