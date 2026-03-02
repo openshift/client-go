@@ -8,10 +8,20 @@ import (
 
 // HealthCheckApplyConfiguration represents a declarative configuration of the HealthCheck type for use
 // with apply.
+//
+// HealthCheck represents an Insights health check attributes.
 type HealthCheckApplyConfiguration struct {
-	Description *string               `json:"description,omitempty"`
-	TotalRisk   *insightsv1.TotalRisk `json:"totalRisk,omitempty"`
-	AdvisorURI  *string               `json:"advisorURI,omitempty"`
+	// description is required field that provides basic description of the healthcheck.
+	// It must contain at least 10 characters and may not exceed 2048 characters.
+	Description *string `json:"description,omitempty"`
+	// totalRisk is the required field of the healthcheck.
+	// It is indicator of the total risk posed by the detected issue; combination of impact and likelihood.
+	// Allowed values are Low, Moderate, Important and Critical.
+	// The value represents the severity of the issue.
+	TotalRisk *insightsv1.TotalRisk `json:"totalRisk,omitempty"`
+	// advisorURI is required field that provides the URL link to the Insights Advisor.
+	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
+	AdvisorURI *string `json:"advisorURI,omitempty"`
 }
 
 // HealthCheckApplyConfiguration constructs a declarative configuration of the HealthCheck type for use with

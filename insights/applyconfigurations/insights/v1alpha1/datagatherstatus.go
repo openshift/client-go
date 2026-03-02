@@ -10,15 +10,29 @@ import (
 
 // DataGatherStatusApplyConfiguration represents a declarative configuration of the DataGatherStatus type for use
 // with apply.
+//
+// DataGatherStatus contains information relating to the DataGather state.
 type DataGatherStatusApplyConfiguration struct {
-	Conditions        []v1.ConditionApplyConfiguration    `json:"conditions,omitempty"`
-	State             *insightsv1alpha1.DataGatherState   `json:"dataGatherState,omitempty"`
-	Gatherers         []GathererStatusApplyConfiguration  `json:"gatherers,omitempty"`
-	StartTime         *metav1.Time                        `json:"startTime,omitempty"`
-	FinishTime        *metav1.Time                        `json:"finishTime,omitempty"`
-	RelatedObjects    []ObjectReferenceApplyConfiguration `json:"relatedObjects,omitempty"`
-	InsightsRequestID *string                             `json:"insightsRequestID,omitempty"`
-	InsightsReport    *InsightsReportApplyConfiguration   `json:"insightsReport,omitempty"`
+	// conditions provide details on the status of the gatherer job.
+	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
+	// dataGatherState reflects the current state of the data gathering process.
+	State *insightsv1alpha1.DataGatherState `json:"dataGatherState,omitempty"`
+	// gatherers is a list of active gatherers (and their statuses) in the last gathering.
+	Gatherers []GathererStatusApplyConfiguration `json:"gatherers,omitempty"`
+	// startTime is the time when Insights data gathering started.
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+	// finishTime is the time when Insights data gathering finished.
+	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+	// relatedObjects is a list of resources which are useful when debugging or inspecting the data
+	// gathering Pod
+	RelatedObjects []ObjectReferenceApplyConfiguration `json:"relatedObjects,omitempty"`
+	// insightsRequestID is an Insights request ID to track the status of the
+	// Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
+	InsightsRequestID *string `json:"insightsRequestID,omitempty"`
+	// insightsReport provides general Insights analysis results.
+	// When omitted, this means no data gathering has taken place yet or the
+	// corresponding Insights analysis (identified by "insightsRequestID") is not available.
+	InsightsReport *InsightsReportApplyConfiguration `json:"insightsReport,omitempty"`
 }
 
 // DataGatherStatusApplyConfiguration constructs a declarative configuration of the DataGatherStatus type for use with
