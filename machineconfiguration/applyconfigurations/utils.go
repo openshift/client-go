@@ -18,6 +18,12 @@ import (
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
 	// Group=machineconfiguration.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("AdditionalArtifactStore"):
+		return &machineconfigurationv1.AdditionalArtifactStoreApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AdditionalImageStore"):
+		return &machineconfigurationv1.AdditionalImageStoreApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("AdditionalLayerStore"):
+		return &machineconfigurationv1.AdditionalLayerStoreApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CertExpiry"):
 		return &machineconfigurationv1.CertExpiryApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ContainerRuntimeConfig"):

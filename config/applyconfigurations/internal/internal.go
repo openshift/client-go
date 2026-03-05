@@ -3310,6 +3310,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: expression
+      type:
+        scalar: string
     - name: prefix
       type:
         scalar: string
@@ -3861,7 +3864,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: claim
       type:
         scalar: string
-      default: ""
+    - name: expression
+      type:
+        scalar: string
     - name: prefix
       type:
         namedType: com.github.openshift.api.config.v1.UsernamePrefix
@@ -3874,6 +3879,8 @@ var schemaYAML = typed.YAMLObject(`types:
       fields:
       - fieldName: claim
         discriminatorValue: Claim
+      - fieldName: expression
+        discriminatorValue: Expression
       - fieldName: prefix
         discriminatorValue: Prefix
 - name: com.github.openshift.api.config.v1.UsernamePrefix
@@ -4258,6 +4265,38 @@ var schemaYAML = typed.YAMLObject(`types:
           elementRelationship: associative
           keys:
           - type
+- name: com.github.openshift.api.config.v1alpha1.CategoryOverride
+  map:
+    fields:
+    - name: certificate
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.CertificateConfig
+      default: {}
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.CertificateConfig
+  map:
+    fields:
+    - name: key
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.KeyConfig
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.CertificateOverride
+  map:
+    fields:
+    - name: category
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.CategoryOverride
+      default: {}
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: category
+        discriminatorValue: Category
 - name: com.github.openshift.api.config.v1alpha1.ClusterImagePolicy
   map:
     fields:
@@ -4367,6 +4406,32 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: request
       type:
         namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+- name: com.github.openshift.api.config.v1alpha1.CustomPKIPolicy
+  map:
+    fields:
+    - name: defaults
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig
+      default: {}
+    - name: overrides
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.CertificateOverride
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig
+  map:
+    fields:
+    - name: key
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.KeyConfig
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig
+  map:
+    fields:
+    - name: curve
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1alpha1.EtcdBackupSpec
   map:
     fields:
@@ -4532,6 +4597,27 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
+- name: com.github.openshift.api.config.v1alpha1.KeyConfig
+  map:
+    fields:
+    - name: algorithm
+      type:
+        scalar: string
+    - name: ecdsa
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig
+      default: {}
+    - name: rsa
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.RSAKeyConfig
+      default: {}
+    unions:
+    - discriminator: algorithm
+      fields:
+      - fieldName: ecdsa
+        discriminatorValue: ECDSA
+      - fieldName: rsa
+        discriminatorValue: RSA
 - name: com.github.openshift.api.config.v1alpha1.MetricsServerConfig
   map:
     fields:
@@ -4570,6 +4656,38 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: verbosity
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.PKI
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKISpec
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.PKICertificateManagement
+  map:
+    fields:
+    - name: custom
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.CustomPKIPolicy
+      default: {}
+    - name: mode
+      type:
+        scalar: string
+    unions:
+    - discriminator: mode
+      fields:
+      - fieldName: custom
+        discriminatorValue: Custom
 - name: com.github.openshift.api.config.v1alpha1.PKICertificateSubject
   map:
     fields:
@@ -4579,6 +4697,13 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: hostname
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.PKISpec
+  map:
+    fields:
+    - name: certificateManagement
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKICertificateManagement
+      default: {}
 - name: com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference
   map:
     fields:
@@ -4704,6 +4829,12 @@ var schemaYAML = typed.YAMLObject(`types:
           keys:
           - topologyKey
           - whenUnsatisfiable
+- name: com.github.openshift.api.config.v1alpha1.RSAKeyConfig
+  map:
+    fields:
+    - name: keySize
+      type:
+        scalar: numeric
 - name: com.github.openshift.api.config.v1alpha1.RetentionNumberConfig
   map:
     fields:

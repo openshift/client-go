@@ -264,7 +264,9 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.insights.v1alpha1.GathererConfig
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - name
     - name: storage
       type:
         namedType: com.github.openshift.api.insights.v1alpha1.Storage
@@ -305,7 +307,10 @@ var schemaYAML = typed.YAMLObject(`types:
         list:
           elementType:
             namedType: com.github.openshift.api.insights.v1alpha1.ObjectReference
-          elementRelationship: atomic
+          elementRelationship: associative
+          keys:
+          - name
+          - namespace
     - name: startTime
       type:
         namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
@@ -386,6 +391,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: namespace
       type:
         scalar: string
+      default: ""
     - name: resource
       type:
         scalar: string

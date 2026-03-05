@@ -4077,11 +4077,59 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: spec
       type:
         namedType: com.github.openshift.api.operator.v1alpha1.ClusterAPISpec
-      default: {}
     - name: status
       type:
         namedType: com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus
       default: {}
+- name: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponent
+  map:
+    fields:
+    - name: image
+      type:
+        namedType: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage
+      default: {}
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: image
+        discriminatorValue: Image
+- name: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage
+  map:
+    fields:
+    - name: profile
+      type:
+        scalar: string
+    - name: ref
+      type:
+        scalar: string
+- name: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision
+  map:
+    fields:
+    - name: components
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponent
+          elementRelationship: atomic
+    - name: contentID
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: revision
+      type:
+        scalar: numeric
+    - name: unmanagedCustomResourceDefinitions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    elementRelationship: atomic
 - name: com.github.openshift.api.operator.v1alpha1.ClusterAPISpec
   map:
     fields:
@@ -4094,17 +4142,17 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus
   map:
     fields:
-    - name: activeConfigMaps
+    - name: currentRevision
+      type:
+        scalar: string
+    - name: desiredRevision
+      type:
+        scalar: string
+    - name: revisions
       type:
         list:
           elementType:
-            scalar: string
-          elementRelationship: atomic
-    - name: targetConfigMaps
-      type:
-        list:
-          elementType:
-            scalar: string
+            namedType: com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision
           elementRelationship: atomic
 - name: com.github.openshift.api.operator.v1alpha1.ClusterVersionOperator
   map:

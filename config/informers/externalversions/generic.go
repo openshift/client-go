@@ -101,6 +101,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().ImagePolicies().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("insightsdatagathers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().InsightsDataGathers().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("pkis"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().PKIs().Informer()}, nil
 
 		// Group=config.openshift.io, Version=v1alpha2
 	case v1alpha2.SchemeGroupVersion.WithResource("insightsdatagathers"):
