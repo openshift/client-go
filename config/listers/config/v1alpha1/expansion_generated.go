@@ -29,3 +29,7 @@ type ImagePolicyNamespaceListerExpansion interface{}
 // InsightsDataGatherListerExpansion allows custom methods to be added to
 // InsightsDataGatherLister.
 type InsightsDataGatherListerExpansion interface{}
+
+// PKIListerExpansion allows custom methods to be added to
+// PKILister.
+type PKIListerExpansion interface{}
