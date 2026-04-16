@@ -15967,7 +15967,7 @@
       "type": "object",
       "properties": {
         "privateZoneIAMRole": {
-          "description": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+          "description": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.\n\nThe ARN must follow the format: arn:<partition>:iam::<account-id>:role/<role-name>, where: <partition> is the AWS partition (aws, aws-cn, aws-us-gov, or aws-eusc), <account-id> is a 12-digit numeric identifier for the AWS account, <role-name> is the IAM role name.",
           "type": "string",
           "default": ""
         }
@@ -18656,7 +18656,7 @@
       }
     },
     "com.github.openshift.api.config.v1.GenericControllerConfig": {
-      "description": "GenericControllerConfig provides information to configure a controller",
+      "description": "GenericControllerConfig provides information to configure a controller\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "servingInfo",
@@ -18665,6 +18665,10 @@
         "authorization"
       ],
       "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
         "authentication": {
           "description": "authentication allows configuration of authentication for the endpoints",
           "default": {},
@@ -18674,6 +18678,10 @@
           "description": "authorization allows configuration of authentication for the endpoints",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.DelegatedAuthorization"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
         },
         "leaderElection": {
           "description": "leaderElection provides information to elect a leader. Only override this if you have a specific need",
@@ -19814,7 +19822,7 @@
           "default": ""
         },
         "controlPlaneTopology": {
-          "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster.",
+          "description": "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
           "type": "string",
           "default": ""
         },
@@ -23792,7 +23800,7 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -24175,6 +24183,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PrometheusOperatorConfig"
         },
+        "telemeterClientConfig": {
+          "description": "telemeterClientConfig is an optional field that can be used to configure the Telemeter Client component that runs in the openshift-monitoring namespace. The Telemeter Client collects selected monitoring metrics and forwards them to Red Hat for telemetry purposes. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. When set, at least one field must be specified within telemeterClientConfig.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.TelemeterClientConfig"
+        },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
           "default": {},
@@ -24555,7 +24568,7 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "description": "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -24670,7 +24683,7 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the openshift-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 1m\n     limit: null\n   - name: memory\n     request: 32Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "description": "resources defines the compute resource requests and limits for the openshift-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 1m\n     limit: null\n   - name: memory\n     request: 32Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -24929,7 +24942,7 @@
           "x-kubernetes-list-type": "map"
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Each entry must have a unique resource name. Minimum of 1 and maximum of 10 resource entries can be specified. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n   - name: memory\n     request: 40Mi",
+          "description": "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -24978,7 +24991,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the prometheus-operator-admission-webhook container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 5m\n     limit: null\n   - name: memory\n     request: 30Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "description": "resources defines the compute resource requests and limits for the prometheus-operator-admission-webhook container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 5m\n     limit: null\n   - name: memory\n     request: 30Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -25021,7 +25034,7 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Prometheus Operator container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "description": "resources defines the compute resource requests and limits for the Prometheus Operator container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
           "type": "array",
           "items": {
             "default": {},
@@ -25545,6 +25558,54 @@
         "serverName": {
           "description": "serverName is an optional server name to use for TLS connections. When specified, must be a valid DNS subdomain as per RFC 1123. When omitted, the server name is derived from the URL. Must be between 1 and 253 characters in length.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.TelemeterClientConfig": {
+      "description": "TelemeterClientConfig provides configuration options for the Telemeter Client component that runs in the `openshift-monitoring` namespace. The Telemeter Client collects selected monitoring metrics and forwards them to Red Hat for telemetry purposes. At least one field must be specified.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the Telemeter Client container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 1m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10. Minimum length for this list is 1.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how Telemeter Client Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1. Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/TopologySpreadConstraint.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -40686,7 +40747,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics"
         },
         "kmsKeyARN": {
-          "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+          "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.\n\nThe ARN must follow the format: arn:<partition>:kms:<region>:<account-id>:(key|alias)/<key-id-or-alias>, where: <partition> is the AWS partition (aws, aws-cn, aws-us-gov, aws-iso, aws-iso-b, aws-iso-e, aws-iso-f, or aws-eusc), <region> is the AWS region, <account-id> is a 12-digit numeric identifier for the AWS account, <key-id-or-alias> is the KMS key ID or alias name.",
           "type": "string"
         }
       }
@@ -43834,6 +43895,14 @@
         "clientTimeout": {
           "description": "clientTimeout defines how long a connection will be held open while waiting for a client response.\n\nIf unset, the default timeout is 30s",
           "$ref": "#/definitions/Duration.v1.meta.apis.pkg.apimachinery.k8s.io"
+        },
+        "configurationManagement": {
+          "description": "configurationManagement specifies how OpenShift router should update the HAProxy configuration.  The following values are valid for this field:\n\n* \"ForkAndReload\". * \"Dynamic\".\n\nOmitting this field means that the user has no opinion and the platform may choose a reasonable default. This default is subject to change over time.  The current default is \"ForkAndReload\".\n\n\"ForkAndReload\" means that OpenShift router should rewrite the HAProxy configuration file and instruct HAProxy to fork and reload. This is OpenShift router's traditional approach.\n\n\"Dynamic\" means that OpenShift router may use HAProxy's control socket for some configuration updates and fall back to fork and reload for other configuration updates.  This is a newer approach, which may be less mature than ForkAndReload.  This setting can improve load-balancing fairness and metrics accuracy and reduce CPU and memory usage if HAProxy has frequent configuration updates for route and endpoints updates.\n\nNote: The \"Dynamic\" option is currently experimental and should not be enabled on production clusters.\n\n\nPossible enum values:\n - `\"Dynamic\"`\n - `\"ForkAndReload\"`",
+          "type": "string",
+          "enum": [
+            "Dynamic",
+            "ForkAndReload"
+          ]
         },
         "connectTimeout": {
           "description": "connectTimeout defines the maximum time to wait for a connection attempt to a server/backend to succeed.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 5s.",
@@ -47913,6 +47982,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage"
         },
+        "name": {
+          "description": "name is the human-readable name of the component. The value has no effect, and will not be set if the component does not define a name in its manifests. If set it must consist of alphanumeric characters, or '-', and may not exceed 255 characters.",
+          "type": "string"
+        },
         "type": {
           "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
           "type": "string",
@@ -47948,6 +48021,35 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentSource": {
+      "description": "ClusterAPIInstallerComponentSource defines the source of a component which will be installed by this revision.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "image": {
+          "description": "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage"
+        },
+        "type": {
+          "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
+          "type": "string",
+          "enum": [
+            "Image"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "image": "Image"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision": {
       "type": "object",
       "required": [
@@ -47969,6 +48071,15 @@
           "description": "contentID uniquely identifies the content of this revision. The contentID must be between 1 and 255 characters long.",
           "type": "string"
         },
+        "manifestSubstitutions": {
+          "description": "manifestSubstitutions is a list of envsubst style substitutions which will be applied to manifests in the revision during rendering. If defined it must not be empty, and may not contain more than 32 items. Each manifest substitution must have a unique key.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevisionManifestSubstitution"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "name": {
           "description": "name is the name of a revision.",
           "type": "string"
@@ -47989,6 +48100,24 @@
         }
       },
       "x-kubernetes-map-type": "atomic"
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevisionManifestSubstitution": {
+      "description": "ClusterAPIInstallerRevisionManifestSubstitution defines an envsubst style substitution which will be applied to manifests in a revision during rendering.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of the envsubst variable to substitute. It must be a valid envsubst variable name, consisting of letters, digits, and underscores, and must start with a letter or underscore. The key must not be empty, and must not exceed 255 characters.",
+          "type": "string"
+        },
+        "value": {
+          "description": "value is the value to substitute for the envsubst variable. It may be empty, in which case the variable will be substituted with an empty string. The value must not exceed 4096 characters.",
+          "type": "string"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIList": {
       "description": "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -48051,6 +48180,11 @@
         "desiredRevision": {
           "description": "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
           "type": "string"
+        },
+        "observedRevisionGeneration": {
+          "description": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1. It may not decrease or be unset once set.",
+          "type": "integer",
+          "format": "int64"
         },
         "revisions": {
           "description": "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
