@@ -3,7 +3,7 @@ module github.com/openshift/client-go
 go 1.25.0
 
 require (
-	github.com/openshift/api v0.0.0-20260416105050-3c6b218b8a80
+	github.com/openshift/api v0.0.0-20260420151639-34e60874783e
 	github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee
 	github.com/spf13/pflag v1.0.9
 	k8s.io/api v0.35.1
