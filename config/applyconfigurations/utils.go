@@ -542,6 +542,36 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.MetadataConfigCustomApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MetricsServerConfig"):
 		return &configv1alpha1.MetricsServerConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("MonitoringPluginConfig"):
+		return &configv1alpha1.MonitoringPluginConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorBuddyInfoConfig"):
+		return &configv1alpha1.NodeExporterCollectorBuddyInfoConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorConfig"):
+		return &configv1alpha1.NodeExporterCollectorConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorCpufreqConfig"):
+		return &configv1alpha1.NodeExporterCollectorCpufreqConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorEthtoolConfig"):
+		return &configv1alpha1.NodeExporterCollectorEthtoolConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorKSMDConfig"):
+		return &configv1alpha1.NodeExporterCollectorKSMDConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorMountStatsConfig"):
+		return &configv1alpha1.NodeExporterCollectorMountStatsConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorNetClassCollectConfig"):
+		return &configv1alpha1.NodeExporterCollectorNetClassCollectConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorNetClassConfig"):
+		return &configv1alpha1.NodeExporterCollectorNetClassConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorNetDevConfig"):
+		return &configv1alpha1.NodeExporterCollectorNetDevConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorProcessesConfig"):
+		return &configv1alpha1.NodeExporterCollectorProcessesConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorSystemdCollectConfig"):
+		return &configv1alpha1.NodeExporterCollectorSystemdCollectConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorSystemdConfig"):
+		return &configv1alpha1.NodeExporterCollectorSystemdConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorTcpStatConfig"):
+		return &configv1alpha1.NodeExporterCollectorTcpStatConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterConfig"):
+		return &configv1alpha1.NodeExporterConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("OAuth2"):
 		return &configv1alpha1.OAuth2ApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("OAuth2EndpointParam"):
@@ -596,6 +626,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.Sigv4ApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Storage"):
 		return &configv1alpha1.StorageApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("TelemeterClientConfig"):
+		return &configv1alpha1.TelemeterClientConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ThanosQuerierConfig"):
+		return &configv1alpha1.ThanosQuerierConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSConfig"):
 		return &configv1alpha1.TLSConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("UppercaseActionConfig"):

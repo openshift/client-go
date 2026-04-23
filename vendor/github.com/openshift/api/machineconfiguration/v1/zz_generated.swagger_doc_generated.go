@@ -31,7 +31,7 @@ func (AdditionalImageStore) SwaggerDoc() map[string]string {
 
 var map_AdditionalLayerStore = map[string]string{
 	"":     "AdditionalLayerStore defines a read-only storage location for Open Container Initiative (OCI) container image layers.",
-	"path": "path specifies the absolute location of the additional layer store. The path must exist on the node before configuration is applied. When a container image is requested, layers found at this location will be used instead of retrieving from the registry. The path is required and must be between 1 and 256 characters long, begin with a forward slash, and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', and '-'. Consecutive forward slashes are not permitted.",
+	"path": "path specifies the absolute location of the additional layer store. The path must exist on the node before configuration is applied. When a container image is requested, layers found at this location will be used instead of retrieving from the registry. The path is required and must be between 1 and 256 characters long, begin with a forward slash, and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', '-', and may end with the ':ref' suffix for reference-based layer organization (e.g., /var/lib/stargz-store/store:ref for stargz-store). Consecutive forward slashes are not permitted.",
 }
 
 func (AdditionalLayerStore) SwaggerDoc() map[string]string {
@@ -244,10 +244,12 @@ func (KubeletConfigList) SwaggerDoc() map[string]string {
 }
 
 var map_KubeletConfigSpec = map[string]string{
-	"":                          "KubeletConfigSpec defines the desired state of KubeletConfig",
-	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the KubeletConfig shoud apply to. A nil selector will result in no pools being selected.",
-	"kubeletConfig":             "kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.",
-	"tlsSecurityProfile":        "If unset, the default is based on the apiservers.config.openshift.io/cluster resource. Note that only Old and Intermediate profiles are currently supported, and the maximum available minTLSVersion is VersionTLS12.",
+	"":                          "KubeletConfigSpec configures the kubelet running on cluster nodes.",
+	"autoSizingReserved":        "autoSizingReserved controls whether system-reserved CPU and memory are automatically calculated based on each node's installed capacity. When set to true, this prevents node failure from resource starvation of system components (kubelet, CRI-O) without manual configuration. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is true for worker nodes and false for control plane nodes. When set to false, automatic resource reservation is disabled and manual settings must be configured.",
+	"logLevel":                  "logLevel sets the kubelet log verbosity, controlling the amount of detail in kubelet logs. Valid values range from 0 (minimal logging) to 10 (maximum verbosity with trace-level detail). Higher log levels may impact node performance. When omitted, the platform chooses a reasonable default, which is subject to change over time. The current default is 2 (standard informational logging).",
+	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the KubeletConfig should apply to. When omitted or set to an empty selector {}, no pools are selected, which is equivalent to not matching any MachineConfigPool.",
+	"kubeletConfig":             "kubeletConfig contains upstream Kubernetes kubelet configuration fields. Values are validated by the kubelet itself. Invalid values may render nodes unusable. Refer to OpenShift documentation for the Kubernetes version corresponding to your OpenShift release to find valid kubelet configuration options.",
+	"tlsSecurityProfile":        "tlsSecurityProfile configures TLS settings for the kubelet. When omitted, the TLS configuration defaults to the value from apiservers.config.openshift.io/cluster. When specified, the type field can be set to either \"Old\", \"Intermediate\", \"Modern\", \"Custom\" or omitted for backward compatibility.",
 }
 
 func (KubeletConfigSpec) SwaggerDoc() map[string]string {
@@ -516,7 +518,7 @@ var map_MachineConfigNodeStatusInternalReleaseImageRef = map[string]string{
 	"":           "MachineConfigNodeStatusInternalReleaseImageRef is used to provide a more detailed reference for a release bundle.",
 	"conditions": "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.\n\nIf Mounted is true, that means that a valid ISO has been mounted on the current node. If Installing is true, that means that a new release bundle is currently being copied on the current node, and not yet completed. If Available is true, it means that the release has been previously installed on the current node, and it can be used. If Removing is true, it means that a release deletion is in progress on the current node, and not yet completed. If Degraded is true, that means something has gone wrong in the current node.",
 	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
-	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
+	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The host must be either exactly \"localhost\" or a dot-qualified domain name. Single-label hosts other than \"localhost\" are not permitted. The length of the whole spec must be between 1 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
 }
 
 func (MachineConfigNodeStatusInternalReleaseImageRef) SwaggerDoc() map[string]string {

@@ -4928,6 +4928,14 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1alpha1.MetricsServerConfig
       default: {}
+    - name: monitoringPluginConfig
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig
+      default: {}
+    - name: nodeExporterConfig
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterConfig
+      default: {}
     - name: openShiftStateMetricsConfig
       type:
         namedType: com.github.openshift.api.config.v1alpha1.OpenShiftStateMetricsConfig
@@ -4943,6 +4951,14 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: prometheusOperatorConfig
       type:
         namedType: com.github.openshift.api.config.v1alpha1.PrometheusOperatorConfig
+      default: {}
+    - name: telemeterClientConfig
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.TelemeterClientConfig
+      default: {}
+    - name: thanosQuerierConfig
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.ThanosQuerierConfig
       default: {}
     - name: userDefined
       type:
@@ -5195,6 +5211,208 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: verbosity
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig
+  map:
+    fields:
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.ContainerResource
+          elementRelationship: associative
+          keys:
+          - name
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: Toleration.v1.core.api.k8s.io
+          elementRelationship: atomic
+    - name: topologySpreadConstraints
+      type:
+        list:
+          elementType:
+            namedType: TopologySpreadConstraint.v1.core.api.k8s.io
+          elementRelationship: associative
+          keys:
+          - topologyKey
+          - whenUnsatisfiable
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorBuddyInfoConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorConfig
+  map:
+    fields:
+    - name: buddyInfo
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorBuddyInfoConfig
+      default: {}
+    - name: cpuFreq
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorCpufreqConfig
+      default: {}
+    - name: ethtool
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig
+      default: {}
+    - name: ksmd
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
+      default: {}
+    - name: mountStats
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorMountStatsConfig
+      default: {}
+    - name: netClass
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassConfig
+      default: {}
+    - name: netDev
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetDevConfig
+      default: {}
+    - name: processes
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorProcessesConfig
+      default: {}
+    - name: systemd
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdConfig
+      default: {}
+    - name: tcpStat
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorTcpStatConfig
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorCpufreqConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorMountStatsConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassCollectConfig
+  map:
+    fields:
+    - name: statsGatherer
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassConfig
+  map:
+    fields:
+    - name: collect
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassCollectConfig
+      default: {}
+    - name: collectionPolicy
+      type:
+        scalar: string
+    unions:
+    - discriminator: collectionPolicy
+      fields:
+      - fieldName: collect
+        discriminatorValue: Collect
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetDevConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorProcessesConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdCollectConfig
+  map:
+    fields:
+    - name: units
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdConfig
+  map:
+    fields:
+    - name: collect
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdCollectConfig
+      default: {}
+    - name: collectionPolicy
+      type:
+        scalar: string
+    unions:
+    - discriminator: collectionPolicy
+      fields:
+      - fieldName: collect
+        discriminatorValue: Collect
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorTcpStatConfig
+  map:
+    fields:
+    - name: collectionPolicy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterConfig
+  map:
+    fields:
+    - name: collectors
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorConfig
+      default: {}
+    - name: ignoredNetworkDevices
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: maxProcs
+      type:
+        scalar: numeric
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.ContainerResource
+          elementRelationship: associative
+          keys:
+          - name
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: Toleration.v1.core.api.k8s.io
+          elementRelationship: atomic
 - name: com.github.openshift.api.config.v1alpha1.OAuth2
   map:
     fields:
@@ -5763,6 +5981,68 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: serverName
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.TelemeterClientConfig
+  map:
+    fields:
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.ContainerResource
+          elementRelationship: associative
+          keys:
+          - name
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: Toleration.v1.core.api.k8s.io
+          elementRelationship: atomic
+    - name: topologySpreadConstraints
+      type:
+        list:
+          elementType:
+            namedType: TopologySpreadConstraint.v1.core.api.k8s.io
+          elementRelationship: associative
+          keys:
+          - topologyKey
+          - whenUnsatisfiable
+- name: com.github.openshift.api.config.v1alpha1.ThanosQuerierConfig
+  map:
+    fields:
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.ContainerResource
+          elementRelationship: associative
+          keys:
+          - name
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: Toleration.v1.core.api.k8s.io
+          elementRelationship: atomic
+    - name: topologySpreadConstraints
+      type:
+        list:
+          elementType:
+            namedType: TopologySpreadConstraint.v1.core.api.k8s.io
+          elementRelationship: associative
+          keys:
+          - topologyKey
+          - whenUnsatisfiable
 - name: com.github.openshift.api.config.v1alpha1.UppercaseActionConfig
   map:
     fields:
