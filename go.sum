@@ -1,3 +1,5 @@
+github.com/bhperry/openshift-api v0.0.0-20260701172439-91ea97fb96d3 h1:M/+G0B4S3emT+CbRMbfSUfH/KIev2Vq3WZeh8iZ5/Wk=
+github.com/bhperry/openshift-api v0.0.0-20260701172439-91ea97fb96d3/go.mod h1:7WJ3IPaK6nmWT8bDcaNooHqd0H5WepjVqV/10VlkMEM=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -71,8 +73,6 @@ github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee h1:W5t00kpgFd
 github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/openshift/api v0.0.0-20260626094904-39631f42b31b h1:Z1/iNCtc1qSLJC6a91Ywk2oPSB4S9v6Lzz9hFPPkvWc=
-github.com/openshift/api v0.0.0-20260626094904-39631f42b31b/go.mod h1:Jm45pE7O6/G0tYYhiLzNyZykTjmf9BfhsKYuGfLLwTE=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee h1:+Sp5GGnjHDhT/a/nQ1xdp43UscBMr7G5wxsYotyhzJ4=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee/go.mod h1:8jcm8UPtg2mCAsxfqKil1xrmRMI3a+XU2TZ9fF8A7TE=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
