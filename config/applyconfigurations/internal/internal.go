@@ -702,17 +702,6 @@ var schemaYAML = typed.YAMLObject(`types:
       default: ""
     unions:
     - discriminator: type
-- name: com.github.openshift.api.config.v1.AWSKMSConfig
-  map:
-    fields:
-    - name: keyARN
-      type:
-        scalar: string
-      default: ""
-    - name: region
-      type:
-        scalar: string
-      default: ""
 - name: com.github.openshift.api.config.v1.AWSPlatformSpec
   map:
     fields:
@@ -2721,18 +2710,19 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.KMSConfig
   map:
     fields:
-    - name: aws
-      type:
-        namedType: com.github.openshift.api.config.v1.AWSKMSConfig
     - name: type
       type:
         scalar: string
       default: ""
+    - name: vault
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultKMSConfig
+      default: {}
     unions:
     - discriminator: type
       fields:
-      - fieldName: aws
-        discriminatorValue: AWS
+      - fieldName: vault
+        discriminatorValue: Vault
 - name: com.github.openshift.api.config.v1.KeystoneIdentityProvider
   map:
     fields:
@@ -4688,6 +4678,76 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+- name: com.github.openshift.api.config.v1.VaultAppRoleAuthentication
+  map:
+    fields:
+    - name: secret
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultSecretReference
+      default: {}
+- name: com.github.openshift.api.config.v1.VaultAuthentication
+  map:
+    fields:
+    - name: appRole
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultAppRoleAuthentication
+      default: {}
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: appRole
+        discriminatorValue: AppRole
+- name: com.github.openshift.api.config.v1.VaultConfigMapReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.VaultKMSConfig
+  map:
+    fields:
+    - name: authentication
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultAuthentication
+      default: {}
+    - name: kmsPluginImage
+      type:
+        scalar: string
+    - name: tls
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultTLSConfig
+      default: {}
+    - name: transitKey
+      type:
+        scalar: string
+    - name: transitMount
+      type:
+        scalar: string
+    - name: vaultAddress
+      type:
+        scalar: string
+    - name: vaultNamespace
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.VaultSecretReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.VaultTLSConfig
+  map:
+    fields:
+    - name: caBundle
+      type:
+        namedType: com.github.openshift.api.config.v1.VaultConfigMapReference
+      default: {}
+    - name: serverName
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.WebhookTokenAuthenticator
   map:
     fields:
