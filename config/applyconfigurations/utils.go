@@ -264,8 +264,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.InsightsDataGatherSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KeystoneIdentityProvider"):
 		return &configv1.KeystoneIdentityProviderApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("KMSConfig"):
-		return &configv1.KMSConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("KMSPluginConfig"):
+		return &configv1.KMSPluginConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubevirtPlatformStatus"):
 		return &configv1.KubevirtPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("LDAPAttributeMapping"):
@@ -456,8 +456,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.VaultAuthenticationApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VaultConfigMapReference"):
 		return &configv1.VaultConfigMapReferenceApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("VaultKMSConfig"):
-		return &configv1.VaultKMSConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("VaultKMSPluginConfig"):
+		return &configv1.VaultKMSPluginConfigApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VaultSecretReference"):
 		return &configv1.VaultSecretReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("VaultTLSConfig"):
@@ -574,6 +574,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.NodeExporterCollectorNetDevConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorProcessesConfig"):
 		return &configv1alpha1.NodeExporterCollectorProcessesConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorSoftirqsConfig"):
+		return &configv1alpha1.NodeExporterCollectorSoftirqsConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorSystemdCollectConfig"):
 		return &configv1alpha1.NodeExporterCollectorSystemdCollectConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorSystemdConfig"):

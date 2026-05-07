@@ -612,7 +612,7 @@ var schemaYAML = typed.YAMLObject(`types:
     fields:
     - name: kms
       type:
-        namedType: com.github.openshift.api.config.v1.KMSConfig
+        namedType: com.github.openshift.api.config.v1.KMSPluginConfig
     - name: type
       type:
         scalar: string
@@ -2707,7 +2707,7 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
-- name: com.github.openshift.api.config.v1.KMSConfig
+- name: com.github.openshift.api.config.v1.KMSPluginConfig
   map:
     fields:
     - name: type
@@ -2716,7 +2716,7 @@ var schemaYAML = typed.YAMLObject(`types:
       default: ""
     - name: vault
       type:
-        namedType: com.github.openshift.api.config.v1.VaultKMSConfig
+        namedType: com.github.openshift.api.config.v1.VaultKMSPluginConfig
       default: {}
     unions:
     - discriminator: type
@@ -4706,7 +4706,7 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: name
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1.VaultKMSConfig
+- name: com.github.openshift.api.config.v1.VaultKMSPluginConfig
   map:
     fields:
     - name: authentication
