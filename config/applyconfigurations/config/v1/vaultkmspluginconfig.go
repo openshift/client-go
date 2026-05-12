@@ -46,19 +46,21 @@ type VaultKMSPluginConfigApplyConfiguration struct {
 	// authentication defines the authentication method used to authenticate with Vault.
 	Authentication *VaultAuthenticationApplyConfiguration `json:"authentication,omitempty"`
 	// transitMount specifies the mount path of the Vault Transit engine.
-	// The value must be between 1 and 1024 characters when specified.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default. These defaults are subject to change over time.
 	// The current default is "transit".
 	//
-	// The mount path cannot start or end with a forward slash, cannot contain spaces,
-	// and cannot contain consecutive forward slashes.
+	// The transit mount must be between 1 and 1024 characters when specified, cannot start or
+	// end with a forward slash, cannot contain consecutive forward slashes, and must only contain
+	// RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward
+	// slashes as path separators.
 	TransitMount *string `json:"transitMount,omitempty"`
 	// transitKey specifies the name of the encryption key in Vault's Transit engine.
 	// This key is used to encrypt and decrypt data.
 	//
-	// The key name must be between 1 and 512 characters and cannot contain spaces or forward slashes.
+	// The transit key must be between 1 and 512 characters, cannot contain forward slashes,
+	// and must only contain alphanumeric characters, hyphens, periods, and underscores.
 	TransitKey *string `json:"transitKey,omitempty"`
 }
 
