@@ -55,10 +55,10 @@ github.com/onsi/ginkgo/v2 v2.27.2 h1:LzwLj0b89qtIy6SSASkzlNvX6WktqurSHwkk2ipF/Ns
 github.com/onsi/ginkgo/v2 v2.27.2/go.mod h1:ArE1D/XhNXBXCBkKOLkbsb2c81dQHCRcF5zwn/ykDRo=
 github.com/onsi/gomega v1.38.2 h1:eZCjf2xjZAqe+LeWvKb5weQ+NcPwX84kqJ0cZNxok2A=
 github.com/onsi/gomega v1.38.2/go.mod h1:W2MJcYxRGV63b418Ai34Ud0hEdTVXq9NW9+Sx6uXf3k=
-github.com/openshift/api v0.0.0-20260511191110-9b69e5fa27e9 h1:yb8ul1HPFYhO04yp0D8T/qSySZnKv210f4nE//i/Bdg=
-github.com/openshift/api v0.0.0-20260511191110-9b69e5fa27e9/go.mod h1:pyVjK0nZ4sRs4fuQVQ4rubsJdahI1PB94LnQ8sGdvxo=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee h1:+Sp5GGnjHDhT/a/nQ1xdp43UscBMr7G5wxsYotyhzJ4=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee/go.mod h1:8jcm8UPtg2mCAsxfqKil1xrmRMI3a+XU2TZ9fF8A7TE=
+github.com/pablintino/api v0.0.0-20260528074109-71b14e62c33b h1:VNoqZTWcS74TUI4TeUIdbevP+1ZhvHNk9E/3N79wxzg=
+github.com/pablintino/api v0.0.0-20260528074109-71b14e62c33b/go.mod h1:pyVjK0nZ4sRs4fuQVQ4rubsJdahI1PB94LnQ8sGdvxo=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=

@@ -31,6 +31,7 @@ authentications.config.openshift.io:
   Category: ""
   FeatureGates:
   - ExternalOIDC
+  - ExternalOIDCExternalClaimsSourcing
   - ExternalOIDCWithUIDAndExtraClaimMappings
   - ExternalOIDCWithUpstreamParity
   FilenameOperatorName: config-operator
@@ -443,7 +444,8 @@ networks.config.openshift.io:
   CRDName: networks.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - NetworkObservabilityInstall
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
