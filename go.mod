@@ -3,7 +3,7 @@ module github.com/openshift/client-go
 go 1.25.0
 
 require (
-	github.com/openshift/api v0.0.0-20260511191110-9b69e5fa27e9
+	github.com/openshift/api v0.0.0-20260603130340-1ad2ac3eb53d
 	github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee
 	github.com/spf13/pflag v1.0.9
 	k8s.io/api v0.35.1
@@ -64,5 +64,3 @@ retract v3.9.0+incompatible
 // To make go aware of the retraction, we need to tag a new version that can be
 // retracted by itself.
 retract v0.0.1
-
-replace github.com/openshift/api => github.com/pablintino/api v0.0.0-20260528074109-71b14e62c33b
