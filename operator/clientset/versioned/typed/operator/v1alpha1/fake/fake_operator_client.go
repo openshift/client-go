@@ -24,6 +24,10 @@ func (c *FakeOperatorV1alpha1) EtcdBackups() v1alpha1.EtcdBackupInterface {
 	return newFakeEtcdBackups(c)
 }
 
+func (c *FakeOperatorV1alpha1) EtcdBackupPolicies() v1alpha1.EtcdBackupPolicyInterface {
+	return newFakeEtcdBackupPolicies(c)
+}
+
 func (c *FakeOperatorV1alpha1) ImageContentSourcePolicies() v1alpha1.ImageContentSourcePolicyInterface {
 	return newFakeImageContentSourcePolicies(c)
 }
