@@ -12,10 +12,6 @@ type FakeConfigV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeConfigV1alpha1) Backups() v1alpha1.BackupInterface {
-	return newFakeBackups(c)
-}
-
 func (c *FakeConfigV1alpha1) ClusterMonitorings() v1alpha1.ClusterMonitoringInterface {
 	return newFakeClusterMonitorings(c)
 }
