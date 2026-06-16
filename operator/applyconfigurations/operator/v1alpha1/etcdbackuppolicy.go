@@ -3,87 +3,85 @@
 package v1alpha1
 
 import (
-	configv1alpha1 "github.com/openshift/api/config/v1alpha1"
-	internal "github.com/openshift/client-go/config/applyconfigurations/internal"
+	operatorv1alpha1 "github.com/openshift/api/operator/v1alpha1"
+	internal "github.com/openshift/client-go/operator/applyconfigurations/internal"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	managedfields "k8s.io/apimachinery/pkg/util/managedfields"
 	v1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
-// BackupApplyConfiguration represents a declarative configuration of the Backup type for use
+// EtcdBackupPolicyApplyConfiguration represents a declarative configuration of the EtcdBackupPolicy type for use
 // with apply.
 //
-// Backup provides configuration for performing backups of the openshift cluster.
+// # EtcdBackupPolicy sets an automated schedule for taking backups of the etcd cluster
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-type BackupApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration `json:",inline"`
-	// metadata is the standard object's metadata.
-	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+type EtcdBackupPolicyApplyConfiguration struct {
+	v1.TypeMetaApplyConfiguration    `json:",inline"`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	// spec holds user settable values for configuration
-	Spec *BackupSpecApplyConfiguration `json:"spec,omitempty"`
+	Spec *EtcdBackupPolicySpecApplyConfiguration `json:"spec,omitempty"`
 	// status holds observed values from the cluster. They may not be overridden.
-	Status *configv1alpha1.BackupStatus `json:"status,omitempty"`
+	Status *EtcdBackupPolicyStatusApplyConfiguration `json:"status,omitempty"`
 }
 
-// Backup constructs a declarative configuration of the Backup type for use with
+// EtcdBackupPolicy constructs a declarative configuration of the EtcdBackupPolicy type for use with
 // apply.
-func Backup(name string) *BackupApplyConfiguration {
-	b := &BackupApplyConfiguration{}
+func EtcdBackupPolicy(name string) *EtcdBackupPolicyApplyConfiguration {
+	b := &EtcdBackupPolicyApplyConfiguration{}
 	b.WithName(name)
-	b.WithKind("Backup")
-	b.WithAPIVersion("config.openshift.io/v1alpha1")
+	b.WithKind("EtcdBackupPolicy")
+	b.WithAPIVersion("operator.openshift.io/v1alpha1")
 	return b
 }
 
-// ExtractBackupFrom extracts the applied configuration owned by fieldManager from
-// backup for the specified subresource. Pass an empty string for subresource to extract
+// ExtractEtcdBackupPolicyFrom extracts the applied configuration owned by fieldManager from
+// etcdBackupPolicy for the specified subresource. Pass an empty string for subresource to extract
 // the main resource. Common subresources include "status", "scale", etc.
-// backup must be a unmodified Backup API object that was retrieved from the Kubernetes API.
-// ExtractBackupFrom provides a way to perform a extract/modify-in-place/apply workflow.
+// etcdBackupPolicy must be a unmodified EtcdBackupPolicy API object that was retrieved from the Kubernetes API.
+// ExtractEtcdBackupPolicyFrom provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-func ExtractBackupFrom(backup *configv1alpha1.Backup, fieldManager string, subresource string) (*BackupApplyConfiguration, error) {
-	b := &BackupApplyConfiguration{}
-	err := managedfields.ExtractInto(backup, internal.Parser().Type("com.github.openshift.api.config.v1alpha1.Backup"), fieldManager, b, subresource)
+func ExtractEtcdBackupPolicyFrom(etcdBackupPolicy *operatorv1alpha1.EtcdBackupPolicy, fieldManager string, subresource string) (*EtcdBackupPolicyApplyConfiguration, error) {
+	b := &EtcdBackupPolicyApplyConfiguration{}
+	err := managedfields.ExtractInto(etcdBackupPolicy, internal.Parser().Type("com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicy"), fieldManager, b, subresource)
 	if err != nil {
 		return nil, err
 	}
-	b.WithName(backup.Name)
+	b.WithName(etcdBackupPolicy.Name)
 
-	b.WithKind("Backup")
-	b.WithAPIVersion("config.openshift.io/v1alpha1")
+	b.WithKind("EtcdBackupPolicy")
+	b.WithAPIVersion("operator.openshift.io/v1alpha1")
 	return b, nil
 }
 
-// ExtractBackup extracts the applied configuration owned by fieldManager from
-// backup. If no managedFields are found in backup for fieldManager, a
-// BackupApplyConfiguration is returned with only the Name, Namespace (if applicable),
+// ExtractEtcdBackupPolicy extracts the applied configuration owned by fieldManager from
+// etcdBackupPolicy. If no managedFields are found in etcdBackupPolicy for fieldManager, a
+// EtcdBackupPolicyApplyConfiguration is returned with only the Name, Namespace (if applicable),
 // APIVersion and Kind populated. It is possible that no managed fields were found for because other
 // field managers have taken ownership of all the fields previously owned by fieldManager, or because
 // the fieldManager never owned fields any fields.
-// backup must be a unmodified Backup API object that was retrieved from the Kubernetes API.
-// ExtractBackup provides a way to perform a extract/modify-in-place/apply workflow.
+// etcdBackupPolicy must be a unmodified EtcdBackupPolicy API object that was retrieved from the Kubernetes API.
+// ExtractEtcdBackupPolicy provides a way to perform a extract/modify-in-place/apply workflow.
 // Note that an extracted apply configuration will contain fewer fields than what the fieldManager previously
 // applied if another fieldManager has updated or force applied any of the previously applied fields.
-func ExtractBackup(backup *configv1alpha1.Backup, fieldManager string) (*BackupApplyConfiguration, error) {
-	return ExtractBackupFrom(backup, fieldManager, "")
+func ExtractEtcdBackupPolicy(etcdBackupPolicy *operatorv1alpha1.EtcdBackupPolicy, fieldManager string) (*EtcdBackupPolicyApplyConfiguration, error) {
+	return ExtractEtcdBackupPolicyFrom(etcdBackupPolicy, fieldManager, "")
 }
 
-// ExtractBackupStatus extracts the applied configuration owned by fieldManager from
-// backup for the status subresource.
-func ExtractBackupStatus(backup *configv1alpha1.Backup, fieldManager string) (*BackupApplyConfiguration, error) {
-	return ExtractBackupFrom(backup, fieldManager, "status")
+// ExtractEtcdBackupPolicyStatus extracts the applied configuration owned by fieldManager from
+// etcdBackupPolicy for the status subresource.
+func ExtractEtcdBackupPolicyStatus(etcdBackupPolicy *operatorv1alpha1.EtcdBackupPolicy, fieldManager string) (*EtcdBackupPolicyApplyConfiguration, error) {
+	return ExtractEtcdBackupPolicyFrom(etcdBackupPolicy, fieldManager, "status")
 }
 
-func (b BackupApplyConfiguration) IsApplyConfiguration() {}
+func (b EtcdBackupPolicyApplyConfiguration) IsApplyConfiguration() {}
 
 // WithKind sets the Kind field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Kind field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithKind(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithKind(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.TypeMetaApplyConfiguration.Kind = &value
 	return b
 }
@@ -91,7 +89,7 @@ func (b *BackupApplyConfiguration) WithKind(value string) *BackupApplyConfigurat
 // WithAPIVersion sets the APIVersion field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the APIVersion field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithAPIVersion(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithAPIVersion(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.TypeMetaApplyConfiguration.APIVersion = &value
 	return b
 }
@@ -99,7 +97,7 @@ func (b *BackupApplyConfiguration) WithAPIVersion(value string) *BackupApplyConf
 // WithName sets the Name field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Name field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithName(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithName(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.Name = &value
 	return b
@@ -108,7 +106,7 @@ func (b *BackupApplyConfiguration) WithName(value string) *BackupApplyConfigurat
 // WithGenerateName sets the GenerateName field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the GenerateName field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithGenerateName(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithGenerateName(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.GenerateName = &value
 	return b
@@ -117,7 +115,7 @@ func (b *BackupApplyConfiguration) WithGenerateName(value string) *BackupApplyCo
 // WithNamespace sets the Namespace field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Namespace field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithNamespace(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithNamespace(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.Namespace = &value
 	return b
@@ -126,7 +124,7 @@ func (b *BackupApplyConfiguration) WithNamespace(value string) *BackupApplyConfi
 // WithUID sets the UID field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the UID field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithUID(value types.UID) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithUID(value types.UID) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.UID = &value
 	return b
@@ -135,7 +133,7 @@ func (b *BackupApplyConfiguration) WithUID(value types.UID) *BackupApplyConfigur
 // WithResourceVersion sets the ResourceVersion field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the ResourceVersion field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithResourceVersion(value string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithResourceVersion(value string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.ResourceVersion = &value
 	return b
@@ -144,7 +142,7 @@ func (b *BackupApplyConfiguration) WithResourceVersion(value string) *BackupAppl
 // WithGeneration sets the Generation field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Generation field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithGeneration(value int64) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithGeneration(value int64) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.Generation = &value
 	return b
@@ -153,7 +151,7 @@ func (b *BackupApplyConfiguration) WithGeneration(value int64) *BackupApplyConfi
 // WithCreationTimestamp sets the CreationTimestamp field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the CreationTimestamp field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithCreationTimestamp(value metav1.Time) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithCreationTimestamp(value metav1.Time) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.CreationTimestamp = &value
 	return b
@@ -162,7 +160,7 @@ func (b *BackupApplyConfiguration) WithCreationTimestamp(value metav1.Time) *Bac
 // WithDeletionTimestamp sets the DeletionTimestamp field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the DeletionTimestamp field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.DeletionTimestamp = &value
 	return b
@@ -171,7 +169,7 @@ func (b *BackupApplyConfiguration) WithDeletionTimestamp(value metav1.Time) *Bac
 // WithDeletionGracePeriodSeconds sets the DeletionGracePeriodSeconds field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the DeletionGracePeriodSeconds field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	b.ObjectMetaApplyConfiguration.DeletionGracePeriodSeconds = &value
 	return b
@@ -181,7 +179,7 @@ func (b *BackupApplyConfiguration) WithDeletionGracePeriodSeconds(value int64) *
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, the entries provided by each call will be put on the Labels field,
 // overwriting an existing map entries in Labels field with the same key.
-func (b *BackupApplyConfiguration) WithLabels(entries map[string]string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithLabels(entries map[string]string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	if b.ObjectMetaApplyConfiguration.Labels == nil && len(entries) > 0 {
 		b.ObjectMetaApplyConfiguration.Labels = make(map[string]string, len(entries))
@@ -196,7 +194,7 @@ func (b *BackupApplyConfiguration) WithLabels(entries map[string]string) *Backup
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, the entries provided by each call will be put on the Annotations field,
 // overwriting an existing map entries in Annotations field with the same key.
-func (b *BackupApplyConfiguration) WithAnnotations(entries map[string]string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithAnnotations(entries map[string]string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	if b.ObjectMetaApplyConfiguration.Annotations == nil && len(entries) > 0 {
 		b.ObjectMetaApplyConfiguration.Annotations = make(map[string]string, len(entries))
@@ -210,7 +208,7 @@ func (b *BackupApplyConfiguration) WithAnnotations(entries map[string]string) *B
 // WithOwnerReferences adds the given value to the OwnerReferences field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the OwnerReferences field.
-func (b *BackupApplyConfiguration) WithOwnerReferences(values ...*v1.OwnerReferenceApplyConfiguration) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithOwnerReferences(values ...*v1.OwnerReferenceApplyConfiguration) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
 		if values[i] == nil {
@@ -224,7 +222,7 @@ func (b *BackupApplyConfiguration) WithOwnerReferences(values ...*v1.OwnerRefere
 // WithFinalizers adds the given value to the Finalizers field in the declarative configuration
 // and returns the receiver, so that objects can be build by chaining "With" function invocations.
 // If called multiple times, values provided by each call will be appended to the Finalizers field.
-func (b *BackupApplyConfiguration) WithFinalizers(values ...string) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithFinalizers(values ...string) *EtcdBackupPolicyApplyConfiguration {
 	b.ensureObjectMetaApplyConfigurationExists()
 	for i := range values {
 		b.ObjectMetaApplyConfiguration.Finalizers = append(b.ObjectMetaApplyConfiguration.Finalizers, values[i])
@@ -232,7 +230,7 @@ func (b *BackupApplyConfiguration) WithFinalizers(values ...string) *BackupApply
 	return b
 }
 
-func (b *BackupApplyConfiguration) ensureObjectMetaApplyConfigurationExists() {
+func (b *EtcdBackupPolicyApplyConfiguration) ensureObjectMetaApplyConfigurationExists() {
 	if b.ObjectMetaApplyConfiguration == nil {
 		b.ObjectMetaApplyConfiguration = &v1.ObjectMetaApplyConfiguration{}
 	}
@@ -241,7 +239,7 @@ func (b *BackupApplyConfiguration) ensureObjectMetaApplyConfigurationExists() {
 // WithSpec sets the Spec field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Spec field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithSpec(value *BackupSpecApplyConfiguration) *BackupApplyConfiguration {
+func (b *EtcdBackupPolicyApplyConfiguration) WithSpec(value *EtcdBackupPolicySpecApplyConfiguration) *EtcdBackupPolicyApplyConfiguration {
 	b.Spec = value
 	return b
 }
@@ -249,29 +247,29 @@ func (b *BackupApplyConfiguration) WithSpec(value *BackupSpecApplyConfiguration)
 // WithStatus sets the Status field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the Status field is set to the value of the last call.
-func (b *BackupApplyConfiguration) WithStatus(value configv1alpha1.BackupStatus) *BackupApplyConfiguration {
-	b.Status = &value
+func (b *EtcdBackupPolicyApplyConfiguration) WithStatus(value *EtcdBackupPolicyStatusApplyConfiguration) *EtcdBackupPolicyApplyConfiguration {
+	b.Status = value
 	return b
 }
 
 // GetKind retrieves the value of the Kind field in the declarative configuration.
-func (b *BackupApplyConfiguration) GetKind() *string {
+func (b *EtcdBackupPolicyApplyConfiguration) GetKind() *string {
 	return b.TypeMetaApplyConfiguration.Kind
 }
 
 // GetAPIVersion retrieves the value of the APIVersion field in the declarative configuration.
-func (b *BackupApplyConfiguration) GetAPIVersion() *string {
+func (b *EtcdBackupPolicyApplyConfiguration) GetAPIVersion() *string {
 	return b.TypeMetaApplyConfiguration.APIVersion
 }
 
 // GetName retrieves the value of the Name field in the declarative configuration.
-func (b *BackupApplyConfiguration) GetName() *string {
+func (b *EtcdBackupPolicyApplyConfiguration) GetName() *string {
 	b.ensureObjectMetaApplyConfigurationExists()
 	return b.ObjectMetaApplyConfiguration.Name
 }
 
 // GetNamespace retrieves the value of the Namespace field in the declarative configuration.
-func (b *BackupApplyConfiguration) GetNamespace() *string {
+func (b *EtcdBackupPolicyApplyConfiguration) GetNamespace() *string {
 	b.ensureObjectMetaApplyConfigurationExists()
 	return b.ObjectMetaApplyConfiguration.Namespace
 }
