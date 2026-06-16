@@ -464,8 +464,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.VSphereCSIDriverConfigSpecApplyConfiguration{}
 
 		// Group=operator.openshift.io, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithKind("BackupJobReference"):
-		return &operatorv1alpha1.BackupJobReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ClusterAPI"):
 		return &operatorv1alpha1.ClusterAPIApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ClusterAPIInstallerComponent"):
@@ -490,10 +488,30 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1alpha1.ClusterVersionOperatorStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackup"):
 		return &operatorv1alpha1.EtcdBackupApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupFile"):
+		return &operatorv1alpha1.EtcdBackupFileApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupJobReference"):
+		return &operatorv1alpha1.EtcdBackupJobReferenceApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupPolicy"):
+		return &operatorv1alpha1.EtcdBackupPolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupPolicyRetentionRule"):
+		return &operatorv1alpha1.EtcdBackupPolicyRetentionRuleApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupPolicySpec"):
+		return &operatorv1alpha1.EtcdBackupPolicySpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupPolicyStatus"):
+		return &operatorv1alpha1.EtcdBackupPolicyStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupReference"):
+		return &operatorv1alpha1.EtcdBackupReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
 		return &operatorv1alpha1.EtcdBackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupStatus"):
 		return &operatorv1alpha1.EtcdBackupStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupStorage"):
+		return &operatorv1alpha1.EtcdBackupStorageApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupStorageLocal"):
+		return &operatorv1alpha1.EtcdBackupStorageLocalApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupStoragePvc"):
+		return &operatorv1alpha1.EtcdBackupStoragePvcApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatewayAPIIngressConfig"):
 		return &operatorv1alpha1.GatewayAPIIngressConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ImageContentSourcePolicy"):
