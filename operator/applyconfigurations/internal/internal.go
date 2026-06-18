@@ -344,6 +344,12 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: atomic
+    - name: groups
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
     - name: minTLSVersion
       type:
         scalar: string
@@ -400,6 +406,12 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: atomic
+    - name: groups
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
     - name: minTLSVersion
       type:
         scalar: string
