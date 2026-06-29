@@ -561,6 +561,16 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.BuildOverrides
       default: {}
+- name: com.github.openshift.api.config.v1.CRIOCredentialProviderConfig
+  scalar: untyped
+  list:
+    elementType:
+      namedType: __untyped_atomic_
+    elementRelationship: atomic
+  map:
+    elementType:
+      namedType: __untyped_deduced_
+    elementRelationship: separable
 - name: com.github.openshift.api.config.v1.ClientCredentialConfig
   map:
     fields:
@@ -2083,6 +2093,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1.ConfigMapFileReference
       default: {}
+    - name: controlPlaneTopology
+      type:
+        scalar: string
     - name: platformSpec
       type:
         namedType: com.github.openshift.api.config.v1.PlatformSpec
