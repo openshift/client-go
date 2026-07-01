@@ -4,6 +4,7 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	types "k8s.io/apimachinery/pkg/types"
 )
 
 // NodeStatusApplyConfiguration represents a declarative configuration of the NodeStatus type for use
@@ -13,6 +14,10 @@ import (
 type NodeStatusApplyConfiguration struct {
 	// nodeName is the name of the node
 	NodeName *string `json:"nodeName,omitempty"`
+	// nodeUID is the UID of the node.
+	// This field is used to detect that a node has been deleted and recreated with the same name.
+	// When the UID changes, it indicates the node is a new instance and the status should be reset.
+	NodeUID *types.UID `json:"nodeUID,omitempty"`
 	// currentRevision is the generation of the most recently successful deployment.
 	// Can not be set on creation of a nodeStatus. Updates must only increase the value.
 	CurrentRevision *int32 `json:"currentRevision,omitempty"`
@@ -44,6 +49,14 @@ func NodeStatus() *NodeStatusApplyConfiguration {
 // If called multiple times, the NodeName field is set to the value of the last call.
 func (b *NodeStatusApplyConfiguration) WithNodeName(value string) *NodeStatusApplyConfiguration {
 	b.NodeName = &value
+	return b
+}
+
+// WithNodeUID sets the NodeUID field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the NodeUID field is set to the value of the last call.
+func (b *NodeStatusApplyConfiguration) WithNodeUID(value types.UID) *NodeStatusApplyConfiguration {
+	b.NodeUID = &value
 	return b
 }
 
