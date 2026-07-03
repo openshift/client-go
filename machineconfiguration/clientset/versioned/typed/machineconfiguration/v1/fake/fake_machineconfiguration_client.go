@@ -20,6 +20,10 @@ func (c *FakeMachineconfigurationV1) ControllerConfigs() v1.ControllerConfigInte
 	return newFakeControllerConfigs(c)
 }
 
+func (c *FakeMachineconfigurationV1) InternalReleaseImages() v1.InternalReleaseImageInterface {
+	return newFakeInternalReleaseImages(c)
+}
+
 func (c *FakeMachineconfigurationV1) KubeletConfigs() v1.KubeletConfigInterface {
 	return newFakeKubeletConfigs(c)
 }
@@ -42,6 +46,10 @@ func (c *FakeMachineconfigurationV1) MachineOSBuilds() v1.MachineOSBuildInterfac
 
 func (c *FakeMachineconfigurationV1) MachineOSConfigs() v1.MachineOSConfigInterface {
 	return newFakeMachineOSConfigs(c)
+}
+
+func (c *FakeMachineconfigurationV1) OSImageStreams() v1.OSImageStreamInterface {
+	return newFakeOSImageStreams(c)
 }
 
 func (c *FakeMachineconfigurationV1) PinnedImageSets() v1.PinnedImageSetInterface {

@@ -50,6 +50,16 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.ImageRegistryBundleApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ImageSecretObjectReference"):
 		return &machineconfigurationv1.ImageSecretObjectReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InternalReleaseImage"):
+		return &machineconfigurationv1.InternalReleaseImageApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InternalReleaseImageBundleStatus"):
+		return &machineconfigurationv1.InternalReleaseImageBundleStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InternalReleaseImageRef"):
+		return &machineconfigurationv1.InternalReleaseImageRefApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InternalReleaseImageSpec"):
+		return &machineconfigurationv1.InternalReleaseImageSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("InternalReleaseImageStatus"):
+		return &machineconfigurationv1.InternalReleaseImageStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IrreconcilableChangeDiff"):
 		return &machineconfigurationv1.IrreconcilableChangeDiffApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("KubeletConfig"):
@@ -124,8 +134,16 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &machineconfigurationv1.NetworkInfoApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ObjectReference"):
 		return &machineconfigurationv1.ObjectReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OSImageStream"):
+		return &machineconfigurationv1.OSImageStreamApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("OSImageStreamReference"):
 		return &machineconfigurationv1.OSImageStreamReferenceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OSImageStreamSet"):
+		return &machineconfigurationv1.OSImageStreamSetApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OSImageStreamSpec"):
+		return &machineconfigurationv1.OSImageStreamSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("OSImageStreamStatus"):
+		return &machineconfigurationv1.OSImageStreamStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PinnedImageRef"):
 		return &machineconfigurationv1.PinnedImageRefApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("PinnedImageSet"):
