@@ -71,8 +71,8 @@ github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee h1:W5t00kpgFd
 github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/openshift/api v0.0.0-20260723163829-0f2bcae5eb15 h1:HZaHnJJGR/nl8S962qxiy9D8I5wFehepJbk02FUs6ig=
-github.com/openshift/api v0.0.0-20260723163829-0f2bcae5eb15/go.mod h1:k6qH5QOVa5GDln2VVm8Jz4NV3Z7R2SATHFLwGS6Wh3M=
+github.com/openshift/api v0.0.0-20260727141720-967cc4c36c9b h1:KrCRsYw5Pt7jwb2LHL48uEdHjKLKa4TD4brBcdO530A=
+github.com/openshift/api v0.0.0-20260727141720-967cc4c36c9b/go.mod h1:k6qH5QOVa5GDln2VVm8Jz4NV3Z7R2SATHFLwGS6Wh3M=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee h1:+Sp5GGnjHDhT/a/nQ1xdp43UscBMr7G5wxsYotyhzJ4=
 github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee/go.mod h1:8jcm8UPtg2mCAsxfqKil1xrmRMI3a+XU2TZ9fF8A7TE=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

@@ -5095,6 +5095,14 @@
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for BareMetal deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
           "type": "string"
+        },
+        "vipManagement": {
+          "description": "vipManagement indicates which VIP management mechanism is active on this cluster. Allowed values are `Keepalived`, `BGP`, and omitted. Once set to a non-empty value, this field is immutable. When set to `BGP`, kube-vip (Routing Table Mode) and frr-k8s are deployed as static pods to advertise VIPs via BGP, replacing the default keepalived/VRRP mechanism. When set to `Keepalived`, the default keepalived-based VIP management is used. When omitted, the default keepalived-based VIP management is used.\n\nPossible enum values:\n - `\"BGP\"` means the VIPs are advertised via BGP by kube-vip (Routing Table Mode) and frr-k8s running as static pods.\n - `\"Keepalived\"` means the VIPs are managed by the default keepalived/VRRP mechanism.",
+          "type": "string",
+          "enum": [
+            "BGP",
+            "Keepalived"
+          ]
         }
       }
     },
@@ -12244,7 +12252,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSphereFailureDomainRegionAffinity"
         },
         "server": {
-          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server. This must match the server field of an entry in the vcenters list. The match is case-sensitive; the value must be specified exactly as it appears in the vcenters entry. The value must be between 1 and 255 characters long.",
           "type": "string",
           "default": ""
         },
@@ -12339,7 +12347,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "failureDomains": {
-          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used. Each failure domain's server must match the server field of an entry in the vcenters list.",
           "type": "array",
           "items": {
             "default": {},
@@ -35888,6 +35896,10 @@
           "description": "nodeName is the name of the node",
           "type": "string",
           "default": ""
+        },
+        "nodeUID": {
+          "description": "nodeUID is the UID of the node. This field is used to detect that a node has been deleted and recreated with the same name. When the UID changes, it indicates the node is a new instance and the controller should treat this status entry as stale. When omitted, UID-based node replacement detection is not available for this entry.",
+          "type": "string"
         },
         "targetRevision": {
           "description": "targetRevision is the generation of the deployment we're trying to apply. Can not be set on creation of a nodeStatus.",

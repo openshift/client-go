@@ -3207,6 +3207,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
+    - name: nodeUID
+      type:
+        scalar: string
     - name: targetRevision
       type:
         scalar: numeric
