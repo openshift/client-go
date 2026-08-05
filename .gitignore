@@ -17,5 +17,7 @@ origin.iml
 .project
 *.go~
 tags
+# only ignore tags file, not tags directory
+!tags/
 .envrc
 examples/build/app
