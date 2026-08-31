@@ -9,9 +9,9 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// HelmChartRepositories returns a HelmChartRepositoryInformer.
-	HelmChartRepositories() HelmChartRepositoryInformer
+	HelmChartRepositories() TypedHelmChartRepositoryInformer
 	// ProjectHelmChartRepositories returns a ProjectHelmChartRepositoryInformer.
-	ProjectHelmChartRepositories() ProjectHelmChartRepositoryInformer
+	ProjectHelmChartRepositories() TypedProjectHelmChartRepositoryInformer
 }
 
 type version struct {
@@ -25,12 +25,12 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// HelmChartRepositories returns a HelmChartRepositoryInformer.
-func (v *version) HelmChartRepositories() HelmChartRepositoryInformer {
+// HelmChartRepositories returns a TypedHelmChartRepositoryInformer.
+func (v *version) HelmChartRepositories() TypedHelmChartRepositoryInformer {
 	return &helmChartRepositoryInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ProjectHelmChartRepositories returns a ProjectHelmChartRepositoryInformer.
-func (v *version) ProjectHelmChartRepositories() ProjectHelmChartRepositoryInformer {
+// ProjectHelmChartRepositories returns a TypedProjectHelmChartRepositoryInformer.
+func (v *version) ProjectHelmChartRepositories() TypedProjectHelmChartRepositoryInformer {
 	return &projectHelmChartRepositoryInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

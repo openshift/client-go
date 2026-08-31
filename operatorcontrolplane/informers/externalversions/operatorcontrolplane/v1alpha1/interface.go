@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// PodNetworkConnectivityChecks returns a PodNetworkConnectivityCheckInformer.
-	PodNetworkConnectivityChecks() PodNetworkConnectivityCheckInformer
+	PodNetworkConnectivityChecks() TypedPodNetworkConnectivityCheckInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// PodNetworkConnectivityChecks returns a PodNetworkConnectivityCheckInformer.
-func (v *version) PodNetworkConnectivityChecks() PodNetworkConnectivityCheckInformer {
+// PodNetworkConnectivityChecks returns a TypedPodNetworkConnectivityCheckInformer.
+func (v *version) PodNetworkConnectivityChecks() TypedPodNetworkConnectivityCheckInformer {
 	return &podNetworkConnectivityCheckInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

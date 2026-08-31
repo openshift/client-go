@@ -11,7 +11,7 @@ import (
 // ServiceCertSignerOperatorConfigSpecApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use
 // with apply.
 type ServiceCertSignerOperatorConfigSpecApplyConfiguration struct {
-	v1.OperatorSpecApplyConfiguration `json:",inline"`
+	v1.OperatorSpecApplyConfiguration `json:""`
 }
 
 // ServiceCertSignerOperatorConfigSpecApplyConfiguration constructs a declarative configuration of the ServiceCertSignerOperatorConfigSpec type for use with

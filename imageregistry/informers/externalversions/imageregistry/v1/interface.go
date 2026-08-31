@@ -9,9 +9,9 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// Configs returns a ConfigInformer.
-	Configs() ConfigInformer
+	Configs() TypedConfigInformer
 	// ImagePruners returns a ImagePrunerInformer.
-	ImagePruners() ImagePrunerInformer
+	ImagePruners() TypedImagePrunerInformer
 }
 
 type version struct {
@@ -25,12 +25,12 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// Configs returns a ConfigInformer.
-func (v *version) Configs() ConfigInformer {
+// Configs returns a TypedConfigInformer.
+func (v *version) Configs() TypedConfigInformer {
 	return &configInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ImagePruners returns a ImagePrunerInformer.
-func (v *version) ImagePruners() ImagePrunerInformer {
+// ImagePruners returns a TypedImagePrunerInformer.
+func (v *version) ImagePruners() TypedImagePrunerInformer {
 	return &imagePrunerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

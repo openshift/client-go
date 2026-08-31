@@ -18,11 +18,39 @@ import (
 )
 
 // AlertRelabelConfigInformer provides access to a shared informer and lister for
-// AlertRelabelConfigs.
+// AlertRelabelConfigs. Prefer using the type-safe variant (see [TypedAlertRelabelConfigInformer]).
 type AlertRelabelConfigInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() monitoringv1.AlertRelabelConfigLister
 }
+
+// TypedAlertRelabelConfigInformer provides access to a shared informer and lister for
+// AlertRelabelConfigs, including the type-safe TypedInformer variant.
+// It is a superset of AlertRelabelConfigInformer.
+type TypedAlertRelabelConfigInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() AlertRelabelConfigIndexInformer
+	Lister() monitoringv1.AlertRelabelConfigLister
+}
+
+// AlertRelabelConfigIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type AlertRelabelConfigIndexInformer cache.TypedSharedIndexInformer[*apimonitoringv1.AlertRelabelConfig]
+
+// AlertRelabelConfigHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for AlertRelabelConfig.
+type AlertRelabelConfigHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apimonitoringv1.AlertRelabelConfig]
+
+// AlertRelabelConfigDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for AlertRelabelConfig.
+type AlertRelabelConfigDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apimonitoringv1.AlertRelabelConfig]
+
+// AlertRelabelConfigFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for AlertRelabelConfig.
+type AlertRelabelConfigFilteringHandler = cache.TypedFilteringResourceEventHandler[*apimonitoringv1.AlertRelabelConfig]
+
+// AlertRelabelConfigIndexers is a specialization of [cache.TypedIndexers] for AlertRelabelConfig.
+type AlertRelabelConfigIndexers = cache.TypedIndexers[*apimonitoringv1.AlertRelabelConfig]
+
+// DeletedAlertRelabelConfig is a specialization of [cache.DeletedObject] for AlertRelabelConfig.
+type DeletedAlertRelabelConfig = cache.DeletedObject[*apimonitoringv1.AlertRelabelConfig]
 
 type alertRelabelConfigInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -33,25 +61,49 @@ type alertRelabelConfigInformer struct {
 // NewAlertRelabelConfigInformer constructs a new informer for AlertRelabelConfig type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertRelabelConfigInformer]).
 func NewAlertRelabelConfigInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewAlertRelabelConfigInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedAlertRelabelConfigInformer constructs a new informer for AlertRelabelConfig type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertRelabelConfigInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers AlertRelabelConfigIndexers) AlertRelabelConfigIndexInformer {
+	return NewTypedAlertRelabelConfigInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredAlertRelabelConfigInformer constructs a new informer for AlertRelabelConfig type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredAlertRelabelConfigInformer]).
 func NewFilteredAlertRelabelConfigInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewAlertRelabelConfigInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedAlertRelabelConfigInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredAlertRelabelConfigInformer constructs a new informer for AlertRelabelConfig type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredAlertRelabelConfigInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers AlertRelabelConfigIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) AlertRelabelConfigIndexInformer {
+	return NewTypedAlertRelabelConfigInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewAlertRelabelConfigInformerWithOptions constructs a new informer for AlertRelabelConfig type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertRelabelConfigInformerWithOptions]).
 func NewAlertRelabelConfigInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedAlertRelabelConfigInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedAlertRelabelConfigInformerWithOptions constructs a new informer for AlertRelabelConfig type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertRelabelConfigInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) AlertRelabelConfigIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "monitoring.openshift.io", Version: "v1", Resource: "alertrelabelconfigs"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertRelabelConfig](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -84,17 +136,57 @@ func NewAlertRelabelConfigInformerWithOptions(client versioned.Interface, namesp
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *alertRelabelConfigInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewAlertRelabelConfigInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedAlertRelabelConfigInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *alertRelabelConfigInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apimonitoringv1.AlertRelabelConfig{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *alertRelabelConfigInformer) TypedInformer() AlertRelabelConfigIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertRelabelConfig](f.factory.InformerFor(&apimonitoringv1.AlertRelabelConfig{}, f.defaultInformer))
 }
 
 func (f *alertRelabelConfigInformer) Lister() monitoringv1.AlertRelabelConfigLister {
 	return monitoringv1.NewAlertRelabelConfigLister(f.Informer().GetIndexer())
+}
+
+// ToTypedAlertRelabelConfigInformer converts an untyped informer into a TypedAlertRelabelConfigInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertRelabelConfig. If that is not the case, calling type-safe methods of the returned
+// TypedAlertRelabelConfigInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedAlertRelabelConfigInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedAlertRelabelConfigInformer(informer AlertRelabelConfigInformer) TypedAlertRelabelConfigInformer {
+	if informer, ok := informer.(TypedAlertRelabelConfigInformer); ok {
+		return informer
+	}
+	return &alertRelabelConfigTypedInformerAdapter{informer}
+}
+
+type alertRelabelConfigTypedInformerAdapter struct {
+	AlertRelabelConfigInformer
+}
+
+func (a *alertRelabelConfigTypedInformerAdapter) TypedInformer() AlertRelabelConfigIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertRelabelConfig](a.Informer())
+}
+
+// ToAlertRelabelConfigIndexInformer converts an untyped informer into a AlertRelabelConfigIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertRelabelConfig. If that is not the case, calling type-safe methods of the returned
+// AlertRelabelConfigIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a AlertRelabelConfigIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToAlertRelabelConfigIndexInformer(informer cache.SharedIndexInformer) AlertRelabelConfigIndexInformer {
+	if informer, ok := informer.(AlertRelabelConfigIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertRelabelConfig](informer)
 }

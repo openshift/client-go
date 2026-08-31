@@ -18,11 +18,39 @@ import (
 )
 
 // DataGatherInformer provides access to a shared informer and lister for
-// DataGathers.
+// DataGathers. Prefer using the type-safe variant (see [TypedDataGatherInformer]).
 type DataGatherInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() insightsv1alpha1.DataGatherLister
 }
+
+// TypedDataGatherInformer provides access to a shared informer and lister for
+// DataGathers, including the type-safe TypedInformer variant.
+// It is a superset of DataGatherInformer.
+type TypedDataGatherInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() DataGatherIndexInformer
+	Lister() insightsv1alpha1.DataGatherLister
+}
+
+// DataGatherIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type DataGatherIndexInformer cache.TypedSharedIndexInformer[*apiinsightsv1alpha1.DataGather]
+
+// DataGatherHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for DataGather.
+type DataGatherHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiinsightsv1alpha1.DataGather]
+
+// DataGatherDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for DataGather.
+type DataGatherDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiinsightsv1alpha1.DataGather]
+
+// DataGatherFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for DataGather.
+type DataGatherFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiinsightsv1alpha1.DataGather]
+
+// DataGatherIndexers is a specialization of [cache.TypedIndexers] for DataGather.
+type DataGatherIndexers = cache.TypedIndexers[*apiinsightsv1alpha1.DataGather]
+
+// DeletedDataGather is a specialization of [cache.DeletedObject] for DataGather.
+type DeletedDataGather = cache.DeletedObject[*apiinsightsv1alpha1.DataGather]
 
 type dataGatherInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type dataGatherInformer struct {
 // NewDataGatherInformer constructs a new informer for DataGather type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDataGatherInformer]).
 func NewDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedDataGatherInformer constructs a new informer for DataGather type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers DataGatherIndexers) DataGatherIndexInformer {
+	return NewTypedDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredDataGatherInformer constructs a new informer for DataGather type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredDataGatherInformer]).
 func NewFilteredDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredDataGatherInformer constructs a new informer for DataGather type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredDataGatherInformer(client versioned.Interface, resyncPeriod time.Duration, indexers DataGatherIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) DataGatherIndexInformer {
+	return NewTypedDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewDataGatherInformerWithOptions constructs a new informer for DataGather type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDataGatherInformerWithOptions]).
 func NewDataGatherInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedDataGatherInformerWithOptions(client, options)
+}
+
+// NewTypedDataGatherInformerWithOptions constructs a new informer for DataGather type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDataGatherInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) DataGatherIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "insights.openshift.io", Version: "v1alpha1", Resource: "datagathers"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiinsightsv1alpha1.DataGather](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewDataGatherInformerWithOptions(client versioned.Interface, options intern
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *dataGatherInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedDataGatherInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *dataGatherInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiinsightsv1alpha1.DataGather{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *dataGatherInformer) TypedInformer() DataGatherIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiinsightsv1alpha1.DataGather](f.factory.InformerFor(&apiinsightsv1alpha1.DataGather{}, f.defaultInformer))
 }
 
 func (f *dataGatherInformer) Lister() insightsv1alpha1.DataGatherLister {
 	return insightsv1alpha1.NewDataGatherLister(f.Informer().GetIndexer())
+}
+
+// ToTypedDataGatherInformer converts an untyped informer into a TypedDataGatherInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DataGather. If that is not the case, calling type-safe methods of the returned
+// TypedDataGatherInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedDataGatherInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedDataGatherInformer(informer DataGatherInformer) TypedDataGatherInformer {
+	if informer, ok := informer.(TypedDataGatherInformer); ok {
+		return informer
+	}
+	return &dataGatherTypedInformerAdapter{informer}
+}
+
+type dataGatherTypedInformerAdapter struct {
+	DataGatherInformer
+}
+
+func (a *dataGatherTypedInformerAdapter) TypedInformer() DataGatherIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiinsightsv1alpha1.DataGather](a.Informer())
+}
+
+// ToDataGatherIndexInformer converts an untyped informer into a DataGatherIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DataGather. If that is not the case, calling type-safe methods of the returned
+// DataGatherIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a DataGatherIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToDataGatherIndexInformer(informer cache.SharedIndexInformer) DataGatherIndexInformer {
+	if informer, ok := informer.(DataGatherIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiinsightsv1alpha1.DataGather](informer)
 }

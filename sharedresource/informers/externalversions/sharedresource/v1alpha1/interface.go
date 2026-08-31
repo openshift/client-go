@@ -9,9 +9,9 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// SharedConfigMaps returns a SharedConfigMapInformer.
-	SharedConfigMaps() SharedConfigMapInformer
+	SharedConfigMaps() TypedSharedConfigMapInformer
 	// SharedSecrets returns a SharedSecretInformer.
-	SharedSecrets() SharedSecretInformer
+	SharedSecrets() TypedSharedSecretInformer
 }
 
 type version struct {
@@ -25,12 +25,12 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// SharedConfigMaps returns a SharedConfigMapInformer.
-func (v *version) SharedConfigMaps() SharedConfigMapInformer {
+// SharedConfigMaps returns a TypedSharedConfigMapInformer.
+func (v *version) SharedConfigMaps() TypedSharedConfigMapInformer {
 	return &sharedConfigMapInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// SharedSecrets returns a SharedSecretInformer.
-func (v *version) SharedSecrets() SharedSecretInformer {
+// SharedSecrets returns a TypedSharedSecretInformer.
+func (v *version) SharedSecrets() TypedSharedSecretInformer {
 	return &sharedSecretInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

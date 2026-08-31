@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// APIRequestCounts returns a APIRequestCountInformer.
-	APIRequestCounts() APIRequestCountInformer
+	APIRequestCounts() TypedAPIRequestCountInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// APIRequestCounts returns a APIRequestCountInformer.
-func (v *version) APIRequestCounts() APIRequestCountInformer {
+// APIRequestCounts returns a TypedAPIRequestCountInformer.
+func (v *version) APIRequestCounts() TypedAPIRequestCountInformer {
 	return &aPIRequestCountInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

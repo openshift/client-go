@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// RangeAllocations returns a RangeAllocationInformer.
-	RangeAllocations() RangeAllocationInformer
+	RangeAllocations() TypedRangeAllocationInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// RangeAllocations returns a RangeAllocationInformer.
-func (v *version) RangeAllocations() RangeAllocationInformer {
+// RangeAllocations returns a TypedRangeAllocationInformer.
+func (v *version) RangeAllocations() TypedRangeAllocationInformer {
 	return &rangeAllocationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

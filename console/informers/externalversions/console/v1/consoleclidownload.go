@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleCLIDownloadInformer provides access to a shared informer and lister for
-// ConsoleCLIDownloads.
+// ConsoleCLIDownloads. Prefer using the type-safe variant (see [TypedConsoleCLIDownloadInformer]).
 type ConsoleCLIDownloadInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleCLIDownloadLister
 }
+
+// TypedConsoleCLIDownloadInformer provides access to a shared informer and lister for
+// ConsoleCLIDownloads, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleCLIDownloadInformer.
+type TypedConsoleCLIDownloadInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleCLIDownloadIndexInformer
+	Lister() consolev1.ConsoleCLIDownloadLister
+}
+
+// ConsoleCLIDownloadIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleCLIDownloadIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleCLIDownload]
+
+// ConsoleCLIDownloadHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleCLIDownload.
+type ConsoleCLIDownloadHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleCLIDownload]
+
+// ConsoleCLIDownloadDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleCLIDownload.
+type ConsoleCLIDownloadDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleCLIDownload]
+
+// ConsoleCLIDownloadFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleCLIDownload.
+type ConsoleCLIDownloadFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleCLIDownload]
+
+// ConsoleCLIDownloadIndexers is a specialization of [cache.TypedIndexers] for ConsoleCLIDownload.
+type ConsoleCLIDownloadIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleCLIDownload]
+
+// DeletedConsoleCLIDownload is a specialization of [cache.DeletedObject] for ConsoleCLIDownload.
+type DeletedConsoleCLIDownload = cache.DeletedObject[*apiconsolev1.ConsoleCLIDownload]
 
 type consoleCLIDownloadInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleCLIDownloadInformer struct {
 // NewConsoleCLIDownloadInformer constructs a new informer for ConsoleCLIDownload type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleCLIDownloadInformer]).
 func NewConsoleCLIDownloadInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleCLIDownloadInformer constructs a new informer for ConsoleCLIDownload type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleCLIDownloadInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleCLIDownloadIndexers) ConsoleCLIDownloadIndexInformer {
+	return NewTypedConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleCLIDownloadInformer constructs a new informer for ConsoleCLIDownload type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleCLIDownloadInformer]).
 func NewFilteredConsoleCLIDownloadInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleCLIDownloadInformer constructs a new informer for ConsoleCLIDownload type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleCLIDownloadInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleCLIDownloadIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleCLIDownloadIndexInformer {
+	return NewTypedConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleCLIDownloadInformerWithOptions constructs a new informer for ConsoleCLIDownload type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleCLIDownloadInformerWithOptions]).
 func NewConsoleCLIDownloadInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleCLIDownloadInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleCLIDownloadInformerWithOptions constructs a new informer for ConsoleCLIDownload type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleCLIDownloadInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleCLIDownloadIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consoleclidownloads"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleCLIDownload](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleCLIDownloadInformerWithOptions(client versioned.Interface, option
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleCLIDownloadInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleCLIDownloadInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleCLIDownloadInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleCLIDownload{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleCLIDownloadInformer) TypedInformer() ConsoleCLIDownloadIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleCLIDownload](f.factory.InformerFor(&apiconsolev1.ConsoleCLIDownload{}, f.defaultInformer))
 }
 
 func (f *consoleCLIDownloadInformer) Lister() consolev1.ConsoleCLIDownloadLister {
 	return consolev1.NewConsoleCLIDownloadLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleCLIDownloadInformer converts an untyped informer into a TypedConsoleCLIDownloadInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleCLIDownload. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleCLIDownloadInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleCLIDownloadInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleCLIDownloadInformer(informer ConsoleCLIDownloadInformer) TypedConsoleCLIDownloadInformer {
+	if informer, ok := informer.(TypedConsoleCLIDownloadInformer); ok {
+		return informer
+	}
+	return &consoleCLIDownloadTypedInformerAdapter{informer}
+}
+
+type consoleCLIDownloadTypedInformerAdapter struct {
+	ConsoleCLIDownloadInformer
+}
+
+func (a *consoleCLIDownloadTypedInformerAdapter) TypedInformer() ConsoleCLIDownloadIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleCLIDownload](a.Informer())
+}
+
+// ToConsoleCLIDownloadIndexInformer converts an untyped informer into a ConsoleCLIDownloadIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleCLIDownload. If that is not the case, calling type-safe methods of the returned
+// ConsoleCLIDownloadIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleCLIDownloadIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleCLIDownloadIndexInformer(informer cache.SharedIndexInformer) ConsoleCLIDownloadIndexInformer {
+	if informer, ok := informer.(ConsoleCLIDownloadIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleCLIDownload](informer)
 }

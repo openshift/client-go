@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleSampleInformer provides access to a shared informer and lister for
-// ConsoleSamples.
+// ConsoleSamples. Prefer using the type-safe variant (see [TypedConsoleSampleInformer]).
 type ConsoleSampleInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleSampleLister
 }
+
+// TypedConsoleSampleInformer provides access to a shared informer and lister for
+// ConsoleSamples, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleSampleInformer.
+type TypedConsoleSampleInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleSampleIndexInformer
+	Lister() consolev1.ConsoleSampleLister
+}
+
+// ConsoleSampleIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleSampleIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleSample]
+
+// ConsoleSampleHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleSample.
+type ConsoleSampleHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleSample]
+
+// ConsoleSampleDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleSample.
+type ConsoleSampleDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleSample]
+
+// ConsoleSampleFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleSample.
+type ConsoleSampleFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleSample]
+
+// ConsoleSampleIndexers is a specialization of [cache.TypedIndexers] for ConsoleSample.
+type ConsoleSampleIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleSample]
+
+// DeletedConsoleSample is a specialization of [cache.DeletedObject] for ConsoleSample.
+type DeletedConsoleSample = cache.DeletedObject[*apiconsolev1.ConsoleSample]
 
 type consoleSampleInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleSampleInformer struct {
 // NewConsoleSampleInformer constructs a new informer for ConsoleSample type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleSampleInformer]).
 func NewConsoleSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleSampleInformer constructs a new informer for ConsoleSample type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleSampleIndexers) ConsoleSampleIndexInformer {
+	return NewTypedConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleSampleInformer constructs a new informer for ConsoleSample type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleSampleInformer]).
 func NewFilteredConsoleSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleSampleInformer constructs a new informer for ConsoleSample type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleSampleIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleSampleIndexInformer {
+	return NewTypedConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleSampleInformerWithOptions constructs a new informer for ConsoleSample type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleSampleInformerWithOptions]).
 func NewConsoleSampleInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleSampleInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleSampleInformerWithOptions constructs a new informer for ConsoleSample type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleSampleInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleSampleIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consolesamples"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleSample](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleSampleInformerWithOptions(client versioned.Interface, options int
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleSampleInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleSampleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleSample{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleSampleInformer) TypedInformer() ConsoleSampleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleSample](f.factory.InformerFor(&apiconsolev1.ConsoleSample{}, f.defaultInformer))
 }
 
 func (f *consoleSampleInformer) Lister() consolev1.ConsoleSampleLister {
 	return consolev1.NewConsoleSampleLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleSampleInformer converts an untyped informer into a TypedConsoleSampleInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleSample. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleSampleInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleSampleInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleSampleInformer(informer ConsoleSampleInformer) TypedConsoleSampleInformer {
+	if informer, ok := informer.(TypedConsoleSampleInformer); ok {
+		return informer
+	}
+	return &consoleSampleTypedInformerAdapter{informer}
+}
+
+type consoleSampleTypedInformerAdapter struct {
+	ConsoleSampleInformer
+}
+
+func (a *consoleSampleTypedInformerAdapter) TypedInformer() ConsoleSampleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleSample](a.Informer())
+}
+
+// ToConsoleSampleIndexInformer converts an untyped informer into a ConsoleSampleIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleSample. If that is not the case, calling type-safe methods of the returned
+// ConsoleSampleIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleSampleIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleSampleIndexInformer(informer cache.SharedIndexInformer) ConsoleSampleIndexInformer {
+	if informer, ok := informer.(ConsoleSampleIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleSample](informer)
 }

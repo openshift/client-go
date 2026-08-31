@@ -18,11 +18,39 @@ import (
 )
 
 // AlertingRuleInformer provides access to a shared informer and lister for
-// AlertingRules.
+// AlertingRules. Prefer using the type-safe variant (see [TypedAlertingRuleInformer]).
 type AlertingRuleInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() monitoringv1.AlertingRuleLister
 }
+
+// TypedAlertingRuleInformer provides access to a shared informer and lister for
+// AlertingRules, including the type-safe TypedInformer variant.
+// It is a superset of AlertingRuleInformer.
+type TypedAlertingRuleInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() AlertingRuleIndexInformer
+	Lister() monitoringv1.AlertingRuleLister
+}
+
+// AlertingRuleIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type AlertingRuleIndexInformer cache.TypedSharedIndexInformer[*apimonitoringv1.AlertingRule]
+
+// AlertingRuleHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for AlertingRule.
+type AlertingRuleHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apimonitoringv1.AlertingRule]
+
+// AlertingRuleDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for AlertingRule.
+type AlertingRuleDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apimonitoringv1.AlertingRule]
+
+// AlertingRuleFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for AlertingRule.
+type AlertingRuleFilteringHandler = cache.TypedFilteringResourceEventHandler[*apimonitoringv1.AlertingRule]
+
+// AlertingRuleIndexers is a specialization of [cache.TypedIndexers] for AlertingRule.
+type AlertingRuleIndexers = cache.TypedIndexers[*apimonitoringv1.AlertingRule]
+
+// DeletedAlertingRule is a specialization of [cache.DeletedObject] for AlertingRule.
+type DeletedAlertingRule = cache.DeletedObject[*apimonitoringv1.AlertingRule]
 
 type alertingRuleInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -33,25 +61,49 @@ type alertingRuleInformer struct {
 // NewAlertingRuleInformer constructs a new informer for AlertingRule type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertingRuleInformer]).
 func NewAlertingRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewAlertingRuleInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedAlertingRuleInformer constructs a new informer for AlertingRule type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertingRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers AlertingRuleIndexers) AlertingRuleIndexInformer {
+	return NewTypedAlertingRuleInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredAlertingRuleInformer constructs a new informer for AlertingRule type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredAlertingRuleInformer]).
 func NewFilteredAlertingRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewAlertingRuleInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedAlertingRuleInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredAlertingRuleInformer constructs a new informer for AlertingRule type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredAlertingRuleInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers AlertingRuleIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) AlertingRuleIndexInformer {
+	return NewTypedAlertingRuleInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewAlertingRuleInformerWithOptions constructs a new informer for AlertingRule type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertingRuleInformerWithOptions]).
 func NewAlertingRuleInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedAlertingRuleInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedAlertingRuleInformerWithOptions constructs a new informer for AlertingRule type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertingRuleInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) AlertingRuleIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "monitoring.openshift.io", Version: "v1", Resource: "alertingrules"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertingRule](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -84,17 +136,57 @@ func NewAlertingRuleInformerWithOptions(client versioned.Interface, namespace st
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *alertingRuleInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewAlertingRuleInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedAlertingRuleInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *alertingRuleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apimonitoringv1.AlertingRule{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *alertingRuleInformer) TypedInformer() AlertingRuleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertingRule](f.factory.InformerFor(&apimonitoringv1.AlertingRule{}, f.defaultInformer))
 }
 
 func (f *alertingRuleInformer) Lister() monitoringv1.AlertingRuleLister {
 	return monitoringv1.NewAlertingRuleLister(f.Informer().GetIndexer())
+}
+
+// ToTypedAlertingRuleInformer converts an untyped informer into a TypedAlertingRuleInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertingRule. If that is not the case, calling type-safe methods of the returned
+// TypedAlertingRuleInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedAlertingRuleInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedAlertingRuleInformer(informer AlertingRuleInformer) TypedAlertingRuleInformer {
+	if informer, ok := informer.(TypedAlertingRuleInformer); ok {
+		return informer
+	}
+	return &alertingRuleTypedInformerAdapter{informer}
+}
+
+type alertingRuleTypedInformerAdapter struct {
+	AlertingRuleInformer
+}
+
+func (a *alertingRuleTypedInformerAdapter) TypedInformer() AlertingRuleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertingRule](a.Informer())
+}
+
+// ToAlertingRuleIndexInformer converts an untyped informer into a AlertingRuleIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertingRule. If that is not the case, calling type-safe methods of the returned
+// AlertingRuleIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a AlertingRuleIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToAlertingRuleIndexInformer(informer cache.SharedIndexInformer) AlertingRuleIndexInformer {
+	if informer, ok := informer.(AlertingRuleIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apimonitoringv1.AlertingRule](informer)
 }

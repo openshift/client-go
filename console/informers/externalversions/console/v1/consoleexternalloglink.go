@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleExternalLogLinkInformer provides access to a shared informer and lister for
-// ConsoleExternalLogLinks.
+// ConsoleExternalLogLinks. Prefer using the type-safe variant (see [TypedConsoleExternalLogLinkInformer]).
 type ConsoleExternalLogLinkInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleExternalLogLinkLister
 }
+
+// TypedConsoleExternalLogLinkInformer provides access to a shared informer and lister for
+// ConsoleExternalLogLinks, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleExternalLogLinkInformer.
+type TypedConsoleExternalLogLinkInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleExternalLogLinkIndexInformer
+	Lister() consolev1.ConsoleExternalLogLinkLister
+}
+
+// ConsoleExternalLogLinkIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleExternalLogLinkIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleExternalLogLink]
+
+// ConsoleExternalLogLinkHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleExternalLogLink.
+type ConsoleExternalLogLinkHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleExternalLogLink]
+
+// ConsoleExternalLogLinkDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleExternalLogLink.
+type ConsoleExternalLogLinkDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleExternalLogLink]
+
+// ConsoleExternalLogLinkFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleExternalLogLink.
+type ConsoleExternalLogLinkFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleExternalLogLink]
+
+// ConsoleExternalLogLinkIndexers is a specialization of [cache.TypedIndexers] for ConsoleExternalLogLink.
+type ConsoleExternalLogLinkIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleExternalLogLink]
+
+// DeletedConsoleExternalLogLink is a specialization of [cache.DeletedObject] for ConsoleExternalLogLink.
+type DeletedConsoleExternalLogLink = cache.DeletedObject[*apiconsolev1.ConsoleExternalLogLink]
 
 type consoleExternalLogLinkInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleExternalLogLinkInformer struct {
 // NewConsoleExternalLogLinkInformer constructs a new informer for ConsoleExternalLogLink type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleExternalLogLinkInformer]).
 func NewConsoleExternalLogLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleExternalLogLinkInformer constructs a new informer for ConsoleExternalLogLink type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleExternalLogLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleExternalLogLinkIndexers) ConsoleExternalLogLinkIndexInformer {
+	return NewTypedConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleExternalLogLinkInformer constructs a new informer for ConsoleExternalLogLink type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleExternalLogLinkInformer]).
 func NewFilteredConsoleExternalLogLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleExternalLogLinkInformer constructs a new informer for ConsoleExternalLogLink type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleExternalLogLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleExternalLogLinkIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleExternalLogLinkIndexInformer {
+	return NewTypedConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleExternalLogLinkInformerWithOptions constructs a new informer for ConsoleExternalLogLink type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleExternalLogLinkInformerWithOptions]).
 func NewConsoleExternalLogLinkInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleExternalLogLinkInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleExternalLogLinkInformerWithOptions constructs a new informer for ConsoleExternalLogLink type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleExternalLogLinkInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleExternalLogLinkIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consoleexternalloglinks"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleExternalLogLink](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleExternalLogLinkInformerWithOptions(client versioned.Interface, op
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleExternalLogLinkInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleExternalLogLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleExternalLogLinkInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleExternalLogLink{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleExternalLogLinkInformer) TypedInformer() ConsoleExternalLogLinkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleExternalLogLink](f.factory.InformerFor(&apiconsolev1.ConsoleExternalLogLink{}, f.defaultInformer))
 }
 
 func (f *consoleExternalLogLinkInformer) Lister() consolev1.ConsoleExternalLogLinkLister {
 	return consolev1.NewConsoleExternalLogLinkLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleExternalLogLinkInformer converts an untyped informer into a TypedConsoleExternalLogLinkInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleExternalLogLink. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleExternalLogLinkInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleExternalLogLinkInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleExternalLogLinkInformer(informer ConsoleExternalLogLinkInformer) TypedConsoleExternalLogLinkInformer {
+	if informer, ok := informer.(TypedConsoleExternalLogLinkInformer); ok {
+		return informer
+	}
+	return &consoleExternalLogLinkTypedInformerAdapter{informer}
+}
+
+type consoleExternalLogLinkTypedInformerAdapter struct {
+	ConsoleExternalLogLinkInformer
+}
+
+func (a *consoleExternalLogLinkTypedInformerAdapter) TypedInformer() ConsoleExternalLogLinkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleExternalLogLink](a.Informer())
+}
+
+// ToConsoleExternalLogLinkIndexInformer converts an untyped informer into a ConsoleExternalLogLinkIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleExternalLogLink. If that is not the case, calling type-safe methods of the returned
+// ConsoleExternalLogLinkIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleExternalLogLinkIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleExternalLogLinkIndexInformer(informer cache.SharedIndexInformer) ConsoleExternalLogLinkIndexInformer {
+	if informer, ok := informer.(ConsoleExternalLogLinkIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleExternalLogLink](informer)
 }

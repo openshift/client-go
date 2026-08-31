@@ -18,11 +18,39 @@ import (
 )
 
 // HelmChartRepositoryInformer provides access to a shared informer and lister for
-// HelmChartRepositories.
+// HelmChartRepositories. Prefer using the type-safe variant (see [TypedHelmChartRepositoryInformer]).
 type HelmChartRepositoryInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() helmv1beta1.HelmChartRepositoryLister
 }
+
+// TypedHelmChartRepositoryInformer provides access to a shared informer and lister for
+// HelmChartRepositories, including the type-safe TypedInformer variant.
+// It is a superset of HelmChartRepositoryInformer.
+type TypedHelmChartRepositoryInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() HelmChartRepositoryIndexInformer
+	Lister() helmv1beta1.HelmChartRepositoryLister
+}
+
+// HelmChartRepositoryIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type HelmChartRepositoryIndexInformer cache.TypedSharedIndexInformer[*apihelmv1beta1.HelmChartRepository]
+
+// HelmChartRepositoryHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for HelmChartRepository.
+type HelmChartRepositoryHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apihelmv1beta1.HelmChartRepository]
+
+// HelmChartRepositoryDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for HelmChartRepository.
+type HelmChartRepositoryDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apihelmv1beta1.HelmChartRepository]
+
+// HelmChartRepositoryFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for HelmChartRepository.
+type HelmChartRepositoryFilteringHandler = cache.TypedFilteringResourceEventHandler[*apihelmv1beta1.HelmChartRepository]
+
+// HelmChartRepositoryIndexers is a specialization of [cache.TypedIndexers] for HelmChartRepository.
+type HelmChartRepositoryIndexers = cache.TypedIndexers[*apihelmv1beta1.HelmChartRepository]
+
+// DeletedHelmChartRepository is a specialization of [cache.DeletedObject] for HelmChartRepository.
+type DeletedHelmChartRepository = cache.DeletedObject[*apihelmv1beta1.HelmChartRepository]
 
 type helmChartRepositoryInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type helmChartRepositoryInformer struct {
 // NewHelmChartRepositoryInformer constructs a new informer for HelmChartRepository type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedHelmChartRepositoryInformer]).
 func NewHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedHelmChartRepositoryInformer constructs a new informer for HelmChartRepository type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod time.Duration, indexers HelmChartRepositoryIndexers) HelmChartRepositoryIndexInformer {
+	return NewTypedHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredHelmChartRepositoryInformer constructs a new informer for HelmChartRepository type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredHelmChartRepositoryInformer]).
 func NewFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredHelmChartRepositoryInformer constructs a new informer for HelmChartRepository type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredHelmChartRepositoryInformer(client versioned.Interface, resyncPeriod time.Duration, indexers HelmChartRepositoryIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) HelmChartRepositoryIndexInformer {
+	return NewTypedHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewHelmChartRepositoryInformerWithOptions constructs a new informer for HelmChartRepository type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedHelmChartRepositoryInformerWithOptions]).
 func NewHelmChartRepositoryInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedHelmChartRepositoryInformerWithOptions(client, options)
+}
+
+// NewTypedHelmChartRepositoryInformerWithOptions constructs a new informer for HelmChartRepository type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedHelmChartRepositoryInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) HelmChartRepositoryIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "helm.openshift.io", Version: "v1beta1", Resource: "helmchartrepositorys"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apihelmv1beta1.HelmChartRepository](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewHelmChartRepositoryInformerWithOptions(client versioned.Interface, optio
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *helmChartRepositoryInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedHelmChartRepositoryInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *helmChartRepositoryInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apihelmv1beta1.HelmChartRepository{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *helmChartRepositoryInformer) TypedInformer() HelmChartRepositoryIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apihelmv1beta1.HelmChartRepository](f.factory.InformerFor(&apihelmv1beta1.HelmChartRepository{}, f.defaultInformer))
 }
 
 func (f *helmChartRepositoryInformer) Lister() helmv1beta1.HelmChartRepositoryLister {
 	return helmv1beta1.NewHelmChartRepositoryLister(f.Informer().GetIndexer())
+}
+
+// ToTypedHelmChartRepositoryInformer converts an untyped informer into a TypedHelmChartRepositoryInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *HelmChartRepository. If that is not the case, calling type-safe methods of the returned
+// TypedHelmChartRepositoryInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedHelmChartRepositoryInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedHelmChartRepositoryInformer(informer HelmChartRepositoryInformer) TypedHelmChartRepositoryInformer {
+	if informer, ok := informer.(TypedHelmChartRepositoryInformer); ok {
+		return informer
+	}
+	return &helmChartRepositoryTypedInformerAdapter{informer}
+}
+
+type helmChartRepositoryTypedInformerAdapter struct {
+	HelmChartRepositoryInformer
+}
+
+func (a *helmChartRepositoryTypedInformerAdapter) TypedInformer() HelmChartRepositoryIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apihelmv1beta1.HelmChartRepository](a.Informer())
+}
+
+// ToHelmChartRepositoryIndexInformer converts an untyped informer into a HelmChartRepositoryIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *HelmChartRepository. If that is not the case, calling type-safe methods of the returned
+// HelmChartRepositoryIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a HelmChartRepositoryIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToHelmChartRepositoryIndexInformer(informer cache.SharedIndexInformer) HelmChartRepositoryIndexInformer {
+	if informer, ok := informer.(HelmChartRepositoryIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apihelmv1beta1.HelmChartRepository](informer)
 }

@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleLinkInformer provides access to a shared informer and lister for
-// ConsoleLinks.
+// ConsoleLinks. Prefer using the type-safe variant (see [TypedConsoleLinkInformer]).
 type ConsoleLinkInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleLinkLister
 }
+
+// TypedConsoleLinkInformer provides access to a shared informer and lister for
+// ConsoleLinks, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleLinkInformer.
+type TypedConsoleLinkInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleLinkIndexInformer
+	Lister() consolev1.ConsoleLinkLister
+}
+
+// ConsoleLinkIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleLinkIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleLink]
+
+// ConsoleLinkHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleLink.
+type ConsoleLinkHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleLink]
+
+// ConsoleLinkDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleLink.
+type ConsoleLinkDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleLink]
+
+// ConsoleLinkFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleLink.
+type ConsoleLinkFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleLink]
+
+// ConsoleLinkIndexers is a specialization of [cache.TypedIndexers] for ConsoleLink.
+type ConsoleLinkIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleLink]
+
+// DeletedConsoleLink is a specialization of [cache.DeletedObject] for ConsoleLink.
+type DeletedConsoleLink = cache.DeletedObject[*apiconsolev1.ConsoleLink]
 
 type consoleLinkInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleLinkInformer struct {
 // NewConsoleLinkInformer constructs a new informer for ConsoleLink type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleLinkInformer]).
 func NewConsoleLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleLinkInformer constructs a new informer for ConsoleLink type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleLinkIndexers) ConsoleLinkIndexInformer {
+	return NewTypedConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleLinkInformer constructs a new informer for ConsoleLink type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleLinkInformer]).
 func NewFilteredConsoleLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleLinkInformer constructs a new informer for ConsoleLink type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleLinkInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleLinkIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleLinkIndexInformer {
+	return NewTypedConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleLinkInformerWithOptions constructs a new informer for ConsoleLink type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleLinkInformerWithOptions]).
 func NewConsoleLinkInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleLinkInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleLinkInformerWithOptions constructs a new informer for ConsoleLink type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleLinkInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleLinkIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consolelinks"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleLink](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleLinkInformerWithOptions(client versioned.Interface, options inter
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleLinkInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleLinkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleLinkInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleLink{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleLinkInformer) TypedInformer() ConsoleLinkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleLink](f.factory.InformerFor(&apiconsolev1.ConsoleLink{}, f.defaultInformer))
 }
 
 func (f *consoleLinkInformer) Lister() consolev1.ConsoleLinkLister {
 	return consolev1.NewConsoleLinkLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleLinkInformer converts an untyped informer into a TypedConsoleLinkInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleLink. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleLinkInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleLinkInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleLinkInformer(informer ConsoleLinkInformer) TypedConsoleLinkInformer {
+	if informer, ok := informer.(TypedConsoleLinkInformer); ok {
+		return informer
+	}
+	return &consoleLinkTypedInformerAdapter{informer}
+}
+
+type consoleLinkTypedInformerAdapter struct {
+	ConsoleLinkInformer
+}
+
+func (a *consoleLinkTypedInformerAdapter) TypedInformer() ConsoleLinkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleLink](a.Informer())
+}
+
+// ToConsoleLinkIndexInformer converts an untyped informer into a ConsoleLinkIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleLink. If that is not the case, calling type-safe methods of the returned
+// ConsoleLinkIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleLinkIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleLinkIndexInformer(informer cache.SharedIndexInformer) ConsoleLinkIndexInformer {
+	if informer, ok := informer.(ConsoleLinkIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleLink](informer)
 }
