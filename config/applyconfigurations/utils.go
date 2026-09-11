@@ -524,10 +524,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.AuditApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("AuthorizationConfig"):
 		return &configv1alpha1.AuthorizationConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("Backup"):
-		return &configv1alpha1.BackupApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
-		return &configv1alpha1.BackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("BasicAuth"):
 		return &configv1alpha1.BasicAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("CertificateConfig"):
@@ -552,8 +548,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.DropEqualActionConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ECDSAKeyConfig"):
 		return &configv1alpha1.ECDSAKeyConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
-		return &configv1alpha1.EtcdBackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
 		return &configv1alpha1.GatherConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("HashModActionConfig"):
@@ -594,6 +588,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorEthtoolConfig"):
 		return &configv1alpha1.NodeExporterCollectorEthtoolConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorInterruptsCollectConfig"):
+		return &configv1alpha1.NodeExporterCollectorInterruptsCollectConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorInterruptsConfig"):
+		return &configv1alpha1.NodeExporterCollectorInterruptsConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorKSMDConfig"):
 		return &configv1alpha1.NodeExporterCollectorKSMDConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("NodeExporterCollectorMountStatsConfig"):
@@ -660,12 +658,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.ReplaceActionConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Retention"):
 		return &configv1alpha1.RetentionApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionNumberConfig"):
-		return &configv1alpha1.RetentionNumberConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
-		return &configv1alpha1.RetentionPolicyApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionSizeConfig"):
-		return &configv1alpha1.RetentionSizeConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RSAKeyConfig"):
 		return &configv1alpha1.RSAKeyConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("SecretKeySelector"):

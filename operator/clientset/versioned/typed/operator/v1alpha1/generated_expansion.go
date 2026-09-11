@@ -8,6 +8,8 @@ type ClusterVersionOperatorExpansion interface{}
 
 type EtcdBackupExpansion interface{}
 
+type EtcdBackupPolicyExpansion interface{}
+
 type ImageContentSourcePolicyExpansion interface{}
 
 type IngressExpansion interface{}

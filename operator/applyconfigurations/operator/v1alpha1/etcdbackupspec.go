@@ -5,12 +5,11 @@ package v1alpha1
 // EtcdBackupSpecApplyConfiguration represents a declarative configuration of the EtcdBackupSpec type for use
 // with apply.
 type EtcdBackupSpecApplyConfiguration struct {
-	// pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the
-	// etcd backup file would be saved
-	// The PVC itself must always be created in the "openshift-etcd" namespace
-	// If the PVC is left unspecified "" then the platform will choose a reasonable default location to save the backup.
-	// In the future this would be backups saved across the control-plane master nodes.
-	PVCName *string `json:"pvcName,omitempty"`
+	// nodeName specifies the master node where an etcd backup should be taken.
+	// If not specified, a random master node will be selected.
+	NodeName *string `json:"nodeName,omitempty"`
+	// storage specifies the location where etcd backup files will be saved.
+	Storage *EtcdBackupStorageApplyConfiguration `json:"storage,omitempty"`
 }
 
 // EtcdBackupSpecApplyConfiguration constructs a declarative configuration of the EtcdBackupSpec type for use with
@@ -19,10 +18,18 @@ func EtcdBackupSpec() *EtcdBackupSpecApplyConfiguration {
 	return &EtcdBackupSpecApplyConfiguration{}
 }
 
-// WithPVCName sets the PVCName field in the declarative configuration to the given value
+// WithNodeName sets the NodeName field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the PVCName field is set to the value of the last call.
-func (b *EtcdBackupSpecApplyConfiguration) WithPVCName(value string) *EtcdBackupSpecApplyConfiguration {
-	b.PVCName = &value
+// If called multiple times, the NodeName field is set to the value of the last call.
+func (b *EtcdBackupSpecApplyConfiguration) WithNodeName(value string) *EtcdBackupSpecApplyConfiguration {
+	b.NodeName = &value
+	return b
+}
+
+// WithStorage sets the Storage field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the Storage field is set to the value of the last call.
+func (b *EtcdBackupSpecApplyConfiguration) WithStorage(value *EtcdBackupStorageApplyConfiguration) *EtcdBackupSpecApplyConfiguration {
+	b.Storage = value
 	return b
 }

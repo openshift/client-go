@@ -2,6 +2,8 @@ module github.com/openshift/client-go
 
 go 1.26.0
 
+replace github.com/openshift/api => github.com/bhperry/openshift-api v0.0.0-20260911192003-50764b47b262
+
 require (
 	github.com/openshift/api v0.0.0-20260810132456-8f52beb625b5
 	github.com/openshift/build-machinery-go v0.0.0-20250530140348-dc5b2804eeee
