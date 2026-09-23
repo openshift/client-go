@@ -2306,19 +2306,22 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1.KMSPluginConfig
   map:
     fields:
-    - name: type
+    - name: pluginConfig
+      type:
+        namedType: com.github.openshift.api.config.v1.KMSPluginConfigReference
+      default: {}
+- name: com.github.openshift.api.config.v1.KMSPluginConfigReference
+  map:
+    fields:
+    - name: apiVersion
       type:
         scalar: string
-      default: ""
-    - name: vault
+    - name: name
       type:
-        namedType: com.github.openshift.api.config.v1.VaultKMSPluginConfig
-      default: {}
-    unions:
-    - discriminator: type
-      fields:
-      - fieldName: vault
-        discriminatorValue: Vault
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
 - name: com.github.openshift.api.config.v1.KeystoneIdentityProvider
   map:
     fields:
@@ -4308,76 +4311,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         scalar: string
       default: ""
-- name: com.github.openshift.api.config.v1.VaultAppRoleAuthentication
-  map:
-    fields:
-    - name: secret
-      type:
-        namedType: com.github.openshift.api.config.v1.VaultSecretReference
-      default: {}
-- name: com.github.openshift.api.config.v1.VaultAuthentication
-  map:
-    fields:
-    - name: appRole
-      type:
-        namedType: com.github.openshift.api.config.v1.VaultAppRoleAuthentication
-      default: {}
-    - name: type
-      type:
-        scalar: string
-    unions:
-    - discriminator: type
-      fields:
-      - fieldName: appRole
-        discriminatorValue: AppRole
-- name: com.github.openshift.api.config.v1.VaultConfigMapReference
-  map:
-    fields:
-    - name: name
-      type:
-        scalar: string
-- name: com.github.openshift.api.config.v1.VaultKMSPluginConfig
-  map:
-    fields:
-    - name: authentication
-      type:
-        namedType: com.github.openshift.api.config.v1.VaultAuthentication
-      default: {}
-    - name: kmsPluginImage
-      type:
-        scalar: string
-    - name: tls
-      type:
-        namedType: com.github.openshift.api.config.v1.VaultTLSConfig
-      default: {}
-    - name: vaultAddress
-      type:
-        scalar: string
-    - name: vaultAuthNamespace
-      type:
-        scalar: string
-    - name: vaultKeyPath
-      type:
-        scalar: string
-    - name: vaultNamespace
-      type:
-        scalar: string
-- name: com.github.openshift.api.config.v1.VaultSecretReference
-  map:
-    fields:
-    - name: name
-      type:
-        scalar: string
-- name: com.github.openshift.api.config.v1.VaultTLSConfig
-  map:
-    fields:
-    - name: caBundle
-      type:
-        namedType: com.github.openshift.api.config.v1.VaultConfigMapReference
-      default: {}
-    - name: serverName
-      type:
-        scalar: string
 - name: com.github.openshift.api.config.v1.WebhookTokenAuthenticator
   map:
     fields:
@@ -5015,6 +4948,10 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig
       default: {}
+    - name: interrupts
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig
+      default: {}
     - name: ksmd
       type:
         namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
@@ -5073,6 +5010,30 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: collectionPolicy
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig
+  map:
+    fields:
+    - name: include
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig
+  map:
+    fields:
+    - name: collect
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig
+      default: {}
+    - name: collectionPolicy
+      type:
+        scalar: string
+    unions:
+    - discriminator: collectionPolicy
+      fields:
+      - fieldName: collect
+        discriminatorValue: Collect
 - name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
   map:
     fields:

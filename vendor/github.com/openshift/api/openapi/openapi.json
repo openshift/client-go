@@ -7582,6 +7582,16 @@
           "description": "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
           "type": "string"
         },
+        "curvePreferences": {
+          "description": "curvePreferences contains the allowed TLS key-exchange groups for the server. Values must match curve IDs from https://golang.org/pkg/crypto/tls/#pkg-constants. When omitted, the Go TLS implementation uses its default curve set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "keyFile": {
           "description": "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
           "type": "string",
@@ -7666,7 +7676,7 @@
       "type": "object",
       "properties": {
         "serviceEndpoints": {
-          "description": "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM service. These endpoints are used by components within the cluster when trying to reach the IBM Cloud Services that have been overridden. The CCCMO reads in the IBMCloudPlatformSpec and validates each endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus are updated to reflect the same custom endpoints. A maximum of 13 service endpoints overrides are supported.",
+          "description": "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM service. These endpoints are used by components within the cluster when trying to reach the IBM Cloud Services that have been overridden. The CCCMO reads in the IBMCloudPlatformSpec and validates each endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus are updated to reflect the same custom endpoints. A maximum of 15 service endpoints overrides are supported.",
           "type": "array",
           "items": {
             "default": {},
@@ -7726,7 +7736,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the name of the IBM Cloud service. Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC. For example, the IBM Cloud Private IAM service could be configured with the service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com` Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`",
+          "description": "name is the name of the IBM Cloud service. Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, VPC, TransitGateway, or PowerVS. For example, the IBM Cloud Private IAM service could be configured with the service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com` Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`",
           "type": "string",
           "default": ""
         },
@@ -8839,28 +8849,38 @@
       "description": "KMSPluginConfig defines the configuration for the KMS instance that will be used with KMS encryption",
       "type": "object",
       "required": [
-        "type"
+        "pluginConfig"
       ],
       "properties": {
-        "type": {
-          "description": "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
-          "type": "string",
-          "default": ""
-        },
-        "vault": {
-          "description": "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
+        "pluginConfig": {
+          "description": "pluginConfig is a required reference to a cluster-scoped resource with a status subresource that satisfies the OpenShift KMS plugin configuration status interface.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultKMSPluginConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSPluginConfigReference"
         }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "type",
-          "fields-to-discriminateBy": {
-            "vault": "Vault"
-          }
+      }
+    },
+    "com.github.openshift.api.config.v1.KMSPluginConfigReference": {
+      "description": "KMSPluginConfigReference identifies a cluster-scoped KMS plugin configuration custom resource.",
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "apiVersion is required and identifies the API version of the referenced KMS plugin configuration resource. The value must be in the format <group>/<version>, where group is a DNS subdomain and version is a Kubernetes API version (for example, v1 or v1alpha1). It must contain between 1 and 64 characters.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is required and is the metadata.name of the referenced KMS plugin configuration resource. The referenced resource must be cluster-scoped. The name must be a valid DNS subdomain name: it must contain between 1 and 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource is required and is the resource name of the referenced KMS plugin configuration custom resource. This is the plural name used in the Kubernetes API (for example, vaultkmsconfigs), not the Kind (for example, VaultKMSConfig). The value must be between 1 and 63 characters, contain only lowercase alphanumeric characters or '-', and start and end with an alphanumeric character.",
+          "type": "string"
         }
-      ]
+      }
     },
     "com.github.openshift.api.config.v1.KeystoneIdentityProvider": {
       "description": "KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials",
@@ -11501,6 +11521,16 @@
           "description": "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
           "type": "string"
         },
+        "curvePreferences": {
+          "description": "curvePreferences contains the allowed TLS key-exchange groups for the server. Values must match curve IDs from https://golang.org/pkg/crypto/tls/#pkg-constants. When omitted, the Go TLS implementation uses its default curve set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "keyFile": {
           "description": "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
           "type": "string",
@@ -12386,7 +12416,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
         },
         "vcenters": {
-          "description": "vcenters holds the connection details for services to communicate with vCenter. Up to 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except when 1.) the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present or 2.) in TechPreview you are able to add and remove vCenters but may not remove all vCenters.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
+          "description": "vcenters holds the connection details for services to communicate with vCenter. Up to 3 vCenters are supported. After installation, you can add or change vCenters, or remove some of them, but you must keep at least one and may not add and remove vCenters during the same update.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
           "type": "array",
           "items": {
             "default": {},
@@ -12490,7 +12520,7 @@
           "type": "string"
         },
         "networks": {
-          "description": "networks is the list of port group network names within this failure domain. If feature gate VSphereMultiNetworks is enabled, up to 10 network adapters may be defined. 10 is the maximum number of virtual network devices which may be attached to a VM as defined by: https://configmax.esp.vmware.com/guest?vmwareproduct=vSphere&release=vSphere%208.0&categories=1-0 The available networks (port groups) can be listed using `govc ls 'network/*'` Networks should be in the form of an absolute path: /<datacenter>/network/<portgroup>.",
+          "description": "networks is the list of port group network names within this failure domain. Up to 10 network adapters may be defined. 10 is the maximum number of virtual network devices which may be attached to a VM as defined by: https://configmax.esp.vmware.com/guest?vmwareproduct=vSphere&release=vSphere%208.0&categories=1-0 The available networks (port groups) can be listed using `govc ls 'network/*'` Networks should be in the form of an absolute path: /<datacenter>/network/<portgroup>.",
           "type": "array",
           "items": {
             "type": "string",
@@ -13762,6 +13792,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig"
         },
+        "interrupts": {
+          "description": "interrupts configures the interrupts collector, which exposes interrupt counts from /proc/interrupts. interrupts is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig"
+        },
         "ksmd": {
           "description": "ksmd configures the ksmd collector, which collects statistics from the kernel same-page merger daemon. ksmd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable on nodes where KSM is in use and you want visibility into merging activity.",
           "default": {},
@@ -13864,6 +13899,54 @@
           ]
         }
       }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig": {
+      "description": "NodeExporterCollectorInterruptsCollectConfig holds configuration options for the interrupts collector when it is actively collecting metrics. At least one field must be specified.",
+      "type": "object",
+      "required": [
+        "include"
+      ],
+      "properties": {
+        "include": {
+          "description": "include is a list of regular expression patterns that select which interrupt lines to collect. This field is required. Each line in /proc/interrupts is matched against the same string node-exporter uses: the IRQ name, info, and devices fields joined with \";\", for example \"LOC;77;IO-APIC 2-edge ...\". Patterns are combined with OR into a single expression anchored on both ends, so each pattern must match the entire string (use \".*\" where needed). Each entry must be at least 1 character, at most 1024 characters, and only contain printable ASCII characters. Maximum length for this list is 50. Minimum length for this list is 1. Entries in this list must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig": {
+      "description": "NodeExporterCollectorInterruptsConfig provides configuration for the interrupts collector of the node-exporter agent. The interrupts collector exposes interrupt counts from /proc/interrupts. It is disabled by default. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected. When collectionPolicy is Collect, the collect field must be set with at least one include pattern. When collectionPolicy is DoNotCollect, the collect field must not be set.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collect": {
+          "description": "collect contains configuration options that apply only when the interrupts collector is actively collecting metrics (i.e. when collectionPolicy is Collect). collect is required when collectionPolicy is Collect and must contain at least one include pattern to explicitly select which interrupt lines are collected. collect must not be set when collectionPolicy is DoNotCollect. When set, at least one field must be specified within collect.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig"
+        },
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the interrupts collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the interrupts collector is active and the collect field must be set with at least one include pattern to select which interrupt lines are collected. When set to \"DoNotCollect\", the interrupts collector is inactive and the collect field must not be set.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "collectionPolicy",
+          "fields-to-discriminateBy": {
+            "collect": "Collect"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig": {
       "description": "NodeExporterCollectorKSMDConfig provides configuration for the ksmd collector of the node-exporter agent. The ksmd collector collects statistics from the kernel same-page merger daemon. It is disabled by default.",
@@ -30699,6 +30782,15 @@
             "TCP"
           ]
         },
+        "securityGroups": {
+          "description": "securityGroups is a list of security group IDs to attach to the Network Load Balancer. When specified, these security groups replace the managed security group that the Cloud Controller Manager would otherwise create automatically. The user is responsible for configuring the ingress and egress rules on the specified security groups.\n\nThe specified security groups must exist in the same VPC as the cluster and must allow the necessary traffic for the IngressController to function.\n\nWhen this field is omitted, the Cloud Controller Manager automatically creates and manages a security group for the NLB.\n\nEach security group ID must be unique and must begin with \"sg-\" followed by 8 or 17 lowercase hexadecimal characters (e.g. \"sg-abcd1234\" or \"sg-abcd1234abcd12345\"). At least 1 and at most 5 security groups can be specified.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "subnets": {
           "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
@@ -32987,6 +33079,10 @@
         "routingViaHost": {
           "description": "routingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
           "type": "boolean"
+        },
+        "uplinkMode": {
+          "description": "uplinkMode controls whether the external gateway bridge (br-ex) requires a physical uplink port. Allowed values are \"Required\" and \"Optional\". When set to \"Required\", ovn-kubernetes requires an uplink on the gateway bridge. When set to \"Optional\", ovn-kubernetes allows the gateway bridge to start without an uplink. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Required\". This setting only takes effect when routingViaHost is true (local gateway mode).",
+          "type": "string"
         }
       }
     },
@@ -35167,12 +35263,12 @@
       ],
       "properties": {
         "apiGroup": {
-          "description": "apiGroup is name of the APIGroup that the machine management resource belongs to. The only current valid value is machine.openshift.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group.",
+          "description": "apiGroup is name of the APIGroup that the machine management resource belongs to. Valid values are machine.openshift.io and cluster.x-k8s.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group. cluster.x-k8s.io means that the machine manager will only register resources that belong to the Cluster API group.",
           "type": "string",
           "default": ""
         },
         "resource": {
-          "description": "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
+          "description": "resource is the machine management resource's type. Valid values are machinesets, controlplanemachinesets and machinedeployments. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet. machinedeployments means that the machine manager will only register resources of the kind MachineDeployment.",
           "type": "string",
           "default": ""
         },
@@ -35730,7 +35826,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
@@ -35753,7 +35849,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
@@ -35772,7 +35868,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
@@ -35836,7 +35932,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
@@ -35859,7 +35955,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
@@ -35878,7 +35974,7 @@
       ],
       "properties": {
         "actions": {
-          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supersede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
           "type": "array",
           "items": {
             "default": {},
