@@ -9,21 +9,21 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// ConsoleCLIDownloads returns a ConsoleCLIDownloadInformer.
-	ConsoleCLIDownloads() ConsoleCLIDownloadInformer
+	ConsoleCLIDownloads() TypedConsoleCLIDownloadInformer
 	// ConsoleExternalLogLinks returns a ConsoleExternalLogLinkInformer.
-	ConsoleExternalLogLinks() ConsoleExternalLogLinkInformer
+	ConsoleExternalLogLinks() TypedConsoleExternalLogLinkInformer
 	// ConsoleLinks returns a ConsoleLinkInformer.
-	ConsoleLinks() ConsoleLinkInformer
+	ConsoleLinks() TypedConsoleLinkInformer
 	// ConsoleNotifications returns a ConsoleNotificationInformer.
-	ConsoleNotifications() ConsoleNotificationInformer
+	ConsoleNotifications() TypedConsoleNotificationInformer
 	// ConsolePlugins returns a ConsolePluginInformer.
-	ConsolePlugins() ConsolePluginInformer
+	ConsolePlugins() TypedConsolePluginInformer
 	// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
-	ConsoleQuickStarts() ConsoleQuickStartInformer
+	ConsoleQuickStarts() TypedConsoleQuickStartInformer
 	// ConsoleSamples returns a ConsoleSampleInformer.
-	ConsoleSamples() ConsoleSampleInformer
+	ConsoleSamples() TypedConsoleSampleInformer
 	// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
-	ConsoleYAMLSamples() ConsoleYAMLSampleInformer
+	ConsoleYAMLSamples() TypedConsoleYAMLSampleInformer
 }
 
 type version struct {
@@ -37,42 +37,42 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// ConsoleCLIDownloads returns a ConsoleCLIDownloadInformer.
-func (v *version) ConsoleCLIDownloads() ConsoleCLIDownloadInformer {
+// ConsoleCLIDownloads returns a TypedConsoleCLIDownloadInformer.
+func (v *version) ConsoleCLIDownloads() TypedConsoleCLIDownloadInformer {
 	return &consoleCLIDownloadInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleExternalLogLinks returns a ConsoleExternalLogLinkInformer.
-func (v *version) ConsoleExternalLogLinks() ConsoleExternalLogLinkInformer {
+// ConsoleExternalLogLinks returns a TypedConsoleExternalLogLinkInformer.
+func (v *version) ConsoleExternalLogLinks() TypedConsoleExternalLogLinkInformer {
 	return &consoleExternalLogLinkInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleLinks returns a ConsoleLinkInformer.
-func (v *version) ConsoleLinks() ConsoleLinkInformer {
+// ConsoleLinks returns a TypedConsoleLinkInformer.
+func (v *version) ConsoleLinks() TypedConsoleLinkInformer {
 	return &consoleLinkInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleNotifications returns a ConsoleNotificationInformer.
-func (v *version) ConsoleNotifications() ConsoleNotificationInformer {
+// ConsoleNotifications returns a TypedConsoleNotificationInformer.
+func (v *version) ConsoleNotifications() TypedConsoleNotificationInformer {
 	return &consoleNotificationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsolePlugins returns a ConsolePluginInformer.
-func (v *version) ConsolePlugins() ConsolePluginInformer {
+// ConsolePlugins returns a TypedConsolePluginInformer.
+func (v *version) ConsolePlugins() TypedConsolePluginInformer {
 	return &consolePluginInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
-func (v *version) ConsoleQuickStarts() ConsoleQuickStartInformer {
+// ConsoleQuickStarts returns a TypedConsoleQuickStartInformer.
+func (v *version) ConsoleQuickStarts() TypedConsoleQuickStartInformer {
 	return &consoleQuickStartInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleSamples returns a ConsoleSampleInformer.
-func (v *version) ConsoleSamples() ConsoleSampleInformer {
+// ConsoleSamples returns a TypedConsoleSampleInformer.
+func (v *version) ConsoleSamples() TypedConsoleSampleInformer {
 	return &consoleSampleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
-// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
-func (v *version) ConsoleYAMLSamples() ConsoleYAMLSampleInformer {
+// ConsoleYAMLSamples returns a TypedConsoleYAMLSampleInformer.
+func (v *version) ConsoleYAMLSamples() TypedConsoleYAMLSampleInformer {
 	return &consoleYAMLSampleInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

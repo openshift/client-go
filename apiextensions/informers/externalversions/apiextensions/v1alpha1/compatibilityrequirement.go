@@ -18,11 +18,39 @@ import (
 )
 
 // CompatibilityRequirementInformer provides access to a shared informer and lister for
-// CompatibilityRequirements.
+// CompatibilityRequirements. Prefer using the type-safe variant (see [TypedCompatibilityRequirementInformer]).
 type CompatibilityRequirementInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() apiextensionsv1alpha1.CompatibilityRequirementLister
 }
+
+// TypedCompatibilityRequirementInformer provides access to a shared informer and lister for
+// CompatibilityRequirements, including the type-safe TypedInformer variant.
+// It is a superset of CompatibilityRequirementInformer.
+type TypedCompatibilityRequirementInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() CompatibilityRequirementIndexInformer
+	Lister() apiextensionsv1alpha1.CompatibilityRequirementLister
+}
+
+// CompatibilityRequirementIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type CompatibilityRequirementIndexInformer cache.TypedSharedIndexInformer[*apiapiextensionsv1alpha1.CompatibilityRequirement]
+
+// CompatibilityRequirementHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for CompatibilityRequirement.
+type CompatibilityRequirementHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiapiextensionsv1alpha1.CompatibilityRequirement]
+
+// CompatibilityRequirementDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for CompatibilityRequirement.
+type CompatibilityRequirementDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiapiextensionsv1alpha1.CompatibilityRequirement]
+
+// CompatibilityRequirementFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for CompatibilityRequirement.
+type CompatibilityRequirementFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiapiextensionsv1alpha1.CompatibilityRequirement]
+
+// CompatibilityRequirementIndexers is a specialization of [cache.TypedIndexers] for CompatibilityRequirement.
+type CompatibilityRequirementIndexers = cache.TypedIndexers[*apiapiextensionsv1alpha1.CompatibilityRequirement]
+
+// DeletedCompatibilityRequirement is a specialization of [cache.DeletedObject] for CompatibilityRequirement.
+type DeletedCompatibilityRequirement = cache.DeletedObject[*apiapiextensionsv1alpha1.CompatibilityRequirement]
 
 type compatibilityRequirementInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type compatibilityRequirementInformer struct {
 // NewCompatibilityRequirementInformer constructs a new informer for CompatibilityRequirement type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedCompatibilityRequirementInformer]).
 func NewCompatibilityRequirementInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedCompatibilityRequirementInformer constructs a new informer for CompatibilityRequirement type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedCompatibilityRequirementInformer(client versioned.Interface, resyncPeriod time.Duration, indexers CompatibilityRequirementIndexers) CompatibilityRequirementIndexInformer {
+	return NewTypedCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredCompatibilityRequirementInformer constructs a new informer for CompatibilityRequirement type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredCompatibilityRequirementInformer]).
 func NewFilteredCompatibilityRequirementInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredCompatibilityRequirementInformer constructs a new informer for CompatibilityRequirement type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredCompatibilityRequirementInformer(client versioned.Interface, resyncPeriod time.Duration, indexers CompatibilityRequirementIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) CompatibilityRequirementIndexInformer {
+	return NewTypedCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewCompatibilityRequirementInformerWithOptions constructs a new informer for CompatibilityRequirement type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedCompatibilityRequirementInformerWithOptions]).
 func NewCompatibilityRequirementInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedCompatibilityRequirementInformerWithOptions(client, options)
+}
+
+// NewTypedCompatibilityRequirementInformerWithOptions constructs a new informer for CompatibilityRequirement type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedCompatibilityRequirementInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) CompatibilityRequirementIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "apiextensions.openshift.io", Version: "v1alpha1", Resource: "compatibilityrequirements"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiapiextensionsv1alpha1.CompatibilityRequirement](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewCompatibilityRequirementInformerWithOptions(client versioned.Interface, 
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *compatibilityRequirementInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedCompatibilityRequirementInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *compatibilityRequirementInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiapiextensionsv1alpha1.CompatibilityRequirement{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *compatibilityRequirementInformer) TypedInformer() CompatibilityRequirementIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiapiextensionsv1alpha1.CompatibilityRequirement](f.factory.InformerFor(&apiapiextensionsv1alpha1.CompatibilityRequirement{}, f.defaultInformer))
 }
 
 func (f *compatibilityRequirementInformer) Lister() apiextensionsv1alpha1.CompatibilityRequirementLister {
 	return apiextensionsv1alpha1.NewCompatibilityRequirementLister(f.Informer().GetIndexer())
+}
+
+// ToTypedCompatibilityRequirementInformer converts an untyped informer into a TypedCompatibilityRequirementInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *CompatibilityRequirement. If that is not the case, calling type-safe methods of the returned
+// TypedCompatibilityRequirementInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedCompatibilityRequirementInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedCompatibilityRequirementInformer(informer CompatibilityRequirementInformer) TypedCompatibilityRequirementInformer {
+	if informer, ok := informer.(TypedCompatibilityRequirementInformer); ok {
+		return informer
+	}
+	return &compatibilityRequirementTypedInformerAdapter{informer}
+}
+
+type compatibilityRequirementTypedInformerAdapter struct {
+	CompatibilityRequirementInformer
+}
+
+func (a *compatibilityRequirementTypedInformerAdapter) TypedInformer() CompatibilityRequirementIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiapiextensionsv1alpha1.CompatibilityRequirement](a.Informer())
+}
+
+// ToCompatibilityRequirementIndexInformer converts an untyped informer into a CompatibilityRequirementIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *CompatibilityRequirement. If that is not the case, calling type-safe methods of the returned
+// CompatibilityRequirementIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a CompatibilityRequirementIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToCompatibilityRequirementIndexInformer(informer cache.SharedIndexInformer) CompatibilityRequirementIndexInformer {
+	if informer, ok := informer.(CompatibilityRequirementIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiapiextensionsv1alpha1.CompatibilityRequirement](informer)
 }
