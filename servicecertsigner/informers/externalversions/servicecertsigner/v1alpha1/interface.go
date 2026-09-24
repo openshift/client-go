@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// ServiceCertSignerOperatorConfigs returns a ServiceCertSignerOperatorConfigInformer.
-	ServiceCertSignerOperatorConfigs() ServiceCertSignerOperatorConfigInformer
+	ServiceCertSignerOperatorConfigs() TypedServiceCertSignerOperatorConfigInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// ServiceCertSignerOperatorConfigs returns a ServiceCertSignerOperatorConfigInformer.
-func (v *version) ServiceCertSignerOperatorConfigs() ServiceCertSignerOperatorConfigInformer {
+// ServiceCertSignerOperatorConfigs returns a TypedServiceCertSignerOperatorConfigInformer.
+func (v *version) ServiceCertSignerOperatorConfigs() TypedServiceCertSignerOperatorConfigInformer {
 	return &serviceCertSignerOperatorConfigInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

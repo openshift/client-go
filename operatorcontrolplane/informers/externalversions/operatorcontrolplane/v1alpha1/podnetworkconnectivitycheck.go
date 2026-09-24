@@ -18,11 +18,39 @@ import (
 )
 
 // PodNetworkConnectivityCheckInformer provides access to a shared informer and lister for
-// PodNetworkConnectivityChecks.
+// PodNetworkConnectivityChecks. Prefer using the type-safe variant (see [TypedPodNetworkConnectivityCheckInformer]).
 type PodNetworkConnectivityCheckInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckLister
 }
+
+// TypedPodNetworkConnectivityCheckInformer provides access to a shared informer and lister for
+// PodNetworkConnectivityChecks, including the type-safe TypedInformer variant.
+// It is a superset of PodNetworkConnectivityCheckInformer.
+type TypedPodNetworkConnectivityCheckInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() PodNetworkConnectivityCheckIndexInformer
+	Lister() operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckLister
+}
+
+// PodNetworkConnectivityCheckIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type PodNetworkConnectivityCheckIndexInformer cache.TypedSharedIndexInformer[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
+
+// PodNetworkConnectivityCheckHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for PodNetworkConnectivityCheck.
+type PodNetworkConnectivityCheckHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
+
+// PodNetworkConnectivityCheckDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for PodNetworkConnectivityCheck.
+type PodNetworkConnectivityCheckDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
+
+// PodNetworkConnectivityCheckFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for PodNetworkConnectivityCheck.
+type PodNetworkConnectivityCheckFilteringHandler = cache.TypedFilteringResourceEventHandler[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
+
+// PodNetworkConnectivityCheckIndexers is a specialization of [cache.TypedIndexers] for PodNetworkConnectivityCheck.
+type PodNetworkConnectivityCheckIndexers = cache.TypedIndexers[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
+
+// DeletedPodNetworkConnectivityCheck is a specialization of [cache.DeletedObject] for PodNetworkConnectivityCheck.
+type DeletedPodNetworkConnectivityCheck = cache.DeletedObject[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck]
 
 type podNetworkConnectivityCheckInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -33,25 +61,49 @@ type podNetworkConnectivityCheckInformer struct {
 // NewPodNetworkConnectivityCheckInformer constructs a new informer for PodNetworkConnectivityCheck type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPodNetworkConnectivityCheckInformer]).
 func NewPodNetworkConnectivityCheckInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewPodNetworkConnectivityCheckInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedPodNetworkConnectivityCheckInformer constructs a new informer for PodNetworkConnectivityCheck type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPodNetworkConnectivityCheckInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers PodNetworkConnectivityCheckIndexers) PodNetworkConnectivityCheckIndexInformer {
+	return NewTypedPodNetworkConnectivityCheckInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredPodNetworkConnectivityCheckInformer constructs a new informer for PodNetworkConnectivityCheck type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredPodNetworkConnectivityCheckInformer]).
 func NewFilteredPodNetworkConnectivityCheckInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewPodNetworkConnectivityCheckInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedPodNetworkConnectivityCheckInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredPodNetworkConnectivityCheckInformer constructs a new informer for PodNetworkConnectivityCheck type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredPodNetworkConnectivityCheckInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers PodNetworkConnectivityCheckIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) PodNetworkConnectivityCheckIndexInformer {
+	return NewTypedPodNetworkConnectivityCheckInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewPodNetworkConnectivityCheckInformerWithOptions constructs a new informer for PodNetworkConnectivityCheck type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPodNetworkConnectivityCheckInformerWithOptions]).
 func NewPodNetworkConnectivityCheckInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedPodNetworkConnectivityCheckInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedPodNetworkConnectivityCheckInformerWithOptions constructs a new informer for PodNetworkConnectivityCheck type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPodNetworkConnectivityCheckInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) PodNetworkConnectivityCheckIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "controlplane.operator.openshift.io", Version: "v1alpha1", Resource: "podnetworkconnectivitychecks"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -84,17 +136,57 @@ func NewPodNetworkConnectivityCheckInformerWithOptions(client versioned.Interfac
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *podNetworkConnectivityCheckInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewPodNetworkConnectivityCheckInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedPodNetworkConnectivityCheckInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *podNetworkConnectivityCheckInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *podNetworkConnectivityCheckInformer) TypedInformer() PodNetworkConnectivityCheckIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck](f.factory.InformerFor(&apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck{}, f.defaultInformer))
 }
 
 func (f *podNetworkConnectivityCheckInformer) Lister() operatorcontrolplanev1alpha1.PodNetworkConnectivityCheckLister {
 	return operatorcontrolplanev1alpha1.NewPodNetworkConnectivityCheckLister(f.Informer().GetIndexer())
+}
+
+// ToTypedPodNetworkConnectivityCheckInformer converts an untyped informer into a TypedPodNetworkConnectivityCheckInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PodNetworkConnectivityCheck. If that is not the case, calling type-safe methods of the returned
+// TypedPodNetworkConnectivityCheckInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedPodNetworkConnectivityCheckInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedPodNetworkConnectivityCheckInformer(informer PodNetworkConnectivityCheckInformer) TypedPodNetworkConnectivityCheckInformer {
+	if informer, ok := informer.(TypedPodNetworkConnectivityCheckInformer); ok {
+		return informer
+	}
+	return &podNetworkConnectivityCheckTypedInformerAdapter{informer}
+}
+
+type podNetworkConnectivityCheckTypedInformerAdapter struct {
+	PodNetworkConnectivityCheckInformer
+}
+
+func (a *podNetworkConnectivityCheckTypedInformerAdapter) TypedInformer() PodNetworkConnectivityCheckIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck](a.Informer())
+}
+
+// ToPodNetworkConnectivityCheckIndexInformer converts an untyped informer into a PodNetworkConnectivityCheckIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PodNetworkConnectivityCheck. If that is not the case, calling type-safe methods of the returned
+// PodNetworkConnectivityCheckIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a PodNetworkConnectivityCheckIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToPodNetworkConnectivityCheckIndexInformer(informer cache.SharedIndexInformer) PodNetworkConnectivityCheckIndexInformer {
+	if informer, ok := informer.(PodNetworkConnectivityCheckIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apioperatorcontrolplanev1alpha1.PodNetworkConnectivityCheck](informer)
 }

@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleNotificationInformer provides access to a shared informer and lister for
-// ConsoleNotifications.
+// ConsoleNotifications. Prefer using the type-safe variant (see [TypedConsoleNotificationInformer]).
 type ConsoleNotificationInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleNotificationLister
 }
+
+// TypedConsoleNotificationInformer provides access to a shared informer and lister for
+// ConsoleNotifications, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleNotificationInformer.
+type TypedConsoleNotificationInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleNotificationIndexInformer
+	Lister() consolev1.ConsoleNotificationLister
+}
+
+// ConsoleNotificationIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleNotificationIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleNotification]
+
+// ConsoleNotificationHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleNotification.
+type ConsoleNotificationHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleNotification]
+
+// ConsoleNotificationDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleNotification.
+type ConsoleNotificationDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleNotification]
+
+// ConsoleNotificationFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleNotification.
+type ConsoleNotificationFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleNotification]
+
+// ConsoleNotificationIndexers is a specialization of [cache.TypedIndexers] for ConsoleNotification.
+type ConsoleNotificationIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleNotification]
+
+// DeletedConsoleNotification is a specialization of [cache.DeletedObject] for ConsoleNotification.
+type DeletedConsoleNotification = cache.DeletedObject[*apiconsolev1.ConsoleNotification]
 
 type consoleNotificationInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleNotificationInformer struct {
 // NewConsoleNotificationInformer constructs a new informer for ConsoleNotification type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleNotificationInformer]).
 func NewConsoleNotificationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleNotificationInformer constructs a new informer for ConsoleNotification type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleNotificationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleNotificationIndexers) ConsoleNotificationIndexInformer {
+	return NewTypedConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleNotificationInformer constructs a new informer for ConsoleNotification type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleNotificationInformer]).
 func NewFilteredConsoleNotificationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleNotificationInformer constructs a new informer for ConsoleNotification type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleNotificationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleNotificationIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleNotificationIndexInformer {
+	return NewTypedConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleNotificationInformerWithOptions constructs a new informer for ConsoleNotification type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleNotificationInformerWithOptions]).
 func NewConsoleNotificationInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleNotificationInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleNotificationInformerWithOptions constructs a new informer for ConsoleNotification type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleNotificationInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleNotificationIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consolenotifications"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleNotification](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleNotificationInformerWithOptions(client versioned.Interface, optio
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleNotificationInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleNotificationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleNotificationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleNotification{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleNotificationInformer) TypedInformer() ConsoleNotificationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleNotification](f.factory.InformerFor(&apiconsolev1.ConsoleNotification{}, f.defaultInformer))
 }
 
 func (f *consoleNotificationInformer) Lister() consolev1.ConsoleNotificationLister {
 	return consolev1.NewConsoleNotificationLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleNotificationInformer converts an untyped informer into a TypedConsoleNotificationInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleNotification. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleNotificationInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleNotificationInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleNotificationInformer(informer ConsoleNotificationInformer) TypedConsoleNotificationInformer {
+	if informer, ok := informer.(TypedConsoleNotificationInformer); ok {
+		return informer
+	}
+	return &consoleNotificationTypedInformerAdapter{informer}
+}
+
+type consoleNotificationTypedInformerAdapter struct {
+	ConsoleNotificationInformer
+}
+
+func (a *consoleNotificationTypedInformerAdapter) TypedInformer() ConsoleNotificationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleNotification](a.Informer())
+}
+
+// ToConsoleNotificationIndexInformer converts an untyped informer into a ConsoleNotificationIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleNotification. If that is not the case, calling type-safe methods of the returned
+// ConsoleNotificationIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleNotificationIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleNotificationIndexInformer(informer cache.SharedIndexInformer) ConsoleNotificationIndexInformer {
+	if informer, ok := informer.(ConsoleNotificationIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleNotification](informer)
 }

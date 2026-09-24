@@ -18,11 +18,39 @@ import (
 )
 
 // ImagePrunerInformer provides access to a shared informer and lister for
-// ImagePruners.
+// ImagePruners. Prefer using the type-safe variant (see [TypedImagePrunerInformer]).
 type ImagePrunerInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() imageregistryv1.ImagePrunerLister
 }
+
+// TypedImagePrunerInformer provides access to a shared informer and lister for
+// ImagePruners, including the type-safe TypedInformer variant.
+// It is a superset of ImagePrunerInformer.
+type TypedImagePrunerInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ImagePrunerIndexInformer
+	Lister() imageregistryv1.ImagePrunerLister
+}
+
+// ImagePrunerIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ImagePrunerIndexInformer cache.TypedSharedIndexInformer[*apiimageregistryv1.ImagePruner]
+
+// ImagePrunerHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ImagePruner.
+type ImagePrunerHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiimageregistryv1.ImagePruner]
+
+// ImagePrunerDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ImagePruner.
+type ImagePrunerDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiimageregistryv1.ImagePruner]
+
+// ImagePrunerFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ImagePruner.
+type ImagePrunerFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiimageregistryv1.ImagePruner]
+
+// ImagePrunerIndexers is a specialization of [cache.TypedIndexers] for ImagePruner.
+type ImagePrunerIndexers = cache.TypedIndexers[*apiimageregistryv1.ImagePruner]
+
+// DeletedImagePruner is a specialization of [cache.DeletedObject] for ImagePruner.
+type DeletedImagePruner = cache.DeletedObject[*apiimageregistryv1.ImagePruner]
 
 type imagePrunerInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type imagePrunerInformer struct {
 // NewImagePrunerInformer constructs a new informer for ImagePruner type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedImagePrunerInformer]).
 func NewImagePrunerInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedImagePrunerInformer constructs a new informer for ImagePruner type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedImagePrunerInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ImagePrunerIndexers) ImagePrunerIndexInformer {
+	return NewTypedImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredImagePrunerInformer constructs a new informer for ImagePruner type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredImagePrunerInformer]).
 func NewFilteredImagePrunerInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredImagePrunerInformer constructs a new informer for ImagePruner type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredImagePrunerInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ImagePrunerIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ImagePrunerIndexInformer {
+	return NewTypedImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewImagePrunerInformerWithOptions constructs a new informer for ImagePruner type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedImagePrunerInformerWithOptions]).
 func NewImagePrunerInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedImagePrunerInformerWithOptions(client, options)
+}
+
+// NewTypedImagePrunerInformerWithOptions constructs a new informer for ImagePruner type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedImagePrunerInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ImagePrunerIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "imageregistry.operator.openshift.io", Version: "v1", Resource: "imagepruners"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiimageregistryv1.ImagePruner](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewImagePrunerInformerWithOptions(client versioned.Interface, options inter
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *imagePrunerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedImagePrunerInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *imagePrunerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiimageregistryv1.ImagePruner{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *imagePrunerInformer) TypedInformer() ImagePrunerIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiimageregistryv1.ImagePruner](f.factory.InformerFor(&apiimageregistryv1.ImagePruner{}, f.defaultInformer))
 }
 
 func (f *imagePrunerInformer) Lister() imageregistryv1.ImagePrunerLister {
 	return imageregistryv1.NewImagePrunerLister(f.Informer().GetIndexer())
+}
+
+// ToTypedImagePrunerInformer converts an untyped informer into a TypedImagePrunerInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ImagePruner. If that is not the case, calling type-safe methods of the returned
+// TypedImagePrunerInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedImagePrunerInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedImagePrunerInformer(informer ImagePrunerInformer) TypedImagePrunerInformer {
+	if informer, ok := informer.(TypedImagePrunerInformer); ok {
+		return informer
+	}
+	return &imagePrunerTypedInformerAdapter{informer}
+}
+
+type imagePrunerTypedInformerAdapter struct {
+	ImagePrunerInformer
+}
+
+func (a *imagePrunerTypedInformerAdapter) TypedInformer() ImagePrunerIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiimageregistryv1.ImagePruner](a.Informer())
+}
+
+// ToImagePrunerIndexInformer converts an untyped informer into a ImagePrunerIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ImagePruner. If that is not the case, calling type-safe methods of the returned
+// ImagePrunerIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ImagePrunerIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToImagePrunerIndexInformer(informer cache.SharedIndexInformer) ImagePrunerIndexInformer {
+	if informer, ok := informer.(ImagePrunerIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiimageregistryv1.ImagePruner](informer)
 }

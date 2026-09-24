@@ -18,11 +18,39 @@ import (
 )
 
 // DNSRecordInformer provides access to a shared informer and lister for
-// DNSRecords.
+// DNSRecords. Prefer using the type-safe variant (see [TypedDNSRecordInformer]).
 type DNSRecordInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() operatoringressv1.DNSRecordLister
 }
+
+// TypedDNSRecordInformer provides access to a shared informer and lister for
+// DNSRecords, including the type-safe TypedInformer variant.
+// It is a superset of DNSRecordInformer.
+type TypedDNSRecordInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() DNSRecordIndexInformer
+	Lister() operatoringressv1.DNSRecordLister
+}
+
+// DNSRecordIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type DNSRecordIndexInformer cache.TypedSharedIndexInformer[*apioperatoringressv1.DNSRecord]
+
+// DNSRecordHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for DNSRecord.
+type DNSRecordHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apioperatoringressv1.DNSRecord]
+
+// DNSRecordDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for DNSRecord.
+type DNSRecordDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apioperatoringressv1.DNSRecord]
+
+// DNSRecordFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for DNSRecord.
+type DNSRecordFilteringHandler = cache.TypedFilteringResourceEventHandler[*apioperatoringressv1.DNSRecord]
+
+// DNSRecordIndexers is a specialization of [cache.TypedIndexers] for DNSRecord.
+type DNSRecordIndexers = cache.TypedIndexers[*apioperatoringressv1.DNSRecord]
+
+// DeletedDNSRecord is a specialization of [cache.DeletedObject] for DNSRecord.
+type DeletedDNSRecord = cache.DeletedObject[*apioperatoringressv1.DNSRecord]
 
 type dNSRecordInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -33,25 +61,49 @@ type dNSRecordInformer struct {
 // NewDNSRecordInformer constructs a new informer for DNSRecord type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDNSRecordInformer]).
 func NewDNSRecordInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewDNSRecordInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedDNSRecordInformer constructs a new informer for DNSRecord type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDNSRecordInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers DNSRecordIndexers) DNSRecordIndexInformer {
+	return NewTypedDNSRecordInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredDNSRecordInformer constructs a new informer for DNSRecord type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredDNSRecordInformer]).
 func NewFilteredDNSRecordInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewDNSRecordInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedDNSRecordInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredDNSRecordInformer constructs a new informer for DNSRecord type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredDNSRecordInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers DNSRecordIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) DNSRecordIndexInformer {
+	return NewTypedDNSRecordInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewDNSRecordInformerWithOptions constructs a new informer for DNSRecord type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDNSRecordInformerWithOptions]).
 func NewDNSRecordInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedDNSRecordInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedDNSRecordInformerWithOptions constructs a new informer for DNSRecord type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDNSRecordInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) DNSRecordIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "ingress.operator.openshift.io", Version: "v1", Resource: "dnsrecords"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apioperatoringressv1.DNSRecord](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -84,17 +136,57 @@ func NewDNSRecordInformerWithOptions(client versioned.Interface, namespace strin
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *dNSRecordInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewDNSRecordInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedDNSRecordInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *dNSRecordInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apioperatoringressv1.DNSRecord{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *dNSRecordInformer) TypedInformer() DNSRecordIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apioperatoringressv1.DNSRecord](f.factory.InformerFor(&apioperatoringressv1.DNSRecord{}, f.defaultInformer))
 }
 
 func (f *dNSRecordInformer) Lister() operatoringressv1.DNSRecordLister {
 	return operatoringressv1.NewDNSRecordLister(f.Informer().GetIndexer())
+}
+
+// ToTypedDNSRecordInformer converts an untyped informer into a TypedDNSRecordInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DNSRecord. If that is not the case, calling type-safe methods of the returned
+// TypedDNSRecordInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedDNSRecordInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedDNSRecordInformer(informer DNSRecordInformer) TypedDNSRecordInformer {
+	if informer, ok := informer.(TypedDNSRecordInformer); ok {
+		return informer
+	}
+	return &dNSRecordTypedInformerAdapter{informer}
+}
+
+type dNSRecordTypedInformerAdapter struct {
+	DNSRecordInformer
+}
+
+func (a *dNSRecordTypedInformerAdapter) TypedInformer() DNSRecordIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apioperatoringressv1.DNSRecord](a.Informer())
+}
+
+// ToDNSRecordIndexInformer converts an untyped informer into a DNSRecordIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DNSRecord. If that is not the case, calling type-safe methods of the returned
+// DNSRecordIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a DNSRecordIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToDNSRecordIndexInformer(informer cache.SharedIndexInformer) DNSRecordIndexInformer {
+	if informer, ok := informer.(DNSRecordIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apioperatoringressv1.DNSRecord](informer)
 }
