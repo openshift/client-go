@@ -2,10 +2,6 @@
 
 package v1alpha1
 
-// BackupListerExpansion allows custom methods to be added to
-// BackupLister.
-type BackupListerExpansion interface{}
-
 // CRIOCredentialProviderConfigListerExpansion allows custom methods to be added to
 // CRIOCredentialProviderConfigLister.
 type CRIOCredentialProviderConfigListerExpansion interface{}

@@ -4424,46 +4424,6 @@ var schemaYAML = typed.YAMLObject(`types:
       fields:
       - fieldName: bearerToken
         discriminatorValue: BearerToken
-- name: com.github.openshift.api.config.v1alpha1.Backup
-  map:
-    fields:
-    - name: apiVersion
-      type:
-        scalar: string
-    - name: kind
-      type:
-        scalar: string
-    - name: metadata
-      type:
-        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
-      default: {}
-    - name: spec
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.BackupSpec
-      default: {}
-    - name: status
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.BackupStatus
-      default: {}
-- name: com.github.openshift.api.config.v1alpha1.BackupSpec
-  map:
-    fields:
-    - name: etcd
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.EtcdBackupSpec
-      default: {}
-- name: com.github.openshift.api.config.v1alpha1.BackupStatus
-  map:
-    elementType:
-      scalar: untyped
-      list:
-        elementType:
-          namedType: __untyped_atomic_
-        elementRelationship: atomic
-      map:
-        elementType:
-          namedType: __untyped_deduced_
-        elementRelationship: separable
 - name: com.github.openshift.api.config.v1alpha1.BasicAuth
   map:
     fields:
@@ -4656,25 +4616,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: curve
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1alpha1.EtcdBackupSpec
-  map:
-    fields:
-    - name: pvcName
-      type:
-        scalar: string
-      default: ""
-    - name: retentionPolicy
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.RetentionPolicy
-      default: {}
-    - name: schedule
-      type:
-        scalar: string
-      default: ""
-    - name: timeZone
-      type:
-        scalar: string
-      default: ""
 - name: com.github.openshift.api.config.v1alpha1.GatherConfig
   map:
     fields:
@@ -5622,40 +5563,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: size
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1alpha1.RetentionNumberConfig
-  map:
-    fields:
-    - name: maxNumberOfBackups
-      type:
-        scalar: numeric
-      default: 0
-- name: com.github.openshift.api.config.v1alpha1.RetentionPolicy
-  map:
-    fields:
-    - name: retentionNumber
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.RetentionNumberConfig
-    - name: retentionSize
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.RetentionSizeConfig
-    - name: retentionType
-      type:
-        scalar: string
-      default: ""
-    unions:
-    - discriminator: retentionType
-      fields:
-      - fieldName: retentionNumber
-        discriminatorValue: RetentionNumber
-      - fieldName: retentionSize
-        discriminatorValue: RetentionSize
-- name: com.github.openshift.api.config.v1alpha1.RetentionSizeConfig
-  map:
-    fields:
-    - name: maxSizeOfBackupsGb
-      type:
-        scalar: numeric
-      default: 0
 - name: com.github.openshift.api.config.v1alpha1.SecretKeySelector
   map:
     fields:
