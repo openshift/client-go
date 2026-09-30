@@ -18,11 +18,39 @@ import (
 )
 
 // SharedConfigMapInformer provides access to a shared informer and lister for
-// SharedConfigMaps.
+// SharedConfigMaps. Prefer using the type-safe variant (see [TypedSharedConfigMapInformer]).
 type SharedConfigMapInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() sharedresourcev1alpha1.SharedConfigMapLister
 }
+
+// TypedSharedConfigMapInformer provides access to a shared informer and lister for
+// SharedConfigMaps, including the type-safe TypedInformer variant.
+// It is a superset of SharedConfigMapInformer.
+type TypedSharedConfigMapInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() SharedConfigMapIndexInformer
+	Lister() sharedresourcev1alpha1.SharedConfigMapLister
+}
+
+// SharedConfigMapIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type SharedConfigMapIndexInformer cache.TypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedConfigMap]
+
+// SharedConfigMapHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for SharedConfigMap.
+type SharedConfigMapHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisharedresourcev1alpha1.SharedConfigMap]
+
+// SharedConfigMapDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for SharedConfigMap.
+type SharedConfigMapDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisharedresourcev1alpha1.SharedConfigMap]
+
+// SharedConfigMapFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for SharedConfigMap.
+type SharedConfigMapFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisharedresourcev1alpha1.SharedConfigMap]
+
+// SharedConfigMapIndexers is a specialization of [cache.TypedIndexers] for SharedConfigMap.
+type SharedConfigMapIndexers = cache.TypedIndexers[*apisharedresourcev1alpha1.SharedConfigMap]
+
+// DeletedSharedConfigMap is a specialization of [cache.DeletedObject] for SharedConfigMap.
+type DeletedSharedConfigMap = cache.DeletedObject[*apisharedresourcev1alpha1.SharedConfigMap]
 
 type sharedConfigMapInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type sharedConfigMapInformer struct {
 // NewSharedConfigMapInformer constructs a new informer for SharedConfigMap type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSharedConfigMapInformer]).
 func NewSharedConfigMapInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedSharedConfigMapInformer constructs a new informer for SharedConfigMap type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSharedConfigMapInformer(client versioned.Interface, resyncPeriod time.Duration, indexers SharedConfigMapIndexers) SharedConfigMapIndexInformer {
+	return NewTypedSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredSharedConfigMapInformer constructs a new informer for SharedConfigMap type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredSharedConfigMapInformer]).
 func NewFilteredSharedConfigMapInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredSharedConfigMapInformer constructs a new informer for SharedConfigMap type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredSharedConfigMapInformer(client versioned.Interface, resyncPeriod time.Duration, indexers SharedConfigMapIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) SharedConfigMapIndexInformer {
+	return NewTypedSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewSharedConfigMapInformerWithOptions constructs a new informer for SharedConfigMap type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSharedConfigMapInformerWithOptions]).
 func NewSharedConfigMapInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedSharedConfigMapInformerWithOptions(client, options)
+}
+
+// NewTypedSharedConfigMapInformerWithOptions constructs a new informer for SharedConfigMap type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSharedConfigMapInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) SharedConfigMapIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "sharedresource.openshift.io", Version: "v1alpha1", Resource: "sharedconfigmaps"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedConfigMap](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewSharedConfigMapInformerWithOptions(client versioned.Interface, options i
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *sharedConfigMapInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedSharedConfigMapInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *sharedConfigMapInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisharedresourcev1alpha1.SharedConfigMap{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *sharedConfigMapInformer) TypedInformer() SharedConfigMapIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedConfigMap](f.factory.InformerFor(&apisharedresourcev1alpha1.SharedConfigMap{}, f.defaultInformer))
 }
 
 func (f *sharedConfigMapInformer) Lister() sharedresourcev1alpha1.SharedConfigMapLister {
 	return sharedresourcev1alpha1.NewSharedConfigMapLister(f.Informer().GetIndexer())
+}
+
+// ToTypedSharedConfigMapInformer converts an untyped informer into a TypedSharedConfigMapInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SharedConfigMap. If that is not the case, calling type-safe methods of the returned
+// TypedSharedConfigMapInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedSharedConfigMapInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedSharedConfigMapInformer(informer SharedConfigMapInformer) TypedSharedConfigMapInformer {
+	if informer, ok := informer.(TypedSharedConfigMapInformer); ok {
+		return informer
+	}
+	return &sharedConfigMapTypedInformerAdapter{informer}
+}
+
+type sharedConfigMapTypedInformerAdapter struct {
+	SharedConfigMapInformer
+}
+
+func (a *sharedConfigMapTypedInformerAdapter) TypedInformer() SharedConfigMapIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedConfigMap](a.Informer())
+}
+
+// ToSharedConfigMapIndexInformer converts an untyped informer into a SharedConfigMapIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SharedConfigMap. If that is not the case, calling type-safe methods of the returned
+// SharedConfigMapIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a SharedConfigMapIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToSharedConfigMapIndexInformer(informer cache.SharedIndexInformer) SharedConfigMapIndexInformer {
+	if informer, ok := informer.(SharedConfigMapIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedConfigMap](informer)
 }

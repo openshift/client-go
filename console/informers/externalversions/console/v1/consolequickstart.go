@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleQuickStartInformer provides access to a shared informer and lister for
-// ConsoleQuickStarts.
+// ConsoleQuickStarts. Prefer using the type-safe variant (see [TypedConsoleQuickStartInformer]).
 type ConsoleQuickStartInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleQuickStartLister
 }
+
+// TypedConsoleQuickStartInformer provides access to a shared informer and lister for
+// ConsoleQuickStarts, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleQuickStartInformer.
+type TypedConsoleQuickStartInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleQuickStartIndexInformer
+	Lister() consolev1.ConsoleQuickStartLister
+}
+
+// ConsoleQuickStartIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleQuickStartIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleQuickStart]
+
+// ConsoleQuickStartHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleQuickStart.
+type ConsoleQuickStartHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleQuickStart]
+
+// ConsoleQuickStartDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleQuickStart.
+type ConsoleQuickStartDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleQuickStart]
+
+// ConsoleQuickStartFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleQuickStart.
+type ConsoleQuickStartFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleQuickStart]
+
+// ConsoleQuickStartIndexers is a specialization of [cache.TypedIndexers] for ConsoleQuickStart.
+type ConsoleQuickStartIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleQuickStart]
+
+// DeletedConsoleQuickStart is a specialization of [cache.DeletedObject] for ConsoleQuickStart.
+type DeletedConsoleQuickStart = cache.DeletedObject[*apiconsolev1.ConsoleQuickStart]
 
 type consoleQuickStartInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleQuickStartInformer struct {
 // NewConsoleQuickStartInformer constructs a new informer for ConsoleQuickStart type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleQuickStartInformer]).
 func NewConsoleQuickStartInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleQuickStartInformer constructs a new informer for ConsoleQuickStart type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleQuickStartInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleQuickStartIndexers) ConsoleQuickStartIndexInformer {
+	return NewTypedConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleQuickStartInformer constructs a new informer for ConsoleQuickStart type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleQuickStartInformer]).
 func NewFilteredConsoleQuickStartInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleQuickStartInformer constructs a new informer for ConsoleQuickStart type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleQuickStartInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleQuickStartIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleQuickStartIndexInformer {
+	return NewTypedConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleQuickStartInformerWithOptions constructs a new informer for ConsoleQuickStart type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleQuickStartInformerWithOptions]).
 func NewConsoleQuickStartInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleQuickStartInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleQuickStartInformerWithOptions constructs a new informer for ConsoleQuickStart type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleQuickStartInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleQuickStartIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consolequickstarts"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleQuickStart](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleQuickStartInformerWithOptions(client versioned.Interface, options
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleQuickStartInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleQuickStartInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleQuickStartInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleQuickStart{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleQuickStartInformer) TypedInformer() ConsoleQuickStartIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleQuickStart](f.factory.InformerFor(&apiconsolev1.ConsoleQuickStart{}, f.defaultInformer))
 }
 
 func (f *consoleQuickStartInformer) Lister() consolev1.ConsoleQuickStartLister {
 	return consolev1.NewConsoleQuickStartLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleQuickStartInformer converts an untyped informer into a TypedConsoleQuickStartInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleQuickStart. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleQuickStartInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleQuickStartInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleQuickStartInformer(informer ConsoleQuickStartInformer) TypedConsoleQuickStartInformer {
+	if informer, ok := informer.(TypedConsoleQuickStartInformer); ok {
+		return informer
+	}
+	return &consoleQuickStartTypedInformerAdapter{informer}
+}
+
+type consoleQuickStartTypedInformerAdapter struct {
+	ConsoleQuickStartInformer
+}
+
+func (a *consoleQuickStartTypedInformerAdapter) TypedInformer() ConsoleQuickStartIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleQuickStart](a.Informer())
+}
+
+// ToConsoleQuickStartIndexInformer converts an untyped informer into a ConsoleQuickStartIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleQuickStart. If that is not the case, calling type-safe methods of the returned
+// ConsoleQuickStartIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleQuickStartIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleQuickStartIndexInformer(informer cache.SharedIndexInformer) ConsoleQuickStartIndexInformer {
+	if informer, ok := informer.(ConsoleQuickStartIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleQuickStart](informer)
 }

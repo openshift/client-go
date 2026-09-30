@@ -18,11 +18,39 @@ import (
 )
 
 // APIRequestCountInformer provides access to a shared informer and lister for
-// APIRequestCounts.
+// APIRequestCounts. Prefer using the type-safe variant (see [TypedAPIRequestCountInformer]).
 type APIRequestCountInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() apiserverv1.APIRequestCountLister
 }
+
+// TypedAPIRequestCountInformer provides access to a shared informer and lister for
+// APIRequestCounts, including the type-safe TypedInformer variant.
+// It is a superset of APIRequestCountInformer.
+type TypedAPIRequestCountInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() APIRequestCountIndexInformer
+	Lister() apiserverv1.APIRequestCountLister
+}
+
+// APIRequestCountIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type APIRequestCountIndexInformer cache.TypedSharedIndexInformer[*apiapiserverv1.APIRequestCount]
+
+// APIRequestCountHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for APIRequestCount.
+type APIRequestCountHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiapiserverv1.APIRequestCount]
+
+// APIRequestCountDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for APIRequestCount.
+type APIRequestCountDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiapiserverv1.APIRequestCount]
+
+// APIRequestCountFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for APIRequestCount.
+type APIRequestCountFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiapiserverv1.APIRequestCount]
+
+// APIRequestCountIndexers is a specialization of [cache.TypedIndexers] for APIRequestCount.
+type APIRequestCountIndexers = cache.TypedIndexers[*apiapiserverv1.APIRequestCount]
+
+// DeletedAPIRequestCount is a specialization of [cache.DeletedObject] for APIRequestCount.
+type DeletedAPIRequestCount = cache.DeletedObject[*apiapiserverv1.APIRequestCount]
 
 type aPIRequestCountInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type aPIRequestCountInformer struct {
 // NewAPIRequestCountInformer constructs a new informer for APIRequestCount type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAPIRequestCountInformer]).
 func NewAPIRequestCountInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedAPIRequestCountInformer constructs a new informer for APIRequestCount type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAPIRequestCountInformer(client versioned.Interface, resyncPeriod time.Duration, indexers APIRequestCountIndexers) APIRequestCountIndexInformer {
+	return NewTypedAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredAPIRequestCountInformer constructs a new informer for APIRequestCount type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredAPIRequestCountInformer]).
 func NewFilteredAPIRequestCountInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredAPIRequestCountInformer constructs a new informer for APIRequestCount type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredAPIRequestCountInformer(client versioned.Interface, resyncPeriod time.Duration, indexers APIRequestCountIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) APIRequestCountIndexInformer {
+	return NewTypedAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewAPIRequestCountInformerWithOptions constructs a new informer for APIRequestCount type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAPIRequestCountInformerWithOptions]).
 func NewAPIRequestCountInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedAPIRequestCountInformerWithOptions(client, options)
+}
+
+// NewTypedAPIRequestCountInformerWithOptions constructs a new informer for APIRequestCount type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAPIRequestCountInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) APIRequestCountIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "apiserver.openshift.io", Version: "v1", Resource: "apirequestcounts"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiapiserverv1.APIRequestCount](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewAPIRequestCountInformerWithOptions(client versioned.Interface, options i
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *aPIRequestCountInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedAPIRequestCountInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *aPIRequestCountInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiapiserverv1.APIRequestCount{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *aPIRequestCountInformer) TypedInformer() APIRequestCountIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiapiserverv1.APIRequestCount](f.factory.InformerFor(&apiapiserverv1.APIRequestCount{}, f.defaultInformer))
 }
 
 func (f *aPIRequestCountInformer) Lister() apiserverv1.APIRequestCountLister {
 	return apiserverv1.NewAPIRequestCountLister(f.Informer().GetIndexer())
+}
+
+// ToTypedAPIRequestCountInformer converts an untyped informer into a TypedAPIRequestCountInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *APIRequestCount. If that is not the case, calling type-safe methods of the returned
+// TypedAPIRequestCountInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedAPIRequestCountInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedAPIRequestCountInformer(informer APIRequestCountInformer) TypedAPIRequestCountInformer {
+	if informer, ok := informer.(TypedAPIRequestCountInformer); ok {
+		return informer
+	}
+	return &aPIRequestCountTypedInformerAdapter{informer}
+}
+
+type aPIRequestCountTypedInformerAdapter struct {
+	APIRequestCountInformer
+}
+
+func (a *aPIRequestCountTypedInformerAdapter) TypedInformer() APIRequestCountIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiapiserverv1.APIRequestCount](a.Informer())
+}
+
+// ToAPIRequestCountIndexInformer converts an untyped informer into a APIRequestCountIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *APIRequestCount. If that is not the case, calling type-safe methods of the returned
+// APIRequestCountIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a APIRequestCountIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToAPIRequestCountIndexInformer(informer cache.SharedIndexInformer) APIRequestCountIndexInformer {
+	if informer, ok := informer.(APIRequestCountIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiapiserverv1.APIRequestCount](informer)
 }

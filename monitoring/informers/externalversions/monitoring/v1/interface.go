@@ -9,9 +9,9 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// AlertRelabelConfigs returns a AlertRelabelConfigInformer.
-	AlertRelabelConfigs() AlertRelabelConfigInformer
+	AlertRelabelConfigs() TypedAlertRelabelConfigInformer
 	// AlertingRules returns a AlertingRuleInformer.
-	AlertingRules() AlertingRuleInformer
+	AlertingRules() TypedAlertingRuleInformer
 }
 
 type version struct {
@@ -25,12 +25,12 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// AlertRelabelConfigs returns a AlertRelabelConfigInformer.
-func (v *version) AlertRelabelConfigs() AlertRelabelConfigInformer {
+// AlertRelabelConfigs returns a TypedAlertRelabelConfigInformer.
+func (v *version) AlertRelabelConfigs() TypedAlertRelabelConfigInformer {
 	return &alertRelabelConfigInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// AlertingRules returns a AlertingRuleInformer.
-func (v *version) AlertingRules() AlertingRuleInformer {
+// AlertingRules returns a TypedAlertingRuleInformer.
+func (v *version) AlertingRules() TypedAlertingRuleInformer {
 	return &alertingRuleInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

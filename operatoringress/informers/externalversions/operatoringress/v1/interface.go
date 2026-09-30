@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// DNSRecords returns a DNSRecordInformer.
-	DNSRecords() DNSRecordInformer
+	DNSRecords() TypedDNSRecordInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// DNSRecords returns a DNSRecordInformer.
-func (v *version) DNSRecords() DNSRecordInformer {
+// DNSRecords returns a TypedDNSRecordInformer.
+func (v *version) DNSRecords() TypedDNSRecordInformer {
 	return &dNSRecordInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
