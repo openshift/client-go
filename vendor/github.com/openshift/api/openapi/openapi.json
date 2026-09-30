@@ -32145,6 +32145,22 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConsoleIngress": {
+      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
+      "type": "object",
+      "properties": {
+        "clientDownloadsURL": {
+          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        },
+        "consoleURL": {
+          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConsoleList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -32201,7 +32217,7 @@
         "ingress": {
           "description": "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleIngress"
         },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
@@ -33411,22 +33427,6 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1.Ingress": {
-      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
-      "type": "object",
-      "properties": {
-        "clientDownloadsURL": {
-          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-          "type": "string",
-          "default": ""
-        },
-        "consoleURL": {
-          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1.IngressController": {
       "description": "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -33773,7 +33773,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.EndpointPublishingStrategy"
         },
         "haproxyVersion": {
-          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.0 introduces HAProxy 3.2 as its default version and supports HAProxy 2.8 from OpenShift 4.22 for migration purposes. When an OpenShift release introduces a new default HAProxy version, that HAProxy version becomes available as a pinnable value in subsequent OpenShift releases, providing a smooth migration path for administrators who want to defer HAProxy upgrades.\n\nValid values for OpenShift 5.0: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.0) - \"3.2\": Explicitly pins HAProxy 3.2 for preservation during cluster\n  upgrades to future OpenShift releases\n- \"2.8\": Uses HAProxy 2.8 from OpenShift 4.22 (migration support, will\n  be dropped in the next OpenShift release)\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
+          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 continues with HAProxy 3.2 (same minor version introduced in OpenShift 5.0) and does not introduce a new HAProxy version.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
           "type": "string"
         },
         "httpCompression": {
@@ -33867,7 +33867,7 @@
           "default": ""
         },
         "effectiveHAProxyVersion": {
-          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.0: - \"3.2\": Using HAProxy 3.2 - \"2.8\": Using HAProxy 2.8",
+          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using HAProxy 3.2",
           "type": "string"
         },
         "endpointPublishingStrategy": {
@@ -41332,7 +41332,7 @@
       ],
       "properties": {
         "caCertificate": {
-          "description": "caCertificate provides the cert authority certificate contents",
+          "description": "caCertificate provides the cert authority certificate contents. Any needed intermediate certificates should be provided here.",
           "type": "string"
         },
         "certificate": {
@@ -41344,7 +41344,7 @@
           "type": "string"
         },
         "externalCertificate": {
-          "description": "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set. The router service account needs to be granted with read-only access to this secret, please refer to openshift docs for additional details.",
+          "description": "externalCertificate provides certificate contents as a secret reference. This should be the serving certificate, and may optionally include the full certificate chain, including any needed intermediate certificates. There is no separate field to provide a CA certificate when using externalCertificate, so any CA certificate needed must be included as part of this chain. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set. The router service account needs to be granted with read-only access to this secret, please refer to openshift docs for additional details.",
           "$ref": "#/definitions/com.github.openshift.api.route.v1.LocalObjectReference"
         },
         "insecureEdgeTerminationPolicy": {

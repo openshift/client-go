@@ -71,3 +71,7 @@ retract v3.9.0+incompatible
 // To make go aware of the retraction, we need to tag a new version that can be
 // retracted by itself.
 retract v0.0.1
+
+// TODO: Remove this temporary replace and use the canonical github.com/openshift/api revision after
+// https://github.com/openshift/api/pull/3070 merges.
+replace github.com/openshift/api => github.com/redhat-chai-bot/api v0.0.0-20260930200331-505a3f0e77f6
