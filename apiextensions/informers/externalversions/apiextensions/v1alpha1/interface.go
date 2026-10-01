@@ -9,7 +9,7 @@ import (
 // Interface provides access to all the informers in this group version.
 type Interface interface {
 	// CompatibilityRequirements returns a CompatibilityRequirementInformer.
-	CompatibilityRequirements() CompatibilityRequirementInformer
+	CompatibilityRequirements() TypedCompatibilityRequirementInformer
 }
 
 type version struct {
@@ -23,7 +23,7 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// CompatibilityRequirements returns a CompatibilityRequirementInformer.
-func (v *version) CompatibilityRequirements() CompatibilityRequirementInformer {
+// CompatibilityRequirements returns a TypedCompatibilityRequirementInformer.
+func (v *version) CompatibilityRequirements() TypedCompatibilityRequirementInformer {
 	return &compatibilityRequirementInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

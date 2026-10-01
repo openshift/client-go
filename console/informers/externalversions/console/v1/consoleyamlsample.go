@@ -18,11 +18,39 @@ import (
 )
 
 // ConsoleYAMLSampleInformer provides access to a shared informer and lister for
-// ConsoleYAMLSamples.
+// ConsoleYAMLSamples. Prefer using the type-safe variant (see [TypedConsoleYAMLSampleInformer]).
 type ConsoleYAMLSampleInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() consolev1.ConsoleYAMLSampleLister
 }
+
+// TypedConsoleYAMLSampleInformer provides access to a shared informer and lister for
+// ConsoleYAMLSamples, including the type-safe TypedInformer variant.
+// It is a superset of ConsoleYAMLSampleInformer.
+type TypedConsoleYAMLSampleInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ConsoleYAMLSampleIndexInformer
+	Lister() consolev1.ConsoleYAMLSampleLister
+}
+
+// ConsoleYAMLSampleIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ConsoleYAMLSampleIndexInformer cache.TypedSharedIndexInformer[*apiconsolev1.ConsoleYAMLSample]
+
+// ConsoleYAMLSampleHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ConsoleYAMLSample.
+type ConsoleYAMLSampleHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiconsolev1.ConsoleYAMLSample]
+
+// ConsoleYAMLSampleDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ConsoleYAMLSample.
+type ConsoleYAMLSampleDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiconsolev1.ConsoleYAMLSample]
+
+// ConsoleYAMLSampleFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ConsoleYAMLSample.
+type ConsoleYAMLSampleFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiconsolev1.ConsoleYAMLSample]
+
+// ConsoleYAMLSampleIndexers is a specialization of [cache.TypedIndexers] for ConsoleYAMLSample.
+type ConsoleYAMLSampleIndexers = cache.TypedIndexers[*apiconsolev1.ConsoleYAMLSample]
+
+// DeletedConsoleYAMLSample is a specialization of [cache.DeletedObject] for ConsoleYAMLSample.
+type DeletedConsoleYAMLSample = cache.DeletedObject[*apiconsolev1.ConsoleYAMLSample]
 
 type consoleYAMLSampleInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type consoleYAMLSampleInformer struct {
 // NewConsoleYAMLSampleInformer constructs a new informer for ConsoleYAMLSample type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleYAMLSampleInformer]).
 func NewConsoleYAMLSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedConsoleYAMLSampleInformer constructs a new informer for ConsoleYAMLSample type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleYAMLSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleYAMLSampleIndexers) ConsoleYAMLSampleIndexInformer {
+	return NewTypedConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredConsoleYAMLSampleInformer constructs a new informer for ConsoleYAMLSample type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredConsoleYAMLSampleInformer]).
 func NewFilteredConsoleYAMLSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredConsoleYAMLSampleInformer constructs a new informer for ConsoleYAMLSample type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredConsoleYAMLSampleInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ConsoleYAMLSampleIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ConsoleYAMLSampleIndexInformer {
+	return NewTypedConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewConsoleYAMLSampleInformerWithOptions constructs a new informer for ConsoleYAMLSample type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedConsoleYAMLSampleInformerWithOptions]).
 func NewConsoleYAMLSampleInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedConsoleYAMLSampleInformerWithOptions(client, options)
+}
+
+// NewTypedConsoleYAMLSampleInformerWithOptions constructs a new informer for ConsoleYAMLSample type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedConsoleYAMLSampleInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ConsoleYAMLSampleIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "console.openshift.io", Version: "v1", Resource: "consoleyamlsamples"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleYAMLSample](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewConsoleYAMLSampleInformerWithOptions(client versioned.Interface, options
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *consoleYAMLSampleInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedConsoleYAMLSampleInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *consoleYAMLSampleInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiconsolev1.ConsoleYAMLSample{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *consoleYAMLSampleInformer) TypedInformer() ConsoleYAMLSampleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleYAMLSample](f.factory.InformerFor(&apiconsolev1.ConsoleYAMLSample{}, f.defaultInformer))
 }
 
 func (f *consoleYAMLSampleInformer) Lister() consolev1.ConsoleYAMLSampleLister {
 	return consolev1.NewConsoleYAMLSampleLister(f.Informer().GetIndexer())
+}
+
+// ToTypedConsoleYAMLSampleInformer converts an untyped informer into a TypedConsoleYAMLSampleInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleYAMLSample. If that is not the case, calling type-safe methods of the returned
+// TypedConsoleYAMLSampleInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedConsoleYAMLSampleInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedConsoleYAMLSampleInformer(informer ConsoleYAMLSampleInformer) TypedConsoleYAMLSampleInformer {
+	if informer, ok := informer.(TypedConsoleYAMLSampleInformer); ok {
+		return informer
+	}
+	return &consoleYAMLSampleTypedInformerAdapter{informer}
+}
+
+type consoleYAMLSampleTypedInformerAdapter struct {
+	ConsoleYAMLSampleInformer
+}
+
+func (a *consoleYAMLSampleTypedInformerAdapter) TypedInformer() ConsoleYAMLSampleIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleYAMLSample](a.Informer())
+}
+
+// ToConsoleYAMLSampleIndexInformer converts an untyped informer into a ConsoleYAMLSampleIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ConsoleYAMLSample. If that is not the case, calling type-safe methods of the returned
+// ConsoleYAMLSampleIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ConsoleYAMLSampleIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToConsoleYAMLSampleIndexInformer(informer cache.SharedIndexInformer) ConsoleYAMLSampleIndexInformer {
+	if informer, ok := informer.(ConsoleYAMLSampleIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiconsolev1.ConsoleYAMLSample](informer)
 }

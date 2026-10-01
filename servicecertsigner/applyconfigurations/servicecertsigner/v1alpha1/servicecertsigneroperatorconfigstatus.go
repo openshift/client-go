@@ -9,7 +9,7 @@ import (
 // ServiceCertSignerOperatorConfigStatusApplyConfiguration represents a declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use
 // with apply.
 type ServiceCertSignerOperatorConfigStatusApplyConfiguration struct {
-	v1.OperatorStatusApplyConfiguration `json:",inline"`
+	v1.OperatorStatusApplyConfiguration `json:""`
 }
 
 // ServiceCertSignerOperatorConfigStatusApplyConfiguration constructs a declarative configuration of the ServiceCertSignerOperatorConfigStatus type for use with

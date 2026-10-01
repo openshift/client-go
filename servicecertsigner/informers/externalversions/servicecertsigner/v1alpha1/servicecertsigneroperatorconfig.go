@@ -18,11 +18,39 @@ import (
 )
 
 // ServiceCertSignerOperatorConfigInformer provides access to a shared informer and lister for
-// ServiceCertSignerOperatorConfigs.
+// ServiceCertSignerOperatorConfigs. Prefer using the type-safe variant (see [TypedServiceCertSignerOperatorConfigInformer]).
 type ServiceCertSignerOperatorConfigInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigLister
 }
+
+// TypedServiceCertSignerOperatorConfigInformer provides access to a shared informer and lister for
+// ServiceCertSignerOperatorConfigs, including the type-safe TypedInformer variant.
+// It is a superset of ServiceCertSignerOperatorConfigInformer.
+type TypedServiceCertSignerOperatorConfigInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ServiceCertSignerOperatorConfigIndexInformer
+	Lister() servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigLister
+}
+
+// ServiceCertSignerOperatorConfigIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ServiceCertSignerOperatorConfigIndexInformer cache.TypedSharedIndexInformer[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
+
+// ServiceCertSignerOperatorConfigHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ServiceCertSignerOperatorConfig.
+type ServiceCertSignerOperatorConfigHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
+
+// ServiceCertSignerOperatorConfigDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ServiceCertSignerOperatorConfig.
+type ServiceCertSignerOperatorConfigDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
+
+// ServiceCertSignerOperatorConfigFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ServiceCertSignerOperatorConfig.
+type ServiceCertSignerOperatorConfigFilteringHandler = cache.TypedFilteringResourceEventHandler[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
+
+// ServiceCertSignerOperatorConfigIndexers is a specialization of [cache.TypedIndexers] for ServiceCertSignerOperatorConfig.
+type ServiceCertSignerOperatorConfigIndexers = cache.TypedIndexers[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
+
+// DeletedServiceCertSignerOperatorConfig is a specialization of [cache.DeletedObject] for ServiceCertSignerOperatorConfig.
+type DeletedServiceCertSignerOperatorConfig = cache.DeletedObject[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig]
 
 type serviceCertSignerOperatorConfigInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type serviceCertSignerOperatorConfigInformer struct {
 // NewServiceCertSignerOperatorConfigInformer constructs a new informer for ServiceCertSignerOperatorConfig type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedServiceCertSignerOperatorConfigInformer]).
 func NewServiceCertSignerOperatorConfigInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedServiceCertSignerOperatorConfigInformer constructs a new informer for ServiceCertSignerOperatorConfig type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedServiceCertSignerOperatorConfigInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ServiceCertSignerOperatorConfigIndexers) ServiceCertSignerOperatorConfigIndexInformer {
+	return NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredServiceCertSignerOperatorConfigInformer constructs a new informer for ServiceCertSignerOperatorConfig type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredServiceCertSignerOperatorConfigInformer]).
 func NewFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredServiceCertSignerOperatorConfigInformer constructs a new informer for ServiceCertSignerOperatorConfig type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredServiceCertSignerOperatorConfigInformer(client versioned.Interface, resyncPeriod time.Duration, indexers ServiceCertSignerOperatorConfigIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ServiceCertSignerOperatorConfigIndexInformer {
+	return NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewServiceCertSignerOperatorConfigInformerWithOptions constructs a new informer for ServiceCertSignerOperatorConfig type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedServiceCertSignerOperatorConfigInformerWithOptions]).
 func NewServiceCertSignerOperatorConfigInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client, options)
+}
+
+// NewTypedServiceCertSignerOperatorConfigInformerWithOptions constructs a new informer for ServiceCertSignerOperatorConfig type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ServiceCertSignerOperatorConfigIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "servicecertsigner.config.openshift.io", Version: "v1alpha1", Resource: "servicecertsigneroperatorconfigs"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewServiceCertSignerOperatorConfigInformerWithOptions(client versioned.Inte
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *serviceCertSignerOperatorConfigInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedServiceCertSignerOperatorConfigInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *serviceCertSignerOperatorConfigInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *serviceCertSignerOperatorConfigInformer) TypedInformer() ServiceCertSignerOperatorConfigIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig](f.factory.InformerFor(&apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig{}, f.defaultInformer))
 }
 
 func (f *serviceCertSignerOperatorConfigInformer) Lister() servicecertsignerv1alpha1.ServiceCertSignerOperatorConfigLister {
 	return servicecertsignerv1alpha1.NewServiceCertSignerOperatorConfigLister(f.Informer().GetIndexer())
+}
+
+// ToTypedServiceCertSignerOperatorConfigInformer converts an untyped informer into a TypedServiceCertSignerOperatorConfigInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ServiceCertSignerOperatorConfig. If that is not the case, calling type-safe methods of the returned
+// TypedServiceCertSignerOperatorConfigInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedServiceCertSignerOperatorConfigInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedServiceCertSignerOperatorConfigInformer(informer ServiceCertSignerOperatorConfigInformer) TypedServiceCertSignerOperatorConfigInformer {
+	if informer, ok := informer.(TypedServiceCertSignerOperatorConfigInformer); ok {
+		return informer
+	}
+	return &serviceCertSignerOperatorConfigTypedInformerAdapter{informer}
+}
+
+type serviceCertSignerOperatorConfigTypedInformerAdapter struct {
+	ServiceCertSignerOperatorConfigInformer
+}
+
+func (a *serviceCertSignerOperatorConfigTypedInformerAdapter) TypedInformer() ServiceCertSignerOperatorConfigIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig](a.Informer())
+}
+
+// ToServiceCertSignerOperatorConfigIndexInformer converts an untyped informer into a ServiceCertSignerOperatorConfigIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ServiceCertSignerOperatorConfig. If that is not the case, calling type-safe methods of the returned
+// ServiceCertSignerOperatorConfigIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ServiceCertSignerOperatorConfigIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToServiceCertSignerOperatorConfigIndexInformer(informer cache.SharedIndexInformer) ServiceCertSignerOperatorConfigIndexInformer {
+	if informer, ok := informer.(ServiceCertSignerOperatorConfigIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apiservicecertsignerv1alpha1.ServiceCertSignerOperatorConfig](informer)
 }

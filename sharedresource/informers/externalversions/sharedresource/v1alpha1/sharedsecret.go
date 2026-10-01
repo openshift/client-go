@@ -18,11 +18,39 @@ import (
 )
 
 // SharedSecretInformer provides access to a shared informer and lister for
-// SharedSecrets.
+// SharedSecrets. Prefer using the type-safe variant (see [TypedSharedSecretInformer]).
 type SharedSecretInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() sharedresourcev1alpha1.SharedSecretLister
 }
+
+// TypedSharedSecretInformer provides access to a shared informer and lister for
+// SharedSecrets, including the type-safe TypedInformer variant.
+// It is a superset of SharedSecretInformer.
+type TypedSharedSecretInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() SharedSecretIndexInformer
+	Lister() sharedresourcev1alpha1.SharedSecretLister
+}
+
+// SharedSecretIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type SharedSecretIndexInformer cache.TypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedSecret]
+
+// SharedSecretHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for SharedSecret.
+type SharedSecretHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisharedresourcev1alpha1.SharedSecret]
+
+// SharedSecretDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for SharedSecret.
+type SharedSecretDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisharedresourcev1alpha1.SharedSecret]
+
+// SharedSecretFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for SharedSecret.
+type SharedSecretFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisharedresourcev1alpha1.SharedSecret]
+
+// SharedSecretIndexers is a specialization of [cache.TypedIndexers] for SharedSecret.
+type SharedSecretIndexers = cache.TypedIndexers[*apisharedresourcev1alpha1.SharedSecret]
+
+// DeletedSharedSecret is a specialization of [cache.DeletedObject] for SharedSecret.
+type DeletedSharedSecret = cache.DeletedObject[*apisharedresourcev1alpha1.SharedSecret]
 
 type sharedSecretInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -32,25 +60,49 @@ type sharedSecretInformer struct {
 // NewSharedSecretInformer constructs a new informer for SharedSecret type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSharedSecretInformer]).
 func NewSharedSecretInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedSharedSecretInformer constructs a new informer for SharedSecret type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSharedSecretInformer(client versioned.Interface, resyncPeriod time.Duration, indexers SharedSecretIndexers) SharedSecretIndexInformer {
+	return NewTypedSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredSharedSecretInformer constructs a new informer for SharedSecret type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredSharedSecretInformer]).
 func NewFilteredSharedSecretInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredSharedSecretInformer constructs a new informer for SharedSecret type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredSharedSecretInformer(client versioned.Interface, resyncPeriod time.Duration, indexers SharedSecretIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) SharedSecretIndexInformer {
+	return NewTypedSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewSharedSecretInformerWithOptions constructs a new informer for SharedSecret type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSharedSecretInformerWithOptions]).
 func NewSharedSecretInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedSharedSecretInformerWithOptions(client, options)
+}
+
+// NewTypedSharedSecretInformerWithOptions constructs a new informer for SharedSecret type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSharedSecretInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) SharedSecretIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "sharedresource.openshift.io", Version: "v1alpha1", Resource: "sharedsecrets"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedSecret](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -83,17 +135,57 @@ func NewSharedSecretInformerWithOptions(client versioned.Interface, options inte
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *sharedSecretInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedSharedSecretInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *sharedSecretInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisharedresourcev1alpha1.SharedSecret{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *sharedSecretInformer) TypedInformer() SharedSecretIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedSecret](f.factory.InformerFor(&apisharedresourcev1alpha1.SharedSecret{}, f.defaultInformer))
 }
 
 func (f *sharedSecretInformer) Lister() sharedresourcev1alpha1.SharedSecretLister {
 	return sharedresourcev1alpha1.NewSharedSecretLister(f.Informer().GetIndexer())
+}
+
+// ToTypedSharedSecretInformer converts an untyped informer into a TypedSharedSecretInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SharedSecret. If that is not the case, calling type-safe methods of the returned
+// TypedSharedSecretInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedSharedSecretInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedSharedSecretInformer(informer SharedSecretInformer) TypedSharedSecretInformer {
+	if informer, ok := informer.(TypedSharedSecretInformer); ok {
+		return informer
+	}
+	return &sharedSecretTypedInformerAdapter{informer}
+}
+
+type sharedSecretTypedInformerAdapter struct {
+	SharedSecretInformer
+}
+
+func (a *sharedSecretTypedInformerAdapter) TypedInformer() SharedSecretIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedSecret](a.Informer())
+}
+
+// ToSharedSecretIndexInformer converts an untyped informer into a SharedSecretIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SharedSecret. If that is not the case, calling type-safe methods of the returned
+// SharedSecretIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a SharedSecretIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToSharedSecretIndexInformer(informer cache.SharedIndexInformer) SharedSecretIndexInformer {
+	if informer, ok := informer.(SharedSecretIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisharedresourcev1alpha1.SharedSecret](informer)
 }
