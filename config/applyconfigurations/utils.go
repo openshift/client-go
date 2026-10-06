@@ -514,10 +514,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.AuditApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("AuthorizationConfig"):
 		return &configv1alpha1.AuthorizationConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("Backup"):
-		return &configv1alpha1.BackupApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
-		return &configv1alpha1.BackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("BasicAuth"):
 		return &configv1alpha1.BasicAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("CertificateConfig"):
@@ -528,6 +524,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.ClusterMonitoringSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ContainerResource"):
 		return &configv1alpha1.ContainerResourceApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ControllerManager"):
+		return &configv1alpha1.ControllerManagerApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("ControllerManagerSpec"):
+		return &configv1alpha1.ControllerManagerSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("CRIOCredentialProviderConfig"):
 		return &configv1alpha1.CRIOCredentialProviderConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("CRIOCredentialProviderConfigSpec"):
@@ -542,8 +542,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.DropEqualActionConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ECDSAKeyConfig"):
 		return &configv1alpha1.ECDSAKeyConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
-		return &configv1alpha1.EtcdBackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
 		return &configv1alpha1.GatherConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("HashModActionConfig"):
@@ -654,12 +652,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.ReplaceActionConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Retention"):
 		return &configv1alpha1.RetentionApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionNumberConfig"):
-		return &configv1alpha1.RetentionNumberConfigApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
-		return &configv1alpha1.RetentionPolicyApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionSizeConfig"):
-		return &configv1alpha1.RetentionSizeConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RSAKeyConfig"):
 		return &configv1alpha1.RSAKeyConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("SecretKeySelector"):

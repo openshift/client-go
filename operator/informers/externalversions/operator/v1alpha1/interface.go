@@ -14,6 +14,8 @@ type Interface interface {
 	ClusterVersionOperators() TypedClusterVersionOperatorInformer
 	// EtcdBackups returns a EtcdBackupInformer.
 	EtcdBackups() TypedEtcdBackupInformer
+	// EtcdBackupPolicies returns a EtcdBackupPolicyInformer.
+	EtcdBackupPolicies() TypedEtcdBackupPolicyInformer
 	// ImageContentSourcePolicies returns a ImageContentSourcePolicyInformer.
 	ImageContentSourcePolicies() TypedImageContentSourcePolicyInformer
 	// Ingresses returns a IngressInformer.
@@ -46,6 +48,11 @@ func (v *version) ClusterVersionOperators() TypedClusterVersionOperatorInformer 
 // EtcdBackups returns a TypedEtcdBackupInformer.
 func (v *version) EtcdBackups() TypedEtcdBackupInformer {
 	return &etcdBackupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// EtcdBackupPolicies returns a TypedEtcdBackupPolicyInformer.
+func (v *version) EtcdBackupPolicies() TypedEtcdBackupPolicyInformer {
+	return &etcdBackupPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ImageContentSourcePolicies returns a TypedImageContentSourcePolicyInformer.
