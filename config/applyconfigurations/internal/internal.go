@@ -5015,6 +5015,10 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig
       default: {}
+    - name: interrupts
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig
+      default: {}
     - name: ksmd
       type:
         namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
@@ -5073,6 +5077,30 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: collectionPolicy
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig
+  map:
+    fields:
+    - name: include
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig
+  map:
+    fields:
+    - name: collect
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig
+      default: {}
+    - name: collectionPolicy
+      type:
+        scalar: string
+    unions:
+    - discriminator: collectionPolicy
+      fields:
+      - fieldName: collect
+        discriminatorValue: Collect
 - name: com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig
   map:
     fields:

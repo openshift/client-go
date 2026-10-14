@@ -13762,6 +13762,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig"
         },
+        "interrupts": {
+          "description": "interrupts configures the interrupts collector, which exposes interrupt counts from /proc/interrupts. interrupts is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig"
+        },
         "ksmd": {
           "description": "ksmd configures the ksmd collector, which collects statistics from the kernel same-page merger daemon. ksmd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable on nodes where KSM is in use and you want visibility into merging activity.",
           "default": {},
@@ -13864,6 +13869,54 @@
           ]
         }
       }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig": {
+      "description": "NodeExporterCollectorInterruptsCollectConfig holds configuration options for the interrupts collector when it is actively collecting metrics. At least one field must be specified.",
+      "type": "object",
+      "required": [
+        "include"
+      ],
+      "properties": {
+        "include": {
+          "description": "include is a list of regular expression patterns that select which interrupt lines to collect. This field is required. Each line in /proc/interrupts is matched against the same string node-exporter uses: the IRQ name, info, and devices fields joined with \";\", for example \"LOC;77;IO-APIC 2-edge ...\". Patterns are combined with OR into a single expression anchored on both ends, so each pattern must match the entire string (use \".*\" where needed). Each entry must be at least 1 character, at most 1024 characters, and only contain printable ASCII characters. Maximum length for this list is 50. Minimum length for this list is 1. Entries in this list must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsConfig": {
+      "description": "NodeExporterCollectorInterruptsConfig provides configuration for the interrupts collector of the node-exporter agent. The interrupts collector exposes interrupt counts from /proc/interrupts. It is disabled by default. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected. When collectionPolicy is Collect, the collect field must be set with at least one include pattern. When collectionPolicy is DoNotCollect, the collect field must not be set.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collect": {
+          "description": "collect contains configuration options that apply only when the interrupts collector is actively collecting metrics (i.e. when collectionPolicy is Collect). collect is required when collectionPolicy is Collect and must contain at least one include pattern to explicitly select which interrupt lines are collected. collect must not be set when collectionPolicy is DoNotCollect. When set, at least one field must be specified within collect.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorInterruptsCollectConfig"
+        },
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the interrupts collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the interrupts collector is active and the collect field must be set with at least one include pattern to select which interrupt lines are collected. When set to \"DoNotCollect\", the interrupts collector is inactive and the collect field must not be set.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "collectionPolicy",
+          "fields-to-discriminateBy": {
+            "collect": "Collect"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig": {
       "description": "NodeExporterCollectorKSMDConfig provides configuration for the ksmd collector of the node-exporter agent. The ksmd collector collects statistics from the kernel same-page merger daemon. It is disabled by default.",
@@ -32053,6 +32106,22 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConsoleIngress": {
+      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
+      "type": "object",
+      "properties": {
+        "clientDownloadsURL": {
+          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        },
+        "consoleURL": {
+          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConsoleList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -32109,7 +32178,7 @@
         "ingress": {
           "description": "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleIngress"
         },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
@@ -33312,22 +33381,6 @@
         "internalTransitSwitchSubnet": {
           "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accommodate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.operator.v1.Ingress": {
-      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
-      "type": "object",
-      "properties": {
-        "clientDownloadsURL": {
-          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-          "type": "string",
-          "default": ""
-        },
-        "consoleURL": {
-          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-          "type": "string",
-          "default": ""
         }
       }
     },
