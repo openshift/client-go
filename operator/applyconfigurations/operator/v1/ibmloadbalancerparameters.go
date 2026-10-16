@@ -31,6 +31,7 @@ type IBMLoadBalancerParametersApplyConfiguration struct {
 	// Valid values for protocol are TCP, PROXY and omitted.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default is TCP, without the proxy protocol enabled.
+	//
 	Protocol *operatorv1.IngressControllerProtocol `json:"protocol,omitempty"`
 }
 

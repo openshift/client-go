@@ -21,6 +21,7 @@ type OpenStackPlatformSpecApplyConfiguration struct {
 	// In single stack clusters a single IP address is expected.
 	// When omitted, values from the status.apiServerInternalIPs will be used.
 	// Once set, the list cannot be completely removed (but its second entry can).
+	//
 	APIServerInternalIPs []configv1.IP `json:"apiServerInternalIPs,omitempty"`
 	// ingressIPs are the external IPs which route to the default ingress
 	// controller. The IPs are suitable targets of a wildcard DNS record used to
@@ -30,6 +31,7 @@ type OpenStackPlatformSpecApplyConfiguration struct {
 	// In single stack clusters a single IP address is expected.
 	// When omitted, values from the status.ingressIPs will be used.
 	// Once set, the list cannot be completely removed (but its second entry can).
+	//
 	IngressIPs []configv1.IP `json:"ingressIPs,omitempty"`
 	// machineNetworks are IP networks used to connect all the OpenShift cluster
 	// nodes. Each network is provided in the CIDR format and should be IPv4 or IPv6,

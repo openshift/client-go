@@ -24,6 +24,7 @@ type TokenClaimValidationRuleApplyConfiguration struct {
 	// requiredClaim allows configuring a required claim name and its expected value.
 	// This field is required when `type` is set to RequiredClaim, and must be omitted when `type` is set to any other value.
 	// The Kubernetes API server uses this field to validate if an incoming JWT is valid for this identity provider.
+	//
 	RequiredClaim *TokenRequiredClaimApplyConfiguration `json:"requiredClaim,omitempty"`
 	// cel holds the CEL expression and message for validation.
 	// Must be set when Type is "CEL", and forbidden otherwise.

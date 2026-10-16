@@ -20,7 +20,6 @@ type OperatorV1Interface interface {
 	ConsolesGetter
 	DNSesGetter
 	EtcdsGetter
-	IngressesGetter
 	IngressControllersGetter
 	InsightsOperatorsGetter
 	KubeAPIServersGetter
@@ -73,10 +72,6 @@ func (c *OperatorV1Client) DNSes() DNSInterface {
 
 func (c *OperatorV1Client) Etcds() EtcdInterface {
 	return newEtcds(c)
-}
-
-func (c *OperatorV1Client) Ingresses() IngressInterface {
-	return newIngresses(c)
 }
 
 func (c *OperatorV1Client) IngressControllers(namespace string) IngressControllerInterface {

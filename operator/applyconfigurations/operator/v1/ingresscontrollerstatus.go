@@ -72,6 +72,7 @@ type IngressControllerStatusApplyConfiguration struct {
 	//
 	// Examples for OpenShift 5.1:
 	// - "3.2": Using HAProxy 3.2
+	//
 	EffectiveHAProxyVersion *operatorv1.HAProxyVersion `json:"effectiveHAProxyVersion,omitempty"`
 }
 

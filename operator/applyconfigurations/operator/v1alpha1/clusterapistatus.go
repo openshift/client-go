@@ -29,9 +29,11 @@ type ClusterAPIStatusApplyConfiguration struct {
 	// All revisions must have a unique revision number.
 	// When adding a revision, the revision number must be greater than the highest revision number in the list.
 	// Revisions are immutable, although they can be deleted.
+	//
 	Revisions []ClusterAPIInstallerRevisionApplyConfiguration `json:"revisions,omitempty"`
 	// observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller.
 	// If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.
+	//
 	ObservedRevisionGeneration *int64 `json:"observedRevisionGeneration,omitempty"`
 }
 

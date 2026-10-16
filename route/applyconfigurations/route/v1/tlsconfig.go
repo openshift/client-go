@@ -45,6 +45,7 @@ type TLSConfigApplyConfiguration struct {
 	// * None - no traffic is allowed on the insecure port (default).
 	//
 	// * Redirect - clients are redirected to the secure port.
+	//
 	InsecureEdgeTerminationPolicy *routev1.InsecureEdgeTerminationPolicyType `json:"insecureEdgeTerminationPolicy,omitempty"`
 	// externalCertificate provides certificate contents as a secret reference.
 	// This should be the serving certificate, and may optionally include the
@@ -56,6 +57,7 @@ type TLSConfigApplyConfiguration struct {
 	// Forbidden when `certificate` is set.
 	// The router service account needs to be granted with read-only access to this secret,
 	// please refer to openshift docs for additional details.
+	//
 	ExternalCertificate *LocalObjectReferenceApplyConfiguration `json:"externalCertificate,omitempty"`
 }
 

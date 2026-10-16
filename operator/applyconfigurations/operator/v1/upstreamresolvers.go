@@ -22,6 +22,7 @@ type UpstreamResolversApplyConfiguration struct {
 	//
 	// A maximum of 15 upstreams is allowed per ForwardPlugin.
 	// If no Upstreams are specified, /etc/resolv.conf is used by default
+	//
 	Upstreams []UpstreamApplyConfiguration `json:"upstreams,omitempty"`
 	// policy is used to determine the order in which upstream servers are selected for querying.
 	// Any one of the following values may be specified:
@@ -31,12 +32,14 @@ type UpstreamResolversApplyConfiguration struct {
 	// * "Sequential" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.
 	//
 	// The default value is "Sequential"
+	//
 	Policy *operatorv1.ForwardingPolicy `json:"policy,omitempty"`
 	// transportConfig is used to configure the transport type, server name, and optional custom CA or CA bundle to use
 	// when forwarding DNS requests to an upstream resolver.
 	//
 	// The default value is "" (empty) which results in a standard cleartext connection being used when forwarding DNS
 	// requests to an upstream resolver.
+	//
 	TransportConfig *DNSTransportConfigApplyConfiguration `json:"transportConfig,omitempty"`
 	// protocolStrategy specifies the protocol to use for upstream DNS
 	// requests.
@@ -52,6 +55,7 @@ type UpstreamResolversApplyConfiguration struct {
 	// the protocol of DNS requests that CoreDNS makes to upstream resolvers.
 	// It does not affect the protocol of DNS requests between clients and
 	// CoreDNS.
+	//
 	ProtocolStrategy *operatorv1.ProtocolStrategy `json:"protocolStrategy,omitempty"`
 }
 

@@ -12,17 +12,20 @@ type OIDCClientConfigApplyConfiguration struct {
 	// It is used in combination with componentNamespace as a unique identifier.
 	//
 	// componentName must not be an empty string ("") and must not exceed 256 characters in length.
+	//
 	ComponentName *string `json:"componentName,omitempty"`
 	// componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running.
 	//
 	// It is used in combination with componentName as a unique identifier.
 	//
 	// componentNamespace must not be an empty string ("") and must not exceed 63 characters in length.
+	//
 	ComponentNamespace *string `json:"componentNamespace,omitempty"`
 	// clientID is a required field that configures the client identifier, from the identity provider, that the platform component uses for authentication requests made to the identity provider.
 	// The identity provider must accept this identifier for platform components to be able to use the identity provider as an authentication mode.
 	//
 	// clientID must not be an empty string ("").
+	//
 	ClientID *string `json:"clientID,omitempty"`
 	// clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.
 	//
@@ -33,11 +36,13 @@ type OIDCClientConfigApplyConfiguration struct {
 	// The client secret will be used when making authentication requests to the identity provider.
 	//
 	// Public clients do not require a client secret but private clients do require a client secret to work with the identity provider.
+	//
 	ClientSecret *SecretNameReferenceApplyConfiguration `json:"clientSecret,omitempty"`
 	// extraScopes is an optional field that configures the extra scopes that should be requested by the platform component when making authentication requests to the identity provider.
 	// This is useful if you have configured claim mappings that requires specific scopes to be requested beyond the standard OIDC scopes.
 	//
 	// When omitted, no additional scopes are requested.
+	//
 	ExtraScopes []string `json:"extraScopes,omitempty"`
 }
 

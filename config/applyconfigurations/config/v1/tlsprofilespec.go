@@ -38,6 +38,7 @@ type TLSProfileSpecApplyConfiguration struct {
 	// groups:
 	// - X25519
 	// - secp256r1
+	//
 	Groups []configv1.TLSGroup `json:"groups,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS

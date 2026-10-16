@@ -29,6 +29,7 @@ type RouteSpecApplyConfiguration struct {
 	// If not specified a route name will typically be automatically
 	// chosen.
 	// Must follow DNS952 subdomain conventions.
+	//
 	Host *string `json:"host,omitempty"`
 	// subdomain is a DNS subdomain that is requested within the ingress controller's
 	// domain (as a subdomain). If host is set this field is ignored. An ingress
@@ -42,8 +43,10 @@ type RouteSpecApplyConfiguration struct {
 	//
 	// Example: subdomain `frontend` automatically receives the router subdomain
 	// `apps.mycluster.com` to have a full hostname `frontend.apps.mycluster.com`.
+	//
 	Subdomain *string `json:"subdomain,omitempty"`
 	// path that the router watches for, to route traffic for to the service. Optional
+	//
 	Path *string `json:"path,omitempty"`
 	// to is an object the route should use as the primary backend. Only the Service kind
 	// is allowed, and it will be defaulted to Service. If the weight field (0-256 default 100)
@@ -52,6 +55,7 @@ type RouteSpecApplyConfiguration struct {
 	// alternateBackends allows up to 3 additional backends to be assigned to the route.
 	// Only the Service kind is allowed, and it will be defaulted to Service.
 	// Use the weight field in RouteTargetReference object to specify relative preference.
+	//
 	AlternateBackends []RouteTargetReferenceApplyConfiguration `json:"alternateBackends,omitempty"`
 	// If specified, the port to be used by the router. Most routers will use all
 	// endpoints exposed by the service by default - set this value to instruct routers
@@ -61,8 +65,10 @@ type RouteSpecApplyConfiguration struct {
 	TLS *TLSConfigApplyConfiguration `json:"tls,omitempty"`
 	// Wildcard policy if any for the route.
 	// Currently only 'Subdomain' or 'None' is allowed.
+	//
 	WildcardPolicy *routev1.WildcardPolicyType `json:"wildcardPolicy,omitempty"`
 	// httpHeaders defines policy for HTTP headers.
+	//
 	HTTPHeaders *RouteHTTPHeadersApplyConfiguration `json:"httpHeaders,omitempty"`
 }
 

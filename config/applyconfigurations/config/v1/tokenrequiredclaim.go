@@ -9,11 +9,13 @@ type TokenRequiredClaimApplyConfiguration struct {
 	// When taken from the JWT claims, claim must be a string value.
 	//
 	// claim must not be an empty string ("").
+	//
 	Claim *string `json:"claim,omitempty"`
 	// requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims.
 	// If the value in the JWT claims does not match, the token will be rejected for authentication.
 	//
 	// requiredValue must not be an empty string ("").
+	//
 	RequiredValue *string `json:"requiredValue,omitempty"`
 }
 

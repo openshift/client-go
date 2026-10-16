@@ -16,6 +16,7 @@ type OpenStackLoadBalancerParametersApplyConfiguration struct {
 	// balancer.
 	// This field may only be used if the IngressController has External scope.
 	// This value must be a valid IPv4 or IPv6 address.
+	//
 	FloatingIP *string `json:"floatingIP,omitempty"`
 }
 

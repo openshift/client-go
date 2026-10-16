@@ -27,6 +27,7 @@ type DNSTransportConfigApplyConfiguration struct {
 	// "TLS" - This indicates that DNS queries should be sent over a TLS connection. If Transport is set to TLS,
 	// you MUST also set ServerName. If a port is not included with the upstream IP, port 853 will be tried by default
 	// per RFC 7858 section 3.1; https://datatracker.ietf.org/doc/html/rfc7858#section-3.1.
+	//
 	Transport *operatorv1.DNSTransport `json:"transport,omitempty"`
 	// tls contains the additional configuration options to use when Transport is set to "TLS".
 	TLS *DNSOverTLSConfigApplyConfiguration `json:"tls,omitempty"`
