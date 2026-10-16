@@ -30,12 +30,15 @@ type LoggingDestinationApplyConfiguration struct {
 	// Logs are sent to a syslog endpoint.  The administrator must specify
 	// an endpoint that can receive syslog messages.  The expectation is
 	// that the administrator has configured a custom syslog instance.
+	//
 	Type *operatorv1.LoggingDestinationType `json:"type,omitempty"`
 	// syslog holds parameters for a syslog endpoint.  Present only if
 	// type is Syslog.
+	//
 	Syslog *SyslogLoggingDestinationParametersApplyConfiguration `json:"syslog,omitempty"`
 	// container holds parameters for the Container logging destination.
 	// Present only if type is Container.
+	//
 	Container *ContainerLoggingDestinationParametersApplyConfiguration `json:"container,omitempty"`
 }
 

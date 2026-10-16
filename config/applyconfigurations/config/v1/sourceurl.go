@@ -19,6 +19,7 @@ type SourceURLApplyConfiguration struct {
 	// hostname must be at least 1 character in length.
 	// When specifying a port, hostname must not exceed 259 characters in length.
 	// When not specifying a port, hostname must not exceed 253 characters in length.
+	//
 	Hostname *string `json:"hostname,omitempty"`
 	// pathExpression is a required CEL expression that returns a list
 	// of string values used to construct the URL path.
@@ -41,6 +42,7 @@ type SourceURLApplyConfiguration struct {
 	// pathExpression: "['admin', 'realms', 'k8s', 'users'] + [claims.sub] + ['groups']"
 	//
 	// Assuming 'claims.sub' is set to '12345', the above example would resolve to the path: '/admin/realms/k8s/users/12345/groups'
+	//
 	PathExpression *string `json:"pathExpression,omitempty"`
 }
 

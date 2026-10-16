@@ -27,6 +27,7 @@ type UpdateHistoryApplyConfiguration struct {
 	// version is a semantic version identifying the update version. If the
 	// requested image does not define a version, or if a failure occurs
 	// retrieving the image, this value may be empty.
+	//
 	Version *string `json:"version,omitempty"`
 	// image is a container image location that contains the update. This value
 	// is always populated.

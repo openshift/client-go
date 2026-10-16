@@ -7,10 +7,20 @@ package v1alpha1
 //
 // PKISpec holds the specification for PKI configuration.
 type PKISpecApplyConfiguration struct {
-	// certificateManagement specifies how PKI configuration is managed for internally-generated certificates.
-	// This controls the certificate generation approach for all OpenShift components that create
-	// certificates internally, including certificate authorities, serving certificates, and client certificates.
-	CertificateManagement *PKICertificateManagementApplyConfiguration `json:"certificateManagement,omitempty"`
+	// certificates specifies the cluster's certificate policy for internally-generated
+	// certificates, resolved most-specific-wins: a named certificate override, then a
+	// category override (CA, server, client), then the required defaults.
+	// This field is required so that every PKI resource specifies a certificate policy.
+	// This field names a configuration policy; it is unrelated to the X.509
+	// certificate-policies extension.
+	//
+	Certificates *PKICertificatePolicyApplyConfiguration `json:"certificates,omitempty"`
+	// keys optionally configures keys generated outside of any certificate, such as
+	// the bound service-account token signing key. Entries are named and opt-in with no
+	// inherited default. When omitted, no keys are configured by this resource.
+	// When set, at least one field must be specified; an empty object is rejected.
+	//
+	Keys *PKIKeyPolicyApplyConfiguration `json:"keys,omitempty"`
 }
 
 // PKISpecApplyConfiguration constructs a declarative configuration of the PKISpec type for use with
@@ -19,10 +29,18 @@ func PKISpec() *PKISpecApplyConfiguration {
 	return &PKISpecApplyConfiguration{}
 }
 
-// WithCertificateManagement sets the CertificateManagement field in the declarative configuration to the given value
+// WithCertificates sets the Certificates field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the CertificateManagement field is set to the value of the last call.
-func (b *PKISpecApplyConfiguration) WithCertificateManagement(value *PKICertificateManagementApplyConfiguration) *PKISpecApplyConfiguration {
-	b.CertificateManagement = value
+// If called multiple times, the Certificates field is set to the value of the last call.
+func (b *PKISpecApplyConfiguration) WithCertificates(value *PKICertificatePolicyApplyConfiguration) *PKISpecApplyConfiguration {
+	b.Certificates = value
+	return b
+}
+
+// WithKeys sets the Keys field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the Keys field is set to the value of the last call.
+func (b *PKISpecApplyConfiguration) WithKeys(value *PKIKeyPolicyApplyConfiguration) *PKISpecApplyConfiguration {
+	b.Keys = value
 	return b
 }

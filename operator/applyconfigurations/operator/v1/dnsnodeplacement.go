@@ -20,6 +20,7 @@ type DNSNodePlacementApplyConfiguration struct {
 	// This default is subject to change.
 	//
 	// If set, the specified selector is used and replaces the default.
+	//
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// tolerations is a list of tolerations applied to DNS pods.
 	//
@@ -31,6 +32,7 @@ type DNSNodePlacementApplyConfiguration struct {
 	//
 	// Note that the daemon controller adds some tolerations as well.  See
 	// https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+	//
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 

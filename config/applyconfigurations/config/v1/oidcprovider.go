@@ -9,22 +9,28 @@ type OIDCProviderApplyConfiguration struct {
 	// It is used to distinguish between multiple identity providers and has no impact on token validation or authentication mechanics.
 	//
 	// name must not be an empty string ("").
+	//
 	Name *string `json:"name,omitempty"`
 	// issuer is a required field that configures how the platform interacts with the identity provider and how tokens issued from the identity provider are evaluated by the Kubernetes API server.
+	//
 	Issuer *TokenIssuerApplyConfiguration `json:"issuer,omitempty"`
 	// oidcClients is an optional field that configures how on-cluster, platform clients should request tokens from the identity provider.
 	// oidcClients must not exceed 20 entries and entries must have unique namespace/name pairs.
+	//
 	OIDCClients []OIDCClientConfigApplyConfiguration `json:"oidcClients,omitempty"`
 	// claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.
+	//
 	ClaimMappings *TokenClaimMappingsApplyConfiguration `json:"claimMappings,omitempty"`
 	// claimValidationRules is an optional field that configures the rules to be used by the Kubernetes API server for validating the claims in a JWT token issued by the identity provider.
 	//
 	// Validation rules are joined via an AND operation.
+	//
 	ClaimValidationRules []TokenClaimValidationRuleApplyConfiguration `json:"claimValidationRules,omitempty"`
 	// userValidationRules is an optional field that configures the set of rules used to validate the cluster user identity that was constructed via mapping token claims to user identity attributes.
 	// Rules are CEL expressions that must evaluate to 'true' for authentication to succeed.
 	// If any rule in the chain of rules evaluates to 'false', authentication will fail.
 	// When specified, at least one rule must be specified and no more than 64 rules may be specified.
+	//
 	UserValidationRules []TokenUserValidationRuleApplyConfiguration `json:"userValidationRules,omitempty"`
 	// externalClaimsSources is an optional field that can be used to configure
 	// sources, external to the token provided in a request, in which claims
@@ -46,6 +52,8 @@ type OIDCProviderApplyConfiguration struct {
 	// If an external source does not respond, responds with an error, or the additional
 	// claim data cannot be resolved from the response successfully it will not be
 	// included in the claim data passed to the claim mapping process.
+	//
+	//
 	ExternalClaimsSources []ExternalClaimsSourceApplyConfiguration `json:"externalClaimsSources,omitempty"`
 }
 

@@ -13,6 +13,7 @@ type SourcedClaimMappingApplyConfiguration struct {
 	// the claim-to-identity mapping process.
 	// name must consist of only lowercase alpha characters and underscores ('_').
 	// name must be at least 1 character and must not exceed 256 characters in length.
+	//
 	Name *string `json:"name,omitempty"`
 	// expression is a required CEL expression that
 	// will produce a value to be assigned to the claim.
@@ -25,6 +26,7 @@ type SourcedClaimMappingApplyConfiguration struct {
 	// this expression to understand what is returned from the external source.
 	//
 	// expression must be at least 1 character and must not exceed 1024 characters in length.
+	//
 	Expression *string `json:"expression,omitempty"`
 }
 

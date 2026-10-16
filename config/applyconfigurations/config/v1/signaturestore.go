@@ -10,6 +10,7 @@ type SignatureStoreApplyConfiguration struct {
 	// url contains the upstream custom signature store URL.
 	// url should be a valid absolute http/https URI of an upstream signature store as per rfc1738.
 	// This must be provided and cannot be empty.
+	//
 	URL *string `json:"url,omitempty"`
 	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
 	// It is used as a trust anchor to validate the TLS certificate presented by the remote server.

@@ -12,14 +12,17 @@ import (
 // DNSRecordSpec contains the details of a DNS record.
 type DNSRecordSpecApplyConfiguration struct {
 	// dnsName is the hostname of the DNS record
+	//
 	DNSName *string `json:"dnsName,omitempty"`
 	// targets are record targets.
+	//
 	Targets []string `json:"targets,omitempty"`
 	// recordType is the DNS record type. For example, "A", "AAAA", or "CNAME".
 	RecordType *operatoringressv1.DNSRecordType `json:"recordType,omitempty"`
 	// recordTTL is the record TTL in seconds. If zero, the default is 30.
 	// RecordTTL will not be used in AWS regions Alias targets, but
 	// will be used in CNAME targets, per AWS API contract.
+	//
 	RecordTTL *int64 `json:"recordTTL,omitempty"`
 	// dnsManagementPolicy denotes the current policy applied on the DNS
 	// record. Records that have policy set as "Unmanaged" are ignored by
@@ -31,6 +34,7 @@ type DNSRecordSpecApplyConfiguration struct {
 	//
 	// This field defaults to Managed. Valid values are "Managed" and
 	// "Unmanaged".
+	//
 	DNSManagementPolicy *operatoringressv1.DNSManagementPolicy `json:"dnsManagementPolicy,omitempty"`
 }
 

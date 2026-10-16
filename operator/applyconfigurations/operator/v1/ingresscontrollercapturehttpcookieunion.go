@@ -19,12 +19,15 @@ type IngressControllerCaptureHTTPCookieUnionApplyConfiguration struct {
 	// specifying matchType "Prefix" and namePrefix "foo" will capture a
 	// cookie named "foo" or "foobar" but not one named "bar".  The first
 	// matching cookie is captured.
+	//
 	MatchType *operatorv1.CookieMatchType `json:"matchType,omitempty"`
 	// name specifies a cookie name.  Its value must be a valid HTTP cookie
 	// name as defined in RFC 6265 section 4.1.
+	//
 	Name *string `json:"name,omitempty"`
 	// namePrefix specifies a cookie name prefix.  Its value must be a valid
 	// HTTP cookie name as defined in RFC 6265 section 4.1.
+	//
 	NamePrefix *string `json:"namePrefix,omitempty"`
 }
 

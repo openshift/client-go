@@ -11,6 +11,7 @@ type BuildSpecApplyConfiguration struct {
 	//
 	// DEPRECATED: Additional CAs for image pull and push should be set on
 	// image.config.openshift.io/cluster instead.
+	//
 	AdditionalTrustedCA *ConfigMapNameReferenceApplyConfiguration `json:"additionalTrustedCA,omitempty"`
 	// buildDefaults controls the default information for Builds
 	BuildDefaults *BuildDefaultsApplyConfiguration `json:"buildDefaults,omitempty"`

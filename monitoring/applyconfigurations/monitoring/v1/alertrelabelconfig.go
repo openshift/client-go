@@ -25,6 +25,7 @@ type AlertRelabelConfigApplyConfiguration struct {
 	// spec describes the desired state of this AlertRelabelConfig object.
 	Spec *AlertRelabelConfigSpecApplyConfiguration `json:"spec,omitempty"`
 	// status describes the current state of this AlertRelabelConfig object.
+	//
 	Status *AlertRelabelConfigStatusApplyConfiguration `json:"status,omitempty"`
 }
 

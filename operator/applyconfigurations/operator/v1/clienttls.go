@@ -20,11 +20,13 @@ type ClientTLSApplyConfiguration struct {
 	// Note that the ingress controller only checks client certificates for
 	// edge-terminated and reencrypt TLS routes; it cannot check
 	// certificates for cleartext HTTP or passthrough TLS routes.
+	//
 	ClientCertificatePolicy *operatorv1.ClientCertificatePolicy `json:"clientCertificatePolicy,omitempty"`
 	// clientCA specifies a configmap containing the PEM-encoded CA
 	// certificate bundle that should be used to verify a client's
 	// certificate.  The administrator must create this configmap in the
 	// openshift-config namespace.
+	//
 	ClientCA *configv1.ConfigMapNameReference `json:"clientCA,omitempty"`
 	// allowedSubjectPatterns specifies a list of regular expressions that
 	// should be matched against the distinguished name on a valid client
@@ -33,6 +35,7 @@ type ClientTLSApplyConfiguration struct {
 	// the list is nonempty, then at least one pattern must match a client
 	// certificate's distinguished name or else the ingress controller
 	// rejects the certificate and denies the connection.
+	//
 	AllowedSubjectPatterns []string `json:"allowedSubjectPatterns,omitempty"`
 }
 

@@ -39,6 +39,7 @@ type ConsolePluginCSPApplyConfiguration struct {
 	// of 1024 characters and must not contain whitespace, commas (,), semicolons (;) or single
 	// quotes ('). The value '*' is not permitted.
 	// Each value in the array must be unique.
+	//
 	Values []consolev1.CSPDirectiveValue `json:"values,omitempty"`
 }
 

@@ -14,6 +14,7 @@ type ClientSecretSecretReferenceApplyConfiguration struct {
 	// It must be at least 1 character in length, must not exceed 253 characters in length,
 	// must start and end with a lowercase alphanumeric character, and must only contain
 	// lowercase alphanumeric characters, '-' or '.'.
+	//
 	Name *string `json:"name,omitempty"`
 }
 

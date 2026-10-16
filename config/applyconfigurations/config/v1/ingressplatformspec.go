@@ -18,6 +18,7 @@ type IngressPlatformSpecApplyConfiguration struct {
 	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS",
 	// "AlibabaCloud", "Nutanix" and "None". Individual components may not support all platforms,
 	// and must handle unrecognized platforms as None if they do not support that platform.
+	//
 	Type *configv1.PlatformType `json:"type,omitempty"`
 	// aws contains settings specific to the Amazon Web Services infrastructure provider.
 	AWS *AWSIngressSpecApplyConfiguration `json:"aws,omitempty"`

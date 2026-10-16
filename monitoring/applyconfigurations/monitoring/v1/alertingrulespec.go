@@ -21,6 +21,7 @@ type AlertingRuleSpecApplyConfiguration struct {
 	// extremely large or has very complex query expressions to evaluate.
 	// Spreading very complex rules across multiple groups to allow them to be
 	// processed in parallel is also a common use-case.
+	//
 	Groups []RuleGroupApplyConfiguration `json:"groups,omitempty"`
 }
 
