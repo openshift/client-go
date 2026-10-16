@@ -11,6 +11,7 @@ type OSImageStreamStatusApplyConfiguration struct {
 	// used as the base image for MachineConfigPools.
 	// availableStreams is required, must have at least one item, must not exceed
 	// 100 items, and must have unique entries keyed on the name field.
+	//
 	AvailableStreams []OSImageStreamSetApplyConfiguration `json:"availableStreams,omitempty"`
 	// defaultStream is the name of the stream that should be used as the default
 	// when no specific stream is requested by a MachineConfigPool.
@@ -18,6 +19,7 @@ type OSImageStreamStatusApplyConfiguration struct {
 	// It must be a valid RFC 1123 subdomain between 1 and 253 characters in length,
 	// consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.'),
 	// and must reference the name of one of the streams in availableStreams.
+	//
 	DefaultStream *string `json:"defaultStream,omitempty"`
 }
 

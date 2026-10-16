@@ -39,6 +39,7 @@ type ProxySpecApplyConfiguration struct {
 	// -----BEGIN CERTIFICATE-----
 	// Custom CA certificate bundle.
 	// -----END CERTIFICATE-----
+	//
 	TrustedCA *ConfigMapNameReferenceApplyConfiguration `json:"trustedCA,omitempty"`
 }
 

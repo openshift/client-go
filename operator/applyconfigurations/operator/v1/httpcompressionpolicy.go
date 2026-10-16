@@ -25,6 +25,7 @@ type HTTPCompressionPolicyApplyConfiguration struct {
 	// formats benefit from compression, but formats that are already compressed (image,
 	// audio, video, etc.) benefit little in exchange for the time and cpu spent on compressing
 	// again. See https://joehonton.medium.com/the-gzip-penalty-d31bd697f1a2
+	//
 	MimeTypes []operatorv1.CompressionMIMEType `json:"mimeTypes,omitempty"`
 }
 

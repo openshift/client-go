@@ -20,6 +20,7 @@ type DNSSpecApplyConfiguration struct {
 	// "a.foo.com".
 	//
 	// If this field is nil, no servers are created.
+	//
 	Servers []ServerApplyConfiguration `json:"servers,omitempty"`
 	// upstreamResolvers defines a schema for configuring CoreDNS
 	// to proxy DNS messages to upstream resolvers for the case of the
@@ -27,6 +28,7 @@ type DNSSpecApplyConfiguration struct {
 	//
 	// If this field is not specified, the upstream used will default to
 	// /etc/resolv.conf, with policy "sequential"
+	//
 	UpstreamResolvers *UpstreamResolversApplyConfiguration `json:"upstreamResolvers,omitempty"`
 	// nodePlacement provides explicit control over the scheduling of DNS
 	// pods.
@@ -42,6 +44,7 @@ type DNSSpecApplyConfiguration struct {
 	// taint is desired, a toleration can be specified for that taint.
 	//
 	// If unset, defaults are used. See nodePlacement for more details.
+	//
 	NodePlacement *DNSNodePlacementApplyConfiguration `json:"nodePlacement,omitempty"`
 	// managementState indicates whether the DNS operator should manage cluster
 	// DNS

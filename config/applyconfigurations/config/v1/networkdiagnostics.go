@@ -16,14 +16,17 @@ type NetworkDiagnosticsApplyConfiguration struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is All.
+	//
 	Mode *configv1.NetworkDiagnosticsMode `json:"mode,omitempty"`
 	// sourcePlacement controls the scheduling of network diagnostics source deployment
 	//
 	// See NetworkDiagnosticsSourcePlacement for more details about default values.
+	//
 	SourcePlacement *NetworkDiagnosticsSourcePlacementApplyConfiguration `json:"sourcePlacement,omitempty"`
 	// targetPlacement controls the scheduling of network diagnostics target daemonset
 	//
 	// See NetworkDiagnosticsTargetPlacement for more details about default values.
+	//
 	TargetPlacement *NetworkDiagnosticsTargetPlacementApplyConfiguration `json:"targetPlacement,omitempty"`
 }
 

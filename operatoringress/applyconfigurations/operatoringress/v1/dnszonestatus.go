@@ -18,6 +18,7 @@ type DNSZoneStatusApplyConfiguration struct {
 	// If publishing the record succeeds, the "Published" condition will be
 	// set with status "True" and upon failure it will be set to "False" along
 	// with the reason and message describing the cause of the failure.
+	//
 	Conditions []DNSZoneConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 

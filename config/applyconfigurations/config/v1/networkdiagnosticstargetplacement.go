@@ -16,12 +16,14 @@ type NetworkDiagnosticsTargetPlacementApplyConfiguration struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `kubernetes.io/os: linux`.
+	//
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// tolerations is a list of tolerations applied to network diagnostics components
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
+	//
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 

@@ -24,6 +24,7 @@ type FailureDomainsApplyConfiguration struct {
 	// vsphere configures failure domain information for the VSphere platform.
 	VSphere []VSphereFailureDomainApplyConfiguration `json:"vsphere,omitempty"`
 	// openstack configures failure domain information for the OpenStack platform.
+	//
 	OpenStack []OpenStackFailureDomainApplyConfiguration `json:"openstack,omitempty"`
 	// nutanix configures failure domain information for the Nutanix platform.
 	Nutanix []NutanixFailureDomainReferenceApplyConfiguration `json:"nutanix,omitempty"`

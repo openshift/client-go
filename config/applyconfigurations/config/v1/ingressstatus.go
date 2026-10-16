@@ -24,6 +24,7 @@ type IngressStatusApplyConfiguration struct {
 	// fields for more information.
 	//
 	// When omitted, the default value is Workers
+	//
 	DefaultPlacement *configv1.DefaultPlacement `json:"defaultPlacement,omitempty"`
 }
 

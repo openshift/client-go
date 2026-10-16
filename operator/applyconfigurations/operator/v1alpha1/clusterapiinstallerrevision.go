@@ -31,6 +31,7 @@ type ClusterAPIInstallerRevisionApplyConfiguration struct {
 	// omitted no components will be installed.
 	//
 	// The maximum number of components is 32.
+	//
 	Components []ClusterAPIInstallerComponentApplyConfiguration `json:"components,omitempty"`
 }
 

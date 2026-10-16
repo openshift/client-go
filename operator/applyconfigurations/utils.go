@@ -94,6 +94,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ConfigStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Console"):
 		return &operatorv1.ConsoleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleAuthProxyConfig"):
+		return &operatorv1.ConsoleAuthProxyConfigApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleAuthProxyTrustedCAConfigMapReference"):
+		return &operatorv1.ConsoleAuthProxyTrustedCAConfigMapReferenceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleConfigRoute"):
 		return &operatorv1.ConsoleConfigRouteApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleCustomization"):

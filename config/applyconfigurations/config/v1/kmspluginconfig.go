@@ -10,6 +10,7 @@ package v1
 type KMSPluginConfigApplyConfiguration struct {
 	// pluginConfig is a required reference to a cluster-scoped resource with a status subresource
 	// that satisfies the OpenShift KMS plugin configuration status interface.
+	//
 	PluginConfig *KMSPluginConfigReferenceApplyConfiguration `json:"pluginConfig,omitempty"`
 }
 

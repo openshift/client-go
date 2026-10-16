@@ -23,6 +23,7 @@ type OpenStackPlatformStatusApplyConfiguration struct {
 	// using the infrastructure rather than Kubernetes networking. These are the
 	// IPs for a self-hosted load balancer in front of the API servers. In dual
 	// stack clusters this list contains two IPs otherwise only one.
+	//
 	APIServerInternalIPs []string `json:"apiServerInternalIPs,omitempty"`
 	// cloudName is the name of the desired OpenStack cloud in the
 	// client configuration file (`clouds.yaml`).
@@ -36,6 +37,7 @@ type OpenStackPlatformStatusApplyConfiguration struct {
 	// controller. The IPs are suitable targets of a wildcard DNS record used to
 	// resolve default route host names. In dual stack clusters this list
 	// contains two IPs otherwise only one.
+	//
 	IngressIPs []string `json:"ingressIPs,omitempty"`
 	// nodeDNSIP is the IP address for the internal DNS used by the
 	// nodes. Unlike the one managed by the DNS operator, `NodeDNSIP`

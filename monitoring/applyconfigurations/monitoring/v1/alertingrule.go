@@ -44,6 +44,7 @@ type AlertingRuleApplyConfiguration struct {
 	// spec describes the desired state of this AlertingRule object.
 	Spec *AlertingRuleSpecApplyConfiguration `json:"spec,omitempty"`
 	// status describes the current state of this AlertOverrides object.
+	//
 	Status *AlertingRuleStatusApplyConfiguration `json:"status,omitempty"`
 }
 

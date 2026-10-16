@@ -11,6 +11,7 @@ type UsernamePrefixApplyConfiguration struct {
 	// prefixString is a required field that configures the prefix that will be applied to cluster identity username attribute during the process of mapping JWT claims to cluster identity attributes.
 	//
 	// prefixString must not be an empty string ("").
+	//
 	PrefixString *string `json:"prefixString,omitempty"`
 }
 

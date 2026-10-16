@@ -27,6 +27,7 @@ type GCPLoadBalancerParametersApplyConfiguration struct {
 	// can communicate with the load balancer. Note that this is the default behavior.
 	//
 	// https://cloud.google.com/load-balancing/docs/internal#client_access
+	//
 	ClientAccess *operatorv1.GCPClientAccess `json:"clientAccess,omitempty"`
 }
 

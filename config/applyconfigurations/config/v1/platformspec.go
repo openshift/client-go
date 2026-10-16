@@ -22,6 +22,7 @@ type PlatformSpecApplyConfiguration struct {
 	// "PowerVS", "AlibabaCloud", "Nutanix", "External", and "None". Individual
 	// components may not support all platforms, and must handle unrecognized
 	// platforms as None if they do not support that platform.
+	//
 	Type *configv1.PlatformType `json:"type,omitempty"`
 	// aws contains settings specific to the Amazon Web Services infrastructure provider.
 	AWS *AWSPlatformSpecApplyConfiguration `json:"aws,omitempty"`

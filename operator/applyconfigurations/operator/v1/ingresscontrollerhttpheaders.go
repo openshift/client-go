@@ -30,6 +30,7 @@ type IngressControllerHTTPHeadersApplyConfiguration struct {
 	// headers, preserving any existing headers.
 	//
 	// By default, the policy is "Append".
+	//
 	ForwardedHeaderPolicy *operatorv1.IngressControllerHTTPHeaderPolicy `json:"forwardedHeaderPolicy,omitempty"`
 	// uniqueId describes configuration for a custom HTTP header that the
 	// ingress controller should inject into incoming HTTP requests.
@@ -39,6 +40,7 @@ type IngressControllerHTTPHeadersApplyConfiguration struct {
 	// requests.
 	//
 	// If this field is empty, no such header is injected into requests.
+	//
 	UniqueId *IngressControllerHTTPUniqueIdHeaderPolicyApplyConfiguration `json:"uniqueId,omitempty"`
 	// headerNameCaseAdjustments specifies case adjustments that can be
 	// applied to HTTP header names.  Each adjustment is specified as an
@@ -55,6 +57,7 @@ type IngressControllerHTTPHeadersApplyConfiguration struct {
 	// all HTTP responses.
 	//
 	// If this field is empty, no request headers are adjusted.
+	//
 	HeaderNameCaseAdjustments []operatorv1.IngressControllerHTTPHeaderNameCaseAdjustment `json:"headerNameCaseAdjustments,omitempty"`
 	// actions specifies options for modifying headers and their values.
 	// Note that this option only applies to cleartext HTTP connections

@@ -27,10 +27,12 @@ type ExternalSourceAuthenticationApplyConfiguration struct {
 	// to fetch an access token using the OAuth2 client credentials grant
 	// flow. The fetched access token will then be used to authenticate
 	// with the external claims source.
+	//
 	Type *configv1.ExternalSourceAuthenticationType `json:"type,omitempty"`
 	// clientCredential configures the client credentials
 	// and token endpoint to use to get an access token.
 	// clientCredential is required when type is 'ClientCredential', and forbidden otherwise.
+	//
 	ClientCredential *ClientCredentialConfigApplyConfiguration `json:"clientCredential,omitempty"`
 }
 

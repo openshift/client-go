@@ -12,6 +12,7 @@ type ExternalSourceTLSApplyConfiguration struct {
 	// namespace that contains the CA certificate to use to validate TLS connections with the external claims source.
 	// The key "ca-bundle.crt" must be present in the referenced ConfigMap and must contain the CA certificate to be used
 	// to verify the external source's TLS certificate.
+	//
 	CertificateAuthority *ExternalSourceCertificateAuthorityConfigMapReferenceApplyConfiguration `json:"certificateAuthority,omitempty"`
 }
 

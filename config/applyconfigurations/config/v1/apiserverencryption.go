@@ -24,6 +24,7 @@ type APIServerEncryptionApplyConfiguration struct {
 	// 3. routes.route.openshift.io
 	// 4. oauthaccesstokens.oauth.openshift.io
 	// 5. oauthauthorizetokens.oauth.openshift.io
+	//
 	Type *configv1.EncryptionType `json:"type,omitempty"`
 	// kms defines the configuration for the external KMS instance that manages the encryption keys,
 	// when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an
@@ -32,6 +33,7 @@ type APIServerEncryptionApplyConfiguration struct {
 	// The Key Management Service (KMS) instance provides symmetric encryption and is responsible for
 	// managing the lifecyle of the encryption keys outside of the control plane.
 	// This allows integration with an external provider to manage the data encryption keys securely.
+	//
 	KMS *KMSPluginConfigApplyConfiguration `json:"kms,omitempty"`
 }
 

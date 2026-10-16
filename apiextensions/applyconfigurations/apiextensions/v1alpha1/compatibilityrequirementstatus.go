@@ -20,6 +20,7 @@ type CompatibilityRequirementStatusApplyConfiguration struct {
 	// The Admitted condition indicates if the validating webhook has been configured.
 	//
 	// The Compatible condition indicates if the observed CRD is compatible with the requirement.
+	//
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 	// observedCRD documents the uid and generation of the CRD object when the current status was written.
 	// This field will be omitted if the target CRD does not exist or could not be retrieved.

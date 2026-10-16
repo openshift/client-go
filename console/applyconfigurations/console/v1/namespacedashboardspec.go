@@ -13,9 +13,11 @@ import (
 // If both namespaces and namespaceSelector are specified, the link will appear in namespaces that match either
 type NamespaceDashboardSpecApplyConfiguration struct {
 	// namespaces is an array of namespace names in which the dashboard link should appear.
+	//
 	Namespaces []string `json:"namespaces,omitempty"`
 	// namespaceSelector is used to select the Namespaces that should contain dashboard link by label.
 	// If the namespace labels match, dashboard link will be shown for the namespaces.
+	//
 	NamespaceSelector *metav1.LabelSelectorApplyConfiguration `json:"namespaceSelector,omitempty"`
 }
 

@@ -20,6 +20,7 @@ type AuthenticationStatusApplyConfiguration struct {
 	// The namespace for this config map is openshift-config-managed.
 	IntegratedOAuthMetadata *ConfigMapNameReferenceApplyConfiguration `json:"integratedOAuthMetadata,omitempty"`
 	// oidcClients is where participating operators place the current OIDC client status for OIDC clients that can be customized by the cluster-admin.
+	//
 	OIDCClients []OIDCClientStatusApplyConfiguration `json:"oidcClients,omitempty"`
 }
 

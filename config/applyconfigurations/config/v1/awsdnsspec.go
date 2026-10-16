@@ -15,6 +15,7 @@ type AWSDNSSpecApplyConfiguration struct {
 	// <partition> is the AWS partition (aws, aws-cn, aws-us-gov, or aws-eusc),
 	// <account-id> is a 12-digit numeric identifier for the AWS account,
 	// <role-name> is the IAM role name.
+	//
 	PrivateZoneIAMRole *string `json:"privateZoneIAMRole,omitempty"`
 }
 

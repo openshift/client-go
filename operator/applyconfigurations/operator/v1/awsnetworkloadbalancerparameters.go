@@ -24,6 +24,7 @@ type AWSNetworkLoadBalancerParametersApplyConfiguration struct {
 	// When omitted from the spec, the subnets will be auto-discovered
 	// for each availability zone. Auto-discovered subnets are not reported
 	// in the status of the IngressController object.
+	//
 	Subnets *AWSSubnetsApplyConfiguration `json:"subnets,omitempty"`
 	// eipAllocations is a list of IDs for Elastic IP (EIP) addresses that
 	// are assigned to the Network Load Balancer.
@@ -37,6 +38,7 @@ type AWSNetworkLoadBalancerParametersApplyConfiguration struct {
 	//
 	// See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general
 	// information about configuration, characteristics, and limitations of Elastic IP addresses.
+	//
 	EIPAllocations []operatorv1.EIPAllocation `json:"eipAllocations,omitempty"`
 	// securityGroups is a list of security group IDs to attach to the
 	// Network Load Balancer. When specified, these security groups replace
@@ -56,6 +58,7 @@ type AWSNetworkLoadBalancerParametersApplyConfiguration struct {
 	// followed by 8 or 17 lowercase hexadecimal characters
 	// (e.g. "sg-abcd1234" or "sg-abcd1234abcd12345"). At least 1 and
 	// at most 5 security groups can be specified.
+	//
 	SecurityGroups []operatorv1.SecurityGroupID `json:"securityGroups,omitempty"`
 	// protocol specifies whether the Network Load Balancer uses PROXY
 	// protocol to forward connections to the IngressController.
@@ -83,6 +86,7 @@ type AWSNetworkLoadBalancerParametersApplyConfiguration struct {
 	// Note that changing this field may cause brief connection failures
 	// during the transition as the NLB attribute change and router rollout
 	// occur independently.
+	//
 	Protocol *operatorv1.NLBProtocol `json:"protocol,omitempty"`
 }
 
