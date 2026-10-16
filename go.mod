@@ -72,4 +72,4 @@ retract v3.9.0+incompatible
 // retracted by itself.
 retract v0.0.1
 
-replace github.com/openshift/api => github.com/sanchezl/api configurable-pki
+replace github.com/openshift/api => github.com/sanchezl/api v0.0.0-20261016215221-2eba0626252b
