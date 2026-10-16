@@ -1242,6 +1242,10 @@
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
+        },
+        "trustedCAFilePath": {
+          "description": "trustedCAFilePath is an optional path to a PEM-encoded CA bundle used to verify outbound HTTPS connections including proxies and TLS-intercepting proxies for outbound issuer discovery and JWKS requests. When specified, the file is watched and updates are applied without restarting the webhook server. When omitted, connections use the system trust roots only.",
+          "type": "string"
         }
       }
     },
@@ -8779,6 +8783,11 @@
         "platformStatus": {
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
+        },
+        "topologyTransitionStatus": {
+          "description": "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is optional and is omitted until the topology controller reports transition status. A transition is requested through spec.controlPlaneTopology. The controller reports completion only after both topologies reach that transition's target and post-transition checks pass; reaching the target topology alone is not completion.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionStatus"
         }
       }
     },
@@ -12126,6 +12135,80 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TopologyState": {
+      "description": "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition. The topology controller determines which transitions are supported. Currently, it supports only transitions that change both topologies from SingleReplica to HighlyAvailable. Representing a topology here does not enable a transition to it.",
+      "type": "object",
+      "required": [
+        "controlPlaneTopology",
+        "infrastructureTopology"
+      ],
+      "properties": {
+        "controlPlaneTopology": {
+          "description": "controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. controlPlaneTopology is required.",
+          "type": "string"
+        },
+        "infrastructureTopology": {
+          "description": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. infrastructureTopology is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransition": {
+      "type": "object",
+      "required": [
+        "source",
+        "target",
+        "evaluations"
+      ],
+      "properties": {
+        "evaluations": {
+          "description": "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailable is required; other condition types report individual checks. Between one and 32 conditions must be present, allowing at most 31 individual checks in addition to the availability condition. The controller defines individual check types, reasons, and messages, and always reports each one explicitly, using Unknown when a check's result is not yet known.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "source": {
+          "description": "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. External control planes cannot be a transition source. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. source is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        },
+        "target": {
+          "description": "target is the control-plane and infrastructure topology this transition would move to. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. External control planes cannot be a transition target. target is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionStatus": {
+      "description": "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provides information on topology transition progress and the evaluation of supported transition types. The controller always reports both conditions once topologyTransitionStatus is set.\n\nValid condition types are TopologyTransitionsEvaluated and TopologyTransitionCompleted. Both conditions must be present: the controller always reports each condition explicitly, using Unknown when a condition's state is not yet known, rather than omitting it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "transitions": {
+          "description": "transitions contains each supported transition type and its availability. It is optional. The controller clears this list whenever TopologyTransitionsEvaluated is not True, so its presence always reflects current, trustworthy results: an omitted list while TopologyTransitionsEvaluated is True means no supported transition options were found, and an omitted list otherwise means no transition options have been reported yet.\n\nBetween one and eight transition options must be present when the list is set. This list reports transition options, not concurrent transitions. The topology controller determines which transition options are supported.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransition"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Update": {
       "description": "Update represents an administrator update request.",
       "type": "object",
@@ -13136,17 +13219,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.CertificateConfig": {
-      "description": "CertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
-      "type": "object",
-      "properties": {
-        "key": {
-          "description": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeyConfig"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoring": {
       "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
       "type": "object",
@@ -13366,49 +13438,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy": {
-      "description": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
-      "type": "object",
-      "required": [
-        "defaults"
-      ],
-      "properties": {
-        "clientCertificates": {
-          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
-        },
-        "defaults": {
-          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig"
-        },
-        "servingCertificates": {
-          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
-        },
-        "signerCertificates": {
-          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig": {
-      "description": "DefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
-      "type": "object",
-      "required": [
-        "key"
-      ],
-      "properties": {
-        "key": {
-          "description": "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeyConfig"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.DropEqualActionConfig": {
       "description": "DropEqualActionConfig configures the DropEqual action. Drops targets for which the concatenated source_labels do match the value of target_label. Requires Prometheus >= v2.41.0.",
       "type": "object",
@@ -13418,19 +13447,6 @@
       "properties": {
         "targetLabel": {
           "description": "targetLabel is the label name whose value is compared to the concatenated source_labels; targets that match are dropped. Must be between 1 and 128 characters in length.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig": {
-      "description": "ECDSAKeyConfig specifies parameters for ECDSA key generation.",
-      "type": "object",
-      "required": [
-        "curve"
-      ],
-      "properties": {
-        "curve": {
-          "description": "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
           "type": "string"
         }
       }
@@ -13588,38 +13604,6 @@
           "type": "string"
         }
       }
-    },
-    "com.github.openshift.api.config.v1alpha1.KeyConfig": {
-      "description": "KeyConfig specifies cryptographic parameters for key generation.",
-      "type": "object",
-      "required": [
-        "algorithm"
-      ],
-      "properties": {
-        "algorithm": {
-          "description": "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
-          "type": "string"
-        },
-        "ecdsa": {
-          "description": "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig"
-        },
-        "rsa": {
-          "description": "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RSAKeyConfig"
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "algorithm",
-          "fields-to-discriminateBy": {
-            "ecdsa": "ECDSA",
-            "rsa": "RSA"
-          }
-        }
-      ]
     },
     "com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig": {
       "description": "KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods.",
@@ -14455,31 +14439,132 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.PKICertificateManagement": {
-      "description": "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+    "com.github.openshift.api.config.v1alpha1.PKICertificateConfig": {
+      "description": "PKICertificateConfig specifies configuration parameters for certificates. At least one property must be specified.",
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKICertificatePolicy": {
+      "description": "PKICertificatePolicy is the cluster's policy for internally-generated certificates: a required defaults, optional per-category overrides, and optional overrides for specific named certificates. The most-specific setting wins.",
       "type": "object",
       "required": [
-        "mode"
+        "defaults"
       ],
       "properties": {
-        "custom": {
-          "description": "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+        "caCertificates": {
+          "description": "caCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all CA certificates. When omitted, defaults are used for CA certificates.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CustomPKIPolicy"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
         },
-        "mode": {
-          "description": "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
+        "clientCertificates": {
+          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates. When set, these parameters take precedence over defaults for all client certificates. When omitted, defaults are used for client certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        },
+        "defaults": {
+          "description": "defaults specifies the default certificate configuration applied to any certificate that has no more-specific (category or named) override. This field is required so that every certificate has a well-defined configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig"
+        },
+        "namedCertificates": {
+          "description": "namedCertificates optionally overrides certificate parameters for specific certificates identified by their well-known name. These overrides have the highest precedence (named, then category, then defaults). Entries are keyed by name, so a given name may appear at most once. When omitted, no named overrides are applied. When present, the list must contain at least one entry. At most 32 named certificate overrides may be specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "serverCertificates": {
+          "description": "serverCertificates optionally overrides certificate parameters for TLS server certificates. When set, these parameters take precedence over defaults for all server certificates. When omitted, defaults are used for server certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig": {
+      "description": "PKIDefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig": {
+      "description": "PKIECDSAKeyConfig specifies parameters for ECDSA key generation.",
+      "type": "object",
+      "required": [
+        "curve"
+      ],
+      "properties": {
+        "curve": {
+          "description": "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIKeyConfig": {
+      "description": "PKIKeyConfig specifies cryptographic parameters for key generation.",
+      "type": "object",
+      "required": [
+        "algorithm"
+      ],
+      "properties": {
+        "algorithm": {
+          "description": "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".\n\nWhen set to RSA, the rsa field must be specified and the generated key will be an RSA key with the configured key size.\n\nWhen set to ECDSA, the ecdsa field must be specified and the generated key will be an ECDSA key using the configured elliptic curve.",
+          "type": "string"
+        },
+        "ecdsa": {
+          "description": "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig"
+        },
+        "rsa": {
+          "description": "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig"
         }
       },
       "x-kubernetes-unions": [
         {
-          "discriminator": "mode",
+          "discriminator": "algorithm",
           "fields-to-discriminateBy": {
-            "custom": "Custom"
+            "ecdsa": "ECDSA",
+            "rsa": "RSA"
           }
         }
       ]
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIKeyPolicy": {
+      "description": "PKIKeyPolicy configures keys generated outside of any certificate, by well-known name. When set, at least one field must be specified; an empty object is rejected.",
+      "type": "object",
+      "properties": {
+        "namedKeys": {
+          "description": "namedKeys configures keys generated outside of any certificate, such as the bound service-account token signing key, identified by their well-known name. Entries are opt-in with no inherited default and are keyed by name, so a given name may appear at most once. When keys is set, at least one named key must be specified. At most 16 named keys may be specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.PKIList": {
       "description": "PKIList is a collection of PKI resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -14510,32 +14595,54 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.PKIProfile": {
-      "description": "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.",
+    "com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig": {
+      "description": "PKINamedCertificateConfig overrides certificate parameters for a specific certificate identified by its well-known name.",
       "type": "object",
       "required": [
-        "defaults"
+        "name"
       ],
       "properties": {
-        "clientCertificates": {
-          "description": "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+        "key": {
+          "description": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
         },
-        "defaults": {
-          "description": "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
+        "name": {
+          "description": "name is the well-known override name of the targeted certificate. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/service-ca.service-serving-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63. The name is validated for format only; there is no registry of valid names, because certificates can be registered dynamically. Core-platform certificates use the bare \"openshift.io/\" prefix; names outside the core platform use an owner subdomain prefix (for example \"hypershift.openshift.io/\"). This field is required so that every named certificate override identifies the certificate it applies to.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig": {
+      "description": "PKINamedKeyConfig configures the cryptographic parameters for a single key generated outside of any certificate, identified by its well-known name.",
+      "type": "object",
+      "required": [
+        "name",
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key specifies the cryptographic parameters for this key. It is required because keys configured here have no inherited default.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyConfig"
         },
-        "servingCertificates": {
-          "description": "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
-        },
-        "signerCertificates": {
-          "description": "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CertificateConfig"
+        "name": {
+          "description": "name is the well-known name of the key. It is a DNS subdomain prefix, a \"/\", then a name made of alphanumerics, \"-\", \"_\" and \".\" (for example \"openshift.io/kube-apiserver.bound-service-account-token-signer\"). The prefix is at most 253 characters and the name after the \"/\" at most 63. The name is validated for format only, using the same rules as a named certificate override. This field is required so that every named key entry identifies the key it configures.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig": {
+      "description": "PKIRSAKeyConfig specifies parameters for RSA key generation.",
+      "type": "object",
+      "required": [
+        "keySize"
+      ],
+      "properties": {
+        "keySize": {
+          "description": "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 4096.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -14543,13 +14650,18 @@
       "description": "PKISpec holds the specification for PKI configuration.",
       "type": "object",
       "required": [
-        "certificateManagement"
+        "certificates"
       ],
       "properties": {
-        "certificateManagement": {
-          "description": "certificateManagement specifies how PKI configuration is managed for internally-generated certificates. This controls the certificate generation approach for all OpenShift components that create certificates internally, including certificate authorities, serving certificates, and client certificates.",
+        "certificates": {
+          "description": "certificates specifies the cluster's certificate policy for internally-generated certificates, resolved most-specific-wins: a named certificate override, then a category override (CA, server, client), then the required defaults. This field is required so that every PKI resource specifies a certificate policy. This field names a configuration policy; it is unrelated to the X.509 certificate-policies extension.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateManagement"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificatePolicy"
+        },
+        "keys": {
+          "description": "keys optionally configures keys generated outside of any certificate, such as the bound service-account token signing key. Entries are named and opt-in with no inherited default. When omitted, no keys are configured by this resource. When set, at least one field must be specified; an empty object is rejected.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKIKeyPolicy"
         }
       }
     },
@@ -14825,20 +14937,6 @@
         "rateLimitedAction": {
           "description": "rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests). When omitted, no retries are performed on rate limit responses. When set to \"Retry\", Prometheus will retry such requests using the backoff settings above. Valid value when set is \"Retry\".",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.RSAKeyConfig": {
-      "description": "RSAKeyConfig specifies parameters for RSA key generation.",
-      "type": "object",
-      "required": [
-        "keySize"
-      ],
-      "properties": {
-        "keySize": {
-          "description": "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 8192.",
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -27917,6 +28015,214 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfig": {
+      "description": "BGPVIPConfig carries the BGP peering configuration for BGP-based VIP management (enhancement openshift/enhancements#1982). It is a singleton named \"cluster\", generated by the installer from platform.baremetal.bgpVIPConfig in the install-config, and may be edited day-2 to reconfigure peering. The configuration is rendered into node-level BGP configuration by its consumers, the machine-config-operator and the cluster-network-operator, which report their progress in status.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the desired BGP VIP peering configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigSpec"
+        },
+        "status": {
+          "description": "status reports the consumers' progress applying the configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigList": {
+      "description": "BGPVIPConfigList is a list of BGPVIPConfig resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfig"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigSpec": {
+      "description": "BGPVIPConfigSpec describes the BGP peering used to advertise the API and Ingress VIPs.",
+      "type": "object",
+      "required": [
+        "localASN",
+        "defaultPeers"
+      ],
+      "properties": {
+        "communities": {
+          "description": "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value of at least 0 and not exceeding 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value of at least 0 and not exceeding 4294967295. When omitted, no communities are attached. Entries are unique; when set, must have at least 1 entry and must not exceed 8 entries.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "defaultPeers": {
+          "description": "defaultPeers are the BGP peers every node establishes sessions with, unless the node is named in hostOverrides. Must have at least 1 entry and must not exceed 16 entries, unique by peerAddress.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "peerAddress"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "hostOverrides": {
+          "description": "hostOverrides replaces (does not merge with) defaultPeers for the named nodes. Only the per-node peer file rendered by the machine-config-operator consumes overrides; the cluster-wide session configuration rendered by the cluster-network-operator uses defaultPeers. When omitted, all nodes use defaultPeers; when set, must have at least 1 entry and must not exceed 256 entries, unique by hostname.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPHostPeers"
+          },
+          "x-kubernetes-list-map-keys": [
+            "hostname"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "localASN": {
+          "description": "localASN is the BGP autonomous system number (ASN) the cluster's BGP speakers present to the configured peers. Use the ASN your network administrator assigned to the cluster - the peer routers must expect it or no session establishes; private-range ASNs (e.g. 64512-65534) are typical for datacenter fabrics. Must be at least 1 and must not exceed 4294967295.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigStatus": {
+      "description": "BGPVIPConfigStatus reports the consumers' progress applying the spec.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions reports the state of processing the configuration; when set, must have at least 1 entry and must not exceed 8 entries. Known condition types are \"Rendered\" (the machine-config-operator has rendered the per-node peer configuration) and \"SessionsConfigured\" (the cluster-network-operator has rendered the FRR session configuration for application). SessionsConfigured does not assert that the generated FRRConfiguration was accepted by the frr-k8s admission webhook or applied on the nodes. Each condition's observedGeneration reports the generation of the spec most recently processed by the operator that writes it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPHostPeers": {
+      "description": "BGPVIPHostPeers is a per-node replacement peer list.",
+      "type": "object",
+      "required": [
+        "hostname",
+        "peers"
+      ],
+      "properties": {
+        "hostname": {
+          "description": "hostname of the node this override applies to, as a non-empty RFC 1123 subdomain of at most 253 characters with dot-separated labels of at most 63 characters each. It is compared verbatim against the hostname the node resolves for itself (as rendered into the per-node peer file), so a short name and its fully qualified form are distinct entries and only the exact match applies.",
+          "type": "string"
+        },
+        "peers": {
+          "description": "peers replaces defaultPeers for this node. Must have at least 1 entry and must not exceed 16 entries, unique by peerAddress.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "peerAddress"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPasswordSecret": {
+      "description": "BGPVIPPasswordSecret references a Secret in the openshift-config namespace by name.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced Secret in the openshift-config namespace. Must be a non-empty RFC 1123 subdomain of at most 253 characters, matching what Kubernetes accepts as a Secret name.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer": {
+      "description": "BGPVIPPeer describes one BGP peer.",
+      "type": "object",
+      "required": [
+        "peerAddress",
+        "peerASN"
+      ],
+      "properties": {
+        "failureDetection": {
+          "description": "failureDetection determines how a failed peer is detected. When set to \"BFD\", a BFD session is established with the peer and BGP reacts to BFD failure detection. When set to \"HoldTimer\", failure detection relies on the BGP hold timer alone. When omitted, failure detection relies on the BGP hold timer.",
+          "type": "string"
+        },
+        "holdTimeSeconds": {
+          "description": "holdTimeSeconds is the BGP hold time in seconds; must be at least 3 (the RFC 4271 minimum for a non-zero hold time) and must not exceed 65535. When omitted, no hold time is configured and the FRR default (180 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "keepaliveTimeSeconds": {
+          "description": "keepaliveTimeSeconds is the BGP keepalive interval in seconds; must be at least 1 and must not exceed 65535. When omitted, no keepalive interval is configured and the FRR default (60 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "passwordSecret": {
+          "description": "passwordSecret references the Secret carrying the TCP MD5 password (RFC 2385) for the session. The Secret must be of type kubernetes.io/basic-auth, live in the openshift-config namespace, and carry the password in its \"password\" key (at most 80 bytes, the kernel's TCP MD5 limit). The Secret type, key, and size requirements are not validated by the API server; the consumers validate them when resolving the reference and must never surface the Secret contents in status, events, or logs. Passwords are never stored in this API. When omitted, the session is unauthenticated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPasswordSecret"
+        },
+        "peerASN": {
+          "description": "peerASN is the autonomous system number of the peer. Must be at least 1 and must not exceed 4294967295.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "peerAddress": {
+          "description": "peerAddress is the IP address of the BGP peer (IPv4 or IPv6) in canonical form (lowercase, no leading zeros, IPv6 zero-compressed); must be at least 2 characters in length and must not exceed 45 characters. The session's address family follows the address family of this value. Canonical form is required so that two spellings of one address cannot form duplicate peers.",
+          "type": "string"
+        },
+        "peerReachability": {
+          "description": "peerReachability describes how the peer is reached. When set to \"MultiHop\", the session may be established with a peer several router hops away. When set to \"DirectlyConnected\", the peer must be on a directly connected network. When omitted, the peer must be directly connected.",
+          "type": "string"
+        },
+        "port": {
+          "description": "port is the TCP port of the BGP session; must be at least 1 and must not exceed 65535. When omitted, port 179 is used.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.InternalReleaseImage": {
       "description": "InternalReleaseImage is used to keep track and manage a set of release bundles (OCP and OLM operators images) that are stored into the control planes nodes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -30608,7 +30914,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31770,6 +32077,46 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig": {
+      "description": "ConsoleAuthProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+      "type": "object",
+      "properties": {
+        "httpProxy": {
+          "description": "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "httpsProxy": {
+          "description": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "noProxy": {
+          "description": "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "trustedCA": {
+          "description": "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference": {
+      "description": "ConsoleAuthProxyTrustedCAConfigMapReference references a ConfigMap in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConsoleConfigRoute": {
       "description": "ConsoleConfigRoute holds information on external route access to console. DEPRECATED",
       "type": "object",
@@ -31928,6 +32275,11 @@
         "providers"
       ],
       "properties": {
+        "authProxy": {
+          "description": "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig"
+        },
         "customization": {
           "description": "customization is used to optionally provide a small set of customization options to the web console.",
           "default": {},
@@ -31960,7 +32312,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "providers": {
           "description": "providers contains configuration for using specific service providers.",
@@ -32297,14 +32650,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategoryMeta"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "tags": {
           "description": "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32331,7 +32686,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32344,7 +32700,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "types": {
           "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
@@ -33505,7 +33862,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.EndpointPublishingStrategy"
         },
         "haproxyVersion": {
-          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 continues with HAProxy 3.2 (same minor version introduced in OpenShift 5.0) and does not introduce a new HAProxy version.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
+          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 uses HAProxy 3.2 as its default version and supports HAProxy 3.4 as an explicit, non-default opt-in.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version. - \"3.4\": Uses the latest HAProxy 3.4.z available for this OpenShift release. This is an explicit opt-in; HAProxy 3.4 is not the default.\n\nPlanned lifecycle for later OpenShift releases: - OpenShift 5.2 plans to make HAProxy 3.4 the default when this field is unset, while continuing to support \"3.2\" as an explicit selection. - OpenShift 5.3 plans to retire support for selecting HAProxy 3.2.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
           "type": "string"
         },
         "httpCompression": {
@@ -33598,7 +33955,7 @@
           "default": ""
         },
         "effectiveHAProxyVersion": {
-          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using HAProxy 3.2",
+          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using the default HAProxy 3.2 - \"3.4\": Using the explicitly selected, non-default HAProxy 3.4\n\nPlanned lifecycle for later OpenShift releases: - OpenShift 5.2 plans to make HAProxy 3.4 the default while keeping HAProxy 3.2 selectable. - OpenShift 5.3 plans to retire HAProxy 3.2.",
           "type": "string"
         },
         "endpointPublishingStrategy": {
@@ -36523,7 +36880,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.PinnedResourceReference"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "visibility": {
           "description": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
@@ -36631,7 +36989,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36709,7 +37068,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36736,14 +37096,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "required": {
           "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
