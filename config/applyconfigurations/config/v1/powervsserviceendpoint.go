@@ -13,10 +13,12 @@ type PowerVSServiceEndpointApplyConfiguration struct {
 	// IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
 	// ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
 	// Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
+	//
 	Name *string `json:"name,omitempty"`
 	// url is fully qualified URI with scheme https, that overrides the default generated
 	// endpoint for a client.
 	// This must be provided and cannot be empty.
+	//
 	URL *string `json:"url,omitempty"`
 }
 

@@ -23,6 +23,7 @@ type ConsolePluginProxyApplyConfiguration struct {
 	// Request example path:
 	//
 	// /api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver
+	//
 	Alias *string `json:"alias,omitempty"`
 	// caCertificate provides the cert authority certificate contents,
 	// in case the proxied Service is using custom service CA.

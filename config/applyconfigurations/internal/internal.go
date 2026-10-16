@@ -4527,13 +4527,6 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1alpha1.SecretKeySelector
       default: {}
-- name: com.github.openshift.api.config.v1alpha1.CertificateConfig
-  map:
-    fields:
-    - name: key
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.KeyConfig
-      default: {}
 - name: com.github.openshift.api.config.v1alpha1.ClusterMonitoring
   map:
     fields:
@@ -4652,42 +4645,10 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: volumeForceDetach
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1alpha1.CustomPKIPolicy
-  map:
-    fields:
-    - name: clientCertificates
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.CertificateConfig
-      default: {}
-    - name: defaults
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig
-      default: {}
-    - name: servingCertificates
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.CertificateConfig
-      default: {}
-    - name: signerCertificates
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.CertificateConfig
-      default: {}
-- name: com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig
-  map:
-    fields:
-    - name: key
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.KeyConfig
-      default: {}
 - name: com.github.openshift.api.config.v1alpha1.DropEqualActionConfig
   map:
     fields:
     - name: targetLabel
-      type:
-        scalar: string
-- name: com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig
-  map:
-    fields:
-    - name: curve
       type:
         scalar: string
 - name: com.github.openshift.api.config.v1alpha1.EtcdBackupSpec
@@ -4779,27 +4740,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: targetLabel
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1alpha1.KeyConfig
-  map:
-    fields:
-    - name: algorithm
-      type:
-        scalar: string
-    - name: ecdsa
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig
-      default: {}
-    - name: rsa
-      type:
-        namedType: com.github.openshift.api.config.v1alpha1.RSAKeyConfig
-      default: {}
-    unions:
-    - discriminator: algorithm
-      fields:
-      - fieldName: ecdsa
-        discriminatorValue: ECDSA
-      - fieldName: rsa
-        discriminatorValue: RSA
 - name: com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig
   map:
     fields:
@@ -5270,27 +5210,121 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.openshift.api.config.v1alpha1.PKISpec
       default: {}
-- name: com.github.openshift.api.config.v1alpha1.PKICertificateManagement
+- name: com.github.openshift.api.config.v1alpha1.PKICertificateConfig
   map:
     fields:
-    - name: custom
+    - name: key
       type:
-        namedType: com.github.openshift.api.config.v1alpha1.CustomPKIPolicy
+        namedType: com.github.openshift.api.config.v1alpha1.PKIKeyConfig
       default: {}
-    - name: mode
+- name: com.github.openshift.api.config.v1alpha1.PKICertificatePolicy
+  map:
+    fields:
+    - name: caCertificates
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKICertificateConfig
+      default: {}
+    - name: clientCertificates
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKICertificateConfig
+      default: {}
+    - name: defaults
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig
+      default: {}
+    - name: namedCertificates
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig
+          elementRelationship: associative
+          keys:
+          - name
+    - name: serverCertificates
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKICertificateConfig
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.PKIDefaultCertificateConfig
+  map:
+    fields:
+    - name: key
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIKeyConfig
+      default: {}
+- name: com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig
+  map:
+    fields:
+    - name: curve
       type:
         scalar: string
+- name: com.github.openshift.api.config.v1alpha1.PKIKeyConfig
+  map:
+    fields:
+    - name: algorithm
+      type:
+        scalar: string
+    - name: ecdsa
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIECDSAKeyConfig
+      default: {}
+    - name: rsa
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig
+      default: {}
     unions:
-    - discriminator: mode
+    - discriminator: algorithm
       fields:
-      - fieldName: custom
-        discriminatorValue: Custom
+      - fieldName: ecdsa
+        discriminatorValue: ECDSA
+      - fieldName: rsa
+        discriminatorValue: RSA
+- name: com.github.openshift.api.config.v1alpha1.PKIKeyPolicy
+  map:
+    fields:
+    - name: namedKeys
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.config.v1alpha1.PKINamedCertificateConfig
+  map:
+    fields:
+    - name: key
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIKeyConfig
+      default: {}
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.PKINamedKeyConfig
+  map:
+    fields:
+    - name: key
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIKeyConfig
+      default: {}
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1alpha1.PKIRSAKeyConfig
+  map:
+    fields:
+    - name: keySize
+      type:
+        scalar: numeric
 - name: com.github.openshift.api.config.v1alpha1.PKISpec
   map:
     fields:
-    - name: certificateManagement
+    - name: certificates
       type:
-        namedType: com.github.openshift.api.config.v1alpha1.PKICertificateManagement
+        namedType: com.github.openshift.api.config.v1alpha1.PKICertificatePolicy
+      default: {}
+    - name: keys
+      type:
+        namedType: com.github.openshift.api.config.v1alpha1.PKIKeyPolicy
       default: {}
 - name: com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference
   map:
@@ -5473,12 +5507,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: rateLimitedAction
       type:
         scalar: string
-- name: com.github.openshift.api.config.v1alpha1.RSAKeyConfig
-  map:
-    fields:
-    - name: keySize
-      type:
-        scalar: numeric
 - name: com.github.openshift.api.config.v1alpha1.RelabelActionConfig
   map:
     fields:

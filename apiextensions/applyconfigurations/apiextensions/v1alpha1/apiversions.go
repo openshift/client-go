@@ -31,6 +31,7 @@ type APIVersionsApplyConfiguration struct {
 	// of only lowercase alphanumeric characters and hyphens, and must start
 	// with an alphabetic character and end with an alphanumeric character.// with an alphabetic character and end with an alphanumeric character.
 	// At most 32 additional versions may be specified.
+	//
 	AdditionalVersions []apiextensionsv1alpha1.APIVersionString `json:"additionalVersions,omitempty"`
 }
 

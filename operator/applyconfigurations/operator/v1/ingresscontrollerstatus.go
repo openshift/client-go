@@ -78,6 +78,7 @@ type IngressControllerStatusApplyConfiguration struct {
 	// - OpenShift 5.2 plans to make HAProxy 3.4 the default while keeping
 	// HAProxy 3.2 selectable.
 	// - OpenShift 5.3 plans to retire HAProxy 3.2.
+	//
 	EffectiveHAProxyVersion *operatorv1.HAProxyVersion `json:"effectiveHAProxyVersion,omitempty"`
 }
 

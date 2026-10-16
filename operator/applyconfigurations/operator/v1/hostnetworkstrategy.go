@@ -36,6 +36,7 @@ type HostNetworkStrategyApplyConfiguration struct {
 	//
 	// The empty string specifies the default, which is TCP without PROXY
 	// protocol.  Note that the default is subject to change.
+	//
 	Protocol *operatorv1.IngressControllerProtocol `json:"protocol,omitempty"`
 	// httpPort is the port on the host which should be used to listen for
 	// HTTP requests. This field should be set when port 80 is already in use.

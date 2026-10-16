@@ -40,6 +40,7 @@ type ContainerRuntimeConfigurationApplyConfiguration struct {
 	//
 	// When omitted, only the default layer location is used.
 	// When specified, at least one store must be provided.
+	//
 	AdditionalLayerStores []AdditionalLayerStoreApplyConfiguration `json:"additionalLayerStores,omitempty"`
 	// additionalImageStores configures additional read-only container image store locations for Open Container Initiative (OCI) images.
 	//
@@ -50,6 +51,7 @@ type ContainerRuntimeConfigurationApplyConfiguration struct {
 	//
 	// When omitted, only the default image location is used.
 	// When specified, at least one store must be provided.
+	//
 	AdditionalImageStores []AdditionalImageStoreApplyConfiguration `json:"additionalImageStores,omitempty"`
 	// additionalArtifactStores configures additional read-only artifact storage locations for Open Container Initiative (OCI) artifacts.
 	//
@@ -60,6 +62,7 @@ type ContainerRuntimeConfigurationApplyConfiguration struct {
 	//
 	// When omitted, only the default artifact location is used.
 	// When specified, at least one store must be provided.
+	//
 	AdditionalArtifactStores []AdditionalArtifactStoreApplyConfiguration `json:"additionalArtifactStores,omitempty"`
 	// containerGomaxprocsBehavior controls whether CRI-O automatically injects the GOMAXPROCS environment variable into containers
 	// based on their CPU resource requests.
@@ -76,6 +79,7 @@ type ContainerRuntimeConfigurationApplyConfiguration struct {
 	// - Setting GOMAXPROCS in the pod spec (env or envFrom)
 	// - Calling runtime.GOMAXPROCS() programmatically in Go code
 	// - Adding the skip-gomaxprocs.crio.io annotation to the pod
+	//
 	ContainerGomaxprocsBehavior *machineconfigurationv1.GomaxprocsBehaviorType `json:"containerGomaxprocsBehavior,omitempty"`
 }
 

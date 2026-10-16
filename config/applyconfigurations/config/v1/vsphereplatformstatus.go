@@ -23,6 +23,7 @@ type VSpherePlatformStatusApplyConfiguration struct {
 	// using the infrastructure rather than Kubernetes networking. These are the
 	// IPs for a self-hosted load balancer in front of the API servers. In dual
 	// stack clusters this list contains two IPs otherwise only one.
+	//
 	APIServerInternalIPs []string `json:"apiServerInternalIPs,omitempty"`
 	// ingressIP is an external IP which routes to the default ingress controller.
 	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
@@ -33,6 +34,7 @@ type VSpherePlatformStatusApplyConfiguration struct {
 	// controller. The IPs are suitable targets of a wildcard DNS record used to
 	// resolve default route host names. In dual stack clusters this list
 	// contains two IPs otherwise only one.
+	//
 	IngressIPs []string `json:"ingressIPs,omitempty"`
 	// nodeDNSIP is the IP address for the internal DNS used by the
 	// nodes. Unlike the one managed by the DNS operator, `NodeDNSIP`

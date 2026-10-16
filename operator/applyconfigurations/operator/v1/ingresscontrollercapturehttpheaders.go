@@ -11,10 +11,12 @@ type IngressControllerCaptureHTTPHeadersApplyConfiguration struct {
 	// request specifies which HTTP request headers to capture.
 	//
 	// If this field is empty, no request headers are captured.
+	//
 	Request []IngressControllerCaptureHTTPHeaderApplyConfiguration `json:"request,omitempty"`
 	// response specifies which HTTP response headers to capture.
 	//
 	// If this field is empty, no response headers are captured.
+	//
 	Response []IngressControllerCaptureHTTPHeaderApplyConfiguration `json:"response,omitempty"`
 }
 

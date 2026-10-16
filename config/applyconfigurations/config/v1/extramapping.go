@@ -21,8 +21,12 @@ type ExtraMappingApplyConfiguration struct {
 	// It must only contain lower case alphanumeric characters and '-' or '.'.
 	// It must not use the reserved domains, or be subdomains of, "kubernetes.io", "k8s.io", and "openshift.io".
 	//
-	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ”', '(', ')', '*', '+', ',', ';', '=', and ':'.
+	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
 	// It must not exceed 256 characters in length.
+	//
+	//
+	//
+	//
 	Key *string `json:"key,omitempty"`
 	// valueExpression is a required field to specify the CEL expression to extract the extra attribute value from a JWT token's claims.
 	// valueExpression must produce a string or string array value.
@@ -36,6 +40,7 @@ type ExtraMappingApplyConfiguration struct {
 	//
 	// valueExpression must not exceed 1024 characters in length.
 	// valueExpression must not be empty.
+	//
 	ValueExpression *string `json:"valueExpression,omitempty"`
 }
 

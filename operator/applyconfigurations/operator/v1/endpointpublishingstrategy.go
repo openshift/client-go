@@ -59,6 +59,7 @@ type EndpointPublishingStrategyApplyConfiguration struct {
 	// specific node ports are dynamically allocated by OpenShift; however, to
 	// support static port allocations, user changes to the node port
 	// field of the managed NodePort Service will preserved.
+	//
 	Type *operatorv1.EndpointPublishingStrategyType `json:"type,omitempty"`
 	// loadBalancer holds parameters for the load balancer. Present only if
 	// type is LoadBalancerService.

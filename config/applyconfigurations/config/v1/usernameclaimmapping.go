@@ -14,6 +14,7 @@ type UsernameClaimMappingApplyConfiguration struct {
 	// When the ExternalOIDCWithUpstreamParity feature gate is enabled, claim must not be set when expression is set.
 	//
 	// claim must not be an empty string ("") and must not exceed 256 characters.
+	//
 	Claim *string `json:"claim,omitempty"`
 	// expression is an optional CEL expression used to derive
 	// the username from JWT claims.
@@ -23,6 +24,7 @@ type UsernameClaimMappingApplyConfiguration struct {
 	//
 	// expression must be at least 1 character and must not exceed 1024 characters in length.
 	// expression must not be set when claim is set.
+	//
 	Expression *string `json:"expression,omitempty"`
 	// prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.
 	//
@@ -42,10 +44,12 @@ type UsernameClaimMappingApplyConfiguration struct {
 	// and `claim` is set to:
 	// - "username": the mapped value will be "https://myoidc.tld#userA"
 	// - "email": the mapped value will be "userA@myoidc.tld"
+	//
 	PrefixPolicy *configv1.UsernamePrefixPolicy `json:"prefixPolicy,omitempty"`
 	// prefix configures the prefix that should be prepended to the value of the JWT claim.
 	//
 	// prefix must be set when prefixPolicy is set to 'Prefix' and must be unset otherwise.
+	//
 	Prefix *UsernamePrefixApplyConfiguration `json:"prefix,omitempty"`
 }
 

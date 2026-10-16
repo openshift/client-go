@@ -17,6 +17,7 @@ type DNSPlatformSpecApplyConfiguration struct {
 	//
 	// Individual components may not support all platforms,
 	// and must handle unrecognized platforms with best-effort defaults.
+	//
 	Type *configv1.PlatformType `json:"type,omitempty"`
 	// aws contains DNS configuration specific to the Amazon Web Services cloud provider.
 	AWS *AWSDNSSpecApplyConfiguration `json:"aws,omitempty"`

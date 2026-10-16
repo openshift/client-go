@@ -16,10 +16,12 @@ type ConsoleLinkSpecApplyConfiguration struct {
 	Location *consolev1.ConsoleLinkLocation `json:"location,omitempty"`
 	// applicationMenu holds information about section and icon used for the link in the
 	// application menu, and it is applicable only when location is set to ApplicationMenu.
+	//
 	ApplicationMenu *ApplicationMenuSpecApplyConfiguration `json:"applicationMenu,omitempty"`
 	// namespaceDashboard holds information about namespaces in which the dashboard link should
 	// appear, and it is applicable only when location is set to NamespaceDashboard.
 	// If not specified, the link will appear in all namespaces.
+	//
 	NamespaceDashboard *NamespaceDashboardSpecApplyConfiguration `json:"namespaceDashboard,omitempty"`
 }
 

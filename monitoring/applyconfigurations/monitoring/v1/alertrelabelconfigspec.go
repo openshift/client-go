@@ -8,6 +8,7 @@ package v1
 // AlertRelabelConfigsSpec is the desired state of an AlertRelabelConfig resource.
 type AlertRelabelConfigSpecApplyConfiguration struct {
 	// configs is a list of sequentially evaluated alert relabel configs.
+	//
 	Configs []RelabelConfigApplyConfiguration `json:"configs,omitempty"`
 }
 

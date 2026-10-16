@@ -45,6 +45,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// level. For the maximum length of the domain value itself, the shortest
 	// possible variant of the prefix and the ingress controller name was considered
 	// for example "router-a."
+	//
 	Domain *string `json:"domain,omitempty"`
 	// httpErrorCodePages specifies a configmap with custom error pages.
 	// The administrator must create this configmap in the openshift-config namespace.
@@ -68,6 +69,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// HighlyAvailable, respectively.
 	//
 	// These defaults are subject to change.
+	//
 	Replicas *int32 `json:"replicas,omitempty"`
 	// endpointPublishingStrategy is used to publish the ingress controller
 	// endpoints to other networks, enable load balancer integrations, etc.
@@ -85,6 +87,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// Any other platform types (including None) default to HostNetwork.
 	//
 	// endpointPublishingStrategy cannot be updated.
+	//
 	EndpointPublishingStrategy *EndpointPublishingStrategyApplyConfiguration `json:"endpointPublishingStrategy,omitempty"`
 	// defaultCertificate is a reference to a secret containing the default
 	// certificate served by the ingress controller. When Routes don't specify
@@ -109,21 +112,25 @@ type IngressControllerSpecApplyConfiguration struct {
 	//
 	// The in-use certificate (whether generated or user-specified) will be
 	// automatically integrated with OpenShift's built-in OAuth server.
+	//
 	DefaultCertificate *corev1.LocalObjectReference `json:"defaultCertificate,omitempty"`
 	// namespaceSelector is used to filter the set of namespaces serviced by the
 	// ingress controller. This is useful for implementing shards.
 	//
 	// If unset, the default is no filtering.
+	//
 	NamespaceSelector *metav1.LabelSelectorApplyConfiguration `json:"namespaceSelector,omitempty"`
 	// routeSelector is used to filter the set of Routes serviced by the ingress
 	// controller. This is useful for implementing shards.
 	//
 	// If unset, the default is no filtering.
+	//
 	RouteSelector *metav1.LabelSelectorApplyConfiguration `json:"routeSelector,omitempty"`
 	// nodePlacement enables explicit control over the scheduling of the ingress
 	// controller.
 	//
 	// If unset, defaults are used. See NodePlacement for more details.
+	//
 	NodePlacement *NodePlacementApplyConfiguration `json:"nodePlacement,omitempty"`
 	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
 	//
@@ -134,24 +141,29 @@ type IngressControllerSpecApplyConfiguration struct {
 	// a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade
 	// to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress
 	// controller, resulting in a rollout.
+	//
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 	// clientTLS specifies settings for requesting and verifying client
 	// certificates, which can be used to enable mutual TLS for
 	// edge-terminated and reencrypt routes.
+	//
 	ClientTLS *ClientTLSApplyConfiguration `json:"clientTLS,omitempty"`
 	// routeAdmission defines a policy for handling new route claims (for example,
 	// to allow or deny claims across namespaces).
 	//
 	// If empty, defaults will be applied. See specific routeAdmission fields
 	// for details about their defaults.
+	//
 	RouteAdmission *RouteAdmissionPolicyApplyConfiguration `json:"routeAdmission,omitempty"`
 	// logging defines parameters for what should be logged where.  If this
 	// field is empty, operational logs are enabled but access logs are
 	// disabled.
+	//
 	Logging *IngressControllerLoggingApplyConfiguration `json:"logging,omitempty"`
 	// httpHeaders defines policy for HTTP headers.
 	//
 	// If this field is empty, the default values are used.
+	//
 	HTTPHeaders *IngressControllerHTTPHeadersApplyConfiguration `json:"httpHeaders,omitempty"`
 	// httpEmptyRequestsPolicy describes how HTTP connections should be
 	// handled if the connection times out before a request is received.
@@ -170,6 +182,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// detection and diagnosis of problems.  In addition, these requests may
 	// be caused by port scans, in which case logging empty requests may aid
 	// in detecting intrusion attempts.
+	//
 	HTTPEmptyRequestsPolicy *operatorv1.HTTPEmptyRequestsPolicy `json:"httpEmptyRequestsPolicy,omitempty"`
 	// tuningOptions defines parameters for adjusting the performance of
 	// ingress controller pods. All fields are optional and will use their
@@ -178,12 +191,15 @@ type IngressControllerSpecApplyConfiguration struct {
 	//
 	// Setting fields within tuningOptions is generally not recommended. The
 	// default values are suitable for most configurations.
+	//
 	TuningOptions *IngressControllerTuningOptionsApplyConfiguration `json:"tuningOptions,omitempty"`
 	// unsupportedConfigOverrides allows specifying unsupported
 	// configuration options.  Its use is unsupported.
+	//
 	UnsupportedConfigOverrides *runtime.RawExtension `json:"unsupportedConfigOverrides,omitempty"`
 	// httpCompression defines a policy for HTTP traffic compression.
 	// By default, there is no HTTP compression.
+	//
 	HTTPCompression *HTTPCompressionPolicyApplyConfiguration `json:"httpCompression,omitempty"`
 	// idleConnectionTerminationPolicy maps directly to HAProxy's
 	// idle-close-on-response option and controls whether HAProxy
@@ -248,6 +264,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// duration (configured via an annotation on the
 	// IngressController resource) in environments with
 	// frequent reloads to prevent resource exhaustion.
+	//
 	IdleConnectionTerminationPolicy *operatorv1.IngressControllerConnectionTerminationPolicy `json:"idleConnectionTerminationPolicy,omitempty"`
 	// closedClientConnectionPolicy controls how the IngressController
 	// behaves when the client closes the TCP connection while the TLS
@@ -284,6 +301,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	//
 	// - Using RSA keys larger than 2048 bits can significantly slow down
 	// TLS computations. Consider using the "Abort" policy to reduce CPU usage.
+	//
 	ClosedClientConnectionPolicy *operatorv1.IngressControllerClosedClientConnectionPolicy `json:"closedClientConnectionPolicy,omitempty"`
 	// haproxyVersion specifies the HAProxy version to use for this
 	// IngressController.
@@ -309,6 +327,7 @@ type IngressControllerSpecApplyConfiguration struct {
 	// If a specific HAProxy version is set and would become unsupported in a
 	// target cluster upgrade, a preflight check will block the cluster upgrade
 	// until this field is updated to unset or a supported version.
+	//
 	HAProxyVersion *operatorv1.HAProxyVersion `json:"haproxyVersion,omitempty"`
 }
 

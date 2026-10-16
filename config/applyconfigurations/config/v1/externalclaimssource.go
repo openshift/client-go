@@ -10,21 +10,25 @@ type ExternalClaimsSourceApplyConfiguration struct {
 	// authentication is an optional field that configures how the apiserver authenticates with an external claims source.
 	// When not specified, anonymous authentication is used which means no 'Authorization' header
 	// is sent in the HTTP request to fetch the external claims.
+	//
 	Authentication *ExternalSourceAuthenticationApplyConfiguration `json:"authentication,omitempty"`
 	// tls is an optional field that configures the http client TLS
 	// settings when fetching external claims from this source.
 	//
 	// When omitted, system default TLS settings will be used
 	// for fetching claims from the external source.
+	//
 	TLS *ExternalSourceTLSApplyConfiguration `json:"tls,omitempty"`
 	// url is a required configuration of the URL
 	// for which the external claims are located.
+	//
 	URL *SourceURLApplyConfiguration `json:"url,omitempty"`
 	// mappings is a required list of the claim
 	// and response handling expression pairs
 	// that produces the claims from the external source.
 	// mappings must have at least 1 entry and must not exceed 16 entries.
 	// Entries must have a unique name across all external claim sources.
+	//
 	Mappings []SourcedClaimMappingApplyConfiguration `json:"mappings,omitempty"`
 	// predicates is an optional list of constraints in
 	// which claims should attempt to be fetched from this
@@ -37,6 +41,7 @@ type ExternalClaimsSourceApplyConfiguration struct {
 	// before claims are attempted to be fetched from this external source.
 	// predicates must have at least 1 entry and must not exceed 16 entries.
 	// Entries must have unique expressions.
+	//
 	Predicates []ExternalSourcePredicateApplyConfiguration `json:"predicates,omitempty"`
 }
 

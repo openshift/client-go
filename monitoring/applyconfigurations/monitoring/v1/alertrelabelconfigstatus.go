@@ -13,6 +13,7 @@ import (
 type AlertRelabelConfigStatusApplyConfiguration struct {
 	// conditions contains details on the state of the AlertRelabelConfig, may be
 	// empty.
+	//
 	Conditions []metav1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 
