@@ -15,6 +15,7 @@ type PrefixedClaimMappingApplyConfiguration struct {
 	// Must not be set to a non-empty value when expression is set.
 	//
 	// Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains an array of strings "a", "b" and "c", the mapping will result in an array of string "myoidc:a", "myoidc:b" and "myoidc:c".
+	//
 	Prefix *string `json:"prefix,omitempty"`
 }
 

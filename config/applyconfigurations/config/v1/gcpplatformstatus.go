@@ -26,6 +26,7 @@ type GCPPlatformStatusApplyConfiguration struct {
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
+	//
 	CloudLoadBalancerConfig *CloudLoadBalancerConfigApplyConfiguration `json:"cloudLoadBalancerConfig,omitempty"`
 	// universeDomain is the GCP universe domain for the cluster, detected from
 	// the installer credentials. Components with their own GCP credentials should
@@ -38,6 +39,7 @@ type GCPPlatformStatusApplyConfiguration struct {
 	// universeDomain is an optional field that, when specified, must be non-empty and at most
 	// 253 characters. It must be a valid DNS subdomain: containing only lowercase alphanumeric
 	// characters, '-' or '.', and starting and ending with an alphanumeric character.
+	//
 	UniverseDomain *string `json:"universeDomain,omitempty"`
 }
 

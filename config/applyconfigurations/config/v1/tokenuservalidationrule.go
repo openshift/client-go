@@ -14,6 +14,7 @@ type TokenUserValidationRuleApplyConfiguration struct {
 	// When the expression evaluates to 'true', the cluster user identity is considered valid.
 	// When the expression evaluates to 'false', the cluster user identity is not considered valid.
 	// expression must be at least 1 character in length and must not exceed 1024 characters.
+	//
 	Expression *string `json:"expression,omitempty"`
 	// message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails.
 	// message must be at least 1 character in length and must not exceed 256 characters.

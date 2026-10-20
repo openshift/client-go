@@ -15,6 +15,7 @@ type ConsolePluginProxyEndpointApplyConfiguration struct {
 	// type is the type of the console plugin's proxy. Currently only "Service" is supported.
 	//
 	// ---
+	//
 	Type *consolev1.ConsolePluginProxyType `json:"type,omitempty"`
 	// service is an in-cluster Service that the plugin will connect to.
 	// The Service must use HTTPS. The console backend exposes an endpoint

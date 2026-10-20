@@ -12,6 +12,7 @@ import (
 // AccessLogging describes how client requests should be logged.
 type AccessLoggingApplyConfiguration struct {
 	// destination is where access logs go.
+	//
 	Destination *LoggingDestinationApplyConfiguration `json:"destination,omitempty"`
 	// httpLogFormat specifies the format of the log message for an HTTP
 	// request.
@@ -26,6 +27,7 @@ type AccessLoggingApplyConfiguration struct {
 	// terminates encryption (that is, edge-terminated or reencrypt
 	// connections).  It does not affect the log format for TLS passthrough
 	// connections.
+	//
 	HttpLogFormat *string `json:"httpLogFormat,omitempty"`
 	// httpCaptureHeaders defines HTTP headers that should be captured in
 	// access logs.  If this field is empty, no headers are captured.
@@ -35,9 +37,11 @@ type AccessLoggingApplyConfiguration struct {
 	// terminates encryption (that is, edge-terminated or reencrypt
 	// connections).  Headers cannot be captured for TLS passthrough
 	// connections.
+	//
 	HTTPCaptureHeaders *IngressControllerCaptureHTTPHeadersApplyConfiguration `json:"httpCaptureHeaders,omitempty"`
 	// httpCaptureCookies specifies HTTP cookies that should be captured in
 	// access logs.  If this field is empty, no cookies are captured.
+	//
 	HTTPCaptureCookies []IngressControllerCaptureHTTPCookieApplyConfiguration `json:"httpCaptureCookies,omitempty"`
 	// logEmptyRequests specifies how connections on which no request is
 	// received should be logged.  Typically, these empty requests come from
@@ -49,6 +53,7 @@ type AccessLoggingApplyConfiguration struct {
 	// by port scans, in which case logging empty requests may aid in
 	// detecting intrusion attempts.  Allowed values for this field are
 	// "Log" and "Ignore".  The default value is "Log".
+	//
 	LogEmptyRequests *operatorv1.LoggingPolicy `json:"logEmptyRequests,omitempty"`
 }
 

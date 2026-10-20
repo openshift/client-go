@@ -52,6 +52,7 @@ type CRIOCredentialProviderConfigSpecApplyConfiguration struct {
 	// - gcr.io
 	// - *.*.registry.io
 	// - registry.io:8080/path
+	//
 	MatchImages []configv1.MatchImage `json:"matchImages,omitempty"`
 }
 

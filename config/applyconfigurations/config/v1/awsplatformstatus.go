@@ -28,6 +28,7 @@ type AWSPlatformStatusApplyConfiguration struct {
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
+	//
 	CloudLoadBalancerConfig *CloudLoadBalancerConfigApplyConfiguration `json:"cloudLoadBalancerConfig,omitempty"`
 	// ipFamily specifies the IP protocol family that should be used for AWS
 	// network resources. This controls whether AWS resources are created with
@@ -42,6 +43,7 @@ type AWSPlatformStatusApplyConfiguration struct {
 	// When omitted, this field defaults to "IPv4".
 	//
 	// This field is immutable and cannot be changed once set.
+	//
 	IPFamily *configv1.IPFamilyType `json:"ipFamily,omitempty"`
 }
 

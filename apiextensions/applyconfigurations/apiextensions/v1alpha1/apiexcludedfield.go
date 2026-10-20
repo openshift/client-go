@@ -28,6 +28,7 @@ type APIExcludedFieldApplyConfiguration struct {
 	// start with an alphabetic character and end with an alphanumeric
 	// character.
 	// At most 32 versions may be specified.
+	//
 	Versions []apiextensionsv1alpha1.APIVersionString `json:"versions,omitempty"`
 }
 

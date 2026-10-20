@@ -30,6 +30,7 @@ type AuditApplyConfiguration struct {
 	// and reproduce the issue in order to troubleshoot properly.
 	//
 	// If unset, the 'Default' profile is used as the default.
+	//
 	Profile *configv1.AuditProfileType `json:"profile,omitempty"`
 	// customRules specify profiles per group. These profile take precedence over the
 	// top-level profile field if they apply. They are evaluation from top to bottom and

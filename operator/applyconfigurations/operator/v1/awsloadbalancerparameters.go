@@ -26,12 +26,15 @@ type AWSLoadBalancerParametersApplyConfiguration struct {
 	// transport layer (TCP/SSL). See the following for additional details:
 	//
 	// https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb
+	//
 	Type *operatorv1.AWSLoadBalancerType `json:"type,omitempty"`
 	// classicLoadBalancerParameters holds configuration parameters for an AWS
 	// classic load balancer. Present only if type is Classic.
+	//
 	ClassicLoadBalancerParameters *AWSClassicLoadBalancerParametersApplyConfiguration `json:"classicLoadBalancer,omitempty"`
 	// networkLoadBalancerParameters holds configuration parameters for an AWS
 	// network load balancer. Present only if type is NLB.
+	//
 	NetworkLoadBalancerParameters *AWSNetworkLoadBalancerParametersApplyConfiguration `json:"networkLoadBalancer,omitempty"`
 }
 

@@ -10,6 +10,7 @@ type IngressControllerLoggingApplyConfiguration struct {
 	// access describes how the client requests should be logged.
 	//
 	// If this field is empty, access logging is disabled.
+	//
 	Access *AccessLoggingApplyConfiguration `json:"access,omitempty"`
 }
 

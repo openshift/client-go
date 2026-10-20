@@ -18,12 +18,14 @@ type AWSSubnetsApplyConfiguration struct {
 	// characters long, must be unique, and the total
 	// number of subnets specified by ids and names
 	// must not exceed 10.
+	//
 	IDs []operatorv1.AWSSubnetID `json:"ids,omitempty"`
 	// names specifies a list of AWS subnets by subnet name.
 	// Subnet names must not start with "subnet-", must not
 	// include commas, must be under 256 characters in length,
 	// must be unique, and the total number of subnets
 	// specified by ids and names must not exceed 10.
+	//
 	Names []operatorv1.AWSSubnetName `json:"names,omitempty"`
 }
 

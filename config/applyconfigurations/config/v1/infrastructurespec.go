@@ -23,6 +23,7 @@ type InfrastructureSpecApplyConfiguration struct {
 	// The controller generates a ConfigMap `kube-cloud-config` in `openshift-config-managed` namespace
 	// with the kube cloud config is stored in `cloud.conf` key.
 	// All the clients are expected to use the generated ConfigMap only.
+	//
 	CloudConfig *ConfigMapFileReferenceApplyConfiguration `json:"cloudConfig,omitempty"`
 	// platformSpec holds desired information specific to the underlying
 	// infrastructure provider.
@@ -36,6 +37,7 @@ type InfrastructureSpecApplyConfiguration struct {
 	// no changes are required and no transitions will be triggered.
 	//
 	// This value may be set to match status.controlPlaneTopology regardless of the current value.
+	//
 	ControlPlaneTopology *configv1.TopologyMode `json:"controlPlaneTopology,omitempty"`
 	// infrastructureTopology expresses the desired topology for infrastructure
 	// services that do not run on control plane nodes, indicating how
@@ -47,6 +49,7 @@ type InfrastructureSpecApplyConfiguration struct {
 	// When the value differs from status.infrastructureTopology, the cluster
 	// evaluates whether the requested transition can proceed. Not all
 	// transitions may be permitted.
+	//
 	InfrastructureTopology *configv1.TopologyMode `json:"infrastructureTopology,omitempty"`
 }
 

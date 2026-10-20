@@ -16,6 +16,7 @@ type AWSCSIDriverConfigSpecApplyConfiguration struct {
 	// <region> is the AWS region,
 	// <account-id> is a 12-digit numeric identifier for the AWS account,
 	// <key-id-or-alias> is the KMS key ID or alias name.
+	//
 	KMSKeyARN *string `json:"kmsKeyARN,omitempty"`
 	// efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.
 	EFSVolumeMetrics *AWSEFSVolumeMetricsApplyConfiguration `json:"efsVolumeMetrics,omitempty"`

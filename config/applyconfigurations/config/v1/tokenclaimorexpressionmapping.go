@@ -13,6 +13,7 @@ type TokenClaimOrExpressionMappingApplyConfiguration struct {
 	// Precisely one of claim or expression must be set.
 	// claim must not be specified when expression is set.
 	// When specified, claim must be at least 1 character in length and must not exceed 256 characters in length.
+	//
 	Claim *string `json:"claim,omitempty"`
 	// expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.
 	//
@@ -24,6 +25,7 @@ type TokenClaimOrExpressionMappingApplyConfiguration struct {
 	// Precisely one of claim or expression must be set.
 	// expression must not be specified when claim is set.
 	// When specified, expression must be at least 1 character in length and must not exceed 1024 characters in length.
+	//
 	Expression *string `json:"expression,omitempty"`
 }
 

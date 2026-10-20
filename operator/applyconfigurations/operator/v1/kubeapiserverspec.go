@@ -19,6 +19,7 @@ type KubeAPIServerSpecApplyConfiguration struct {
 	//
 	// When omitted this means no opinion, and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default value is 3h (180 minutes).
+	//
 	EventTTLMinutes *int32 `json:"eventTTLMinutes,omitempty"`
 }
 

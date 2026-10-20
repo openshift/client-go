@@ -18,6 +18,7 @@ type AWSClassicLoadBalancerParametersApplyConfiguration struct {
 	// see <https://pkg.go.dev/time#ParseDuration>.  A nil or zero value
 	// means no opinion, in which case a default value is used.  The default
 	// value for this field is 60s.  This default is subject to change.
+	//
 	ConnectionIdleTimeout *metav1.Duration `json:"connectionIdleTimeout,omitempty"`
 	// subnets specifies the subnets to which the load balancer will
 	// attach. The subnets may be specified by either their
@@ -31,6 +32,7 @@ type AWSClassicLoadBalancerParametersApplyConfiguration struct {
 	// When omitted from the spec, the subnets will be auto-discovered
 	// for each availability zone. Auto-discovered subnets are not reported
 	// in the status of the IngressController object.
+	//
 	Subnets *AWSSubnetsApplyConfiguration `json:"subnets,omitempty"`
 }
 

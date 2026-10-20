@@ -15,6 +15,7 @@ type ConsolePluginBackendApplyConfiguration struct {
 	// type is the backend type which servers the console's plugin. Currently only "Service" is supported.
 	//
 	// ---
+	//
 	Type *consolev1.ConsolePluginBackendType `json:"type,omitempty"`
 	// service is a Kubernetes Service that exposes the plugin using a
 	// deployment with an HTTP server. The Service must use HTTPS and

@@ -15,11 +15,13 @@ type ClientCredentialConfigApplyConfiguration struct {
 	// clientID is a required client identifier to use during the OAuth2 client credentials flow.
 	// clientID must be at least 1 character in length, must not exceed 256 characters in length,
 	// and must only contain printable ASCII characters.
+	//
 	ClientID *string `json:"clientID,omitempty"`
 	// clientSecret is a required reference to a Secret in the openshift-config namespace to be used
 	// as the client secret during the OAuth2 client credentials flow.
 	//
 	// The key 'client-secret' is used to locate the client secret data in the Secret.
+	//
 	ClientSecret *ClientSecretSecretReferenceApplyConfiguration `json:"clientSecret,omitempty"`
 	// tokenEndpoint is a required URL to query for an access token using
 	// the client credential OAuth2 flow.
@@ -28,6 +30,7 @@ type ClientCredentialConfigApplyConfiguration struct {
 	// tokenEndpoint must have a host and a path.
 	// tokenEndpoint must not contain query parameters, fragments,
 	// or user information (e.g., "user:password@host").
+	//
 	TokenEndpoint *string `json:"tokenEndpoint,omitempty"`
 	// scopes is an optional list of OAuth2 scopes to request when obtaining
 	// an access token.
@@ -39,6 +42,7 @@ type ClientCredentialConfigApplyConfiguration struct {
 	// Each entry must be at least 1 character in length and must not exceed 256 characters in length.
 	// Each entry must only contain printable ASCII characters, excluding spaces, double quotes and backslashes.
 	// Entries must be unique.
+	//
 	Scopes []configv1.OAuth2Scope `json:"scopes,omitempty"`
 	// tls is an optional field that allows configuring the TLS
 	// settings used to interact with the identity provider
@@ -46,6 +50,7 @@ type ClientCredentialConfigApplyConfiguration struct {
 	//
 	// When omitted, system default TLS settings will be used
 	// for the OAuth2 client.
+	//
 	TLS *ExternalSourceTLSApplyConfiguration `json:"tls,omitempty"`
 }
 

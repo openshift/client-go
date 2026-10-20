@@ -19,15 +19,18 @@ type UpdateApplyConfiguration struct {
 	// architecture is set, image cannot be set and version must be
 	// set.
 	// Valid values are 'Multi' and empty.
+	//
 	Architecture *configv1.ClusterVersionArchitecture `json:"architecture,omitempty"`
 	// version is a semantic version identifying the update version.
 	// version is required if architecture is specified.
 	// If both version and image are set, the version extracted from the referenced image must match the specified version.
+	//
 	Version *string `json:"version,omitempty"`
 	// image is a container image location that contains the update.
 	// image should be used when the desired version does not exist in availableUpdates or history.
 	// When image is set, architecture cannot be specified.
 	// If both version and image are set, the version extracted from the referenced image must match the specified version.
+	//
 	Image *string `json:"image,omitempty"`
 	// force allows an administrator to update to an image that has failed
 	// verification or upgradeable checks that are designed to keep your
@@ -39,6 +42,7 @@ type UpdateApplyConfiguration struct {
 	// The provided image will run with full administrative access
 	// to the cluster. Do not use this flag with images that come from unknown
 	// or potentially malicious sources.
+	//
 	Force *bool `json:"force,omitempty"`
 	// acceptRisks is an optional set of names of conditional update risks that are considered acceptable.
 	// A conditional update is performed only if all of its risks are acceptable.

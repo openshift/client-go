@@ -40,13 +40,16 @@ type ClusterVersionSpecApplyConfiguration struct {
 	// previous version is within the current minor version. Not all
 	// rollbacks will succeed, and some may unrecoverably break the
 	// cluster.
+	//
 	DesiredUpdate *UpdateApplyConfiguration `json:"desiredUpdate,omitempty"`
 	// upstream may be used to specify the preferred update server. By default
 	// it will use the appropriate update server for the cluster and region.
+	//
 	Upstream *configv1.URL `json:"upstream,omitempty"`
 	// channel is an identifier for explicitly requesting a non-default set
 	// of updates to be applied to this cluster. The default channel will
 	// contain stable updates that are appropriate for production clusters.
+	//
 	Channel *string `json:"channel,omitempty"`
 	// capabilities configures the installation of optional, core
 	// cluster components.  A null value here is identical to an

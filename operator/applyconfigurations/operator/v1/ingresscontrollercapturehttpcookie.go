@@ -19,6 +19,7 @@ type IngressControllerCaptureHTTPCookieApplyConfiguration struct {
 	// value will be truncated in the log message.  Note that the ingress
 	// controller may impose a separate bound on the total length of HTTP
 	// headers in a request.
+	//
 	MaxLength *int `json:"maxLength,omitempty"`
 }
 

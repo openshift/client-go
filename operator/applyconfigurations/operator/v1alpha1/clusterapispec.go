@@ -22,6 +22,7 @@ type ClusterAPISpecApplyConfiguration struct {
 	// Items cannot be removed from this list once added.
 	//
 	// The maximum number of unmanagedCustomResourceDefinitions is 128.
+	//
 	UnmanagedCustomResourceDefinitions []string `json:"unmanagedCustomResourceDefinitions,omitempty"`
 }
 

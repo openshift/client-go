@@ -24,6 +24,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// values that are too small may break the IngressController and
 	// headerBufferBytes values that are too large could cause the
 	// IngressController to use significantly more memory than necessary.
+	//
 	HeaderBufferBytes *int32 `json:"headerBufferBytes,omitempty"`
 	// headerBufferMaxRewriteBytes describes how much memory should be reserved
 	// (in bytes) from headerBufferBytes for HTTP header rewriting
@@ -39,6 +40,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// IngressController and headerBufferMaxRewriteBytes values that are too
 	// large could cause the IngressController to use significantly more memory
 	// than necessary.
+	//
 	HeaderBufferMaxRewriteBytes *int32 `json:"headerBufferMaxRewriteBytes,omitempty"`
 	// threadCount defines the number of threads created per HAProxy process.
 	// Creating more threads allows each ingress controller pod to handle more
@@ -52,6 +54,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// time under load, potentially starving other pods if set too high.
 	// Reducing the number of threads may cause the ingress controller to
 	// perform poorly.
+	//
 	ThreadCount *int32 `json:"threadCount,omitempty"`
 	// clientTimeout defines how long a connection will be held open while
 	// waiting for a client response.
@@ -90,6 +93,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default. This default is subject to change over time.
 	// The current default is 5s.
+	//
 	ConnectTimeout *metav1.Duration `json:"connectTimeout,omitempty"`
 	// httpKeepAliveTimeout defines the maximum allowed time to wait for
 	// a new HTTP request to appear on a connection from the client to the router.
@@ -111,6 +115,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	//
 	// High values (minutes or more) favor connection reuse but may cause idle
 	// connections to linger longer.
+	//
 	HTTPKeepAliveTimeout *metav1.Duration `json:"httpKeepAliveTimeout,omitempty"`
 	// tlsInspectDelay defines how long the router can hold data to find a
 	// matching route.
@@ -141,6 +146,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	//
 	// Currently the minimum allowed value is 1s and the maximum allowed value is
 	// 2147483647ms (24.85 days).  Both are subject to change over time.
+	//
 	HealthCheckInterval *metav1.Duration `json:"healthCheckInterval,omitempty"`
 	// maxConnections defines the maximum number of simultaneous
 	// connections that can be established per HAProxy process.
@@ -182,6 +188,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// You can monitor memory usage of individual HAProxy
 	// processes in router containers with the following metric:
 	// 'container_memory_working_set_bytes{container="router",namespace="openshift-ingress"}/container_processes{container="router",namespace="openshift-ingress"}'.
+	//
 	MaxConnections *int32 `json:"maxConnections,omitempty"`
 	// reloadInterval defines the minimum interval at which the router is allowed to reload
 	// to accept new changes. Increasing this value can prevent the accumulation of
@@ -209,6 +216,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	// in observing updates to routes and their endpoints. HAProxy's configuration will
 	// be reloaded less frequently, and newly created routes will not be served until the
 	// subsequent reload.
+	//
 	ReloadInterval *metav1.Duration `json:"reloadInterval,omitempty"`
 	// configurationManagement specifies how OpenShift router should update
 	// the HAProxy configuration.  The following values are valid for this
@@ -235,6 +243,7 @@ type IngressControllerTuningOptionsApplyConfiguration struct {
 	//
 	// Note: The "Dynamic" option is currently experimental and should not
 	// be enabled on production clusters.
+	//
 	ConfigurationManagement *operatorv1.IngressControllerConfigurationManagement `json:"configurationManagement,omitempty"`
 }
 

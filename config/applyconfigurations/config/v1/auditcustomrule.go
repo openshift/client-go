@@ -13,6 +13,7 @@ import (
 // the top-level profile.
 type AuditCustomRuleApplyConfiguration struct {
 	// group is a name of group a request user must be member of in order to this profile to apply.
+	//
 	Group *string `json:"group,omitempty"`
 	// profile specifies the name of the desired audit policy configuration to be deployed to
 	// all OpenShift-provided API servers in the cluster.
@@ -26,6 +27,7 @@ type AuditCustomRuleApplyConfiguration struct {
 	// - None: no requests are logged at all, not even oauthaccesstokens and oauthauthorizetokens.
 	//
 	// If unset, the 'Default' profile is used as the default.
+	//
 	Profile *configv1.AuditProfileType `json:"profile,omitempty"`
 }
 

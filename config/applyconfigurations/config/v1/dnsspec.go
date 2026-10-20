@@ -19,6 +19,7 @@ type DNSSpecApplyConfiguration struct {
 	// If this field is nil, no public records should be created.
 	//
 	// Once set, this field cannot be changed.
+	//
 	PublicZone *DNSZoneApplyConfiguration `json:"publicZone,omitempty"`
 	// privateZone is the location where all the DNS records that are only available internally
 	// to the cluster exist.
@@ -26,6 +27,7 @@ type DNSSpecApplyConfiguration struct {
 	// If this field is nil, no private records should be created.
 	//
 	// Once set, this field cannot be changed.
+	//
 	PrivateZone *DNSZoneApplyConfiguration `json:"privateZone,omitempty"`
 	// platform holds configuration specific to the underlying
 	// infrastructure provider for DNS.

@@ -20,6 +20,7 @@ type MachineConfigNodeStatusInternalReleaseImageRefApplyConfiguration struct {
 	// If Available is true, it means that the release has been previously installed on the current node, and it can be used.
 	// If Removing is true, it means that a release deletion is in progress on the current node, and not yet completed.
 	// If Degraded is true, that means something has gone wrong in the current node.
+	//
 	Conditions []metav1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 	// name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.
 	// The expected name format is ocp-release-bundle-<version>-<arch|stream>.

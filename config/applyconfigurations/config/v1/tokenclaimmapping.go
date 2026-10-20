@@ -12,6 +12,7 @@ type TokenClaimMappingApplyConfiguration struct {
 	// claim must not exceed 256 characters in length.
 	// When set to the empty string `""`, this means that no named claim should be used for the group mapping.
 	// claim is required when the ExternalOIDCWithUpstreamParity feature gate is not enabled.
+	//
 	Claim *string `json:"claim,omitempty"`
 	// expression is an optional CEL expression used to derive
 	// group values from JWT claims.
@@ -21,6 +22,7 @@ type TokenClaimMappingApplyConfiguration struct {
 	// expression must be at least 1 character and must not exceed 1024 characters in length .
 	//
 	// When specified, claim must not be set or be explicitly set to the empty string (`""`).
+	//
 	Expression *string `json:"expression,omitempty"`
 }
 

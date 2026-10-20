@@ -35,6 +35,7 @@ type NodePortStrategyApplyConfiguration struct {
 	//
 	// The empty string specifies the default, which is TCP without PROXY
 	// protocol.  Note that the default is subject to change.
+	//
 	Protocol *operatorv1.IngressControllerProtocol `json:"protocol,omitempty"`
 }
 
