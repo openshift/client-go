@@ -1242,6 +1242,10 @@
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
+        },
+        "trustedCAFilePath": {
+          "description": "trustedCAFilePath is an optional path to a PEM-encoded CA bundle used to verify outbound HTTPS connections including proxies and TLS-intercepting proxies for outbound issuer discovery and JWKS requests. When specified, the file is watched and updates are applied without restarting the webhook server. When omitted, connections use the system trust roots only.",
+          "type": "string"
         }
       }
     },
@@ -8779,6 +8783,11 @@
         "platformStatus": {
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
+        },
+        "topologyTransitionStatus": {
+          "description": "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is optional and is omitted until the topology controller reports transition status. A transition is requested through spec.controlPlaneTopology. The controller reports completion only after both topologies reach that transition's target and post-transition checks pass; reaching the target topology alone is not completion.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionStatus"
         }
       }
     },
@@ -12126,6 +12135,80 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TopologyState": {
+      "description": "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition. The topology controller determines which transitions are supported. Currently, it supports only transitions that change both topologies from SingleReplica to HighlyAvailable. Representing a topology here does not enable a transition to it.",
+      "type": "object",
+      "required": [
+        "controlPlaneTopology",
+        "infrastructureTopology"
+      ],
+      "properties": {
+        "controlPlaneTopology": {
+          "description": "controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. controlPlaneTopology is required.",
+          "type": "string"
+        },
+        "infrastructureTopology": {
+          "description": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. infrastructureTopology is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransition": {
+      "type": "object",
+      "required": [
+        "source",
+        "target",
+        "evaluations"
+      ],
+      "properties": {
+        "evaluations": {
+          "description": "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailable is required; other condition types report individual checks. Between one and 32 conditions must be present, allowing at most 31 individual checks in addition to the availability condition. The controller defines individual check types, reasons, and messages, and always reports each one explicitly, using Unknown when a check's result is not yet known.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "source": {
+          "description": "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. External control planes cannot be a transition source. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. source is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        },
+        "target": {
+          "description": "target is the control-plane and infrastructure topology this transition would move to. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. External control planes cannot be a transition target. target is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionStatus": {
+      "description": "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provides information on topology transition progress and the evaluation of supported transition types. The controller always reports both conditions once topologyTransitionStatus is set.\n\nValid condition types are TopologyTransitionsEvaluated and TopologyTransitionCompleted. Both conditions must be present: the controller always reports each condition explicitly, using Unknown when a condition's state is not yet known, rather than omitting it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "transitions": {
+          "description": "transitions contains each supported transition type and its availability. It is optional. The controller clears this list whenever TopologyTransitionsEvaluated is not True, so its presence always reflects current, trustworthy results: an omitted list while TopologyTransitionsEvaluated is True means no supported transition options were found, and an omitted list otherwise means no transition options have been reported yet.\n\nBetween one and eight transition options must be present when the list is set. This list reports transition options, not concurrent transitions. The topology controller determines which transition options are supported.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransition"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Update": {
       "description": "Update represents an administrator update request.",
       "type": "object",
@@ -13042,97 +13125,6 @@
           "description": "username defines the secret reference containing the username for basic authentication. The secret must exist in the openshift-monitoring namespace.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfig": {
-      "description": "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "spec defines the desired configuration of the CRI-O Credential Provider. This field is required and must be provided when creating the resource.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigSpec"
-        },
-        "status": {
-          "description": "status represents the current state of the CRIOCredentialProviderConfig. When omitted or nil, it indicates that the status has not yet been set by the controller. The controller will populate this field with validation conditions and operational state.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigList": {
-      "description": "CRIOCredentialProviderConfigList contains a list of CRIOCredentialProviderConfig resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "metadata",
-        "items"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfig"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigSpec": {
-      "description": "CRIOCredentialProviderConfigSpec defines the desired configuration of the CRI-O Credential Provider.",
-      "type": "object",
-      "properties": {
-        "matchImages": {
-          "description": "matchImages is a list of string patterns used to determine whether the CRI-O credential provider should be invoked for a given image. This list is passed to the kubelet CredentialProviderConfig, and if any pattern matches the requested image, CRI-O credential provider will be invoked to obtain credentials for pulling that image or its mirrors. Depending on the platform, the CRI-O credential provider may be installed alongside an existing platform specific provider. Conflicts between the existing platform specific provider image match configuration and this list will be handled by the following precedence rule: credentials from built-in kubelet providers (e.g., ECR, GCR, ACR) take precedence over those from the CRIOCredentialProviderConfig when both match the same image. To avoid uncertainty, it is recommended to avoid configuring your private image patterns to overlap with existing platform specific provider config(e.g., the entries from https://github.com/openshift/machine-config-operator/blob/main/templates/common/aws/files/etc-kubernetes-credential-providers-ecr-credential-provider.yaml). You can check the resource's Status conditions to see if any entries were ignored due to exact matches with known built-in provider patterns.\n\nThis field is optional, the items of the list must contain between 1 and 50 entries. The list is treated as a set, so duplicate entries are not allowed.\n\nFor more details, see: https://kubernetes.io/docs/tasks/administer-cluster/kubelet-credential-provider/ https://github.com/cri-o/crio-credential-provider#architecture\n\nEach entry in matchImages is a pattern which can optionally contain a port and a path. Each entry must be no longer than 512 characters. Wildcards ('*') are supported for full subdomain labels, such as '*.k8s.io' or 'k8s.*.io', and for top-level domains, such as 'k8s.*' (which matches 'k8s.io' or 'k8s.net'). A global wildcard '*' (matching any domain) is not allowed. Wildcards may replace an entire hostname label (e.g., *.example.com), but they cannot appear within a label (e.g., f*oo.example.com) and are not allowed in the port or path. For example, 'example.*.com' is valid, but 'exa*mple.*.com' is not. Each wildcard matches only a single domain label, so '*.io' does **not** match '*.k8s.io'.\n\nA match exists between an image and a matchImage when all of the below are true: Both contain the same number of domain parts and each part matches. The URL path of an matchImages must be a prefix of the target image URL path. If the matchImages contains a port, then the port must match in the image as well.\n\nExample values of matchImages: - 123456789.dkr.ecr.us-east-1.amazonaws.com - *.azurecr.io - gcr.io - *.*.registry.io - registry.io:8080/path",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-kubernetes-list-type": "set"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.CRIOCredentialProviderConfigStatus": {
-      "description": "CRIOCredentialProviderConfigStatus defines the observed state of CRIOCredentialProviderConfig",
-      "type": "object",
-      "properties": {
-        "conditions": {
-          "description": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Validated\": indicates whether the matchImages configuration is valid",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          },
-          "x-kubernetes-list-map-keys": [
-            "type"
-          ],
-          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -27917,6 +27909,214 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfig": {
+      "description": "BGPVIPConfig carries the BGP peering configuration for BGP-based VIP management (enhancement openshift/enhancements#1982). It is a singleton named \"cluster\", generated by the installer from platform.baremetal.bgpVIPConfig in the install-config, and may be edited day-2 to reconfigure peering. The configuration is rendered into node-level BGP configuration by its consumers, the machine-config-operator and the cluster-network-operator, which report their progress in status.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the desired BGP VIP peering configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigSpec"
+        },
+        "status": {
+          "description": "status reports the consumers' progress applying the configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigList": {
+      "description": "BGPVIPConfigList is a list of BGPVIPConfig resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfig"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigSpec": {
+      "description": "BGPVIPConfigSpec describes the BGP peering used to advertise the API and Ingress VIPs.",
+      "type": "object",
+      "required": [
+        "localASN",
+        "defaultPeers"
+      ],
+      "properties": {
+        "communities": {
+          "description": "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value of at least 0 and not exceeding 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value of at least 0 and not exceeding 4294967295. When omitted, no communities are attached. Entries are unique; when set, must have at least 1 entry and must not exceed 8 entries.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "defaultPeers": {
+          "description": "defaultPeers are the BGP peers every node establishes sessions with, unless the node is named in hostOverrides. Must have at least 1 entry and must not exceed 16 entries, unique by peerAddress.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "peerAddress"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "hostOverrides": {
+          "description": "hostOverrides replaces (does not merge with) defaultPeers for the named nodes. Only the per-node peer file rendered by the machine-config-operator consumes overrides; the cluster-wide session configuration rendered by the cluster-network-operator uses defaultPeers. When omitted, all nodes use defaultPeers; when set, must have at least 1 entry and must not exceed 256 entries, unique by hostname.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPHostPeers"
+          },
+          "x-kubernetes-list-map-keys": [
+            "hostname"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "localASN": {
+          "description": "localASN is the BGP autonomous system number (ASN) the cluster's BGP speakers present to the configured peers. Use the ASN your network administrator assigned to the cluster - the peer routers must expect it or no session establishes; private-range ASNs (e.g. 64512-65534) are typical for datacenter fabrics. Must be at least 1 and must not exceed 4294967295.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfigStatus": {
+      "description": "BGPVIPConfigStatus reports the consumers' progress applying the spec.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions reports the state of processing the configuration; when set, must have at least 1 entry and must not exceed 8 entries. Known condition types are \"Rendered\" (the machine-config-operator has rendered the per-node peer configuration) and \"SessionsConfigured\" (the cluster-network-operator has rendered the FRR session configuration for application). SessionsConfigured does not assert that the generated FRRConfiguration was accepted by the frr-k8s admission webhook or applied on the nodes. Each condition's observedGeneration reports the generation of the spec most recently processed by the operator that writes it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPHostPeers": {
+      "description": "BGPVIPHostPeers is a per-node replacement peer list.",
+      "type": "object",
+      "required": [
+        "hostname",
+        "peers"
+      ],
+      "properties": {
+        "hostname": {
+          "description": "hostname of the node this override applies to, as a non-empty RFC 1123 subdomain of at most 253 characters with dot-separated labels of at most 63 characters each. It is compared verbatim against the hostname the node resolves for itself (as rendered into the per-node peer file), so a short name and its fully qualified form are distinct entries and only the exact match applies.",
+          "type": "string"
+        },
+        "peers": {
+          "description": "peers replaces defaultPeers for this node. Must have at least 1 entry and must not exceed 16 entries, unique by peerAddress.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "peerAddress"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPasswordSecret": {
+      "description": "BGPVIPPasswordSecret references a Secret in the openshift-config namespace by name.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced Secret in the openshift-config namespace. Must be a non-empty RFC 1123 subdomain of at most 253 characters, matching what Kubernetes accepts as a Secret name.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPeer": {
+      "description": "BGPVIPPeer describes one BGP peer.",
+      "type": "object",
+      "required": [
+        "peerAddress",
+        "peerASN"
+      ],
+      "properties": {
+        "failureDetection": {
+          "description": "failureDetection determines how a failed peer is detected. When set to \"BFD\", a BFD session is established with the peer and BGP reacts to BFD failure detection. When set to \"HoldTimer\", failure detection relies on the BGP hold timer alone. When omitted, failure detection relies on the BGP hold timer.",
+          "type": "string"
+        },
+        "holdTimeSeconds": {
+          "description": "holdTimeSeconds is the BGP hold time in seconds; must be at least 3 (the RFC 4271 minimum for a non-zero hold time) and must not exceed 65535. When omitted, no hold time is configured and the FRR default (180 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "keepaliveTimeSeconds": {
+          "description": "keepaliveTimeSeconds is the BGP keepalive interval in seconds; must be at least 1 and must not exceed 65535. When omitted, no keepalive interval is configured and the FRR default (60 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "passwordSecret": {
+          "description": "passwordSecret references the Secret carrying the TCP MD5 password (RFC 2385) for the session. The Secret must be of type kubernetes.io/basic-auth, live in the openshift-config namespace, and carry the password in its \"password\" key (at most 80 bytes, the kernel's TCP MD5 limit). The Secret type, key, and size requirements are not validated by the API server; the consumers validate them when resolving the reference and must never surface the Secret contents in status, events, or logs. Passwords are never stored in this API. When omitted, the session is unauthenticated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPPasswordSecret"
+        },
+        "peerASN": {
+          "description": "peerASN is the autonomous system number of the peer. Must be at least 1 and must not exceed 4294967295.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "peerAddress": {
+          "description": "peerAddress is the IP address of the BGP peer (IPv4 or IPv6) in canonical form (lowercase, no leading zeros, IPv6 zero-compressed); must be at least 2 characters in length and must not exceed 45 characters. The session's address family follows the address family of this value. Canonical form is required so that two spellings of one address cannot form duplicate peers.",
+          "type": "string"
+        },
+        "peerReachability": {
+          "description": "peerReachability describes how the peer is reached. When set to \"MultiHop\", the session may be established with a peer several router hops away. When set to \"DirectlyConnected\", the peer must be on a directly connected network. When omitted, the peer must be directly connected.",
+          "type": "string"
+        },
+        "port": {
+          "description": "port is the TCP port of the BGP session; must be at least 1 and must not exceed 65535. When omitted, port 179 is used.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.InternalReleaseImage": {
       "description": "InternalReleaseImage is used to keep track and manage a set of release bundles (OCP and OLM operators images) that are stored into the control planes nodes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -30608,7 +30808,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31770,6 +31971,46 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig": {
+      "description": "ConsoleAuthProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+      "type": "object",
+      "properties": {
+        "httpProxy": {
+          "description": "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "httpsProxy": {
+          "description": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "noProxy": {
+          "description": "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "trustedCA": {
+          "description": "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference": {
+      "description": "ConsoleAuthProxyTrustedCAConfigMapReference references a ConfigMap in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConsoleConfigRoute": {
       "description": "ConsoleConfigRoute holds information on external route access to console. DEPRECATED",
       "type": "object",
@@ -31928,6 +32169,11 @@
         "providers"
       ],
       "properties": {
+        "authProxy": {
+          "description": "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig"
+        },
         "customization": {
           "description": "customization is used to optionally provide a small set of customization options to the web console.",
           "default": {},
@@ -31960,7 +32206,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "providers": {
           "description": "providers contains configuration for using specific service providers.",
@@ -32297,14 +32544,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategoryMeta"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "tags": {
           "description": "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32331,7 +32580,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32344,7 +32594,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "types": {
           "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
@@ -33505,7 +33756,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.EndpointPublishingStrategy"
         },
         "haproxyVersion": {
-          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 continues with HAProxy 3.2 (same minor version introduced in OpenShift 5.0) and does not introduce a new HAProxy version.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
+          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 uses HAProxy 3.2 as its default version and supports HAProxy 3.4 as an explicit, non-default opt-in.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version. - \"3.4\": Uses the latest HAProxy 3.4.z available for this OpenShift release. This is an explicit opt-in; HAProxy 3.4 is not the default.\n\nPlanned lifecycle for later OpenShift releases: - OpenShift 5.2 plans to make HAProxy 3.4 the default when this field is unset, while continuing to support \"3.2\" as an explicit selection. - OpenShift 5.3 plans to retire support for selecting HAProxy 3.2.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
           "type": "string"
         },
         "httpCompression": {
@@ -33598,7 +33849,7 @@
           "default": ""
         },
         "effectiveHAProxyVersion": {
-          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using HAProxy 3.2",
+          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using the default HAProxy 3.2 - \"3.4\": Using the explicitly selected, non-default HAProxy 3.4\n\nPlanned lifecycle for later OpenShift releases: - OpenShift 5.2 plans to make HAProxy 3.4 the default while keeping HAProxy 3.2 selectable. - OpenShift 5.3 plans to retire HAProxy 3.2.",
           "type": "string"
         },
         "endpointPublishingStrategy": {
@@ -36523,7 +36774,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.PinnedResourceReference"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "visibility": {
           "description": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
@@ -36631,7 +36883,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36709,7 +36962,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36736,14 +36990,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "required": {
           "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
