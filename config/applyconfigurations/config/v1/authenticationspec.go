@@ -34,6 +34,7 @@ type AuthenticationSpecApplyConfiguration struct {
 	// honor bearer tokens that are provisioned by an external authentication service.
 	//
 	// Can only be set if "Type" is set to "None".
+	//
 	WebhookTokenAuthenticator *WebhookTokenAuthenticatorApplyConfiguration `json:"webhookTokenAuthenticator,omitempty"`
 	// serviceAccountIssuer is the identifier of the bound service account token
 	// issuer.
@@ -48,6 +49,7 @@ type AuthenticationSpecApplyConfiguration struct {
 	// Can only be set if "Type" is set to "OIDC".
 	//
 	// At most one provider can be configured.
+	//
 	OIDCProviders []OIDCProviderApplyConfiguration `json:"oidcProviders,omitempty"`
 }
 

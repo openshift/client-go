@@ -16,6 +16,7 @@ type OpenStackFailureDomainApplyConfiguration struct {
 	AvailabilityZone *string `json:"availabilityZone,omitempty"`
 	// rootVolume contains settings that will be used by the OpenStack machine provider to create the root volume attached to the VM.
 	// If not specified, no root volume will be created.
+	//
 	RootVolume *RootVolumeApplyConfiguration `json:"rootVolume,omitempty"`
 }
 

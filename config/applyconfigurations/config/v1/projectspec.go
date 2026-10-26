@@ -12,6 +12,7 @@ type ProjectSpecApplyConfiguration struct {
 	// projectRequestTemplate is the template to use for creating projects in response to projectrequest.
 	// This must point to a template in 'openshift-config' namespace. It is optional.
 	// If it is not specified, a default template is used.
+	//
 	ProjectRequestTemplate *TemplateReferenceApplyConfiguration `json:"projectRequestTemplate,omitempty"`
 }
 

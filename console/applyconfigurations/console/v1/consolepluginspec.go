@@ -56,6 +56,7 @@ type ConsolePluginSpecApplyConfiguration struct {
 	//
 	// OpenShift web console server CSP response header:
 	// Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'
+	//
 	ContentSecurityPolicy []ConsolePluginCSPApplyConfiguration `json:"contentSecurityPolicy,omitempty"`
 }
 

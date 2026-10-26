@@ -10,6 +10,7 @@ type IngressSpecApplyConfiguration struct {
 	// gatewayAPI holds configuration for Gateway API integration, including how the
 	// ingress operator manages Gateway API CRDs, the OpenShift Gateway API
 	// implementation, and its Gateway API controllers.
+	//
 	GatewayAPI *GatewayAPIIngressConfigApplyConfiguration `json:"gatewayAPI,omitempty"`
 }
 

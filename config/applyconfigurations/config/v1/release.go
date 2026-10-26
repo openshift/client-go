@@ -16,6 +16,7 @@ type ReleaseApplyConfiguration struct {
 	// architecture means either a single architecture or a multi
 	// architecture.
 	// Valid values are 'Multi' and empty.
+	//
 	Architecture *configv1.ClusterVersionArchitecture `json:"architecture,omitempty"`
 	// version is a semantic version identifying the update version. When this
 	// field is part of spec, version is optional if image is specified.

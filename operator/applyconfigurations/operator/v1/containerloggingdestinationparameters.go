@@ -13,6 +13,7 @@ type ContainerLoggingDestinationParametersApplyConfiguration struct {
 	// Valid values are integers in the range 480 to 8192, inclusive.
 	//
 	// When omitted, the default value is 1024.
+	//
 	MaxLength *int32 `json:"maxLength,omitempty"`
 }
 

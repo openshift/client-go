@@ -25,6 +25,7 @@ type ExternalSourcePredicateApplyConfiguration struct {
 	// field to understand what claims the identity provider includes when issuing tokens.
 	//
 	// expression must be at least 1 character and must not exceed 1024 characters in length.
+	//
 	Expression *string `json:"expression,omitempty"`
 }
 

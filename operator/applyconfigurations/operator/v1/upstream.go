@@ -22,12 +22,15 @@ type UpstreamApplyConfiguration struct {
 	// * When SystemResolvConf is used, the Upstream structure does not require any further fields to be defined:
 	// /etc/resolv.conf will be used
 	// * When Network is used, the Upstream structure must contain at least an Address
+	//
 	Type *operatorv1.UpstreamType `json:"type,omitempty"`
 	// address must be defined when Type is set to Network. It will be ignored otherwise.
 	// It must be a valid ipv4 or ipv6 address.
+	//
 	Address *string `json:"address,omitempty"`
 	// port may be defined when Type is set to Network. It will be ignored otherwise.
 	// Port must be between 65535
+	//
 	Port *uint32 `json:"port,omitempty"`
 }
 

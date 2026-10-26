@@ -11,17 +11,20 @@ type KMSPluginConfigReferenceApplyConfiguration struct {
 	// The value must be in the format <group>/<version>, where group is a DNS subdomain
 	// and version is a Kubernetes API version (for example, v1 or v1alpha1).
 	// It must contain between 1 and 64 characters.
+	//
 	APIVersion *string `json:"apiVersion,omitempty"`
 	// resource is required and is the resource name of the referenced KMS plugin configuration custom resource.
 	// This is the plural name used in the Kubernetes API (for example, vaultkmsconfigs),
 	// not the Kind (for example, VaultKMSConfig).
 	// The value must be between 1 and 63 characters, contain only lowercase alphanumeric
 	// characters or '-', and start and end with an alphanumeric character.
+	//
 	Resource *string `json:"resource,omitempty"`
 	// name is required and is the metadata.name of the referenced KMS plugin configuration resource.
 	// The referenced resource must be cluster-scoped.
 	// The name must be a valid DNS subdomain name: it must contain between 1 and 253 characters,
 	// contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.
+	//
 	Name *string `json:"name,omitempty"`
 }
 

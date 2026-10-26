@@ -24,12 +24,12 @@ type NodePlacementApplyConfiguration struct {
 	// When defaultPlacement is Workers, the default is:
 	//
 	// kubernetes.io/os: linux
-	// node-role.kubernetes.io/worker: ”
+	// node-role.kubernetes.io/worker: ''
 	//
 	// When defaultPlacement is ControlPlane, the default is:
 	//
 	// kubernetes.io/os: linux
-	// node-role.kubernetes.io/master: ”
+	// node-role.kubernetes.io/master: ''
 	//
 	// These defaults are subject to change.
 	//
@@ -37,6 +37,7 @@ type NodePlacementApplyConfiguration struct {
 	// nodeSelector.matchLabels may be used.  This is a limitation of the
 	// Kubernetes API: the pod spec does not allow complex expressions for
 	// node selectors.
+	//
 	NodeSelector *metav1.LabelSelectorApplyConfiguration `json:"nodeSelector,omitempty"`
 	// tolerations is a list of tolerations applied to ingress controller
 	// deployments.
@@ -44,6 +45,7 @@ type NodePlacementApplyConfiguration struct {
 	// The default is an empty list.
 	//
 	// See https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+	//
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 

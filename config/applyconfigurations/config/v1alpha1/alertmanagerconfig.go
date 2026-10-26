@@ -19,6 +19,7 @@ type AlertmanagerConfigApplyConfiguration struct {
 	// When set to Disabled, the Alertmanager instance will not be deployed.
 	// When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
+	//
 	DeploymentMode *configv1alpha1.AlertManagerDeployMode `json:"deploymentMode,omitempty"`
 	// customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.

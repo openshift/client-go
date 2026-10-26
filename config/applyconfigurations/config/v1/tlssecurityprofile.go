@@ -29,6 +29,7 @@ type TLSSecurityProfileApplyConfiguration struct {
 	// The profiles are intent based, so they may change over time as new ciphers are
 	// developed and existing ciphers are found to be insecure. Depending on
 	// precisely which ciphers are available to a process, the list may be reduced.
+	//
 	Type *configv1.TLSProfileType `json:"type,omitempty"`
 	// old is a TLS profile for use when services need to be accessed by very old
 	// clients or libraries and should be used only as a last resort.
@@ -64,6 +65,7 @@ type TLSSecurityProfileApplyConfiguration struct {
 	// - AES128-SHA
 	// - AES256-SHA
 	// - DES-CBC3-SHA
+	//
 	Old *configv1.OldTLSProfile `json:"old,omitempty"`
 	// intermediate is a TLS profile for use when you do not need compatibility with
 	// legacy clients and want to remain highly secure while being compatible with
@@ -85,6 +87,7 @@ type TLSSecurityProfileApplyConfiguration struct {
 	// - ECDHE-RSA-AES256-GCM-SHA384
 	// - ECDHE-ECDSA-CHACHA20-POLY1305
 	// - ECDHE-RSA-CHACHA20-POLY1305
+	//
 	Intermediate *configv1.IntermediateTLSProfile `json:"intermediate,omitempty"`
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
@@ -97,6 +100,7 @@ type TLSSecurityProfileApplyConfiguration struct {
 	// - TLS_AES_128_GCM_SHA256
 	// - TLS_AES_256_GCM_SHA384
 	// - TLS_CHACHA20_POLY1305_SHA256
+	//
 	Modern *configv1.ModernTLSProfile `json:"modern,omitempty"`
 	// custom is a user-defined TLS security profile. Be extremely careful using a custom
 	// profile as invalid configurations can be catastrophic.
@@ -111,6 +115,7 @@ type TLSSecurityProfileApplyConfiguration struct {
 	// - ECDHE-RSA-CHACHA20-POLY1305
 	// - ECDHE-RSA-AES128-GCM-SHA256
 	// - ECDHE-ECDSA-AES128-GCM-SHA256
+	//
 	Custom *CustomTLSProfileApplyConfiguration `json:"custom,omitempty"`
 }
 

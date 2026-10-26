@@ -14,7 +14,7 @@ import (
 type GathererStatusApplyConfiguration struct {
 	// conditions provide details on the status of each gatherer.
 	//
-	// # The current condition type is DataGathered
+	// The current condition type is DataGathered
 	//
 	// The DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name.
 	// When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected.
@@ -22,6 +22,7 @@ type GathererStatusApplyConfiguration struct {
 	// When it has a status of False and a reason of GatherError, an error occurred and no data was gathered.
 	// When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected.
 	// When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.
+	//
 	Conditions []metav1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 	// name is the required name of the gatherer.
 	// It must contain at least 5 characters and may not exceed 256 characters.

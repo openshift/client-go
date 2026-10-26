@@ -14,6 +14,7 @@ type DNSOverTLSConfigApplyConfiguration struct {
 	// serverName is the upstream server to connect to when forwarding DNS queries. This is required when Transport is
 	// set to "TLS". ServerName will be validated against the DNS naming conventions in RFC 1123 and should match the
 	// TLS certificate installed in the upstream resolver(s).
+	//
 	ServerName *string `json:"serverName,omitempty"`
 	// caBundle references a ConfigMap that must contain either a single
 	// CA Certificate or a CA Bundle. This allows cluster administrators to provide their
@@ -23,6 +24,7 @@ type DNSOverTLSConfigApplyConfiguration struct {
 	// 2. The value must be a PEM encoded CA certificate or CA bundle.
 	// 3. The administrator must create this configmap in the openshift-config namespace.
 	// 4. The upstream server certificate must contain a Subject Alternative Name (SAN) that matches ServerName.
+	//
 	CABundle *configv1.ConfigMapNameReference `json:"caBundle,omitempty"`
 }
 

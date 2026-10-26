@@ -62,6 +62,7 @@ type MachineConfigPoolSpecApplyConfiguration struct {
 	// When set, the referenced stream overrides the cluster-wide OS
 	// images for the pool with the OS and Extensions associated to stream.
 	// When omitted, the pool uses the cluster-wide default OS images.
+	//
 	OSImageStream *OSImageStreamReferenceApplyConfiguration `json:"osImageStream,omitempty"`
 }
 

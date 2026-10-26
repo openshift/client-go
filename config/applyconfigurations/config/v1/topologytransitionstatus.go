@@ -20,6 +20,7 @@ type TopologyTransitionStatusApplyConfiguration struct {
 	// TopologyTransitionCompleted. Both conditions must be present: the controller
 	// always reports each condition explicitly, using Unknown when a condition's
 	// state is not yet known, rather than omitting it.
+	//
 	Conditions []metav1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 	// transitions contains each supported transition type and its availability.
 	// It is optional. The controller clears this list whenever

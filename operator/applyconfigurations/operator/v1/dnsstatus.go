@@ -17,6 +17,7 @@ type DNSStatusApplyConfiguration struct {
 	// Example: dig foo.com @<service IP>
 	//
 	// More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+	//
 	ClusterIP *string `json:"clusterIP,omitempty"`
 	// clusterDomain is the local cluster DNS domain suffix for DNS services.
 	// This will be a subdomain as defined in RFC 1034,
@@ -24,6 +25,7 @@ type DNSStatusApplyConfiguration struct {
 	// Example: "cluster.local"
 	//
 	// More info: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service
+	//
 	ClusterDomain *string `json:"clusterDomain,omitempty"`
 	// conditions provide information about the state of the DNS on the cluster.
 	//
@@ -33,6 +35,7 @@ type DNSStatusApplyConfiguration struct {
 	// - True if the following conditions are met:
 	// * DNS controller daemonset is available.
 	// - False if any of those conditions are unsatisfied.
+	//
 	Conditions []OperatorConditionApplyConfiguration `json:"conditions,omitempty"`
 }
 

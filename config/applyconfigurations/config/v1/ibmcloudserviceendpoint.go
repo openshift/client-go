@@ -18,11 +18,13 @@ type IBMCloudServiceEndpointApplyConfiguration struct {
 	// service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
 	// Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
 	// with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`
+	//
 	Name *configv1.IBMCloudServiceName `json:"name,omitempty"`
 	// url is fully qualified URI with scheme https, that overrides the default generated
 	// endpoint for a client.
 	// This must be provided and cannot be empty. The path must follow the pattern
 	// /v[0,9]+ or /api/v[0,9]+
+	//
 	URL *string `json:"url,omitempty"`
 }
 

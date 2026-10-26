@@ -9,6 +9,7 @@ type OSImageStreamReferenceApplyConfiguration struct {
 	//
 	// It must be a valid RFC 1123 subdomain between 1 and 253 characters in length,
 	// consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.').
+	//
 	Name *string `json:"name,omitempty"`
 }
 

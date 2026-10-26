@@ -41,6 +41,7 @@ type NetworkSpecApplyConfiguration struct {
 	// If networkDiagnostics is not specified or is empty,
 	// and the spec.disableNetworkDiagnostics flag in network.operator.openshift.io is set to true,
 	// the network diagnostics feature will be disabled.
+	//
 	NetworkDiagnostics *NetworkDiagnosticsApplyConfiguration `json:"networkDiagnostics,omitempty"`
 	// networkObservability is an optional field that configures network observability installation
 	// during cluster deployment (day-0).

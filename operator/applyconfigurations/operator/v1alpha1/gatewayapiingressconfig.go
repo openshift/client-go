@@ -28,6 +28,7 @@ type GatewayAPIIngressConfigApplyConfiguration struct {
 	// or its Gateway API controllers. The cluster administrator or a third-party
 	// product is responsible for providing their own CRDs and Gateway controller.
 	// The ingress operator reports observational status only.
+	//
 	ManagementMode *operatorv1alpha1.GatewayAPIManagementMode `json:"managementMode,omitempty"`
 }
 

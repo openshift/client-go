@@ -21,6 +21,7 @@ type IngressStatusApplyConfiguration struct {
 	// cluster.
 	// * "GatewayAPICRDsCompliant" indicates whether the installed CRDs match the
 	// version expected by this ingress operator release.
+	//
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
 	// observedGeneration represents the most recent generation observed by the operator and specifies the version of
 	// the spec field currently being synced.

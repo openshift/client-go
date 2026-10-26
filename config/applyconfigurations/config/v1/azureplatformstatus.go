@@ -33,11 +33,13 @@ type AzurePlatformStatusApplyConfiguration struct {
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
+	//
 	CloudLoadBalancerConfig *CloudLoadBalancerConfigApplyConfiguration `json:"cloudLoadBalancerConfig,omitempty"`
 	// ipFamily specifies the IP protocol family that should be used for Azure
 	// network resources. This controls whether Azure resources are created with
 	// IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
 	// protocol family.
+	//
 	IPFamily *configv1.IPFamilyType `json:"ipFamily,omitempty"`
 }
 

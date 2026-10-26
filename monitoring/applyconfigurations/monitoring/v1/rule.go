@@ -16,6 +16,7 @@ import (
 type RuleApplyConfiguration struct {
 	// alert is the name of the alert. Must be a valid label value, i.e. may
 	// contain any Unicode character.
+	//
 	Alert *string `json:"alert,omitempty"`
 	// expr is the PromQL expression to evaluate. Every evaluation cycle this is
 	// evaluated at the current time, and all resultant time series become pending
@@ -25,10 +26,12 @@ type RuleApplyConfiguration struct {
 	// intent is to create an alert that is always firing.  This is sometimes used
 	// to create an always-firing "Watchdog" alert in order to ensure the alerting
 	// pipeline is functional.
+	//
 	Expr *intstr.IntOrString `json:"expr,omitempty"`
 	// for is the time period after which alerts are considered firing after first
 	// returning results.  Alerts which have not yet fired for long enough are
 	// considered pending.
+	//
 	For *monitoringv1.Duration `json:"for,omitempty"`
 	// labels to add or overwrite for each alert.  The results of the PromQL
 	// expression for the alert will result in an existing set of labels for the
@@ -37,10 +40,12 @@ type RuleApplyConfiguration struct {
 	// the previous value.  These should typically be short identifying values
 	// that may be useful to query against.  A common example is the alert
 	// severity, where one sets `severity: warning` under the `labels` key:
+	//
 	Labels map[string]string `json:"labels,omitempty"`
 	// annotations to add to each alert.  These are values that can be used to
 	// store longer additional information that you won't query on, such as alert
 	// descriptions or runbook links.
+	//
 	Annotations map[string]string `json:"annotations,omitempty"`
 }
 

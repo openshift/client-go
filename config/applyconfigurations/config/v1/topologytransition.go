@@ -58,6 +58,7 @@ type TopologyTransitionApplyConfiguration struct {
 	// The controller defines individual check types, reasons, and messages, and
 	// always reports each one explicitly, using Unknown when a check's result is
 	// not yet known.
+	//
 	Evaluations []metav1.ConditionApplyConfiguration `json:"evaluations,omitempty"`
 }
 
