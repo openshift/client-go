@@ -3,6 +3,7 @@
 package scheme
 
 import (
+	apiextensionsv1 "github.com/openshift/api/apiextensions/v1"
 	apiextensionsv1alpha1 "github.com/openshift/api/apiextensions/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -15,6 +16,7 @@ var Scheme = runtime.NewScheme()
 var Codecs = serializer.NewCodecFactory(Scheme)
 var ParameterCodec = runtime.NewParameterCodec(Scheme)
 var localSchemeBuilder = runtime.SchemeBuilder{
+	apiextensionsv1.AddToScheme,
 	apiextensionsv1alpha1.AddToScheme,
 }
 

@@ -6,6 +6,7 @@ import (
 	fmt "fmt"
 	http "net/http"
 
+	apiextensionsv1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1"
 	apiextensionsv1alpha1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -14,13 +15,20 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterfaces
+	ApiextensionsV1() apiextensionsv1.ApiextensionsV1Interface
 	ApiextensionsV1alpha1() apiextensionsv1alpha1.ApiextensionsV1alpha1Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
+	apiextensionsV1       *apiextensionsv1.ApiextensionsV1Client
 	apiextensionsV1alpha1 *apiextensionsv1alpha1.ApiextensionsV1alpha1Client
+}
+
+// ApiextensionsV1 retrieves the ApiextensionsV1Client
+func (c *Clientset) ApiextensionsV1() apiextensionsv1.ApiextensionsV1Interface {
+	return c.apiextensionsV1
 }
 
 // ApiextensionsV1alpha1 retrieves the ApiextensionsV1alpha1Client
@@ -72,6 +80,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
+	cs.apiextensionsV1, err = apiextensionsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.apiextensionsV1alpha1, err = apiextensionsv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -97,6 +109,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
+	cs.apiextensionsV1 = apiextensionsv1.New(c)
 	cs.apiextensionsV1alpha1 = apiextensionsv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)

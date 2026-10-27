@@ -23,6 +23,147 @@ func Parser() *typed.Parser {
 var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
+- name: com.github.openshift.api.apiextensions.v1.APIExcludedField
+  map:
+    fields:
+    - name: path
+      type:
+        scalar: string
+    - name: versions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.apiextensions.v1.APIVersions
+  map:
+    fields:
+    - name: additionalVersions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: defaultSelection
+      type:
+        scalar: string
+- name: com.github.openshift.api.apiextensions.v1.CRDData
+  map:
+    fields:
+    - name: data
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+- name: com.github.openshift.api.apiextensions.v1.CompatibilityRequirement
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.CompatibilityRequirementSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.CompatibilityRequirementStatus
+      default: {}
+- name: com.github.openshift.api.apiextensions.v1.CompatibilityRequirementSpec
+  map:
+    fields:
+    - name: compatibilitySchema
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.CompatibilitySchema
+      default: {}
+    - name: customResourceDefinitionSchemaValidation
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.CustomResourceDefinitionSchemaValidation
+      default: {}
+    - name: objectSchemaValidation
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.ObjectSchemaValidation
+      default: {}
+- name: com.github.openshift.api.apiextensions.v1.CompatibilityRequirementStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: crdName
+      type:
+        scalar: string
+    - name: observedCRD
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.ObservedCRD
+      default: {}
+- name: com.github.openshift.api.apiextensions.v1.CompatibilitySchema
+  map:
+    fields:
+    - name: customResourceDefinition
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.CRDData
+      default: {}
+    - name: excludedFields
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.apiextensions.v1.APIExcludedField
+          elementRelationship: atomic
+    - name: requiredVersions
+      type:
+        namedType: com.github.openshift.api.apiextensions.v1.APIVersions
+      default: {}
+- name: com.github.openshift.api.apiextensions.v1.CustomResourceDefinitionSchemaValidation
+  map:
+    fields:
+    - name: action
+      type:
+        scalar: string
+- name: com.github.openshift.api.apiextensions.v1.ObjectSchemaValidation
+  map:
+    fields:
+    - name: action
+      type:
+        scalar: string
+    - name: matchConditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.admissionregistration.v1.MatchCondition
+          elementRelationship: associative
+          keys:
+          - name
+    - name: namespaceSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+      default: {}
+    - name: objectSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+      default: {}
+- name: com.github.openshift.api.apiextensions.v1.ObservedCRD
+  map:
+    fields:
+    - name: generation
+      type:
+        scalar: numeric
+    - name: uid
+      type:
+        scalar: string
 - name: com.github.openshift.api.apiextensions.v1alpha1.APIExcludedField
   map:
     fields:

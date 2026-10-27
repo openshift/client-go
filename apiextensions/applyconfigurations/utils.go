@@ -3,7 +3,9 @@
 package applyconfigurations
 
 import (
+	v1 "github.com/openshift/api/apiextensions/v1"
 	v1alpha1 "github.com/openshift/api/apiextensions/v1alpha1"
+	apiextensionsv1 "github.com/openshift/client-go/apiextensions/applyconfigurations/apiextensions/v1"
 	apiextensionsv1alpha1 "github.com/openshift/client-go/apiextensions/applyconfigurations/apiextensions/v1alpha1"
 	internal "github.com/openshift/client-go/apiextensions/applyconfigurations/internal"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -15,7 +17,29 @@ import (
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=apiextensions.openshift.io, Version=v1alpha1
+	// Group=apiextensions.openshift.io, Version=v1
+	case v1.SchemeGroupVersion.WithKind("APIExcludedField"):
+		return &apiextensionsv1.APIExcludedFieldApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("APIVersions"):
+		return &apiextensionsv1.APIVersionsApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CompatibilityRequirement"):
+		return &apiextensionsv1.CompatibilityRequirementApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CompatibilityRequirementSpec"):
+		return &apiextensionsv1.CompatibilityRequirementSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CompatibilityRequirementStatus"):
+		return &apiextensionsv1.CompatibilityRequirementStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CompatibilitySchema"):
+		return &apiextensionsv1.CompatibilitySchemaApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CRDData"):
+		return &apiextensionsv1.CRDDataApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CustomResourceDefinitionSchemaValidation"):
+		return &apiextensionsv1.CustomResourceDefinitionSchemaValidationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ObjectSchemaValidation"):
+		return &apiextensionsv1.ObjectSchemaValidationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ObservedCRD"):
+		return &apiextensionsv1.ObservedCRDApplyConfiguration{}
+
+		// Group=apiextensions.openshift.io, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("APIExcludedField"):
 		return &apiextensionsv1alpha1.APIExcludedFieldApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("APIVersions"):
