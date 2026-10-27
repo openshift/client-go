@@ -5,6 +5,8 @@ package fake
 import (
 	applyconfigurations "github.com/openshift/client-go/apiextensions/applyconfigurations"
 	clientset "github.com/openshift/client-go/apiextensions/clientset/versioned"
+	apiextensionsv1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1"
+	fakeapiextensionsv1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1/fake"
 	apiextensionsv1alpha1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1alpha1"
 	fakeapiextensionsv1alpha1 "github.com/openshift/client-go/apiextensions/clientset/versioned/typed/apiextensions/v1alpha1/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -119,6 +121,11 @@ var (
 	_ clientset.Interface = &Clientset{}
 	_ testing.FakeClient  = &Clientset{}
 )
+
+// ApiextensionsV1 retrieves the ApiextensionsV1Client
+func (c *Clientset) ApiextensionsV1() apiextensionsv1.ApiextensionsV1Interface {
+	return &fakeapiextensionsv1.FakeApiextensionsV1{Fake: &c.Fake}
+}
 
 // ApiextensionsV1alpha1 retrieves the ApiextensionsV1alpha1Client
 func (c *Clientset) ApiextensionsV1alpha1() apiextensionsv1alpha1.ApiextensionsV1alpha1Interface {
