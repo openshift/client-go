@@ -94,6 +94,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ConsoleConfigRouteApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleCustomization"):
 		return &operatorv1.ConsoleCustomizationApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ConsoleIngress"):
+		return &operatorv1.ConsoleIngressApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleProviders"):
 		return &operatorv1.ConsoleProvidersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleSpec"):
@@ -178,8 +180,6 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IBMCloudCSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IBMLoadBalancerParameters"):
 		return &operatorv1.IBMLoadBalancerParametersApplyConfiguration{}
-	case v1.SchemeGroupVersion.WithKind("Ingress"):
-		return &operatorv1.IngressApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressController"):
 		return &operatorv1.IngressControllerApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerCaptureHTTPCookie"):

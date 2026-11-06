@@ -18488,6 +18488,10 @@
             "key"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "universeDomain": {
+          "description": "universeDomain is the GCP universe domain for the cluster, detected from the installer credentials. Components with their own GCP credentials should read the universe domain from those credentials, as they are the authoritative source. This field is provided for components that do not have GCP credentials and for general observability.\n\nWhen omitted, standard public GCP (googleapis.com) is assumed.\n\nuniverseDomain is an optional field that, when specified, must be non-empty and at most 253 characters. It must be a valid DNS subdomain: containing only lowercase alphanumeric characters, '-' or '.', and starting and ending with an alphanumeric character.",
+          "type": "string"
         }
       }
     },
@@ -23433,7 +23437,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSphereFailureDomainRegionAffinity"
         },
         "server": {
-          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server. This must match the server field of an entry in the vcenters list. The match is case-sensitive; the value must be specified exactly as it appears in the vcenters entry. The value must be between 1 and 255 characters long.",
           "type": "string",
           "default": ""
         },
@@ -23528,7 +23532,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "failureDomains": {
-          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used. Each failure domain's server must match the server field of an entry in the vcenters list.",
           "type": "array",
           "items": {
             "default": {},
@@ -23563,7 +23567,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
         },
         "vcenters": {
-          "description": "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported, but in tech preview 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except in the case where the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
+          "description": "vcenters holds the connection details for services to communicate with vCenter. Up to 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except when 1.) the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present or 2.) in TechPreview you are able to add and remove vCenters but may not remove all vCenters.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
           "type": "array",
           "items": {
             "default": {},
@@ -41162,6 +41166,14 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "protocol": {
+          "description": "protocol specifies whether the Network Load Balancer uses PROXY protocol to forward connections to the IngressController.\n\nWhen set to \"TCP\", the NLB uses AWS's native client IP preservation. This may cause hairpin connection failures for internal load balancers when connections are made from pods to router pods on the same node.\n\nWhen set to \"PROXY\", the NLB disables native client IP preservation and uses PROXY protocol v2. The IngressController enables PROXY protocol on HAProxy so that it can parse PROXY protocol headers to obtain the original client IP. This avoids hairpin connection failures.\n\nThe following values are valid for this field:\n\n* \"TCP\". * \"PROXY\".\n\nWhen omitted, this means the user has no opinion and the value is left to the platform to choose a reasonable default, which is subject to change over time. The current default is \"PROXY\".\n\nNote that changing this field may cause brief connection failures during the transition as the NLB attribute change and router rollout occur independently.\n\n\nPossible enum values:\n - `\"PROXY\"` instructs the NLB to forward connections using PROXY protocol v2.\n - `\"TCP\"` instructs the NLB to forward connections using TCP without PROXY protocol.",
+          "type": "string",
+          "enum": [
+            "PROXY",
+            "TCP"
+          ]
+        },
         "subnets": {
           "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
@@ -44075,6 +44087,10 @@
         "endpointPublishingStrategy": {
           "description": "endpointPublishingStrategy is used to publish the ingress controller endpoints to other networks, enable load balancer integrations, etc.\n\nIf unset, the default is based on infrastructure.config.openshift.io/cluster .status.platform:\n\n  AWS:          LoadBalancerService (with External scope)\n  Azure:        LoadBalancerService (with External scope)\n  GCP:          LoadBalancerService (with External scope)\n  IBMCloud:     LoadBalancerService (with External scope)\n  AlibabaCloud: LoadBalancerService (with External scope)\n  Libvirt:      HostNetwork\n\nAny other platform types (including None) default to HostNetwork.\n\nendpointPublishingStrategy cannot be updated.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.EndpointPublishingStrategy"
+        },
+        "haproxyVersion": {
+          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nThis field is available in OpenShift 4.22 as an API-only backport with no operator implementation. Setting this field on OpenShift 4.22 allows administrators to pin HAProxy 2.8 before upgrading to OpenShift 5.0, where the operator will honor this setting.\n\nValid values for OpenShift 4.22: - Unset (default): Uses HAProxy 2.8 (the default for OpenShift 4.22) - \"2.8\": Explicitly pins HAProxy 2.8 for preservation during cluster\n  upgrade to OpenShift 5.0\n\nOn OpenShift 4.22, this field has no effect on the running IngressController. It only preserves the administrator's intent for the OpenShift 5.0 upgrade.",
+          "type": "string"
         },
         "httpCompression": {
           "description": "httpCompression defines a policy for HTTP traffic compression. By default, there is no HTTP compression.",
