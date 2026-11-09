@@ -17,12 +17,12 @@ type HealthCheckApplyConfiguration struct {
 	// by the detected issue; combination of impact and likelihood. The values can be from 1 to 4,
 	// and the higher the number, the more important the issue.
 	TotalRisk *int32 `json:"totalRisk,omitempty"`
-	// advisorURI is required field that provides the URL link to the Insights Advisor.
+	// advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	AdvisorURI *string `json:"advisorURI,omitempty"`
 	// state determines what the current state of the health check is.
 	// Health check is enabled by default and can be disabled
-	// by the user in the Insights advisor user interface.
+	// by the user in the Red Hat Lightspeed Advisor UI.
 	State *insightsv1alpha1.HealthCheckState `json:"state,omitempty"`
 }
 
