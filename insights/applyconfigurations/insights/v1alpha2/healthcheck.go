@@ -19,7 +19,7 @@ type HealthCheckApplyConfiguration struct {
 	// Allowed values are Low, Medium, Important and Critical.
 	// The value represents the severity of the issue.
 	TotalRisk *insightsv1alpha2.TotalRisk `json:"totalRisk,omitempty"`
-	// advisorURI is required field that provides the URL link to the Insights Advisor.
+	// advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	AdvisorURI *string `json:"advisorURI,omitempty"`
 }
