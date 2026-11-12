@@ -99,7 +99,7 @@ func NewProxyInformerWithOptions(client versioned.Interface, options internalint
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedProxyInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ProxyIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "config.openshift.io", Version: "v1", Resource: "proxys"}
+	gvr := schema.GroupVersionResource{Group: "config.openshift.io", Version: "v1", Resource: "proxies"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apiconfigv1.Proxy](cache.NewSharedIndexInformerWithOptions(

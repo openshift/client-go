@@ -8,19 +8,19 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ClusterAPIs returns a ClusterAPIInformer.
+	// ClusterAPIs returns a TypedClusterAPIInformer.
 	ClusterAPIs() TypedClusterAPIInformer
-	// ClusterVersionOperators returns a ClusterVersionOperatorInformer.
+	// ClusterVersionOperators returns a TypedClusterVersionOperatorInformer.
 	ClusterVersionOperators() TypedClusterVersionOperatorInformer
-	// EtcdBackups returns a EtcdBackupInformer.
+	// EtcdBackups returns a TypedEtcdBackupInformer.
 	EtcdBackups() TypedEtcdBackupInformer
-	// EtcdBackupPolicies returns a EtcdBackupPolicyInformer.
+	// EtcdBackupPolicies returns a TypedEtcdBackupPolicyInformer.
 	EtcdBackupPolicies() TypedEtcdBackupPolicyInformer
-	// ImageContentSourcePolicies returns a ImageContentSourcePolicyInformer.
+	// ImageContentSourcePolicies returns a TypedImageContentSourcePolicyInformer.
 	ImageContentSourcePolicies() TypedImageContentSourcePolicyInformer
-	// Ingresses returns a IngressInformer.
+	// Ingresses returns a TypedIngressInformer.
 	Ingresses() TypedIngressInformer
-	// OLMs returns a OLMInformer.
+	// OLMs returns a TypedOLMInformer.
 	OLMs() TypedOLMInformer
 }
 

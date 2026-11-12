@@ -27,6 +27,7 @@ type ImageDigestMirrorSetInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, imageDigestMirrorSet *configv1.ImageDigestMirrorSet, opts metav1.UpdateOptions) (*configv1.ImageDigestMirrorSet, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*configv1.ImageDigestMirrorSet, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*configv1.ImageDigestMirrorSetList, error)

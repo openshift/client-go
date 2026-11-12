@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// CloudPrivateIPConfigs returns a CloudPrivateIPConfigInformer.
+	// CloudPrivateIPConfigs returns a TypedCloudPrivateIPConfigInformer.
 	CloudPrivateIPConfigs() TypedCloudPrivateIPConfigInformer
 }
 

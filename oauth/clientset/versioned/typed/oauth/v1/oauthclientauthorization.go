@@ -25,6 +25,7 @@ type OAuthClientAuthorizationInterface interface {
 	Create(ctx context.Context, oAuthClientAuthorization *oauthv1.OAuthClientAuthorization, opts metav1.CreateOptions) (*oauthv1.OAuthClientAuthorization, error)
 	Update(ctx context.Context, oAuthClientAuthorization *oauthv1.OAuthClientAuthorization, opts metav1.UpdateOptions) (*oauthv1.OAuthClientAuthorization, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*oauthv1.OAuthClientAuthorization, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*oauthv1.OAuthClientAuthorizationList, error)

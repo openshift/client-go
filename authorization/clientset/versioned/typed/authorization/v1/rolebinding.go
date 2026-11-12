@@ -25,6 +25,7 @@ type RoleBindingInterface interface {
 	Create(ctx context.Context, roleBinding *authorizationv1.RoleBinding, opts metav1.CreateOptions) (*authorizationv1.RoleBinding, error)
 	Update(ctx context.Context, roleBinding *authorizationv1.RoleBinding, opts metav1.UpdateOptions) (*authorizationv1.RoleBinding, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*authorizationv1.RoleBinding, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*authorizationv1.RoleBindingList, error)

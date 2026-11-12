@@ -100,7 +100,7 @@ func NewProjectHelmChartRepositoryInformerWithOptions(client versioned.Interface
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedProjectHelmChartRepositoryInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) ProjectHelmChartRepositoryIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "helm.openshift.io", Version: "v1beta1", Resource: "projecthelmchartrepositorys"}
+	gvr := schema.GroupVersionResource{Group: "helm.openshift.io", Version: "v1beta1", Resource: "projecthelmchartrepositories"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apihelmv1beta1.ProjectHelmChartRepository](cache.NewSharedIndexInformerWithOptions(

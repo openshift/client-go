@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// APIRequestCounts returns a APIRequestCountInformer.
+	// APIRequestCounts returns a TypedAPIRequestCountInformer.
 	APIRequestCounts() TypedAPIRequestCountInformer
 }
 

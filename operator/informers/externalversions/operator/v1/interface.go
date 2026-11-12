@@ -8,53 +8,53 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Authentications returns a AuthenticationInformer.
+	// Authentications returns a TypedAuthenticationInformer.
 	Authentications() TypedAuthenticationInformer
-	// CSISnapshotControllers returns a CSISnapshotControllerInformer.
+	// CSISnapshotControllers returns a TypedCSISnapshotControllerInformer.
 	CSISnapshotControllers() TypedCSISnapshotControllerInformer
-	// CloudCredentials returns a CloudCredentialInformer.
+	// CloudCredentials returns a TypedCloudCredentialInformer.
 	CloudCredentials() TypedCloudCredentialInformer
-	// ClusterCSIDrivers returns a ClusterCSIDriverInformer.
+	// ClusterCSIDrivers returns a TypedClusterCSIDriverInformer.
 	ClusterCSIDrivers() TypedClusterCSIDriverInformer
-	// Configs returns a ConfigInformer.
+	// Configs returns a TypedConfigInformer.
 	Configs() TypedConfigInformer
-	// Consoles returns a ConsoleInformer.
+	// Consoles returns a TypedConsoleInformer.
 	Consoles() TypedConsoleInformer
-	// DNSes returns a DNSInformer.
+	// DNSes returns a TypedDNSInformer.
 	DNSes() TypedDNSInformer
-	// Etcds returns a EtcdInformer.
+	// Etcds returns a TypedEtcdInformer.
 	Etcds() TypedEtcdInformer
-	// Ingresses returns a IngressInformer.
+	// Ingresses returns a TypedIngressInformer.
 	Ingresses() TypedIngressInformer
-	// IngressControllers returns a IngressControllerInformer.
+	// IngressControllers returns a TypedIngressControllerInformer.
 	IngressControllers() TypedIngressControllerInformer
-	// InsightsOperators returns a InsightsOperatorInformer.
+	// InsightsOperators returns a TypedInsightsOperatorInformer.
 	InsightsOperators() TypedInsightsOperatorInformer
-	// KubeAPIServers returns a KubeAPIServerInformer.
+	// KubeAPIServers returns a TypedKubeAPIServerInformer.
 	KubeAPIServers() TypedKubeAPIServerInformer
-	// KubeControllerManagers returns a KubeControllerManagerInformer.
+	// KubeControllerManagers returns a TypedKubeControllerManagerInformer.
 	KubeControllerManagers() TypedKubeControllerManagerInformer
-	// KubeSchedulers returns a KubeSchedulerInformer.
+	// KubeSchedulers returns a TypedKubeSchedulerInformer.
 	KubeSchedulers() TypedKubeSchedulerInformer
-	// KubeStorageVersionMigrators returns a KubeStorageVersionMigratorInformer.
+	// KubeStorageVersionMigrators returns a TypedKubeStorageVersionMigratorInformer.
 	KubeStorageVersionMigrators() TypedKubeStorageVersionMigratorInformer
-	// MachineConfigurations returns a MachineConfigurationInformer.
+	// MachineConfigurations returns a TypedMachineConfigurationInformer.
 	MachineConfigurations() TypedMachineConfigurationInformer
-	// Networks returns a NetworkInformer.
+	// Networks returns a TypedNetworkInformer.
 	Networks() TypedNetworkInformer
-	// OLMs returns a OLMInformer.
+	// OLMs returns a TypedOLMInformer.
 	OLMs() TypedOLMInformer
-	// OpenShiftAPIServers returns a OpenShiftAPIServerInformer.
+	// OpenShiftAPIServers returns a TypedOpenShiftAPIServerInformer.
 	OpenShiftAPIServers() TypedOpenShiftAPIServerInformer
-	// OpenShiftControllerManagers returns a OpenShiftControllerManagerInformer.
+	// OpenShiftControllerManagers returns a TypedOpenShiftControllerManagerInformer.
 	OpenShiftControllerManagers() TypedOpenShiftControllerManagerInformer
-	// ServiceCAs returns a ServiceCAInformer.
+	// ServiceCAs returns a TypedServiceCAInformer.
 	ServiceCAs() TypedServiceCAInformer
-	// ServiceCatalogAPIServers returns a ServiceCatalogAPIServerInformer.
+	// ServiceCatalogAPIServers returns a TypedServiceCatalogAPIServerInformer.
 	ServiceCatalogAPIServers() TypedServiceCatalogAPIServerInformer
-	// ServiceCatalogControllerManagers returns a ServiceCatalogControllerManagerInformer.
+	// ServiceCatalogControllerManagers returns a TypedServiceCatalogControllerManagerInformer.
 	ServiceCatalogControllerManagers() TypedServiceCatalogControllerManagerInformer
-	// Storages returns a StorageInformer.
+	// Storages returns a TypedStorageInformer.
 	Storages() TypedStorageInformer
 }
 

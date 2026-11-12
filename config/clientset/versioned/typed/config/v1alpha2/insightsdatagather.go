@@ -27,6 +27,7 @@ type InsightsDataGatherInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, insightsDataGather *configv1alpha2.InsightsDataGather, opts v1.UpdateOptions) (*configv1alpha2.InsightsDataGather, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*configv1alpha2.InsightsDataGather, error)
 	List(ctx context.Context, opts v1.ListOptions) (*configv1alpha2.InsightsDataGatherList, error)

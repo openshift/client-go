@@ -25,6 +25,7 @@ type BrokerTemplateInstanceInterface interface {
 	Create(ctx context.Context, brokerTemplateInstance *templatev1.BrokerTemplateInstance, opts metav1.CreateOptions) (*templatev1.BrokerTemplateInstance, error)
 	Update(ctx context.Context, brokerTemplateInstance *templatev1.BrokerTemplateInstance, opts metav1.UpdateOptions) (*templatev1.BrokerTemplateInstance, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*templatev1.BrokerTemplateInstance, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*templatev1.BrokerTemplateInstanceList, error)

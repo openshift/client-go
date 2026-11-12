@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Routes returns a RouteInformer.
+	// Routes returns a TypedRouteInformer.
 	Routes() TypedRouteInformer
 }
 

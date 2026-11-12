@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// PodNetworkConnectivityChecks returns a PodNetworkConnectivityCheckInformer.
+	// PodNetworkConnectivityChecks returns a TypedPodNetworkConnectivityCheckInformer.
 	PodNetworkConnectivityChecks() TypedPodNetworkConnectivityCheckInformer
 }
 

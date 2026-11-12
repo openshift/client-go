@@ -25,6 +25,7 @@ type ImageContentSourcePolicyInterface interface {
 	Create(ctx context.Context, imageContentSourcePolicy *operatorv1alpha1.ImageContentSourcePolicy, opts v1.CreateOptions) (*operatorv1alpha1.ImageContentSourcePolicy, error)
 	Update(ctx context.Context, imageContentSourcePolicy *operatorv1alpha1.ImageContentSourcePolicy, opts v1.UpdateOptions) (*operatorv1alpha1.ImageContentSourcePolicy, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*operatorv1alpha1.ImageContentSourcePolicy, error)
 	List(ctx context.Context, opts v1.ListOptions) (*operatorv1alpha1.ImageContentSourcePolicyList, error)

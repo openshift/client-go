@@ -20,6 +20,7 @@ type ProjectRequestsGetter interface {
 
 // ProjectRequestInterface has methods to work with ProjectRequest resources.
 type ProjectRequestInterface interface {
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	Apply(ctx context.Context, projectRequest *projectv1.ProjectRequestApplyConfiguration, opts metav1.ApplyOptions) (result *apiprojectv1.ProjectRequest, err error)
 	Create(ctx context.Context, projectRequest *apiprojectv1.ProjectRequest, opts metav1.CreateOptions) (*apiprojectv1.Project, error)
 

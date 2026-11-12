@@ -25,6 +25,7 @@ type HostSubnetInterface interface {
 	Create(ctx context.Context, hostSubnet *networkv1.HostSubnet, opts metav1.CreateOptions) (*networkv1.HostSubnet, error)
 	Update(ctx context.Context, hostSubnet *networkv1.HostSubnet, opts metav1.UpdateOptions) (*networkv1.HostSubnet, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*networkv1.HostSubnet, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*networkv1.HostSubnetList, error)

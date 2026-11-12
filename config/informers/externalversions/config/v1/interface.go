@@ -8,55 +8,55 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// APIServers returns a APIServerInformer.
+	// APIServers returns a TypedAPIServerInformer.
 	APIServers() TypedAPIServerInformer
-	// Authentications returns a AuthenticationInformer.
+	// Authentications returns a TypedAuthenticationInformer.
 	Authentications() TypedAuthenticationInformer
-	// Builds returns a BuildInformer.
+	// Builds returns a TypedBuildInformer.
 	Builds() TypedBuildInformer
-	// CRIOCredentialProviderConfigs returns a CRIOCredentialProviderConfigInformer.
+	// CRIOCredentialProviderConfigs returns a TypedCRIOCredentialProviderConfigInformer.
 	CRIOCredentialProviderConfigs() TypedCRIOCredentialProviderConfigInformer
-	// ClusterImagePolicies returns a ClusterImagePolicyInformer.
+	// ClusterImagePolicies returns a TypedClusterImagePolicyInformer.
 	ClusterImagePolicies() TypedClusterImagePolicyInformer
-	// ClusterOperators returns a ClusterOperatorInformer.
+	// ClusterOperators returns a TypedClusterOperatorInformer.
 	ClusterOperators() TypedClusterOperatorInformer
-	// ClusterVersions returns a ClusterVersionInformer.
+	// ClusterVersions returns a TypedClusterVersionInformer.
 	ClusterVersions() TypedClusterVersionInformer
-	// Consoles returns a ConsoleInformer.
+	// Consoles returns a TypedConsoleInformer.
 	Consoles() TypedConsoleInformer
-	// DNSes returns a DNSInformer.
+	// DNSes returns a TypedDNSInformer.
 	DNSes() TypedDNSInformer
-	// FeatureGates returns a FeatureGateInformer.
+	// FeatureGates returns a TypedFeatureGateInformer.
 	FeatureGates() TypedFeatureGateInformer
-	// Images returns a ImageInformer.
+	// Images returns a TypedImageInformer.
 	Images() TypedImageInformer
-	// ImageContentPolicies returns a ImageContentPolicyInformer.
+	// ImageContentPolicies returns a TypedImageContentPolicyInformer.
 	ImageContentPolicies() TypedImageContentPolicyInformer
-	// ImageDigestMirrorSets returns a ImageDigestMirrorSetInformer.
+	// ImageDigestMirrorSets returns a TypedImageDigestMirrorSetInformer.
 	ImageDigestMirrorSets() TypedImageDigestMirrorSetInformer
-	// ImagePolicies returns a ImagePolicyInformer.
+	// ImagePolicies returns a TypedImagePolicyInformer.
 	ImagePolicies() TypedImagePolicyInformer
-	// ImageTagMirrorSets returns a ImageTagMirrorSetInformer.
+	// ImageTagMirrorSets returns a TypedImageTagMirrorSetInformer.
 	ImageTagMirrorSets() TypedImageTagMirrorSetInformer
-	// Infrastructures returns a InfrastructureInformer.
+	// Infrastructures returns a TypedInfrastructureInformer.
 	Infrastructures() TypedInfrastructureInformer
-	// Ingresses returns a IngressInformer.
+	// Ingresses returns a TypedIngressInformer.
 	Ingresses() TypedIngressInformer
-	// InsightsDataGathers returns a InsightsDataGatherInformer.
+	// InsightsDataGathers returns a TypedInsightsDataGatherInformer.
 	InsightsDataGathers() TypedInsightsDataGatherInformer
-	// Networks returns a NetworkInformer.
+	// Networks returns a TypedNetworkInformer.
 	Networks() TypedNetworkInformer
-	// Nodes returns a NodeInformer.
+	// Nodes returns a TypedNodeInformer.
 	Nodes() TypedNodeInformer
-	// OAuths returns a OAuthInformer.
+	// OAuths returns a TypedOAuthInformer.
 	OAuths() TypedOAuthInformer
-	// OperatorHubs returns a OperatorHubInformer.
+	// OperatorHubs returns a TypedOperatorHubInformer.
 	OperatorHubs() TypedOperatorHubInformer
-	// Projects returns a ProjectInformer.
+	// Projects returns a TypedProjectInformer.
 	Projects() TypedProjectInformer
-	// Proxies returns a ProxyInformer.
+	// Proxies returns a TypedProxyInformer.
 	Proxies() TypedProxyInformer
-	// Schedulers returns a SchedulerInformer.
+	// Schedulers returns a TypedSchedulerInformer.
 	Schedulers() TypedSchedulerInformer
 }
 

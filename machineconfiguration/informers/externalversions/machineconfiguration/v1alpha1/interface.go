@@ -8,11 +8,11 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// BGPVIPConfigs returns a BGPVIPConfigInformer.
+	// BGPVIPConfigs returns a TypedBGPVIPConfigInformer.
 	BGPVIPConfigs() TypedBGPVIPConfigInformer
-	// InternalReleaseImages returns a InternalReleaseImageInformer.
+	// InternalReleaseImages returns a TypedInternalReleaseImageInformer.
 	InternalReleaseImages() TypedInternalReleaseImageInformer
-	// OSImageStreams returns a OSImageStreamInformer.
+	// OSImageStreams returns a TypedOSImageStreamInformer.
 	OSImageStreams() TypedOSImageStreamInformer
 }
 

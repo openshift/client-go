@@ -8,21 +8,21 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ConsoleCLIDownloads returns a ConsoleCLIDownloadInformer.
+	// ConsoleCLIDownloads returns a TypedConsoleCLIDownloadInformer.
 	ConsoleCLIDownloads() TypedConsoleCLIDownloadInformer
-	// ConsoleExternalLogLinks returns a ConsoleExternalLogLinkInformer.
+	// ConsoleExternalLogLinks returns a TypedConsoleExternalLogLinkInformer.
 	ConsoleExternalLogLinks() TypedConsoleExternalLogLinkInformer
-	// ConsoleLinks returns a ConsoleLinkInformer.
+	// ConsoleLinks returns a TypedConsoleLinkInformer.
 	ConsoleLinks() TypedConsoleLinkInformer
-	// ConsoleNotifications returns a ConsoleNotificationInformer.
+	// ConsoleNotifications returns a TypedConsoleNotificationInformer.
 	ConsoleNotifications() TypedConsoleNotificationInformer
-	// ConsolePlugins returns a ConsolePluginInformer.
+	// ConsolePlugins returns a TypedConsolePluginInformer.
 	ConsolePlugins() TypedConsolePluginInformer
-	// ConsoleQuickStarts returns a ConsoleQuickStartInformer.
+	// ConsoleQuickStarts returns a TypedConsoleQuickStartInformer.
 	ConsoleQuickStarts() TypedConsoleQuickStartInformer
-	// ConsoleSamples returns a ConsoleSampleInformer.
+	// ConsoleSamples returns a TypedConsoleSampleInformer.
 	ConsoleSamples() TypedConsoleSampleInformer
-	// ConsoleYAMLSamples returns a ConsoleYAMLSampleInformer.
+	// ConsoleYAMLSamples returns a TypedConsoleYAMLSampleInformer.
 	ConsoleYAMLSamples() TypedConsoleYAMLSampleInformer
 }
 
