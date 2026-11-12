@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v7/typed"
 )
 
 func Parser() *typed.Parser {
@@ -23,116 +23,2608 @@ func Parser() *typed.Parser {
 var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
+- name: com.github.openshift.api.config.v1.AWSDNSSpec
+  map:
+    fields:
+    - name: privateZoneIAMRole
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.AWSPlatformSpec
+  map:
+    fields:
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AWSServiceEndpoint
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.AWSPlatformStatus
+  map:
+    fields:
+    - name: cloudLoadBalancerConfig
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudLoadBalancerConfig
+      default:
+        dnsType: PlatformDefault
+    - name: ipFamily
+      type:
+        scalar: string
+      default: IPv4
+    - name: region
+      type:
+        scalar: string
+      default: ""
+    - name: resourceTags
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AWSResourceTag
+          elementRelationship: atomic
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AWSServiceEndpoint
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.AWSResourceTag
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.AWSServiceEndpoint
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: url
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.AlibabaCloudPlatformStatus
+  map:
+    fields:
+    - name: region
+      type:
+        scalar: string
+      default: ""
+    - name: resourceGroupID
+      type:
+        scalar: string
+    - name: resourceTags
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AlibabaCloudResourceTag
+          elementRelationship: associative
+          keys:
+          - key
+- name: com.github.openshift.api.config.v1.AlibabaCloudResourceTag
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.AzurePlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.AzurePlatformStatus
+  map:
+    fields:
+    - name: armEndpoint
+      type:
+        scalar: string
+    - name: cloudLoadBalancerConfig
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudLoadBalancerConfig
+      default:
+        dnsType: PlatformDefault
+    - name: cloudName
+      type:
+        scalar: string
+    - name: ipFamily
+      type:
+        scalar: string
+      default: IPv4
+    - name: networkResourceGroupName
+      type:
+        scalar: string
+    - name: resourceGroupName
+      type:
+        scalar: string
+      default: ""
+    - name: resourceTags
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.AzureResourceTag
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.AzureResourceTag
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: OpenShiftManagedDefault
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.BareMetalPlatformSpec
+  map:
+    fields:
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.BareMetalPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: dnsRecordsType
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: loadBalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer
+      default:
+        type: OpenShiftManagedDefault
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nodeDNSIP
+      type:
+        scalar: string
+    - name: vipManagement
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.CloudControllerManagerStatus
+  map:
+    fields:
+    - name: state
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.CloudLoadBalancerConfig
+  map:
+    fields:
+    - name: clusterHosted
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudLoadBalancerIPs
+    - name: dnsType
+      type:
+        scalar: string
+      default: PlatformDefault
+    unions:
+    - discriminator: dnsType
+      fields:
+      - fieldName: clusterHosted
+        discriminatorValue: ClusterHosted
+- name: com.github.openshift.api.config.v1.CloudLoadBalancerIPs
+  map:
+    fields:
+    - name: apiIntLoadBalancerIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: apiLoadBalancerIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: ingressLoadBalancerIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.config.v1.ConfigMapFileReference
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.CustomTLSProfile
+  map:
+    fields:
+    - name: ciphers
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: groups
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: minTLSVersion
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.DNS
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.config.v1.DNSSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.config.v1.DNSStatus
+      default: {}
+- name: com.github.openshift.api.config.v1.DNSPlatformSpec
+  map:
+    fields:
+    - name: aws
+      type:
+        namedType: com.github.openshift.api.config.v1.AWSDNSSpec
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: aws
+        discriminatorValue: AWS
+- name: com.github.openshift.api.config.v1.DNSSpec
+  map:
+    fields:
+    - name: baseDomain
+      type:
+        scalar: string
+      default: ""
+    - name: platform
+      type:
+        namedType: com.github.openshift.api.config.v1.DNSPlatformSpec
+      default: {}
+    - name: privateZone
+      type:
+        namedType: com.github.openshift.api.config.v1.DNSZone
+    - name: publicZone
+      type:
+        namedType: com.github.openshift.api.config.v1.DNSZone
+- name: com.github.openshift.api.config.v1.DNSStatus
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.DNSZone
+  map:
+    fields:
+    - name: id
+      type:
+        scalar: string
+    - name: tags
+      type:
+        map:
+          elementType:
+            scalar: string
+- name: com.github.openshift.api.config.v1.EquinixMetalPlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.EquinixMetalPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.ExternalPlatformSpec
+  map:
+    fields:
+    - name: platformName
+      type:
+        scalar: string
+      default: Unknown
+- name: com.github.openshift.api.config.v1.ExternalPlatformStatus
+  map:
+    fields:
+    - name: cloudControllerManager
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudControllerManagerStatus
+      default: {}
+- name: com.github.openshift.api.config.v1.GCPPlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.GCPPlatformStatus
+  map:
+    fields:
+    - name: cloudLoadBalancerConfig
+      type:
+        namedType: com.github.openshift.api.config.v1.CloudLoadBalancerConfig
+      default:
+        dnsType: PlatformDefault
+    - name: projectID
+      type:
+        scalar: string
+      default: ""
+    - name: region
+      type:
+        scalar: string
+      default: ""
+    - name: resourceLabels
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.GCPResourceLabel
+          elementRelationship: associative
+          keys:
+          - key
+    - name: resourceTags
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.GCPResourceTag
+          elementRelationship: associative
+          keys:
+          - key
+    - name: universeDomain
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.GCPResourceLabel
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.GCPResourceTag
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: parentID
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.IBMCloudPlatformSpec
+  map:
+    fields:
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.IBMCloudServiceEndpoint
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.config.v1.IBMCloudPlatformStatus
+  map:
+    fields:
+    - name: cisInstanceCRN
+      type:
+        scalar: string
+    - name: dnsInstanceCRN
+      type:
+        scalar: string
+    - name: location
+      type:
+        scalar: string
+    - name: providerType
+      type:
+        scalar: string
+    - name: resourceGroupName
+      type:
+        scalar: string
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.IBMCloudServiceEndpoint
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.config.v1.IBMCloudServiceEndpoint
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: url
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.Infrastructure
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.config.v1.InfrastructureSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.config.v1.InfrastructureStatus
+      default: {}
+- name: com.github.openshift.api.config.v1.InfrastructureSpec
+  map:
+    fields:
+    - name: cloudConfig
+      type:
+        namedType: com.github.openshift.api.config.v1.ConfigMapFileReference
+      default: {}
+    - name: controlPlaneTopology
+      type:
+        scalar: string
+    - name: infrastructureTopology
+      type:
+        scalar: string
+    - name: platformSpec
+      type:
+        namedType: com.github.openshift.api.config.v1.PlatformSpec
+      default: {}
+- name: com.github.openshift.api.config.v1.InfrastructureStatus
+  map:
+    fields:
+    - name: apiServerInternalURI
+      type:
+        scalar: string
+      default: ""
+    - name: apiServerURL
+      type:
+        scalar: string
+      default: ""
+    - name: controlPlaneTopology
+      type:
+        scalar: string
+      default: ""
+    - name: cpuPartitioning
+      type:
+        scalar: string
+      default: None
+    - name: etcdDiscoveryDomain
+      type:
+        scalar: string
+      default: ""
+    - name: infrastructureName
+      type:
+        scalar: string
+      default: ""
+    - name: infrastructureTopology
+      type:
+        scalar: string
+    - name: platform
+      type:
+        scalar: string
+    - name: platformStatus
+      type:
+        namedType: com.github.openshift.api.config.v1.PlatformStatus
+    - name: topologyTransitionStatus
+      type:
+        namedType: com.github.openshift.api.config.v1.TopologyTransitionStatus
+      default: {}
+- name: com.github.openshift.api.config.v1.IntermediateTLSProfile
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.KubevirtPlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.KubevirtPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.MTUMigration
+  map:
+    fields:
+    - name: machine
+      type:
+        namedType: com.github.openshift.api.config.v1.MTUMigrationValues
+    - name: network
+      type:
+        namedType: com.github.openshift.api.config.v1.MTUMigrationValues
+- name: com.github.openshift.api.config.v1.MTUMigrationValues
+  map:
+    fields:
+    - name: from
+      type:
+        scalar: numeric
+    - name: to
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.config.v1.ModernTLSProfile
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.NutanixFailureDomain
+  map:
+    fields:
+    - name: cluster
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixResourceIdentifier
+      default: {}
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: subnets
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.NutanixResourceIdentifier
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: OpenShiftManagedDefault
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.NutanixPlatformSpec
+  map:
+    fields:
+    - name: failureDomains
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.NutanixFailureDomain
+          elementRelationship: associative
+          keys:
+          - name
+    - name: prismCentral
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixPrismEndpoint
+      default: {}
+    - name: prismElements
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.NutanixPrismElementEndpoint
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.config.v1.NutanixPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: dnsRecordsType
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: loadBalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer
+      default:
+        type: OpenShiftManagedDefault
+- name: com.github.openshift.api.config.v1.NutanixPrismElementEndpoint
+  map:
+    fields:
+    - name: endpoint
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixPrismEndpoint
+      default: {}
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.NutanixPrismEndpoint
+  map:
+    fields:
+    - name: address
+      type:
+        scalar: string
+      default: ""
+    - name: port
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.openshift.api.config.v1.NutanixResourceIdentifier
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    - name: uuid
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: name
+        discriminatorValue: Name
+      - fieldName: uuid
+        discriminatorValue: UUID
+- name: com.github.openshift.api.config.v1.OldTLSProfile
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: OpenShiftManagedDefault
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.OpenStackPlatformSpec
+  map:
+    fields:
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: maxAllowedAddressPairs
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.config.v1.OpenStackPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: cloudName
+      type:
+        scalar: string
+    - name: dnsRecordsType
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: loadBalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer
+      default:
+        type: OpenShiftManagedDefault
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nodeDNSIP
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: OpenShiftManagedDefault
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.OvirtPlatformSpec
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.config.v1.OvirtPlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: dnsRecordsType
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: loadBalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer
+      default:
+        type: OpenShiftManagedDefault
+    - name: nodeDNSIP
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.PlatformSpec
+  map:
+    fields:
+    - name: alibabaCloud
+      type:
+        namedType: com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec
+    - name: aws
+      type:
+        namedType: com.github.openshift.api.config.v1.AWSPlatformSpec
+    - name: azure
+      type:
+        namedType: com.github.openshift.api.config.v1.AzurePlatformSpec
+    - name: baremetal
+      type:
+        namedType: com.github.openshift.api.config.v1.BareMetalPlatformSpec
+    - name: equinixMetal
+      type:
+        namedType: com.github.openshift.api.config.v1.EquinixMetalPlatformSpec
+    - name: external
+      type:
+        namedType: com.github.openshift.api.config.v1.ExternalPlatformSpec
+    - name: gcp
+      type:
+        namedType: com.github.openshift.api.config.v1.GCPPlatformSpec
+    - name: ibmcloud
+      type:
+        namedType: com.github.openshift.api.config.v1.IBMCloudPlatformSpec
+    - name: kubevirt
+      type:
+        namedType: com.github.openshift.api.config.v1.KubevirtPlatformSpec
+    - name: nutanix
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixPlatformSpec
+    - name: openstack
+      type:
+        namedType: com.github.openshift.api.config.v1.OpenStackPlatformSpec
+    - name: ovirt
+      type:
+        namedType: com.github.openshift.api.config.v1.OvirtPlatformSpec
+    - name: powervs
+      type:
+        namedType: com.github.openshift.api.config.v1.PowerVSPlatformSpec
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    - name: vsphere
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformSpec
+- name: com.github.openshift.api.config.v1.PlatformStatus
+  map:
+    fields:
+    - name: alibabaCloud
+      type:
+        namedType: com.github.openshift.api.config.v1.AlibabaCloudPlatformStatus
+    - name: aws
+      type:
+        namedType: com.github.openshift.api.config.v1.AWSPlatformStatus
+    - name: azure
+      type:
+        namedType: com.github.openshift.api.config.v1.AzurePlatformStatus
+    - name: baremetal
+      type:
+        namedType: com.github.openshift.api.config.v1.BareMetalPlatformStatus
+    - name: equinixMetal
+      type:
+        namedType: com.github.openshift.api.config.v1.EquinixMetalPlatformStatus
+    - name: external
+      type:
+        namedType: com.github.openshift.api.config.v1.ExternalPlatformStatus
+    - name: gcp
+      type:
+        namedType: com.github.openshift.api.config.v1.GCPPlatformStatus
+    - name: ibmcloud
+      type:
+        namedType: com.github.openshift.api.config.v1.IBMCloudPlatformStatus
+    - name: kubevirt
+      type:
+        namedType: com.github.openshift.api.config.v1.KubevirtPlatformStatus
+    - name: nutanix
+      type:
+        namedType: com.github.openshift.api.config.v1.NutanixPlatformStatus
+    - name: openstack
+      type:
+        namedType: com.github.openshift.api.config.v1.OpenStackPlatformStatus
+    - name: ovirt
+      type:
+        namedType: com.github.openshift.api.config.v1.OvirtPlatformStatus
+    - name: powervs
+      type:
+        namedType: com.github.openshift.api.config.v1.PowerVSPlatformStatus
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    - name: vsphere
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformStatus
+- name: com.github.openshift.api.config.v1.PowerVSPlatformSpec
+  map:
+    fields:
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.PowerVSServiceEndpoint
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.config.v1.PowerVSPlatformStatus
+  map:
+    fields:
+    - name: cisInstanceCRN
+      type:
+        scalar: string
+    - name: dnsInstanceCRN
+      type:
+        scalar: string
+    - name: region
+      type:
+        scalar: string
+      default: ""
+    - name: resourceGroup
+      type:
+        scalar: string
+      default: ""
+    - name: serviceEndpoints
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.PowerVSServiceEndpoint
+          elementRelationship: associative
+          keys:
+          - name
+    - name: zone
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.PowerVSServiceEndpoint
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: url
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.ProxyStatus
+  map:
+    fields:
+    - name: httpProxy
+      type:
+        scalar: string
+    - name: httpsProxy
+      type:
+        scalar: string
+    - name: noProxy
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.TLSSecurityProfile
+  map:
+    fields:
+    - name: custom
+      type:
+        namedType: com.github.openshift.api.config.v1.CustomTLSProfile
+    - name: intermediate
+      type:
+        namedType: com.github.openshift.api.config.v1.IntermediateTLSProfile
+    - name: modern
+      type:
+        namedType: com.github.openshift.api.config.v1.ModernTLSProfile
+    - name: old
+      type:
+        namedType: com.github.openshift.api.config.v1.OldTLSProfile
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: custom
+        discriminatorValue: Custom
+      - fieldName: intermediate
+        discriminatorValue: Intermediate
+      - fieldName: modern
+        discriminatorValue: Modern
+      - fieldName: old
+        discriminatorValue: Old
+- name: com.github.openshift.api.config.v1.TopologyState
+  map:
+    fields:
+    - name: controlPlaneTopology
+      type:
+        scalar: string
+    - name: infrastructureTopology
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.TopologyTransition
+  map:
+    fields:
+    - name: evaluations
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: source
+      type:
+        namedType: com.github.openshift.api.config.v1.TopologyState
+      default: {}
+    - name: target
+      type:
+        namedType: com.github.openshift.api.config.v1.TopologyState
+      default: {}
+- name: com.github.openshift.api.config.v1.TopologyTransitionStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: transitions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.TopologyTransition
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.VSphereFailureDomainHostGroup
+  map:
+    fields:
+    - name: hostGroup
+      type:
+        scalar: string
+      default: ""
+    - name: vmGroup
+      type:
+        scalar: string
+      default: ""
+    - name: vmHostRule
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.config.v1.VSphereFailureDomainRegionAffinity
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.VSphereFailureDomainZoneAffinity
+  map:
+    fields:
+    - name: hostGroup
+      type:
+        namedType: com.github.openshift.api.config.v1.VSphereFailureDomainHostGroup
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: hostGroup
+        discriminatorValue: HostGroup
+- name: com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: region
+      type:
+        scalar: string
+      default: ""
+    - name: regionAffinity
+      type:
+        namedType: com.github.openshift.api.config.v1.VSphereFailureDomainRegionAffinity
+    - name: server
+      type:
+        scalar: string
+      default: ""
+    - name: topology
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformTopology
+      default: {}
+    - name: zone
+      type:
+        scalar: string
+      default: ""
+    - name: zoneAffinity
+      type:
+        namedType: com.github.openshift.api.config.v1.VSphereFailureDomainZoneAffinity
+- name: com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer
+  map:
+    fields:
+    - name: type
+      type:
+        scalar: string
+      default: OpenShiftManagedDefault
+    unions:
+    - discriminator: type
+- name: com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking
+  map:
+    fields:
+    - name: external
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec
+      default: {}
+    - name: internal
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec
+      default: {}
+- name: com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec
+  map:
+    fields:
+    - name: excludeNetworkSubnetCidr
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: network
+      type:
+        scalar: string
+    - name: networkSubnetCidr
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.config.v1.VSpherePlatformSpec
+  map:
+    fields:
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: failureDomains
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec
+          elementRelationship: associative
+          keys:
+          - name
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nodeNetworking
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking
+      default: {}
+    - name: vcenters
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec
+          elementRelationship: atomic
+- name: com.github.openshift.api.config.v1.VSpherePlatformStatus
+  map:
+    fields:
+    - name: apiServerInternalIP
+      type:
+        scalar: string
+    - name: apiServerInternalIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: dnsRecordsType
+      type:
+        scalar: string
+    - name: ingressIP
+      type:
+        scalar: string
+    - name: ingressIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: loadBalancer
+      type:
+        namedType: com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer
+      default:
+        type: OpenShiftManagedDefault
+    - name: machineNetworks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nodeDNSIP
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.VSpherePlatformTopology
+  map:
+    fields:
+    - name: computeCluster
+      type:
+        scalar: string
+      default: ""
+    - name: datacenter
+      type:
+        scalar: string
+      default: ""
+    - name: datastore
+      type:
+        scalar: string
+      default: ""
+    - name: folder
+      type:
+        scalar: string
+    - name: networks
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: resourcePool
+      type:
+        scalar: string
+    - name: template
+      type:
+        scalar: string
+- name: com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec
+  map:
+    fields:
+    - name: datacenters
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: port
+      type:
+        scalar: numeric
+    - name: server
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.AdditionalArtifactStore
+  map:
+    fields:
+    - name: path
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.AdditionalImageStore
+  map:
+    fields:
+    - name: path
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.AdditionalLayerStore
+  map:
+    fields:
+    - name: path
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.CertExpiry
+  map:
+    fields:
+    - name: bundle
+      type:
+        scalar: string
+      default: ""
+    - name: expiry
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: subject
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfig
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigCondition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigSpec
+  map:
+    fields:
+    - name: containerRuntimeConfig
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfiguration
+    - name: machineConfigPoolSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+- name: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfigCondition
+          elementRelationship: atomic
+    - name: observedGeneration
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.machineconfiguration.v1.ContainerRuntimeConfiguration
+  map:
+    fields:
+    - name: additionalArtifactStores
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.AdditionalArtifactStore
+          elementRelationship: atomic
+    - name: additionalImageStores
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.AdditionalImageStore
+          elementRelationship: atomic
+    - name: additionalLayerStores
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.AdditionalLayerStore
+          elementRelationship: atomic
+    - name: containerGomaxprocsBehavior
+      type:
+        scalar: string
+    - name: defaultRuntime
+      type:
+        scalar: string
+    - name: logLevel
+      type:
+        scalar: string
+    - name: logSizeMax
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: overlaySize
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: pidsLimit
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.machineconfiguration.v1.ControllerCertificate
+  map:
+    fields:
+    - name: bundleFile
+      type:
+        scalar: string
+      default: ""
+    - name: notAfter
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: notBefore
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: signer
+      type:
+        scalar: string
+      default: ""
+    - name: subject
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.ControllerConfig
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ControllerConfigSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ControllerConfigStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.ControllerConfigSpec
+  map:
+    fields:
+    - name: additionalTrustBundle
+      type:
+        scalar: string
+    - name: baseOSContainerImage
+      type:
+        scalar: string
+      default: ""
+    - name: baseOSExtensionsContainerImage
+      type:
+        scalar: string
+      default: ""
+    - name: bgpVIPPeersJSON
+      type:
+        scalar: string
+    - name: cloudProviderCAData
+      type:
+        scalar: string
+    - name: cloudProviderConfig
+      type:
+        scalar: string
+      default: ""
+    - name: clusterDNSIP
+      type:
+        scalar: string
+      default: ""
+    - name: dns
+      type:
+        namedType: com.github.openshift.api.config.v1.DNS
+    - name: etcdDiscoveryDomain
+      type:
+        scalar: string
+    - name: imageRegistryBundleData
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ImageRegistryBundle
+          elementRelationship: atomic
+    - name: imageRegistryBundleUserData
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ImageRegistryBundle
+          elementRelationship: atomic
+    - name: images
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: infra
+      type:
+        namedType: com.github.openshift.api.config.v1.Infrastructure
+    - name: internalRegistryPullSecret
+      type:
+        scalar: string
+    - name: ipFamilies
+      type:
+        scalar: string
+      default: ""
+    - name: kubeAPIServerServingCAData
+      type:
+        scalar: string
+    - name: network
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.NetworkInfo
+    - name: networkType
+      type:
+        scalar: string
+    - name: osImageURL
+      type:
+        scalar: string
+      default: ""
+    - name: platform
+      type:
+        scalar: string
+    - name: proxy
+      type:
+        namedType: com.github.openshift.api.config.v1.ProxyStatus
+    - name: pullSecret
+      type:
+        namedType: io.k8s.api.core.v1.ObjectReference
+    - name: releaseImage
+      type:
+        scalar: string
+      default: ""
+    - name: rootCAData
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.ControllerConfigStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ControllerConfigStatusCondition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: controllerCertificates
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ControllerCertificate
+          elementRelationship: atomic
+    - name: observedGeneration
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.machineconfiguration.v1.ControllerConfigStatusCondition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.ImageRegistryBundle
+  map:
+    fields:
+    - name: data
+      type:
+        scalar: string
+    - name: file
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.ImageSecretObjectReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImage
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageBundleStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: image
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageRef
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageSpec
+  map:
+    fields:
+    - name: releases
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageRef
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: releases
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.InternalReleaseImageBundleStatus
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.IrreconcilableChangeDiff
+  map:
+    fields:
+    - name: diff
+      type:
+        scalar: string
+    - name: fieldPath
+      type:
+        scalar: string
 - name: com.github.openshift.api.machineconfiguration.v1.KubeletConfig
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.KubeletConfigSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.KubeletConfigStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.KubeletConfigCondition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.KubeletConfigSpec
+  map:
+    fields:
+    - name: autoSizingReserved
+      type:
+        scalar: boolean
+    - name: kubeletConfig
+      type:
+        namedType: __untyped_atomic_
+    - name: logLevel
+      type:
+        scalar: numeric
+    - name: machineConfigPoolSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: systemGomaxprocsBehavior
+      type:
+        scalar: string
+    - name: tlsSecurityProfile
+      type:
+        namedType: com.github.openshift.api.config.v1.TLSSecurityProfile
+- name: com.github.openshift.api.machineconfiguration.v1.KubeletConfigStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.KubeletConfigCondition
+          elementRelationship: atomic
+    - name: observedGeneration
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.machineconfiguration.v1.MCOObjectReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.MachineConfig
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigSpec
+      default: {}
 - name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNode
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpec
+  map:
+    fields:
+    - name: configImage
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpecConfigImage
+      default: {}
+    - name: configVersion
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpecMachineConfigVersion
+      default: {}
+    - name: node
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MCOObjectReference
+      default: {}
+    - name: pool
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MCOObjectReference
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpecConfigImage
+  map:
+    fields:
+    - name: desiredImage
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeSpecMachineConfigVersion
+  map:
+    fields:
+    - name: desired
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: configImage
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusConfigImage
+      default: {}
+    - name: configVersion
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusMachineConfigVersion
+    - name: internalReleaseImage
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusInternalReleaseImage
+      default: {}
+    - name: irreconcilableChanges
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.IrreconcilableChangeDiff
+          elementRelationship: associative
+          keys:
+          - fieldPath
+    - name: observedGeneration
+      type:
+        scalar: numeric
+    - name: pinnedImageSets
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusPinnedImageSet
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusConfigImage
+  map:
+    fields:
+    - name: currentImage
+      type:
+        scalar: string
+    - name: desiredImage
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusInternalReleaseImage
+  map:
+    fields:
+    - name: releases
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusInternalReleaseImageRef
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusInternalReleaseImageRef
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: image
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusMachineConfigVersion
+  map:
+    fields:
+    - name: current
+      type:
+        scalar: string
+      default: ""
+    - name: desired
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigNodeStatusPinnedImageSet
+  map:
+    fields:
+    - name: currentGeneration
+      type:
+        scalar: numeric
+    - name: desiredGeneration
+      type:
+        scalar: numeric
+    - name: lastFailedGeneration
+      type:
+        scalar: numeric
+    - name: lastFailedGenerationError
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPool
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolCondition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+      default: ""
+    - name: reason
+      type:
+        scalar: string
+      default: ""
+    - name: status
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolSpec
+  map:
+    fields:
+    - name: configuration
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolStatusConfiguration
+      default: {}
+    - name: machineConfigSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: maxUnavailable
+      type:
+        namedType: io.k8s.apimachinery.pkg.util.intstr.IntOrString
+    - name: nodeSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: osImageStream
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.OSImageStreamReference
+      default: {}
+    - name: paused
+      type:
+        scalar: boolean
+      default: false
+    - name: pinnedImageSets
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.PinnedImageSetRef
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolStatus
+  map:
+    fields:
+    - name: certExpirys
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.CertExpiry
+          elementRelationship: atomic
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolCondition
+          elementRelationship: atomic
+    - name: configuration
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolStatusConfiguration
+      default: {}
+    - name: degradedMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: machineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: observedGeneration
+      type:
+        scalar: numeric
+    - name: osImageStream
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.OSImageStreamReference
+      default: {}
+    - name: poolSynchronizersStatus
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.PoolSynchronizerStatus
+          elementRelationship: associative
+          keys:
+          - poolSynchronizerType
+    - name: readyMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: unavailableMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: updatedMachineCount
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolStatusConfiguration
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: fieldPath
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resourceVersion
+      type:
+        scalar: string
+    - name: source
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.ObjectReference
+          elementRelationship: atomic
+    - name: uid
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineConfigSpec
+  map:
+    fields:
+    - name: baseOSExtensionsContainerImage
+      type:
+        scalar: string
+      default: ""
+    - name: config
+      type:
+        namedType: __untyped_atomic_
+    - name: extensions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: fips
+      type:
+        scalar: boolean
+      default: false
+    - name: kernelArguments
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: kernelType
+      type:
+        scalar: string
+      default: ""
+    - name: osImageURL
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.MachineOSBuild
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSBuildSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSBuildStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSBuildSpec
+  map:
+    fields:
+    - name: machineConfig
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigReference
+      default: {}
+    - name: machineOSConfig
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigReference
+      default: {}
+    - name: renderedImagePushSpec
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSBuildStatus
+  map:
+    fields:
+    - name: buildEnd
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: buildStart
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: builder
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSBuilderReference
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: digestedImagePushSpec
+      type:
+        scalar: string
+    - name: relatedObjects
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.ObjectReference
+          elementRelationship: associative
+          keys:
+          - name
+          - resource
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSBuilderReference
+  map:
+    fields:
+    - name: imageBuilderType
+      type:
+        scalar: string
+      default: ""
+    - name: job
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ObjectReference
+    unions:
+    - discriminator: imageBuilderType
+      fields:
+      - fieldName: job
+        discriminatorValue: Job
 - name: com.github.openshift.api.machineconfiguration.v1.MachineOSConfig
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigSpec
+  map:
+    fields:
+    - name: baseImagePullSecret
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ImageSecretObjectReference
+    - name: containerFile
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSContainerfile
+          elementRelationship: associative
+          keys:
+          - containerfileArch
+    - name: imageBuilder
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineOSImageBuilder
+      default: {}
+    - name: machineConfigPool
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.MachineConfigPoolReference
+      default: {}
+    - name: renderedImagePushSecret
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ImageSecretObjectReference
+      default: {}
+    - name: renderedImagePushSpec
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSConfigStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: currentImagePullSpec
+      type:
+        scalar: string
+    - name: machineOSBuild
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.ObjectReference
+    - name: observedGeneration
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSContainerfile
+  map:
+    fields:
+    - name: containerfileArch
+      type:
+        scalar: string
+    - name: content
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.MachineOSImageBuilder
+  map:
+    fields:
+    - name: imageBuilderType
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.NetworkInfo
+  map:
+    fields:
+    - name: mtuMigration
+      type:
+        namedType: com.github.openshift.api.config.v1.MTUMigration
 - name: com.github.openshift.api.machineconfiguration.v1.OSImageStream
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.OSImageStreamSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.OSImageStreamStatus
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.OSImageStreamReference
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.OSImageStreamSet
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: osExtensionsImage
+      type:
+        scalar: string
+    - name: osImage
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.OSImageStreamSpec
+  map:
+    fields:
+    - name: defaultStream
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.OSImageStreamStatus
+  map:
+    fields:
+    - name: availableStreams
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.OSImageStreamSet
+          elementRelationship: associative
+          keys:
+          - name
+    - name: defaultStream
+      type:
+        scalar: string
+- name: com.github.openshift.api.machineconfiguration.v1.ObjectReference
+  map:
+    fields:
+    - name: group
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.PinnedImageRef
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.openshift.api.machineconfiguration.v1.PinnedImageSet
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.machineconfiguration.v1.PinnedImageSetSpec
+      default: {}
+- name: com.github.openshift.api.machineconfiguration.v1.PinnedImageSetRef
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.machineconfiguration.v1.PinnedImageSetSpec
+  map:
+    fields:
+    - name: pinnedImages
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.machineconfiguration.v1.PinnedImageRef
+          elementRelationship: associative
+          keys:
+          - name
+- name: com.github.openshift.api.machineconfiguration.v1.PoolSynchronizerStatus
+  map:
+    fields:
+    - name: availableMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: machineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: observedGeneration
+      type:
+        scalar: numeric
+    - name: poolSynchronizerType
+      type:
+        scalar: string
+      default: ""
+    - name: readyMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: unavailableMachineCount
+      type:
+        scalar: numeric
+      default: 0
+    - name: updatedMachineCount
+      type:
+        scalar: numeric
+      default: 0
 - name: com.github.openshift.api.machineconfiguration.v1alpha1.BGPVIPConfig
   map:
     fields:
@@ -367,6 +2859,33 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: defaultStream
       type:
         scalar: string
+- name: io.k8s.api.core.v1.ObjectReference
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: fieldPath
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resourceVersion
+      type:
+        scalar: string
+    - name: uid
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.api.resource.Quantity
+  scalar: untyped
 - name: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
   map:
     fields:
@@ -404,6 +2923,38 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+  map:
+    fields:
+    - name: matchExpressions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+          elementRelationship: atomic
+    - name: matchLabels
+      type:
+        map:
+          elementType:
+            scalar: string
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: operator
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
 - name: io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry
   map:
     fields:
@@ -518,6 +3069,20 @@ var schemaYAML = typed.YAMLObject(`types:
       default: ""
     elementRelationship: atomic
 - name: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+  scalar: untyped
+- name: io.k8s.apimachinery.pkg.runtime.RawExtension
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: io.k8s.apimachinery.pkg.util.intstr.IntOrString
   scalar: untyped
 - name: __untyped_atomic_
   scalar: untyped

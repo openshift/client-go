@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ServiceCertSignerOperatorConfigs returns a ServiceCertSignerOperatorConfigInformer.
+	// ServiceCertSignerOperatorConfigs returns a TypedServiceCertSignerOperatorConfigInformer.
 	ServiceCertSignerOperatorConfigs() TypedServiceCertSignerOperatorConfigInformer
 }
 

@@ -25,6 +25,7 @@ type PKIInterface interface {
 	Create(ctx context.Context, pKI *configv1alpha1.PKI, opts v1.CreateOptions) (*configv1alpha1.PKI, error)
 	Update(ctx context.Context, pKI *configv1alpha1.PKI, opts v1.UpdateOptions) (*configv1alpha1.PKI, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*configv1alpha1.PKI, error)
 	List(ctx context.Context, opts v1.ListOptions) (*configv1alpha1.PKIList, error)

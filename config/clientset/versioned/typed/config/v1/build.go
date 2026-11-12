@@ -25,6 +25,7 @@ type BuildInterface interface {
 	Create(ctx context.Context, build *configv1.Build, opts metav1.CreateOptions) (*configv1.Build, error)
 	Update(ctx context.Context, build *configv1.Build, opts metav1.UpdateOptions) (*configv1.Build, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*configv1.Build, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*configv1.BuildList, error)

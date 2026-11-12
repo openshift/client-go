@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Images returns a ImageInformer.
+	// Images returns a TypedImageInformer.
 	Images() TypedImageInformer
-	// ImageStreams returns a ImageStreamInformer.
+	// ImageStreams returns a TypedImageStreamInformer.
 	ImageStreams() TypedImageStreamInformer
 }
 

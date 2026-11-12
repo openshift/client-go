@@ -8,11 +8,11 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// BrokerTemplateInstances returns a BrokerTemplateInstanceInformer.
+	// BrokerTemplateInstances returns a TypedBrokerTemplateInstanceInformer.
 	BrokerTemplateInstances() TypedBrokerTemplateInstanceInformer
-	// Templates returns a TemplateInformer.
+	// Templates returns a TypedTemplateInformer.
 	Templates() TypedTemplateInformer
-	// TemplateInstances returns a TemplateInstanceInformer.
+	// TemplateInstances returns a TypedTemplateInstanceInformer.
 	TemplateInstances() TypedTemplateInstanceInformer
 }
 

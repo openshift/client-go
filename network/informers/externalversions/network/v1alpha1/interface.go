@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// DNSNameResolvers returns a DNSNameResolverInformer.
+	// DNSNameResolvers returns a TypedDNSNameResolverInformer.
 	DNSNameResolvers() TypedDNSNameResolverInformer
 }
 

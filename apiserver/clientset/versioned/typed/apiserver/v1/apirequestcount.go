@@ -27,6 +27,7 @@ type APIRequestCountInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, aPIRequestCount *apiserverv1.APIRequestCount, opts metav1.UpdateOptions) (*apiserverv1.APIRequestCount, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*apiserverv1.APIRequestCount, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*apiserverv1.APIRequestCountList, error)

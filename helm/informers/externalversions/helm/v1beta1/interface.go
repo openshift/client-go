@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// HelmChartRepositories returns a HelmChartRepositoryInformer.
+	// HelmChartRepositories returns a TypedHelmChartRepositoryInformer.
 	HelmChartRepositories() TypedHelmChartRepositoryInformer
-	// ProjectHelmChartRepositories returns a ProjectHelmChartRepositoryInformer.
+	// ProjectHelmChartRepositories returns a TypedProjectHelmChartRepositoryInformer.
 	ProjectHelmChartRepositories() TypedProjectHelmChartRepositoryInformer
 }
 

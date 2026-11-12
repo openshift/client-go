@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v7/typed"
 )
 
 func Parser() *typed.Parser {
@@ -23,26 +23,992 @@ func Parser() *typed.Parser {
 var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
+- name: com.github.openshift.api.imageregistry.v1.AzureNetworkAccess
+  map:
+    fields:
+    - name: internal
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.AzureNetworkAccessInternal
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: internal
+        discriminatorValue: Internal
+- name: com.github.openshift.api.imageregistry.v1.AzureNetworkAccessInternal
+  map:
+    fields:
+    - name: networkResourceGroupName
+      type:
+        scalar: string
+    - name: privateEndpointName
+      type:
+        scalar: string
+    - name: subnetName
+      type:
+        scalar: string
+    - name: vnetName
+      type:
+        scalar: string
 - name: com.github.openshift.api.imageregistry.v1.Config
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistrySpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryStatus
+      default: {}
+- name: com.github.openshift.api.imageregistry.v1.EncryptionAlibaba
+  map:
+    fields:
+    - name: kms
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.KMSEncryptionAlibaba
+    - name: method
+      type:
+        scalar: string
 - name: com.github.openshift.api.imageregistry.v1.ImagePruner
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImagePrunerSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImagePrunerStatus
+      default: {}
+- name: com.github.openshift.api.imageregistry.v1.ImagePrunerSpec
+  map:
+    fields:
+    - name: affinity
+      type:
+        namedType: io.k8s.api.core.v1.Affinity
+    - name: failedJobsHistoryLimit
+      type:
+        scalar: numeric
+    - name: ignoreInvalidImageReferences
+      type:
+        scalar: boolean
+    - name: keepTagRevisions
+      type:
+        scalar: numeric
+    - name: keepYoungerThan
+      type:
+        scalar: numeric
+    - name: keepYoungerThanDuration
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: logLevel
+      type:
+        scalar: string
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: resources
+      type:
+        namedType: io.k8s.api.core.v1.ResourceRequirements
+    - name: schedule
+      type:
+        scalar: string
+      default: ""
+    - name: successfulJobsHistoryLimit
+      type:
+        scalar: numeric
+    - name: suspend
+      type:
+        scalar: boolean
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.Toleration
+          elementRelationship: atomic
+- name: com.github.openshift.api.imageregistry.v1.ImagePrunerStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.OperatorCondition
+          elementRelationship: atomic
+    - name: observedGeneration
+      type:
+        scalar: numeric
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigProxy
+  map:
+    fields:
+    - name: http
+      type:
+        scalar: string
+    - name: https
+      type:
+        scalar: string
+    - name: noProxy
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRequests
+  map:
+    fields:
+    - name: read
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRequestsLimits
+      default: {}
+    - name: write
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRequestsLimits
+      default: {}
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRequestsLimits
+  map:
+    fields:
+    - name: maxInQueue
+      type:
+        scalar: numeric
+    - name: maxRunning
+      type:
+        scalar: numeric
+    - name: maxWaitInQueue
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRoute
+  map:
+    fields:
+    - name: hostname
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: secretName
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorage
+  map:
+    fields:
+    - name: azure
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageAzure
+    - name: emptyDir
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageEmptyDir
+    - name: gcs
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageGCS
+    - name: ibmcos
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageIBMCOS
+    - name: managementState
+      type:
+        scalar: string
+    - name: oss
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageAlibabaOSS
+    - name: pvc
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStoragePVC
+    - name: s3
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageS3
+    - name: swift
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageSwift
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageAlibabaOSS
+  map:
+    fields:
+    - name: bucket
+      type:
+        scalar: string
+    - name: encryption
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.EncryptionAlibaba
+    - name: endpointAccessibility
+      type:
+        scalar: string
+    - name: region
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageAzure
+  map:
+    fields:
+    - name: accountName
+      type:
+        scalar: string
+    - name: cloudName
+      type:
+        scalar: string
+    - name: container
+      type:
+        scalar: string
+    - name: networkAccess
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.AzureNetworkAccess
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageEmptyDir
   map:
     elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageGCS
+  map:
+    fields:
+    - name: bucket
+      type:
+        scalar: string
+    - name: keyID
+      type:
+        scalar: string
+    - name: projectID
+      type:
+        scalar: string
+    - name: region
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageIBMCOS
+  map:
+    fields:
+    - name: bucket
+      type:
+        scalar: string
+    - name: location
+      type:
+        scalar: string
+    - name: resourceGroupName
+      type:
+        scalar: string
+    - name: resourceKeyCRN
+      type:
+        scalar: string
+    - name: serviceInstanceCRN
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStoragePVC
+  map:
+    fields:
+    - name: claim
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageS3
+  map:
+    fields:
+    - name: bucket
+      type:
+        scalar: string
+    - name: chunkSizeMiB
+      type:
+        scalar: numeric
+    - name: cloudFront
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageS3CloudFront
+    - name: encrypt
+      type:
+        scalar: boolean
+    - name: keyID
+      type:
+        scalar: string
+    - name: region
+      type:
+        scalar: string
+    - name: regionEndpoint
+      type:
+        scalar: string
+    - name: trustedCA
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.S3TrustedCASource
+      default: {}
+    - name: virtualHostedStyle
+      type:
+        scalar: boolean
+      default: false
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageS3CloudFront
+  map:
+    fields:
+    - name: baseURL
+      type:
+        scalar: string
+      default: ""
+    - name: duration
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: keypairID
+      type:
+        scalar: string
+      default: ""
+    - name: privateKey
+      type:
+        namedType: io.k8s.api.core.v1.SecretKeySelector
+      default: {}
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorageSwift
+  map:
+    fields:
+    - name: authURL
+      type:
+        scalar: string
+    - name: authVersion
+      type:
+        scalar: string
+    - name: container
+      type:
+        scalar: string
+    - name: domain
+      type:
+        scalar: string
+    - name: domainID
+      type:
+        scalar: string
+    - name: regionName
+      type:
+        scalar: string
+    - name: tenant
+      type:
+        scalar: string
+    - name: tenantID
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistrySpec
+  map:
+    fields:
+    - name: affinity
+      type:
+        namedType: io.k8s.api.core.v1.Affinity
+    - name: defaultRoute
+      type:
+        scalar: boolean
+    - name: disableRedirect
+      type:
+        scalar: boolean
+    - name: httpSecret
+      type:
+        scalar: string
+    - name: logLevel
+      type:
+        scalar: string
+    - name: logging
+      type:
+        scalar: numeric
+    - name: managementState
+      type:
+        scalar: string
+      default: ""
+    - name: nodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: observedConfig
+      type:
+        namedType: __untyped_atomic_
+    - name: operatorLogLevel
+      type:
+        scalar: string
+    - name: proxy
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigProxy
+      default: {}
+    - name: readOnly
+      type:
+        scalar: boolean
+    - name: replicas
+      type:
+        scalar: numeric
+      default: 0
+    - name: requests
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRequests
+        elementRelationship: atomic
+      default: {}
+    - name: resources
+      type:
+        namedType: io.k8s.api.core.v1.ResourceRequirements
+        elementRelationship: atomic
+    - name: rolloutStrategy
+      type:
+        scalar: string
+    - name: routes
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigRoute
+          elementRelationship: atomic
+    - name: storage
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorage
+      default: {}
+    - name: tolerations
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.Toleration
+          elementRelationship: atomic
+    - name: topologySpreadConstraints
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.TopologySpreadConstraint
+          elementRelationship: atomic
+    - name: unsupportedConfigOverrides
+      type:
+        namedType: __untyped_atomic_
+- name: com.github.openshift.api.imageregistry.v1.ImageRegistryStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.OperatorCondition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: generations
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.GenerationStatus
+          elementRelationship: associative
+          keys:
+          - group
+          - resource
+          - namespace
+          - name
+    - name: latestAvailableRevision
+      type:
+        scalar: numeric
+    - name: observedGeneration
+      type:
+        scalar: numeric
+    - name: readyReplicas
+      type:
+        scalar: numeric
+      default: 0
+    - name: storage
+      type:
+        namedType: com.github.openshift.api.imageregistry.v1.ImageRegistryConfigStorage
+      default: {}
+    - name: storageManaged
+      type:
+        scalar: boolean
+      default: false
+    - name: version
+      type:
+        scalar: string
+- name: com.github.openshift.api.imageregistry.v1.KMSEncryptionAlibaba
+  map:
+    fields:
+    - name: keyID
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.imageregistry.v1.S3TrustedCASource
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.operator.v1.GenerationStatus
+  map:
+    fields:
+    - name: group
+      type:
+        scalar: string
+      default: ""
+    - name: hash
+      type:
+        scalar: string
+      default: ""
+    - name: lastGeneration
+      type:
+        scalar: numeric
+      default: 0
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+      default: ""
+    - name: resource
+      type:
+        scalar: string
+      default: ""
+- name: com.github.openshift.api.operator.v1.OperatorCondition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: io.k8s.api.core.v1.Affinity
+  map:
+    fields:
+    - name: nodeAffinity
+      type:
+        namedType: io.k8s.api.core.v1.NodeAffinity
+    - name: podAffinity
+      type:
+        namedType: io.k8s.api.core.v1.PodAffinity
+    - name: podAntiAffinity
+      type:
+        namedType: io.k8s.api.core.v1.PodAntiAffinity
+- name: io.k8s.api.core.v1.NodeAffinity
+  map:
+    fields:
+    - name: preferredDuringSchedulingIgnoredDuringExecution
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.PreferredSchedulingTerm
+          elementRelationship: atomic
+    - name: requiredDuringSchedulingIgnoredDuringExecution
+      type:
+        namedType: io.k8s.api.core.v1.NodeSelector
+- name: io.k8s.api.core.v1.NodeSelector
+  map:
+    fields:
+    - name: nodeSelectorTerms
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.NodeSelectorTerm
+          elementRelationship: atomic
+    elementRelationship: atomic
+- name: io.k8s.api.core.v1.NodeSelectorRequirement
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: operator
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: io.k8s.api.core.v1.NodeSelectorTerm
+  map:
+    fields:
+    - name: matchExpressions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.NodeSelectorRequirement
+          elementRelationship: atomic
+    - name: matchFields
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.NodeSelectorRequirement
+          elementRelationship: atomic
+    elementRelationship: atomic
+- name: io.k8s.api.core.v1.PodAffinity
+  map:
+    fields:
+    - name: preferredDuringSchedulingIgnoredDuringExecution
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.WeightedPodAffinityTerm
+          elementRelationship: atomic
+    - name: requiredDuringSchedulingIgnoredDuringExecution
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.PodAffinityTerm
+          elementRelationship: atomic
+- name: io.k8s.api.core.v1.PodAffinityTerm
+  map:
+    fields:
+    - name: labelSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: matchLabelKeys
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: mismatchLabelKeys
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: namespaceSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: namespaces
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: topologyKey
+      type:
+        scalar: string
+      default: ""
+- name: io.k8s.api.core.v1.PodAntiAffinity
+  map:
+    fields:
+    - name: preferredDuringSchedulingIgnoredDuringExecution
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.WeightedPodAffinityTerm
+          elementRelationship: atomic
+    - name: requiredDuringSchedulingIgnoredDuringExecution
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.PodAffinityTerm
+          elementRelationship: atomic
+- name: io.k8s.api.core.v1.PreferredSchedulingTerm
+  map:
+    fields:
+    - name: preference
+      type:
+        namedType: io.k8s.api.core.v1.NodeSelectorTerm
+      default: {}
+    - name: weight
+      type:
+        scalar: numeric
+      default: 0
+- name: io.k8s.api.core.v1.ResourceClaim
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: request
+      type:
+        scalar: string
+- name: io.k8s.api.core.v1.ResourceRequirements
+  map:
+    fields:
+    - name: claims
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.core.v1.ResourceClaim
+          elementRelationship: associative
+          keys:
+          - name
+    - name: limits
+      type:
+        map:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: requests
+      type:
+        map:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+- name: io.k8s.api.core.v1.SecretKeySelector
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: optional
+      type:
+        scalar: boolean
+    elementRelationship: atomic
+- name: io.k8s.api.core.v1.Toleration
+  map:
+    fields:
+    - name: effect
+      type:
+        scalar: string
+    - name: key
+      type:
+        scalar: string
+    - name: operator
+      type:
+        scalar: string
+    - name: tolerationSeconds
+      type:
+        scalar: numeric
+    - name: value
+      type:
+        scalar: string
+- name: io.k8s.api.core.v1.TopologySpreadConstraint
+  map:
+    fields:
+    - name: labelSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: matchLabelKeys
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: maxSkew
+      type:
+        scalar: numeric
+      default: 0
+    - name: minDomains
+      type:
+        scalar: numeric
+    - name: nodeAffinityPolicy
+      type:
+        scalar: string
+    - name: nodeTaintsPolicy
+      type:
+        scalar: string
+    - name: topologyKey
+      type:
+        scalar: string
+      default: ""
+    - name: whenUnsatisfiable
+      type:
+        scalar: string
+      default: ""
+- name: io.k8s.api.core.v1.WeightedPodAffinityTerm
+  map:
+    fields:
+    - name: podAffinityTerm
+      type:
+        namedType: io.k8s.api.core.v1.PodAffinityTerm
+      default: {}
+    - name: weight
+      type:
+        scalar: numeric
+      default: 0
+- name: io.k8s.apimachinery.pkg.api.resource.Quantity
+  scalar: untyped
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+  scalar: string
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+  map:
+    fields:
+    - name: matchExpressions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+          elementRelationship: atomic
+    - name: matchLabels
+      type:
+        map:
+          elementType:
+            scalar: string
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: operator
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: fieldsType
+      type:
+        scalar: string
+    - name: fieldsV1
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1
+    - name: manager
+      type:
+        scalar: string
+    - name: operation
+      type:
+        scalar: string
+    - name: subresource
+      type:
+        scalar: string
+    - name: time
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+  map:
+    fields:
+    - name: annotations
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: creationTimestamp
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: deletionGracePeriodSeconds
+      type:
+        scalar: numeric
+    - name: deletionTimestamp
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: finalizers
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: generateName
+      type:
+        scalar: string
+    - name: generation
+      type:
+        scalar: numeric
+    - name: labels
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: managedFields
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry
+          elementRelationship: atomic
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: ownerReferences
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference
+          elementRelationship: associative
+          keys:
+          - uid
+    - name: resourceVersion
+      type:
+        scalar: string
+    - name: selfLink
+      type:
+        scalar: string
+    - name: uid
+      type:
+        scalar: string
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+      default: ""
+    - name: blockOwnerDeletion
+      type:
+        scalar: boolean
+    - name: controller
+      type:
+        scalar: boolean
+    - name: kind
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: uid
+      type:
+        scalar: string
+      default: ""
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+  scalar: untyped
+- name: io.k8s.apimachinery.pkg.runtime.RawExtension
+  map:
+    elementType:
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
 - name: __untyped_atomic_
   scalar: untyped
   list:

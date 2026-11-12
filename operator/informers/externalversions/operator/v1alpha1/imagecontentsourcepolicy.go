@@ -99,7 +99,7 @@ func NewImageContentSourcePolicyInformerWithOptions(client versioned.Interface, 
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedImageContentSourcePolicyInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) ImageContentSourcePolicyIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1alpha1", Resource: "imagecontentsourcepolicys"}
+	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1alpha1", Resource: "imagecontentsourcepolicies"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apioperatorv1alpha1.ImageContentSourcePolicy](cache.NewSharedIndexInformerWithOptions(

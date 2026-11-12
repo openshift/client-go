@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v7/typed"
 )
 
 func Parser() *typed.Parser {
@@ -2037,7 +2037,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: imageStreamImportMode
       type:
         scalar: string
-      default: ""
     - name: registrySources
       type:
         namedType: com.github.openshift.api.config.v1.RegistrySources

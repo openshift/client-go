@@ -25,6 +25,7 @@ type RangeAllocationInterface interface {
 	Create(ctx context.Context, rangeAllocation *securityinternalv1.RangeAllocation, opts metav1.CreateOptions) (*securityinternalv1.RangeAllocation, error)
 	Update(ctx context.Context, rangeAllocation *securityinternalv1.RangeAllocation, opts metav1.UpdateOptions) (*securityinternalv1.RangeAllocation, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*securityinternalv1.RangeAllocation, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*securityinternalv1.RangeAllocationList, error)

@@ -25,6 +25,7 @@ type UserInterface interface {
 	Create(ctx context.Context, user *userv1.User, opts metav1.CreateOptions) (*userv1.User, error)
 	Update(ctx context.Context, user *userv1.User, opts metav1.UpdateOptions) (*userv1.User, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*userv1.User, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*userv1.UserList, error)

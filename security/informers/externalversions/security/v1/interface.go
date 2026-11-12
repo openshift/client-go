@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// RangeAllocations returns a RangeAllocationInformer.
+	// RangeAllocations returns a TypedRangeAllocationInformer.
 	RangeAllocations() TypedRangeAllocationInformer
-	// SecurityContextConstraints returns a SecurityContextConstraintsInformer.
+	// SecurityContextConstraints returns a TypedSecurityContextConstraintsInformer.
 	SecurityContextConstraints() TypedSecurityContextConstraintsInformer
 }
 

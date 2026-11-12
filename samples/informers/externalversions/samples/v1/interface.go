@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Configs returns a ConfigInformer.
+	// Configs returns a TypedConfigInformer.
 	Configs() TypedConfigInformer
 }
 

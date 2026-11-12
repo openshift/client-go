@@ -99,7 +99,7 @@ func NewIdentityInformerWithOptions(client versioned.Interface, options internal
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedIdentityInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) IdentityIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "user.openshift.io", Version: "v1", Resource: "identitys"}
+	gvr := schema.GroupVersionResource{Group: "user.openshift.io", Version: "v1", Resource: "identities"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apiuserv1.Identity](cache.NewSharedIndexInformerWithOptions(

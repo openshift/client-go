@@ -27,6 +27,7 @@ type MachineInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, machine *machinev1beta1.Machine, opts v1.UpdateOptions) (*machinev1beta1.Machine, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*machinev1beta1.Machine, error)
 	List(ctx context.Context, opts v1.ListOptions) (*machinev1beta1.MachineList, error)

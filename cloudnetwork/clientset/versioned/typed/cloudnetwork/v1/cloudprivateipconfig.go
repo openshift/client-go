@@ -27,6 +27,7 @@ type CloudPrivateIPConfigInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, cloudPrivateIPConfig *cloudnetworkv1.CloudPrivateIPConfig, opts metav1.UpdateOptions) (*cloudnetworkv1.CloudPrivateIPConfig, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*cloudnetworkv1.CloudPrivateIPConfig, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*cloudnetworkv1.CloudPrivateIPConfigList, error)

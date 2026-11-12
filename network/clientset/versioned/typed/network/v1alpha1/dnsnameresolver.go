@@ -27,6 +27,7 @@ type DNSNameResolverInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, dNSNameResolver *networkv1alpha1.DNSNameResolver, opts v1.UpdateOptions) (*networkv1alpha1.DNSNameResolver, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*networkv1alpha1.DNSNameResolver, error)
 	List(ctx context.Context, opts v1.ListOptions) (*networkv1alpha1.DNSNameResolverList, error)

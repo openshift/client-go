@@ -27,6 +27,7 @@ type EtcdBackupInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, etcdBackup *operatorv1alpha1.EtcdBackup, opts v1.UpdateOptions) (*operatorv1alpha1.EtcdBackup, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*operatorv1alpha1.EtcdBackup, error)
 	List(ctx context.Context, opts v1.ListOptions) (*operatorv1alpha1.EtcdBackupList, error)

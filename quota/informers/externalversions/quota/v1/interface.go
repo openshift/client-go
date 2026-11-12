@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ClusterResourceQuotas returns a ClusterResourceQuotaInformer.
+	// ClusterResourceQuotas returns a TypedClusterResourceQuotaInformer.
 	ClusterResourceQuotas() TypedClusterResourceQuotaInformer
 }
 

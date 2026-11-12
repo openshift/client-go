@@ -25,6 +25,7 @@ type ClusterNetworkInterface interface {
 	Create(ctx context.Context, clusterNetwork *networkv1.ClusterNetwork, opts metav1.CreateOptions) (*networkv1.ClusterNetwork, error)
 	Update(ctx context.Context, clusterNetwork *networkv1.ClusterNetwork, opts metav1.UpdateOptions) (*networkv1.ClusterNetwork, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*networkv1.ClusterNetwork, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*networkv1.ClusterNetworkList, error)

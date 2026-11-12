@@ -25,6 +25,7 @@ type NetNamespaceInterface interface {
 	Create(ctx context.Context, netNamespace *networkv1.NetNamespace, opts metav1.CreateOptions) (*networkv1.NetNamespace, error)
 	Update(ctx context.Context, netNamespace *networkv1.NetNamespace, opts metav1.UpdateOptions) (*networkv1.NetNamespace, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*networkv1.NetNamespace, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*networkv1.NetNamespaceList, error)

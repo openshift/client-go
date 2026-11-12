@@ -15,7 +15,7 @@ type DataGatherStatusApplyConfiguration struct {
 	// conditions is an optional field that provides details on the status of the gatherer job.
 	// It may not exceed 100 items and must not contain duplicates.
 	//
-	// # The current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid
+	// The current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid
 	//
 	// The DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing.
 	// When it has a status of True and a reason of Succeeded, the archive was successfully uploaded.
