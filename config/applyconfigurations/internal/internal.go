@@ -2037,7 +2037,6 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: imageStreamImportMode
       type:
         scalar: string
-      default: ""
     - name: registrySources
       type:
         namedType: com.github.openshift.api.config.v1.RegistrySources

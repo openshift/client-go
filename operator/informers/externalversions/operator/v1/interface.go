@@ -14,6 +14,8 @@ type Interface interface {
 	CSISnapshotControllers() TypedCSISnapshotControllerInformer
 	// CloudCredentials returns a CloudCredentialInformer.
 	CloudCredentials() TypedCloudCredentialInformer
+	// ClusterAPIs returns a ClusterAPIInformer.
+	ClusterAPIs() TypedClusterAPIInformer
 	// ClusterCSIDrivers returns a ClusterCSIDriverInformer.
 	ClusterCSIDrivers() TypedClusterCSIDriverInformer
 	// Configs returns a ConfigInformer.
@@ -82,6 +84,11 @@ func (v *version) CSISnapshotControllers() TypedCSISnapshotControllerInformer {
 // CloudCredentials returns a TypedCloudCredentialInformer.
 func (v *version) CloudCredentials() TypedCloudCredentialInformer {
 	return &cloudCredentialInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ClusterAPIs returns a TypedClusterAPIInformer.
+func (v *version) ClusterAPIs() TypedClusterAPIInformer {
+	return &clusterAPIInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ClusterCSIDrivers returns a TypedClusterCSIDriverInformer.
