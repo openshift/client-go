@@ -20,6 +20,10 @@ type DNSExpansion interface{}
 
 type EtcdExpansion interface{}
 
+type EtcdBackupExpansion interface{}
+
+type EtcdBackupPolicyExpansion interface{}
+
 type IngressExpansion interface{}
 
 type IngressControllerExpansion interface{}

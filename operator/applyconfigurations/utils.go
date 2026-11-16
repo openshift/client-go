@@ -168,6 +168,38 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.EndpointPublishingStrategyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("Etcd"):
 		return &operatorv1.EtcdApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackup"):
+		return &operatorv1.EtcdBackupApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupFile"):
+		return &operatorv1.EtcdBackupFileApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicy"):
+		return &operatorv1.EtcdBackupPolicyApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyRetentionQuantity"):
+		return &operatorv1.EtcdBackupPolicyRetentionQuantityApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyRetentionRule"):
+		return &operatorv1.EtcdBackupPolicyRetentionRuleApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyRetentionSize"):
+		return &operatorv1.EtcdBackupPolicyRetentionSizeApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicySpec"):
+		return &operatorv1.EtcdBackupPolicySpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyStatus"):
+		return &operatorv1.EtcdBackupPolicyStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyStorage"):
+		return &operatorv1.EtcdBackupPolicyStorageApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyStorageLocal"):
+		return &operatorv1.EtcdBackupPolicyStorageLocalApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupPolicyStoragePvc"):
+		return &operatorv1.EtcdBackupPolicyStoragePvcApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
+		return &operatorv1.EtcdBackupSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupStatus"):
+		return &operatorv1.EtcdBackupStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupStorage"):
+		return &operatorv1.EtcdBackupStorageApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupStorageLocal"):
+		return &operatorv1.EtcdBackupStorageLocalApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("EtcdBackupStoragePvc"):
+		return &operatorv1.EtcdBackupStoragePvcApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("EtcdSpec"):
 		return &operatorv1.EtcdSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("EtcdStatus"):
@@ -220,6 +252,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IngressControllerCaptureHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerCaptureHTTPHeaders"):
 		return &operatorv1.IngressControllerCaptureHTTPHeadersApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IngressControllerContainerResource"):
+		return &operatorv1.IngressControllerContainerResourceApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeader"):
 		return &operatorv1.IngressControllerHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerHTTPHeaderActions"):
@@ -232,6 +266,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.IngressControllerHTTPUniqueIdHeaderPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerLogging"):
 		return &operatorv1.IngressControllerLoggingApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("IngressControllerResources"):
+		return &operatorv1.IngressControllerResourcesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerSetHTTPHeader"):
 		return &operatorv1.IngressControllerSetHTTPHeaderApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("IngressControllerSpec"):
