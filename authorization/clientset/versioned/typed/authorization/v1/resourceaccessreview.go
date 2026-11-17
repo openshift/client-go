@@ -19,6 +19,7 @@ type ResourceAccessReviewsGetter interface {
 
 // ResourceAccessReviewInterface has methods to work with ResourceAccessReview resources.
 type ResourceAccessReviewInterface interface {
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	Create(ctx context.Context, resourceAccessReview *authorizationv1.ResourceAccessReview, opts metav1.CreateOptions) (*authorizationv1.ResourceAccessReviewResponse, error)
 
 	ResourceAccessReviewExpansion

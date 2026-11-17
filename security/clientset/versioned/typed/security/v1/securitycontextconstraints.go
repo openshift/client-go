@@ -25,6 +25,7 @@ type SecurityContextConstraintsInterface interface {
 	Create(ctx context.Context, securityContextConstraints *securityv1.SecurityContextConstraints, opts metav1.CreateOptions) (*securityv1.SecurityContextConstraints, error)
 	Update(ctx context.Context, securityContextConstraints *securityv1.SecurityContextConstraints, opts metav1.UpdateOptions) (*securityv1.SecurityContextConstraints, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*securityv1.SecurityContextConstraints, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*securityv1.SecurityContextConstraintsList, error)

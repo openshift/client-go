@@ -8,13 +8,13 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ClusterNetworks returns a ClusterNetworkInformer.
+	// ClusterNetworks returns a TypedClusterNetworkInformer.
 	ClusterNetworks() TypedClusterNetworkInformer
-	// EgressNetworkPolicies returns a EgressNetworkPolicyInformer.
+	// EgressNetworkPolicies returns a TypedEgressNetworkPolicyInformer.
 	EgressNetworkPolicies() TypedEgressNetworkPolicyInformer
-	// HostSubnets returns a HostSubnetInformer.
+	// HostSubnets returns a TypedHostSubnetInformer.
 	HostSubnets() TypedHostSubnetInformer
-	// NetNamespaces returns a NetNamespaceInformer.
+	// NetNamespaces returns a TypedNetNamespaceInformer.
 	NetNamespaces() TypedNetNamespaceInformer
 }
 

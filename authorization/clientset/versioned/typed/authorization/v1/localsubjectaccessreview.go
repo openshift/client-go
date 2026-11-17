@@ -19,6 +19,7 @@ type LocalSubjectAccessReviewsGetter interface {
 
 // LocalSubjectAccessReviewInterface has methods to work with LocalSubjectAccessReview resources.
 type LocalSubjectAccessReviewInterface interface {
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	Create(ctx context.Context, localSubjectAccessReview *authorizationv1.LocalSubjectAccessReview, opts metav1.CreateOptions) (*authorizationv1.SubjectAccessReviewResponse, error)
 
 	LocalSubjectAccessReviewExpansion

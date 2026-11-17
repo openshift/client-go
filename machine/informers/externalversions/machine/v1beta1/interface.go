@@ -8,11 +8,11 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Machines returns a MachineInformer.
+	// Machines returns a TypedMachineInformer.
 	Machines() TypedMachineInformer
-	// MachineHealthChecks returns a MachineHealthCheckInformer.
+	// MachineHealthChecks returns a TypedMachineHealthCheckInformer.
 	MachineHealthChecks() TypedMachineHealthCheckInformer
-	// MachineSets returns a MachineSetInformer.
+	// MachineSets returns a TypedMachineSetInformer.
 	MachineSets() TypedMachineSetInformer
 }
 

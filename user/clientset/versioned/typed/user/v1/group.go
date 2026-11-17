@@ -25,6 +25,7 @@ type GroupInterface interface {
 	Create(ctx context.Context, group *userv1.Group, opts metav1.CreateOptions) (*userv1.Group, error)
 	Update(ctx context.Context, group *userv1.Group, opts metav1.UpdateOptions) (*userv1.Group, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*userv1.Group, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*userv1.GroupList, error)

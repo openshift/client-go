@@ -27,6 +27,7 @@ type RouteInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, route *routev1.Route, opts metav1.UpdateOptions) (*routev1.Route, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*routev1.Route, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*routev1.RouteList, error)

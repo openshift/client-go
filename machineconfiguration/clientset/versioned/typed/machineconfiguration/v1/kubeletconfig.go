@@ -27,6 +27,7 @@ type KubeletConfigInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, kubeletConfig *machineconfigurationv1.KubeletConfig, opts metav1.UpdateOptions) (*machineconfigurationv1.KubeletConfig, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*machineconfigurationv1.KubeletConfig, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*machineconfigurationv1.KubeletConfigList, error)

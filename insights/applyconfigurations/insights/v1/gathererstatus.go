@@ -14,7 +14,7 @@ import (
 type GathererStatusApplyConfiguration struct {
 	// conditions provide details on the status of each gatherer.
 	//
-	// # The current condition type is DataGathered
+	// The current condition type is DataGathered
 	//
 	// The DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name.
 	// When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected.

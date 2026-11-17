@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v7/typed"
 )
 
 func Parser() *typed.Parser {
@@ -2112,6 +2112,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: localhostProfile
       type:
         scalar: string
+    - name: oci
+      type:
+        namedType: io.k8s.api.core.v1.SecurityProfileOCI
     - name: type
       type:
         scalar: string
@@ -2121,6 +2124,8 @@ var schemaYAML = typed.YAMLObject(`types:
       fields:
       - fieldName: localhostProfile
         discriminatorValue: LocalhostProfile
+      - fieldName: oci
+        discriminatorValue: OCI
 - name: io.k8s.api.core.v1.SecretEnvSource
   map:
     fields:
@@ -2222,6 +2227,31 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: windowsOptions
       type:
         namedType: io.k8s.api.core.v1.WindowsSecurityContextOptions
+- name: io.k8s.api.core.v1.SecurityProfileOCI
+  map:
+    fields:
+    - name: baseProfile
+      type:
+        namedType: io.k8s.api.core.v1.SecurityProfileOCIBase
+    - name: ref
+      type:
+        scalar: string
+      default: ""
+- name: io.k8s.api.core.v1.SecurityProfileOCIBase
+  map:
+    fields:
+    - name: localhostProfile
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: localhostProfile
+        discriminatorValue: LocalhostProfile
 - name: io.k8s.api.core.v1.ServiceAccountTokenProjection
   map:
     fields:

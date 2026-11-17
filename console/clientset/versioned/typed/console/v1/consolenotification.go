@@ -25,6 +25,7 @@ type ConsoleNotificationInterface interface {
 	Create(ctx context.Context, consoleNotification *consolev1.ConsoleNotification, opts metav1.CreateOptions) (*consolev1.ConsoleNotification, error)
 	Update(ctx context.Context, consoleNotification *consolev1.ConsoleNotification, opts metav1.UpdateOptions) (*consolev1.ConsoleNotification, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*consolev1.ConsoleNotification, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*consolev1.ConsoleNotificationList, error)

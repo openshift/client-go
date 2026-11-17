@@ -99,7 +99,7 @@ func NewSecurityContextConstraintsInformerWithOptions(client versioned.Interface
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedSecurityContextConstraintsInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) SecurityContextConstraintsIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "security.openshift.io", Version: "v1", Resource: "securitycontextconstraintss"}
+	gvr := schema.GroupVersionResource{Group: "security.openshift.io", Version: "v1", Resource: "securitycontextconstraints"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apisecurityv1.SecurityContextConstraints](cache.NewSharedIndexInformerWithOptions(

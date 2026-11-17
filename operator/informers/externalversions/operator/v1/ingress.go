@@ -99,7 +99,7 @@ func NewIngressInformerWithOptions(client versioned.Interface, options internali
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedIngressInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) IngressIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1", Resource: "ingresss"}
+	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1", Resource: "ingresses"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apioperatorv1.Ingress](cache.NewSharedIndexInformerWithOptions(

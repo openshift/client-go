@@ -8,11 +8,11 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Groups returns a GroupInformer.
+	// Groups returns a TypedGroupInformer.
 	Groups() TypedGroupInformer
-	// Identities returns a IdentityInformer.
+	// Identities returns a TypedIdentityInformer.
 	Identities() TypedIdentityInformer
-	// Users returns a UserInformer.
+	// Users returns a TypedUserInformer.
 	Users() TypedUserInformer
 }
 

@@ -27,6 +27,7 @@ type ImagePrunerInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, imagePruner *imageregistryv1.ImagePruner, opts metav1.UpdateOptions) (*imageregistryv1.ImagePruner, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*imageregistryv1.ImagePruner, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*imageregistryv1.ImagePrunerList, error)

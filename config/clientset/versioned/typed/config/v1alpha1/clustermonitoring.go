@@ -27,6 +27,7 @@ type ClusterMonitoringInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, clusterMonitoring *configv1alpha1.ClusterMonitoring, opts v1.UpdateOptions) (*configv1alpha1.ClusterMonitoring, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*configv1alpha1.ClusterMonitoring, error)
 	List(ctx context.Context, opts v1.ListOptions) (*configv1alpha1.ClusterMonitoringList, error)

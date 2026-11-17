@@ -25,6 +25,7 @@ type ClusterRoleInterface interface {
 	Create(ctx context.Context, clusterRole *authorizationv1.ClusterRole, opts metav1.CreateOptions) (*authorizationv1.ClusterRole, error)
 	Update(ctx context.Context, clusterRole *authorizationv1.ClusterRole, opts metav1.UpdateOptions) (*authorizationv1.ClusterRole, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*authorizationv1.ClusterRole, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*authorizationv1.ClusterRoleList, error)

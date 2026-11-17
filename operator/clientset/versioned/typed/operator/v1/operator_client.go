@@ -15,6 +15,7 @@ type OperatorV1Interface interface {
 	AuthenticationsGetter
 	CSISnapshotControllersGetter
 	CloudCredentialsGetter
+	ClusterAPIsGetter
 	ClusterCSIDriversGetter
 	ConfigsGetter
 	ConsolesGetter
@@ -53,6 +54,10 @@ func (c *OperatorV1Client) CSISnapshotControllers() CSISnapshotControllerInterfa
 
 func (c *OperatorV1Client) CloudCredentials() CloudCredentialInterface {
 	return newCloudCredentials(c)
+}
+
+func (c *OperatorV1Client) ClusterAPIs() ClusterAPIInterface {
+	return newClusterAPIs(c)
 }
 
 func (c *OperatorV1Client) ClusterCSIDrivers() ClusterCSIDriverInterface {
@@ -183,7 +188,9 @@ func setConfigDefaults(config *rest.Config) {
 	gv := operatorv1.SchemeGroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
+	if config.NegotiatedSerializer == nil {
+		config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
+	}
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()

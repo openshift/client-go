@@ -25,6 +25,7 @@ type ImageInterface interface {
 	Create(ctx context.Context, image *imagev1.Image, opts metav1.CreateOptions) (*imagev1.Image, error)
 	Update(ctx context.Context, image *imagev1.Image, opts metav1.UpdateOptions) (*imagev1.Image, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*imagev1.Image, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*imagev1.ImageList, error)

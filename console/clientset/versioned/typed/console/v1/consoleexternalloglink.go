@@ -25,6 +25,7 @@ type ConsoleExternalLogLinkInterface interface {
 	Create(ctx context.Context, consoleExternalLogLink *consolev1.ConsoleExternalLogLink, opts metav1.CreateOptions) (*consolev1.ConsoleExternalLogLink, error)
 	Update(ctx context.Context, consoleExternalLogLink *consolev1.ConsoleExternalLogLink, opts metav1.UpdateOptions) (*consolev1.ConsoleExternalLogLink, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*consolev1.ConsoleExternalLogLink, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*consolev1.ConsoleExternalLogLinkList, error)

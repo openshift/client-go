@@ -72,6 +72,22 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.CloudCredentialSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CloudCredentialStatus"):
 		return &operatorv1.CloudCredentialStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPI"):
+		return &operatorv1.ClusterAPIApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIInstallerComponent"):
+		return &operatorv1.ClusterAPIInstallerComponentApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIInstallerComponentImage"):
+		return &operatorv1.ClusterAPIInstallerComponentImageApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIInstallerComponentSource"):
+		return &operatorv1.ClusterAPIInstallerComponentSourceApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIInstallerRevision"):
+		return &operatorv1.ClusterAPIInstallerRevisionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIInstallerRevisionManifestSubstitution"):
+		return &operatorv1.ClusterAPIInstallerRevisionManifestSubstitutionApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPISpec"):
+		return &operatorv1.ClusterAPISpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ClusterAPIStatus"):
+		return &operatorv1.ClusterAPIStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterBootImageAutomatic"):
 		return &operatorv1.ClusterBootImageAutomaticApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterBootImageManual"):

@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// AlertRelabelConfigs returns a AlertRelabelConfigInformer.
+	// AlertRelabelConfigs returns a TypedAlertRelabelConfigInformer.
 	AlertRelabelConfigs() TypedAlertRelabelConfigInformer
-	// AlertingRules returns a AlertingRuleInformer.
+	// AlertingRules returns a TypedAlertingRuleInformer.
 	AlertingRules() TypedAlertingRuleInformer
 }
 

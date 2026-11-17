@@ -25,6 +25,7 @@ type PinnedImageSetInterface interface {
 	Create(ctx context.Context, pinnedImageSet *machineconfigurationv1.PinnedImageSet, opts metav1.CreateOptions) (*machineconfigurationv1.PinnedImageSet, error)
 	Update(ctx context.Context, pinnedImageSet *machineconfigurationv1.PinnedImageSet, opts metav1.UpdateOptions) (*machineconfigurationv1.PinnedImageSet, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*machineconfigurationv1.PinnedImageSet, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*machineconfigurationv1.PinnedImageSetList, error)

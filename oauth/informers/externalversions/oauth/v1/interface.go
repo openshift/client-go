@@ -8,15 +8,15 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// OAuthAccessTokens returns a OAuthAccessTokenInformer.
+	// OAuthAccessTokens returns a TypedOAuthAccessTokenInformer.
 	OAuthAccessTokens() TypedOAuthAccessTokenInformer
-	// OAuthAuthorizeTokens returns a OAuthAuthorizeTokenInformer.
+	// OAuthAuthorizeTokens returns a TypedOAuthAuthorizeTokenInformer.
 	OAuthAuthorizeTokens() TypedOAuthAuthorizeTokenInformer
-	// OAuthClients returns a OAuthClientInformer.
+	// OAuthClients returns a TypedOAuthClientInformer.
 	OAuthClients() TypedOAuthClientInformer
-	// OAuthClientAuthorizations returns a OAuthClientAuthorizationInformer.
+	// OAuthClientAuthorizations returns a TypedOAuthClientAuthorizationInformer.
 	OAuthClientAuthorizations() TypedOAuthClientAuthorizationInformer
-	// UserOAuthAccessTokens returns a UserOAuthAccessTokenInformer.
+	// UserOAuthAccessTokens returns a TypedUserOAuthAccessTokenInformer.
 	UserOAuthAccessTokens() TypedUserOAuthAccessTokenInformer
 }
 

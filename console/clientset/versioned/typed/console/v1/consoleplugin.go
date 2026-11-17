@@ -25,6 +25,7 @@ type ConsolePluginInterface interface {
 	Create(ctx context.Context, consolePlugin *consolev1.ConsolePlugin, opts metav1.CreateOptions) (*consolev1.ConsolePlugin, error)
 	Update(ctx context.Context, consolePlugin *consolev1.ConsolePlugin, opts metav1.UpdateOptions) (*consolev1.ConsolePlugin, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*consolev1.ConsolePlugin, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*consolev1.ConsolePluginList, error)
