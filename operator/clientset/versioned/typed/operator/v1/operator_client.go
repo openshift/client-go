@@ -15,6 +15,7 @@ type OperatorV1Interface interface {
 	AuthenticationsGetter
 	CSISnapshotControllersGetter
 	CloudCredentialsGetter
+	ClusterAPIsGetter
 	ClusterCSIDriversGetter
 	ConfigsGetter
 	ConsolesGetter
@@ -53,6 +54,10 @@ func (c *OperatorV1Client) CSISnapshotControllers() CSISnapshotControllerInterfa
 
 func (c *OperatorV1Client) CloudCredentials() CloudCredentialInterface {
 	return newCloudCredentials(c)
+}
+
+func (c *OperatorV1Client) ClusterAPIs() ClusterAPIInterface {
+	return newClusterAPIs(c)
 }
 
 func (c *OperatorV1Client) ClusterCSIDrivers() ClusterCSIDriverInterface {

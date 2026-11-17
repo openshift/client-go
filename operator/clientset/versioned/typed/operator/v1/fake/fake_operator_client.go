@@ -24,6 +24,10 @@ func (c *FakeOperatorV1) CloudCredentials() v1.CloudCredentialInterface {
 	return newFakeCloudCredentials(c)
 }
 
+func (c *FakeOperatorV1) ClusterAPIs() v1.ClusterAPIInterface {
+	return newFakeClusterAPIs(c)
+}
+
 func (c *FakeOperatorV1) ClusterCSIDrivers() v1.ClusterCSIDriverInterface {
 	return newFakeClusterCSIDrivers(c)
 }
