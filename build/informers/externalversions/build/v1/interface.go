@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Builds returns a BuildInformer.
+	// Builds returns a TypedBuildInformer.
 	Builds() TypedBuildInformer
-	// BuildConfigs returns a BuildConfigInformer.
+	// BuildConfigs returns a TypedBuildConfigInformer.
 	BuildConfigs() TypedBuildConfigInformer
 }
 

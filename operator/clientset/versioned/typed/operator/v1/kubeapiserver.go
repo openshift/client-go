@@ -27,6 +27,7 @@ type KubeAPIServerInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, kubeAPIServer *operatorv1.KubeAPIServer, opts metav1.UpdateOptions) (*operatorv1.KubeAPIServer, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*operatorv1.KubeAPIServer, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*operatorv1.KubeAPIServerList, error)

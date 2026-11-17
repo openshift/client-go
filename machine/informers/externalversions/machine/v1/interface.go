@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ControlPlaneMachineSets returns a ControlPlaneMachineSetInformer.
+	// ControlPlaneMachineSets returns a TypedControlPlaneMachineSetInformer.
 	ControlPlaneMachineSets() TypedControlPlaneMachineSetInformer
 }
 

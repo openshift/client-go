@@ -25,6 +25,7 @@ type ConsoleYAMLSampleInterface interface {
 	Create(ctx context.Context, consoleYAMLSample *consolev1.ConsoleYAMLSample, opts metav1.CreateOptions) (*consolev1.ConsoleYAMLSample, error)
 	Update(ctx context.Context, consoleYAMLSample *consolev1.ConsoleYAMLSample, opts metav1.UpdateOptions) (*consolev1.ConsoleYAMLSample, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*consolev1.ConsoleYAMLSample, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*consolev1.ConsoleYAMLSampleList, error)

@@ -8,6 +8,8 @@ type CSISnapshotControllerExpansion interface{}
 
 type CloudCredentialExpansion interface{}
 
+type ClusterAPIExpansion interface{}
+
 type ClusterCSIDriverExpansion interface{}
 
 type ConfigExpansion interface{}

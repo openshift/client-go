@@ -6,7 +6,7 @@ import (
 	fmt "fmt"
 	sync "sync"
 
-	typed "sigs.k8s.io/structured-merge-diff/v6/typed"
+	typed "sigs.k8s.io/structured-merge-diff/v7/typed"
 )
 
 func Parser() *typed.Parser {
@@ -716,6 +716,129 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: version
       type:
         scalar: string
+- name: com.github.openshift.api.operator.v1.ClusterAPI
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.openshift.api.operator.v1.ClusterAPISpec
+    - name: status
+      type:
+        namedType: com.github.openshift.api.operator.v1.ClusterAPIStatus
+      default: {}
+- name: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponent
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: source
+      type:
+        namedType: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentSource
+      default: {}
+- name: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentImage
+  map:
+    fields:
+    - name: profile
+      type:
+        scalar: string
+    - name: ref
+      type:
+        scalar: string
+- name: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentSource
+  map:
+    fields:
+    - name: image
+      type:
+        namedType: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponentImage
+      default: {}
+    - name: type
+      type:
+        scalar: string
+    unions:
+    - discriminator: type
+      fields:
+      - fieldName: image
+        discriminatorValue: Image
+- name: com.github.openshift.api.operator.v1.ClusterAPIInstallerRevision
+  map:
+    fields:
+    - name: components
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.ClusterAPIInstallerComponent
+          elementRelationship: atomic
+    - name: contentID
+      type:
+        scalar: string
+    - name: manifestSubstitutions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.ClusterAPIInstallerRevisionManifestSubstitution
+          elementRelationship: associative
+          keys:
+          - key
+    - name: name
+      type:
+        scalar: string
+    - name: revision
+      type:
+        scalar: numeric
+    - name: unmanagedCustomResourceDefinitions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    elementRelationship: atomic
+- name: com.github.openshift.api.operator.v1.ClusterAPIInstallerRevisionManifestSubstitution
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+    - name: value
+      type:
+        scalar: string
+- name: com.github.openshift.api.operator.v1.ClusterAPISpec
+  map:
+    fields:
+    - name: unmanagedCustomResourceDefinitions
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.openshift.api.operator.v1.ClusterAPIStatus
+  map:
+    fields:
+    - name: currentRevision
+      type:
+        scalar: string
+    - name: desiredRevision
+      type:
+        scalar: string
+    - name: observedRevisionGeneration
+      type:
+        scalar: numeric
+    - name: revisions
+      type:
+        list:
+          elementType:
+            namedType: com.github.openshift.api.operator.v1.ClusterAPIInstallerRevision
+          elementRelationship: atomic
 - name: com.github.openshift.api.operator.v1.ClusterBootImageAutomatic
   map:
     fields:

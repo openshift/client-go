@@ -99,7 +99,7 @@ func NewDNSInformerWithOptions(client versioned.Interface, options internalinter
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedDNSInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) DNSIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1", Resource: "dnss"}
+	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1", Resource: "dnses"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apioperatorv1.DNS](cache.NewSharedIndexInformerWithOptions(

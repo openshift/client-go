@@ -8,27 +8,27 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ContainerRuntimeConfigs returns a ContainerRuntimeConfigInformer.
+	// ContainerRuntimeConfigs returns a TypedContainerRuntimeConfigInformer.
 	ContainerRuntimeConfigs() TypedContainerRuntimeConfigInformer
-	// ControllerConfigs returns a ControllerConfigInformer.
+	// ControllerConfigs returns a TypedControllerConfigInformer.
 	ControllerConfigs() TypedControllerConfigInformer
-	// InternalReleaseImages returns a InternalReleaseImageInformer.
+	// InternalReleaseImages returns a TypedInternalReleaseImageInformer.
 	InternalReleaseImages() TypedInternalReleaseImageInformer
-	// KubeletConfigs returns a KubeletConfigInformer.
+	// KubeletConfigs returns a TypedKubeletConfigInformer.
 	KubeletConfigs() TypedKubeletConfigInformer
-	// MachineConfigs returns a MachineConfigInformer.
+	// MachineConfigs returns a TypedMachineConfigInformer.
 	MachineConfigs() TypedMachineConfigInformer
-	// MachineConfigNodes returns a MachineConfigNodeInformer.
+	// MachineConfigNodes returns a TypedMachineConfigNodeInformer.
 	MachineConfigNodes() TypedMachineConfigNodeInformer
-	// MachineConfigPools returns a MachineConfigPoolInformer.
+	// MachineConfigPools returns a TypedMachineConfigPoolInformer.
 	MachineConfigPools() TypedMachineConfigPoolInformer
-	// MachineOSBuilds returns a MachineOSBuildInformer.
+	// MachineOSBuilds returns a TypedMachineOSBuildInformer.
 	MachineOSBuilds() TypedMachineOSBuildInformer
-	// MachineOSConfigs returns a MachineOSConfigInformer.
+	// MachineOSConfigs returns a TypedMachineOSConfigInformer.
 	MachineOSConfigs() TypedMachineOSConfigInformer
-	// OSImageStreams returns a OSImageStreamInformer.
+	// OSImageStreams returns a TypedOSImageStreamInformer.
 	OSImageStreams() TypedOSImageStreamInformer
-	// PinnedImageSets returns a PinnedImageSetInformer.
+	// PinnedImageSets returns a TypedPinnedImageSetInformer.
 	PinnedImageSets() TypedPinnedImageSetInformer
 }
 

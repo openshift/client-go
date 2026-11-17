@@ -27,6 +27,7 @@ type AlertRelabelConfigInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, alertRelabelConfig *monitoringv1.AlertRelabelConfig, opts metav1.UpdateOptions) (*monitoringv1.AlertRelabelConfig, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*monitoringv1.AlertRelabelConfig, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*monitoringv1.AlertRelabelConfigList, error)

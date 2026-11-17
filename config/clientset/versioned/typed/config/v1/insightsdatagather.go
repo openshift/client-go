@@ -25,6 +25,7 @@ type InsightsDataGatherInterface interface {
 	Create(ctx context.Context, insightsDataGather *configv1.InsightsDataGather, opts metav1.CreateOptions) (*configv1.InsightsDataGather, error)
 	Update(ctx context.Context, insightsDataGather *configv1.InsightsDataGather, opts metav1.UpdateOptions) (*configv1.InsightsDataGather, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*configv1.InsightsDataGather, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*configv1.InsightsDataGatherList, error)

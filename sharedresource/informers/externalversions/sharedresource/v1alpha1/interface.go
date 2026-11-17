@@ -8,9 +8,9 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// SharedConfigMaps returns a SharedConfigMapInformer.
+	// SharedConfigMaps returns a TypedSharedConfigMapInformer.
 	SharedConfigMaps() TypedSharedConfigMapInformer
-	// SharedSecrets returns a SharedSecretInformer.
+	// SharedSecrets returns a TypedSharedSecretInformer.
 	SharedSecrets() TypedSharedSecretInformer
 }
 

@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// InsightsDataGathers returns a InsightsDataGatherInformer.
+	// InsightsDataGathers returns a TypedInsightsDataGatherInformer.
 	InsightsDataGathers() TypedInsightsDataGatherInformer
 }
 

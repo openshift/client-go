@@ -27,6 +27,7 @@ type BuildInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, build *buildv1.Build, opts metav1.UpdateOptions) (*buildv1.Build, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*buildv1.Build, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*buildv1.BuildList, error)

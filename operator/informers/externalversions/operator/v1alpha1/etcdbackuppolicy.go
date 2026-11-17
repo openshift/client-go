@@ -99,7 +99,7 @@ func NewEtcdBackupPolicyInformerWithOptions(client versioned.Interface, options 
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedEtcdBackupPolicyInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) EtcdBackupPolicyIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1alpha1", Resource: "etcdbackuppolicys"}
+	gvr := schema.GroupVersionResource{Group: "operator.openshift.io", Version: "v1alpha1", Resource: "etcdbackuppolicies"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apioperatorv1alpha1.EtcdBackupPolicy](cache.NewSharedIndexInformerWithOptions(

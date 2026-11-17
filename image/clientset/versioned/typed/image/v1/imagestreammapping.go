@@ -20,6 +20,7 @@ type ImageStreamMappingsGetter interface {
 
 // ImageStreamMappingInterface has methods to work with ImageStreamMapping resources.
 type ImageStreamMappingInterface interface {
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	Apply(ctx context.Context, imageStreamMapping *imagev1.ImageStreamMappingApplyConfiguration, opts metav1.ApplyOptions) (result *apiimagev1.ImageStreamMapping, err error)
 	Create(ctx context.Context, imageStreamMapping *apiimagev1.ImageStreamMapping, opts metav1.CreateOptions) (*metav1.Status, error)
 

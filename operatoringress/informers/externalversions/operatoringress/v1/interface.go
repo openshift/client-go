@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// DNSRecords returns a DNSRecordInformer.
+	// DNSRecords returns a TypedDNSRecordInformer.
 	DNSRecords() TypedDNSRecordInformer
 }
 

@@ -27,6 +27,7 @@ type SharedSecretInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, sharedSecret *sharedresourcev1alpha1.SharedSecret, opts v1.UpdateOptions) (*sharedresourcev1alpha1.SharedSecret, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts v1.DeleteOptions) (v1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*sharedresourcev1alpha1.SharedSecret, error)
 	List(ctx context.Context, opts v1.ListOptions) (*sharedresourcev1alpha1.SharedSecretList, error)

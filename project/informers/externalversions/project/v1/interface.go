@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// Projects returns a ProjectInformer.
+	// Projects returns a TypedProjectInformer.
 	Projects() TypedProjectInformer
 }
 

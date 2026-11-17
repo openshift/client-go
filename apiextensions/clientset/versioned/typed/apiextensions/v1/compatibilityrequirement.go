@@ -27,6 +27,7 @@ type CompatibilityRequirementInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, compatibilityRequirement *apiextensionsv1.CompatibilityRequirement, opts metav1.UpdateOptions) (*apiextensionsv1.CompatibilityRequirement, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*apiextensionsv1.CompatibilityRequirement, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*apiextensionsv1.CompatibilityRequirementList, error)

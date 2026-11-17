@@ -100,7 +100,7 @@ func NewEgressNetworkPolicyInformerWithOptions(client versioned.Interface, names
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewTypedEgressNetworkPolicyInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) EgressNetworkPolicyIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "network.openshift.io", Version: "v1", Resource: "egressnetworkpolicys"}
+	gvr := schema.GroupVersionResource{Group: "network.openshift.io", Version: "v1", Resource: "egressnetworkpolicies"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
 	return cache.NewTypedSharedIndexInformer[*apinetworkv1.EgressNetworkPolicy](cache.NewSharedIndexInformerWithOptions(

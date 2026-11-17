@@ -8,7 +8,7 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// CompatibilityRequirements returns a CompatibilityRequirementInformer.
+	// CompatibilityRequirements returns a TypedCompatibilityRequirementInformer.
 	CompatibilityRequirements() TypedCompatibilityRequirementInformer
 }
 

@@ -25,6 +25,7 @@ type ImageContentPolicyInterface interface {
 	Create(ctx context.Context, imageContentPolicy *configv1.ImageContentPolicy, opts metav1.CreateOptions) (*configv1.ImageContentPolicy, error)
 	Update(ctx context.Context, imageContentPolicy *configv1.ImageContentPolicy, opts metav1.UpdateOptions) (*configv1.ImageContentPolicy, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*configv1.ImageContentPolicy, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*configv1.ImageContentPolicyList, error)

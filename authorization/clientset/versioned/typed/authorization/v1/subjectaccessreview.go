@@ -19,6 +19,7 @@ type SubjectAccessReviewsGetter interface {
 
 // SubjectAccessReviewInterface has methods to work with SubjectAccessReview resources.
 type SubjectAccessReviewInterface interface {
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	Create(ctx context.Context, subjectAccessReview *authorizationv1.SubjectAccessReview, opts metav1.CreateOptions) (*authorizationv1.SubjectAccessReviewResponse, error)
 
 	SubjectAccessReviewExpansion

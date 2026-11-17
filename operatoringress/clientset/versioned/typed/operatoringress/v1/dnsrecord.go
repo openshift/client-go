@@ -27,6 +27,7 @@ type DNSRecordInterface interface {
 	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 	UpdateStatus(ctx context.Context, dNSRecord *operatoringressv1.DNSRecord, opts metav1.UpdateOptions) (*operatoringressv1.DNSRecord, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteWithResult(ctx context.Context, name string, opts metav1.DeleteOptions) (metav1.APIResult, error)
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*operatoringressv1.DNSRecord, error)
 	List(ctx context.Context, opts metav1.ListOptions) (*operatoringressv1.DNSRecordList, error)

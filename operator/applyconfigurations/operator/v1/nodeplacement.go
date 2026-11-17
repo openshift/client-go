@@ -24,12 +24,12 @@ type NodePlacementApplyConfiguration struct {
 	// When defaultPlacement is Workers, the default is:
 	//
 	// kubernetes.io/os: linux
-	// node-role.kubernetes.io/worker: ”
+	// node-role.kubernetes.io/worker: ''
 	//
 	// When defaultPlacement is ControlPlane, the default is:
 	//
 	// kubernetes.io/os: linux
-	// node-role.kubernetes.io/master: ”
+	// node-role.kubernetes.io/master: ''
 	//
 	// These defaults are subject to change.
 	//
