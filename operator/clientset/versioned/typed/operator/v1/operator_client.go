@@ -21,6 +21,8 @@ type OperatorV1Interface interface {
 	ConsolesGetter
 	DNSesGetter
 	EtcdsGetter
+	EtcdBackupsGetter
+	EtcdBackupPoliciesGetter
 	IngressesGetter
 	IngressControllersGetter
 	InsightsOperatorsGetter
@@ -78,6 +80,14 @@ func (c *OperatorV1Client) DNSes() DNSInterface {
 
 func (c *OperatorV1Client) Etcds() EtcdInterface {
 	return newEtcds(c)
+}
+
+func (c *OperatorV1Client) EtcdBackups() EtcdBackupInterface {
+	return newEtcdBackups(c)
+}
+
+func (c *OperatorV1Client) EtcdBackupPolicies() EtcdBackupPolicyInterface {
+	return newEtcdBackupPolicies(c)
 }
 
 func (c *OperatorV1Client) Ingresses() IngressInterface {

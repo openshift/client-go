@@ -1012,6 +1012,168 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 	return map_EtcdSpec
 }
 
+var map_EtcdBackup = map[string]string{
+	"":         "\n\n# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster. # When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (EtcdBackup) SwaggerDoc() map[string]string {
+	return map_EtcdBackup
+}
+
+var map_EtcdBackupFile = map[string]string{
+	"assetType": "assetType specifies the type of the backup file. If set to Snapshot, the file is an etcd database snapshot. If set to StaticKubeResources, the file is a bundle of static pod manifests for the control plane. If etcd is encrypted, this will include the encryption keys.",
+	"path":      "path to the backup file on the storage backend. Must be an absolute filepath between 1 and 4096 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is required.",
+	"sizeBytes": "sizeBytes is the size of the backup file on the storage backend in bytes. If omitted, then the file specified by path is an empty file. When specified, must be between 1 and 1000000000000 (1 TB). This field is optional.",
+}
+
+func (EtcdBackupFile) SwaggerDoc() map[string]string {
+	return map_EtcdBackupFile
+}
+
+var map_EtcdBackupList = map[string]string{
+	"": "EtcdBackupList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (EtcdBackupList) SwaggerDoc() map[string]string {
+	return map_EtcdBackupList
+}
+
+var map_EtcdBackupSpec = map[string]string{
+	"assets":       "assets specifies the type of files to be backed up. If Snapshot is present, the etcd database will be snapshotted and saved to the storage backend. If StaticKubeResources is present, static pod manifests for the control plane will be bundled and saved to the storage backend. If etcd is encrypted, this will include the encryption keys. When specified, must contain between 1 and 2 entries, with at most 1 of each type. When omitted, all assets types will be backed up. This field is optional.",
+	"nodeSelector": "nodeSelector specifies which control plane nodes to select from for running the backup job. Only one backup job is run per EtcdBackup. The default node-role.kubernetes.io/control-plane label will always be added on top of any labels set on nodeSelector. If no nodes are matched, then the backup will be marked failed. For Local storage type, this may be used to target a specific node to take and store the backup. For PVC storage type, this may be used to control where the backup is taken from. If multiple nodes are selected, the scheduler is responsible for placing the backup job based on volume topology and any other scheduling constraints. When specified, must contain between 1 and 10 entries. This field is optional.",
+	"storage":      "storage specifies the location where etcd backup files will be saved. This field is required.",
+}
+
+func (EtcdBackupSpec) SwaggerDoc() map[string]string {
+	return map_EtcdBackupSpec
+}
+
+var map_EtcdBackupStatus = map[string]string{
+	"conditions": "conditions provide details on the status of the etcd backup job. Supported conditions include Running, Completed, and Failed. If Running is true, the backup job is currently active. If Completed is true, the backup job succeeded and has saved backup files to its storage location. If Failed is true, the backup job failed and did not create valid backup files.\n\nWhen specified, must contain between 1 and 15 entries, with no more than 1 of each type. This field is optional.",
+	"jobName":    "jobName is a reference to the Job created for the backup. It always runs in the openshift-etcd namespace. Must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is optional.",
+	"nodeName":   "nodeName is used for Local EtcdBackups to bind the control plane node where the snapshot will be taken. It is set by the cluster-etcd-operator before the Local backup runs to ensure the file location is known for garbage collection. Must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is optional.",
+	"files":      "files tracks the path and size of files generated by the etcd backup. Includes both etcd snapshots and static manifests. When specified, must contain between 1 and 10 entries. This field is optional.",
+}
+
+func (EtcdBackupStatus) SwaggerDoc() map[string]string {
+	return map_EtcdBackupStatus
+}
+
+var map_EtcdBackupStorage = map[string]string{
+	"type":  "type of storage backend to use for storing the etcd backup. Allowed values are Local and PVC. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim. This field is required.",
+	"pvc":   "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+	"local": "local specifies a host path directory on the control plane node where the etcd backup file will be saved. This field is optional when storage type is \"Local\", and forbidden otherwise.",
+}
+
+func (EtcdBackupStorage) SwaggerDoc() map[string]string {
+	return map_EtcdBackupStorage
+}
+
+var map_EtcdBackupStorageLocal = map[string]string{
+	"hostPath": "hostPath is a local directory on the control plane node where the etcd backup file will be saved. hostPath must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. When omitted, hostPath defaults to \"/etc/kubernetes/cluster-backup\". This field is optional.",
+}
+
+func (EtcdBackupStorageLocal) SwaggerDoc() map[string]string {
+	return map_EtcdBackupStorageLocal
+}
+
+var map_EtcdBackupStoragePvc = map[string]string{
+	"name": "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved. name must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is required.",
+	"path": "path is a directory on the volume where the etcd backup file will be saved. When present, path must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is optional.",
+}
+
+func (EtcdBackupStoragePvc) SwaggerDoc() map[string]string {
+	return map_EtcdBackupStoragePvc
+}
+
+var map_EtcdBackupPolicy = map[string]string{
+	"":         "\n\n# EtcdBackupPolicy sets an automated schedule for taking backups of the etcd cluster\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (EtcdBackupPolicy) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicy
+}
+
+var map_EtcdBackupPolicyList = map[string]string{
+	"": "EtcdBackupPolicyList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (EtcdBackupPolicyList) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyList
+}
+
+var map_EtcdBackupPolicyRetentionQuantity = map[string]string{
+	"maxQuantity": "maxQuantity enforces the deletion of completed backups that exceed the total count. The total count of completed backups may temporarily exceed the limit when new backups are completed. Older backups are not deleted until a new one has succeeded. Must be between 1 and 1000. This field is required.",
+}
+
+func (EtcdBackupPolicyRetentionQuantity) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyRetentionQuantity
+}
+
+var map_EtcdBackupPolicyRetentionRule = map[string]string{
+	"type":     "type defined which rule field is set Allowed values are Quantity and Size. When set to Quantity, this rule deletes completed EtcdBackups based on the total count. When set to Size, this rule deletes completed EtcdBackups based on the total aggregate size of backup files. This field is required.",
+	"quantity": "quantity enforces the deletion of EtcdBackups belonging to the EtcdBackupPolicy based on total count. This field is required when the rule type is \"Quantity\", and forbidden otherwise.",
+	"size":     "size enforces the deletion of EtcdBackups belonging to the EtcdBackupPolicy based on total backup file size. At least one backup will always be retained, even if it exceeds the size limit. This field is required when the rule type is \"Size\", and forbidden otherwise.",
+}
+
+func (EtcdBackupPolicyRetentionRule) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyRetentionRule
+}
+
+var map_EtcdBackupPolicyRetentionSize = map[string]string{
+	"maxTotalSizeGiB": "maxTotalSizeGiB enforces the deletion of completed backups by the total size of backups on the storage backend (in GiB). This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are completed. Older backups are not deleted until a new one has succeeded. If the newest backup exceeds the limit on its own, it will be retained with all older backups being pruned to ensure at least one valid backup exists. Must be between 1 and 10240 (10 TiB). This field is required.",
+}
+
+func (EtcdBackupPolicyRetentionSize) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyRetentionSize
+}
+
+var map_EtcdBackupPolicySpec = map[string]string{
+	"schedule":                  "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. The value must be one of the following forms: a predefined macro \"@yearly\", \"@annually\", \"@monthly\", \"@weekly\", \"@daily\" or \"@hourly\"; an \"@every <duration>\" expression where duration is a sequence of decimal numbers each with a unit of \"s\", \"m\" or \"h\" (for example \"@every 2h\" or \"@every 1h30m\"); or a standard cron expression of five space separated fields (minute, hour, day-of-month, month and day-of-week), where each field may only contain digits, the names used for months and days of the week, and the cron special characters \"*\", \"/\", \"-\" and \",\". This validation only checks the overall shape of the value; the individual field values are validated when the schedule is parsed by the controller, which reports parsing failures via the schedule's status condition. Must be between 1 and 1024 characters long. This field is required.",
+	"timeZone":                  "timeZone is an IANA time zone database name used to interpret the schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. The accepted values are the same as the timeZone field of a CronJob. If not specified, this will default to the time zone of the cluster. Must be between 1 and 64 characters long. This field is optional.",
+	"assets":                    "assets specifies the type of files to be backed up. If Snapshot is present, the etcd database will be snapshotted and saved to the storage backend. If StaticKubeResources is present, static pod manifests for the control plane will be bundled and saved to the storage backend. If etcd is encrypted, this will include the encryption keys. This field is copied to EtcdBackups created by this policy. When specified, must contain between 1 and 2 entries, with at most 1 of each type. When omitted, all assets types will be backed up. This field is optional.",
+	"nodeSelector":              "nodeSelector specifies which control plane nodes to select from for running backup jobs. The default node-role.kubernetes.io/control-plane label will always be added on top of any labels set on nodeSelector. If no nodes are matched, then no EtcdBackups will be created. For Local storage type, this may be used to target a specific node to take and store the backup. If distribution is AllNodes, then backups are taken on all selected nodes. If distribution is SingleNode, then backups will round robin selected nodes in lexicographical order starting from the last created backup for the policy. For PVC storage type, this may be used to control where the backup is taken from. If multiple nodes are selected, the scheduler is responsible for placing the backup job based on volume topology and any other scheduling constraints. EtcdBackup nodeSelector is derived from this field. When specified, must contain between 1 and 10 entries. This field is optional.",
+	"storage":                   "storage specifies the location where etcd backup files will be saved. EtcdBackup storage is derived from this field. In rare cases, where storage type is changed from PVC to Local with AllNodes distribution on an existing policy, old backups on the PVC may need to be manually pruned. Make sure to check that new valid backups exist before deleting old ones. This field is required.",
+	"retentionRules":            "retentionRules defines the policy for retaining and deleting completed backups. Completed backups are deleted from the oldest first until all rules are satisfied. If no rules are specified then backups created by this policy will not be automatically deleted. When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible. For Local storage with distribution AllNodes, retention is calculated for EtcdBackups grouped by Node (e.g. MaxQuantity 2 results in 2 backups per node, MaxTotalSizeGiB 5 results in 5GiB of backups per node). In all other cases retention is calculated across all EtcdBackups belonging to the policy. When specified, must contain between 1 and 2 entries. Must not have more than 1 entry of each rule type. This field is optional.",
+	"failedBackupsHistoryLimit": "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Failed backups are deleted from the oldest first. Must be non-negative integer. If set to to 0, then failed backups will be deleted immediately. If unset, defaults to 1. Must be a positive integer no greater than 100. This field is optional.",
+}
+
+func (EtcdBackupPolicySpec) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicySpec
+}
+
+var map_EtcdBackupPolicyStatus = map[string]string{
+	"conditions": "conditions provide details on the status of the etcd backup policy. Supported conditions include Scheduled. If Scheduled is true, scheduling the policy succeeded. If Scheduled is false, an error occurred while attempting to schedule the policy. The condition reason and message will provide addition details.\n\nWhen specified, must contain between 1 and 10 entries, with no more than 1 of each type. This field is optional.",
+}
+
+func (EtcdBackupPolicyStatus) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyStatus
+}
+
+var map_EtcdBackupPolicyStorage = map[string]string{
+	"type":  "type of storage backend to use for storing the etcd backup. Allowed values are Local and PVC. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim. This field is required.",
+	"pvc":   "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+	"local": "local specifies a host path directory on the control plane node where the etcd backup file will be saved. This field is optional when storage type is \"Local\", and forbidden otherwise.",
+}
+
+func (EtcdBackupPolicyStorage) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyStorage
+}
+
+var map_EtcdBackupPolicyStorageLocal = map[string]string{
+	"distribution": "distribution controls whether or not scheduled local backups are only taken on a single node or fan out to all control plane nodes. Allowed values are SingleNode and AllNodes When set to SingleNode, a single EtcdBackup will be created at each schedule execution on one of the selected control plane nodes. If multiple nodes are matched by nodeSelector, then backups round robin the nodes in lexicographical order. When set to AllNodes, EtcdBackups will be created for all selected control plane nodes at each schedule execution. Retention rules will be applied to EtcdBackups grouped by Node (e.g. MaxQuantity 2 results in 2 backups per node, MaxTotalSizeGiB 5 results in 5GiB of backups per node). If omitted, defaults to SingleNode. This field is optional.",
+}
+
+func (EtcdBackupPolicyStorageLocal) SwaggerDoc() map[string]string {
+	return map_EtcdBackupPolicyStorageLocal
+}
+
 var map_GatewayAPIIngressConfig = map[string]string{
 	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
@@ -1240,6 +1402,17 @@ func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
 	return map_IngressControllerCaptureHTTPHeaders
 }
 
+var map_IngressControllerContainerResource = map[string]string{
+	"":        "IngressControllerContainerResource defines an override for one resource.",
+	"name":    "name is required and identifies cpu, memory, ephemeral-storage, hugepages-<size>, or a domain-qualified extended resource such as example.com/device. It must be a Kubernetes qualified name of 1 to 253 characters: an optional lowercase DNS subdomain and slash followed by an alphanumeric name of at most 63 characters, with '-', '_' and '.' allowed internally. Extended resource domains must not be kubernetes.io or its subdomains, and names must not start with 'requests.'. Hugepage sizes must be valid quantities of 1 to 20 characters representing a positive, whole number of bytes.",
+	"request": "request optionally sets the minimum amount of this resource per replica.\n\nWARNING: the platform does not validate this value against what the container needs, and setting it too low or too high can break ingress. A request below what the container needs causes CPU throttling and makes the pod more likely to be evicted when its node runs short of memory; users see slow route updates, added latency, timeouts and 5xx responses. A request that the nodes cannot satisfy leaves ingress pods Pending, and a rolling update can then stall with fewer replicas than desired. A request is static: the platform never adjusts it as route count, configuration size or traffic grows. Issues caused by an inappropriate value are not supported, and the cluster administrator is responsible for choosing it; the platform default described on spec.resources is the supported configuration.\n\nIt must be a valid, positive, non-zero quantity of 1 to 20 characters and must not exceed limit. Extended resources and hugepages require an equal limit; extended resource values must be whole numbers, and hugepage values must be whole multiples of the page size. When omitted with a limit, the operator uses that limit as the effective request, without defaulting this API field. When there is no entry for a resource, the platform default request applies.",
+	"limit":   "limit optionally sets the maximum amount of this resource per replica.\n\nWARNING: setting a limit on a cluster component such as the router is discouraged, the platform does not validate it against what the container needs, and the cluster administrator accepts responsibility for any unavailability it causes; the platform default of no limit, described on spec.resources, is the supported configuration. A CPU limit that the container exceeds is enforced by throttling, which appears as latency spikes, timeouts and 5xx responses under bursty traffic. A memory limit below the working set of the container causes it to be OOMKilled and restarted, and while a container that serves traffic is restarting, the routes handled by that replica are unavailable; with a single replica that is an ingress outage. Because a limit-only entry also becomes the request, a limit that the nodes cannot satisfy leaves the pods Pending. The platform never re-evaluates the limit, so a value that works today can start causing these failures as route count, configuration size or traffic grows.\n\nIt must be a valid, positive, non-zero quantity of 1 to 20 characters and must not be less than request. Extended resource values must be whole numbers; hugepage values must be whole multiples of the page size. For extended resources and hugepages, an explicit request must equal limit. When request is omitted, the operator uses limit as the effective request, without defaulting the API field. When limit is omitted, the platform default applies (currently no limit), unless a LimitRange in the router namespace applies one.",
+}
+
+func (IngressControllerContainerResource) SwaggerDoc() map[string]string {
+	return map_IngressControllerContainerResource
+}
+
 var map_IngressControllerHTTPHeader = map[string]string{
 	"":       "IngressControllerHTTPHeader specifies configuration for setting or deleting an HTTP header.",
 	"name":   "name specifies the name of a header on which to perform an action. Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2. The name must consist only of alphanumeric and the following special characters, \"-!#$%&'*+.^_`\". The following header names are reserved and may not be modified via this API: Strict-Transport-Security, Proxy, Host, Cookie, Set-Cookie. It must be no more than 255 characters in length. Header name must be unique.",
@@ -1310,6 +1483,16 @@ func (IngressControllerLogging) SwaggerDoc() map[string]string {
 	return map_IngressControllerLogging
 }
 
+var map_IngressControllerResources = map[string]string{
+	"":        "IngressControllerResources configures per-replica resources for ingress containers.",
+	"router":  "router optionally configures resources for the controller that watches routes and generates HAProxy configuration. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the router container, as described on the spec.resources field.",
+	"haproxy": "haproxy optionally configures resources for the proxy that handles ingress traffic. It runs as a restartable init sidecar in the router pod. When specified, it must be a list of 1 to 8 resource overrides with unique names. Removing an entry restores the platform default for that resource. When omitted, the platform applies its default for the haproxy container, as described on the spec.resources field.",
+}
+
+func (IngressControllerResources) SwaggerDoc() map[string]string {
+	return map_IngressControllerResources
+}
+
 var map_IngressControllerSetHTTPHeader = map[string]string{
 	"":      "IngressControllerSetHTTPHeader defines the value which needs to be set on an HTTP header.",
 	"value": "value specifies a header value. Dynamic values can be added. The value will be interpreted as an HAProxy format string as defined in http://cbonte.github.io/haproxy-dconv/2.6/configuration.html#8.2.6  and may use HAProxy's %[] syntax and otherwise must be a valid HTTP header value as defined in https://datatracker.ietf.org/doc/html/rfc7230#section-3.2. The value of this field must be no more than 16384 characters in length. Note that the total size of all net added headers *after* interpolating dynamic values must not exceed the value of spec.tuningOptions.headerBufferMaxRewriteBytes on the IngressController. ",
@@ -1329,6 +1512,7 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":               "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":                   "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":                   "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
+	"resources":                       "resources optionally configures per-replica resources for the router and haproxy containers independently. At least one container must be configured. When omitted, the platform is left to choose reasonable defaults, which are subject to change over time. The current defaults are requests of 25m CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for haproxy, and no limits for either container.\n\nThe values set here are not validated against what the workload needs; setting them too low or too high can make the router unavailable, and Red Hat does not support issues caused by such values. See the request and limit fields for the specific risks of each. The cluster administrator is responsible for choosing appropriate values.",
 	"tlsSecurityProfile":              "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the apiservers.config.openshift.io/cluster resource.\n\nNote that when using the Old, Intermediate, and Modern profile types, the effective profile configuration is subject to change between releases. For example, given a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress controller, resulting in a rollout.",
 	"clientTLS":                       "clientTLS specifies settings for requesting and verifying client certificates, which can be used to enable mutual TLS for edge-terminated and reencrypt routes.",
 	"routeAdmission":                  "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",

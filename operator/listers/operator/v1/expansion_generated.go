@@ -38,6 +38,14 @@ type DNSListerExpansion interface{}
 // EtcdLister.
 type EtcdListerExpansion interface{}
 
+// EtcdBackupListerExpansion allows custom methods to be added to
+// EtcdBackupLister.
+type EtcdBackupListerExpansion interface{}
+
+// EtcdBackupPolicyListerExpansion allows custom methods to be added to
+// EtcdBackupPolicyLister.
+type EtcdBackupPolicyListerExpansion interface{}
+
 // IngressListerExpansion allows custom methods to be added to
 // IngressLister.
 type IngressListerExpansion interface{}

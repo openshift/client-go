@@ -125,6 +125,19 @@ type IngressControllerSpecApplyConfiguration struct {
 	//
 	// If unset, defaults are used. See NodePlacement for more details.
 	NodePlacement *NodePlacementApplyConfiguration `json:"nodePlacement,omitempty"`
+	// resources optionally configures per-replica resources for the router and
+	// haproxy containers independently. At least one container must be configured.
+	// When omitted, the platform is left to choose reasonable defaults, which
+	// are subject to change over time. The current defaults are requests of 25m
+	// CPU and 64Mi memory for router, requests of 100m CPU and 256Mi memory for
+	// haproxy, and no limits for either container.
+	//
+	// The values set here are not validated against what the workload needs;
+	// setting them too low or too high can make the router unavailable, and Red
+	// Hat does not support issues caused by such values. See the request and
+	// limit fields for the specific risks of each. The cluster administrator is
+	// responsible for choosing appropriate values.
+	Resources *IngressControllerResourcesApplyConfiguration `json:"resources,omitempty"`
 	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
 	//
 	// If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
@@ -379,6 +392,14 @@ func (b *IngressControllerSpecApplyConfiguration) WithRouteSelector(value *metav
 // If called multiple times, the NodePlacement field is set to the value of the last call.
 func (b *IngressControllerSpecApplyConfiguration) WithNodePlacement(value *NodePlacementApplyConfiguration) *IngressControllerSpecApplyConfiguration {
 	b.NodePlacement = value
+	return b
+}
+
+// WithResources sets the Resources field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the Resources field is set to the value of the last call.
+func (b *IngressControllerSpecApplyConfiguration) WithResources(value *IngressControllerResourcesApplyConfiguration) *IngressControllerSpecApplyConfiguration {
+	b.Resources = value
 	return b
 }
 
